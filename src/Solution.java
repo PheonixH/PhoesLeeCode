@@ -36,7 +36,7 @@ public class Solution {
         int[] arr = {1,2,3,4};
         int[] brr = {3,2,4,1};
         int[] crr = {-2,1,-2,-3};
-        System.out.print(solution.asteroidCollision(crr));
+        System.out.print(solution.containsDuplicate(crr));
     }
     //709
     public String toLowerCase(String str) {
@@ -832,6 +832,26 @@ public class Solution {
             }
         }
         return false;
+    }
+    //217
+    public boolean containsDuplicate(int[] nums) {
+        if(nums == null||1 == nums.length){
+            return false;
+        }
+        else {
+            HashSet<Integer> hashSet = new HashSet<>();
+            for(int i = 0;i < nums.length;i++){
+                hashSet.add(nums[i]);
+                if(i + 1 != hashSet.size()){
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+    //219
+    public boolean containsNearbyDuplicate(int[] nums, int k) {
+        return true;
     }
 }
 /**
