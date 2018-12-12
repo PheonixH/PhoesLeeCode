@@ -33,10 +33,10 @@ public class Solution {
 //        t2.left = t3;
 //        solution.postorderTraversal(t1);
         String[] strings={"5","2","C","D","+"};
-        int[] arr = {1,2,3,4};
+        int[] arr = {1,2,3,1};
         int[] brr = {3,2,4,1};
-        int[] crr = {-2,1,-2,-3};
-        System.out.print(solution.containsDuplicate(crr));
+        int[] crr = {1,2,3,1,2,3};
+        System.out.print(solution.containsNearbyDuplicate(crr,2));
     }
     //709
     public String toLowerCase(String str) {
@@ -823,15 +823,16 @@ public class Solution {
 
     //220:超时
     public boolean containsNearbyAlmostDuplicate(int[] nums, int k, int t) {
-        for(int i = 0;i < nums.length;i++){
-            for(int j = i + 1;j <= i + k&&j <nums.length;j++){
-                long l = Math.abs((long)nums[j] - (long)nums[i]);
-                if(t >= l&&l>=0){
-                    return true;
-                }
-            }
-        }
-        return false;
+//        for(int i = 0;i < nums.length;i++){
+//            for(int j = i + 1;j <= i + k&&j <nums.length;j++){
+//                long l = Math.abs((long)nums[j] - (long)nums[i]);
+//                if(t >= l&&l>=0){
+//                    return true;
+//                }
+//            }
+//        }
+//        return false;
+        return true;
     }
     //217
     public boolean containsDuplicate(int[] nums) {
@@ -851,7 +852,60 @@ public class Solution {
     }
     //219
     public boolean containsNearbyDuplicate(int[] nums, int k) {
-        return true;
+        HashSet<Integer> hashSet = new HashSet<>();
+        for(int i = 0;i <= k&&i<nums.length;i++){
+            hashSet.add(nums[i]);
+            if(hashSet.size() != i+1){
+                return true;
+            }
+        }
+        if(hashSet.size() == nums.length){
+            return false;
+        }
+        else {
+            int i = hashSet.size();
+            while (i < nums.length){
+                hashSet.remove(nums[i - k - 1]);
+                hashSet.add(nums[i]);
+                if(hashSet.size() != k + 1){
+                    return true;
+                }
+                i++;
+            }
+            return false;
+        }
+    }
+    //367
+    public boolean isPerfectSquare(int num) {
+        long left = 0;
+        long right = num;
+        while(left<=right){
+            long mid = left+(right-left)/2;
+            long t = mid * mid;
+            if(t == num){
+                return true;
+            }
+            else if(t<num){
+                left = mid+1;
+            }
+            else{
+                right = mid-1;
+            }
+        }
+        return false;
+        //任意完全平方数都可以表示成连续的奇数和
+//        int i = 1;
+//        int s = i;
+//        while (s < num){
+//            i = i + 2;
+//            s = s + i;
+//        }
+//        if(s == num){
+//            return true;
+//        }
+//        else {
+//            return false;
+//        }
     }
 }
 /**
