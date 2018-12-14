@@ -488,4 +488,11 @@ public class SolitionUbuntu {
 //            }
 //        }
 //        return re;}
+
+    //810
+    public boolean xorGame(int[] nums) {
+        int x = 0, n = nums.length;
+        for (int num : nums) x ^= num;
+        return x == 0 || n % 2 == 0;
+    }
 }
