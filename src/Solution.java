@@ -14,29 +14,34 @@ import static java.lang.Math.log10;
 public class Solution {
     public static void main(String[] args){
         Solution solution = new Solution();
-        ListNode p = new ListNode(9);
-        ListNode p1 = new ListNode(8);
+        ListNode p = new ListNode(1);
+        ListNode p1 = new ListNode(2);
         ListNode p2 = new ListNode(3);
-        ListNode p3 = new ListNode(1);
-        ListNode p4 = new ListNode(6);
+        ListNode p3 = new ListNode(4);
+        ListNode p4 = new ListNode(5);
         ListNode p5 = new ListNode(4);
         p.next = p1;
         //p1.next = p2;
 
 //        p3.next = p4;
 //        p4.next = p5;
-//        TreeNode t1 = new TreeNode(1);
-//        t1.left = null;
-//        TreeNode t2 = new TreeNode(2);
-//        TreeNode t3 = new TreeNode(3);
-//        t1.right = t2;
-//        t2.left = t3;
+        TreeNode t1 = new TreeNode(1);
+        t1.right = null;
+        TreeNode t2 = new TreeNode(2);
+        TreeNode t3 = new TreeNode(3);
+        t1.left = t2;
+        t2.left = t3;
+        t2.right = null;
+        TreeNode t4 = new TreeNode(4);
+        TreeNode t5 = new TreeNode(5);
+        t3.left = t4;
+        t4.left = t5;
 //        solution.postorderTraversal(t1);
         String[] strings={"5","2","C","D","+"};
         int[] arr = {1,2,3,4};
         int[] brr = {3,2,4,1};
         int[] crr = {-2,1,-2,-3};
-        System.out.print(solution.asteroidCollision(crr));
+        System.out.print(solution.superEggDrop(4,60));
     }
     //709
     public String toLowerCase(String str) {
@@ -420,14 +425,43 @@ public class Solution {
         }
     }
     //887:Failed
-    public int superEggDrop(int K, int N) {
-        int a = 1;
-        int b = 1;
-        while (N > a){
-            a = a * 2 + 1;
-            b++;
+    //定义组合函数 C(m,n)
+    public int C(int m,int n){
+        if(n > m/2) {
+            n = m - n;
         }
-        return b;
+        int max=1,k=0;
+        while(n-->0) {
+            max = max*(m--)/(++k);
+        }
+        return max;
+    }
+    public int superEggDrop(int K, int N) {
+        // i 记录了层数信息
+        // m 第 i 层的最大节点数
+        // s 前 i 层最大节点数之和
+        int m = 1, i, sum = 0;
+        //前 K 层情况
+        for(i = 0; i < K; ++i){
+            sum += m;
+            if(N <= sum) {
+                return ++i;
+            }
+            m *= 2;
+        }
+        // temp 是辅助值
+        int temp = m;
+        // K 层以后的情况
+        while(true){
+            m = temp - C(i,i-K);
+            sum += m;
+            if(N<=sum) {
+                break;
+            }
+            temp += m;
+            ++i;
+        }
+        return ++i;
     }
     //682
     public int calPoints(String[] ops) {

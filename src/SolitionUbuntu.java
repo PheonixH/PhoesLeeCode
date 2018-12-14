@@ -17,18 +17,17 @@ import java.util.*;
  */
 public class SolitionUbuntu {
     public static void main(String[] args){
-        TreeNode root = new TreeNode(3);
-        TreeNode r1 = new TreeNode(9);
-        TreeNode r2 = new TreeNode(20);
-        TreeNode r3 = new TreeNode(15);
-        TreeNode r4 = new TreeNode(7);
+        TreeNode root = new TreeNode(1);
+        TreeNode r1 = new TreeNode(2);
+        TreeNode r2 = new TreeNode(3);
+        TreeNode r3 = new TreeNode(4);
+        TreeNode r4 = new TreeNode(5);
 //        TreeNode r5 = new TreeNode(15);
         root.left = r1;
-        r2.right = r4;
+        r1.left = r2;
         r2.left = r3;
-        root.right = r2;
+        r3.left = r4;
         SolitionUbuntu solution = new SolitionUbuntu();
-        System.out.println(solution.findDeep(root,0));
         System.out.println(solution.zigzagLevelOrder(root));
 //        int[] arr = solution.findFrequentTreeSum(root);
         //List l = solution.zigzagLevelOrder(root);
@@ -43,10 +42,12 @@ public class SolitionUbuntu {
         Stack<TreeNode> st1 = new Stack<TreeNode>();
         Stack<TreeNode> st2 = new Stack<TreeNode>();
         if(root != null) {
-            if (root.left != null)
+            if (root.left != null) {
                 st1.push(root.left);
-            if (root.right != null)
+            }
+            if (root.right != null) {
                 st1.push(root.right);
+            }
             List rr = new ArrayList();
             rr.add(root.val);
             re.add(rr);
@@ -70,10 +71,10 @@ public class SolitionUbuntu {
                         TreeNode t = (TreeNode) st2.pop();
                         rr2.add(t.val);
                         if (t.left != null) {
-                            st1.push(t.right);
+                            st1.push(t.left);
                         }
                         if (t.right != null) {
-                            st1.push(t.left);
+                            st1.push(t.right);
                         }
                     }
                     useL = 1;
@@ -492,7 +493,9 @@ public class SolitionUbuntu {
     //810
     public boolean xorGame(int[] nums) {
         int x = 0, n = nums.length;
-        for (int num : nums) x ^= num;
+        for (int num : nums) {
+            x ^= num;
+        }
         return x == 0 || n % 2 == 0;
     }
 }
