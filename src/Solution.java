@@ -43,6 +43,7 @@ public class Solution {
         int[] crr = {-2,1,-2,-3};
         System.out.print(solution.superEggDrop(4,60));
     }
+
     //709
     public String toLowerCase(String str) {
         char[] ch = str.toCharArray();
@@ -53,6 +54,7 @@ public class Solution {
         }
         return String.valueOf(ch);
     }
+
     //72
     public int minDistance(String word1, String word2) {
         // write your code here
@@ -75,6 +77,7 @@ public class Solution {
         }
         return dp[word1.length()][word2.length()];
     }
+
     //15:超时
     public List<List<Integer>> threeSum(int[] nums) {
         List sum0 = new ArrayList<>();
@@ -137,6 +140,7 @@ public class Solution {
         }
         return sum0;
     }
+
     //77
     public List<List<Integer>> combine(int n, int k) {
         if(k == 0|| k > n){
@@ -201,6 +205,7 @@ public class Solution {
             return result;
         }
     }
+
     //621
     public int leastInterval(char[] tasks, int n) {
 //        int result = 0;
@@ -240,6 +245,7 @@ public class Solution {
         result = (max - 1) * n + max + all - 1;
         return result > tasks.length?result : tasks.length;
     }
+
     //83
     public ListNode deleteDuplicates(ListNode head) {
         if(head == null||head.next == null){
@@ -271,6 +277,7 @@ public class Solution {
             return head;
         }
     }
+
     //145
     public List<Integer> postorderTraversal(TreeNode root) {
         List<Integer> list = new ArrayList<>();
@@ -311,6 +318,7 @@ public class Solution {
             return list;
         }
     }
+
     //719 超时。。。
     public int smallestDistancePair(int[] nums, int k) {
         if(nums.length == 2) {
@@ -342,6 +350,7 @@ public class Solution {
             return result;
         }
     }
+
     //922
     public int[] sortArrayByParityII(int[] A) {
         int[] arr = new int [A.length];
@@ -359,6 +368,7 @@ public class Solution {
         }
         return arr;
     }
+
     //342
     public boolean isPowerOfFour(int num) {
         //1).
@@ -400,10 +410,12 @@ public class Solution {
         //4).
 //        return ((num & (num-1)) == 0) && num > 0 && ((num  & 0x55555555) != 0);
     }
+
     //231
     public boolean isPowerOfTwo(int n) {
         return  0 == (n&(n-1)) && n > 0;
     }
+
     //191
     // you need to treat n as an unsigned value
     public int hammingWeight(int n) {
@@ -414,6 +426,7 @@ public class Solution {
         n = n + (n >>> 16) & 0x0000ffff;
         return n;
     }
+
     //326
     public boolean isPowerOfThree(int n) {
         double tem = log10(n) / log10(3.0);
@@ -424,6 +437,7 @@ public class Solution {
             return false;
         }
     }
+
     //887:Failed
     //定义组合函数 C(m,n)
     public int C(int m,int n){
@@ -463,6 +477,7 @@ public class Solution {
         }
         return ++i;
     }
+
     //682
     public int calPoints(String[] ops) {
         int i = 0;
@@ -514,6 +529,7 @@ public class Solution {
 //        }
         return sum;
     }
+
     //122
     public int maxProfit2(int[] prices) {
         if(0 == prices.length||1 == prices.length){
@@ -529,6 +545,7 @@ public class Solution {
             return sum;
         }
     }
+
     //123
     public int maxProfit3(int[] prices) {
         if(prices == null||0 == prices.length||1 == prices.length){
@@ -572,6 +589,7 @@ public class Solution {
             return res;
         }
     }
+
     //188 Failed
     public int maxProfit4(int k, int[] prices) {
         int[] r = new  int [2];
@@ -660,6 +678,7 @@ public class Solution {
         }
         return re;
     }
+
     //67
     public String addBinary(String a, String b) {
         char[] arr = a.toCharArray();
@@ -699,6 +718,7 @@ public class Solution {
         }
         return str;
     }
+
     //43
     public String multiply(String num1, String num2) {
         char[] arr = num1.toCharArray();
@@ -735,6 +755,7 @@ public class Solution {
         }
         return str;
     }
+
     //735
     public int[] asteroidCollision(int[] asteroids) {
         Stack<Integer> stack = new Stack<>();
@@ -800,6 +821,7 @@ public class Solution {
         }
         return res;
     }
+
     //106
     public TreeNode buildTree(int[] inorder, int[] postorder) {
         if (inorder.length == 0){

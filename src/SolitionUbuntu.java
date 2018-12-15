@@ -28,7 +28,9 @@ public class SolitionUbuntu {
         r2.left = r3;
         r3.left = r4;
         SolitionUbuntu solution = new SolitionUbuntu();
-        System.out.println(solution.zigzagLevelOrder(root));
+        int[] arr = {10, 20, 5};
+        int[] brr = {70, 50, 30};
+        System.out.println(solution.mincostToHireWorkers(arr,brr,2));
 //        int[] arr = solution.findFrequentTreeSum(root);
         //List l = solution.zigzagLevelOrder(root);
 //        System.out.print(solution.nthMagicalNumber(1,2,3));
@@ -497,5 +499,101 @@ public class SolitionUbuntu {
             x ^= num;
         }
         return x == 0 || n % 2 == 0;
+    }
+
+    //242
+    public boolean isAnagram(String s, String t) {
+        int[] snum = new int[27];
+        int[] tnum = new int[27];
+        char[] cs = s.toCharArray();
+        char[] ct = t.toCharArray();
+        if(s.length() != t.length()){
+            return false;
+        }
+        for(int i = 0;i < s.length();i++){
+            if(0 <= cs[i] - 'a' && 26 >= cs[i] - 'a'){
+                snum[cs[i] - 'a']++;
+            }
+            if(0 <= ct[i] - 'a' && 26 >= ct[i] - 'a'){
+                tnum[ct[i] - 'a']++;
+            }
+        }
+        for(int i = 0;i < 26;i++){
+            if(snum[i] != tnum[i]){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    //153
+    public int findMin(int[] nums) {
+        if(0 == nums.length){
+            return 0;
+        }
+        for(int i = 1;i < nums.length;i++){
+            if(nums[i] < nums[i-1]){
+                return nums[i];
+            }
+        }
+        return nums[0];
+    }
+    //154
+    public int findMin2(int[] nums) {
+        return findMin(nums);
+    }
+
+    //857
+    public double mincostToHireWorkers(int[] quality, int[] wage, int K) {
+        double[] pay = new double[quality.length];
+        double min = (double) wage[0] / (double) quality[0];
+        int kk = 0;
+        int[] work = new int[K + 1];
+        int b = 0;
+        for(int i =0;i < quality.length;i++){
+            pay[i] = (double)wage[i] / (double)quality[i];
+            if(pay[i] >= min){
+                min = pay[i];
+                kk = i;
+            }
+            if(b == 0){
+                work[0] = quality[0];
+                b++;
+            }
+            else if(b < K){
+                int j = 0;
+                while (b < i &&work[j] < quality[i]){
+                    j++;
+                }
+                if(b == i){
+                    work[b] = quality[i];
+                }
+                else {
+                    for(int jj = b + 1;jj > j;jj--){
+                        work[jj] = work[jj - 1];
+                    }
+                    work[j] = quality[i];
+                }
+                b++;
+            }
+            else {
+                int j = 0;
+                while (j < K&&work[j] < quality[i]){
+                    j++;
+                }
+                if(work[j] >= quality[i]){
+                    for(int jj = b;jj > j;jj--){
+                        work[jj] = work[jj - 1];
+                    }
+                    work[j] = quality[i];
+                }
+            }
+        }
+        int sum = 0;
+        for(int j : work){
+            sum += j;
+        }
+        sum = sum - work[work.length - 1];
+        return sum * min ;
     }
 }
