@@ -43,10 +43,10 @@ public class Solution {
 //        solution.postorderTraversal(t1);
         String[] strings = {"5", "2", "C", "D", "+"};
         int[] arr = {1, 2, 3, 4, 5, 6};
-        int[] brr = {3, 2, 4, 1};
-        int[] crr = {-2, 1, -2, -3};
+        int[] brr = {1,2,2,5,3,5};
+        int[] crr = {3,2,1};
 //        System.out.print(solution.rotate(arr,9));
-        solution.rotate(arr,2);
+        solution.thirdMax(crr);
     }
 
     //709
@@ -1066,6 +1066,61 @@ public class Solution {
             nums[e] = t;
             b++;
             e--;
+        }
+    }
+
+    //414
+    public int thirdMax(int[] nums) {
+        if(0 == nums.length){
+            return 0;
+        }
+        if (1 == nums.length){
+            return nums[0];
+        }
+        if(2 == nums.length){
+            return nums[0] > nums[1]?nums[0] : nums[1];
+        }
+        int x = nums[0];
+        int y = 0, z = 0;
+        boolean by = false;
+        boolean bz = false;
+        int k = 1;
+        while (k  < nums.length){
+            if(nums[k] != x){
+                int t = nums[k];
+                if(x < nums[k]){
+                    t = x;
+                    x = nums[k];
+                }
+                if(!by){
+                    y = t;
+                    by = true;
+                }
+                else if(!bz && t != y){
+                    if(y < t){
+                        int tt = t;
+                        t = y;
+                        y = tt;
+                    }
+                    z = t;
+                    bz = true;
+                }
+                else if(bz && t != y){
+                    int tt = t;
+                    if(y < t){
+                        tt = y;
+                        y = t;
+                    }
+                    z = tt > z?tt : z;
+                }
+            }
+            k++;
+        }
+        if(!bz){
+            return x;
+        }
+        else {
+            return z;
         }
     }
 }
