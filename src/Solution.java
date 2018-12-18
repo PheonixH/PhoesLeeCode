@@ -19,12 +19,16 @@ public class Solution {
         ListNode p2 = new ListNode(3);
         ListNode p3 = new ListNode(4);
         ListNode p4 = new ListNode(5);
-        ListNode p5 = new ListNode(4);
+        ListNode p5 = new ListNode(6);
+        ListNode p6 = new ListNode(7);
+        ListNode p7 = new ListNode(8);
         p.next = p1;
-        //p1.next = p2;
-
-//        p3.next = p4;
-//        p4.next = p5;
+        p1.next = p2;
+        p2.next = p3;
+        p3.next = p4;
+        p4.next = p5;
+        p5.next = p6;
+        p6.next = p7;
         TreeNode t1 = new TreeNode(1);
         t1.right = null;
         TreeNode t2 = new TreeNode(2);
@@ -38,10 +42,11 @@ public class Solution {
         t4.left = t5;
 //        solution.postorderTraversal(t1);
         String[] strings = {"5", "2", "C", "D", "+"};
-        int[] arr = {1, 2, 3, 4};
+        int[] arr = {1, 2, 3, 4, 5, 6};
         int[] brr = {3, 2, 4, 1};
         int[] crr = {-2, 1, -2, -3};
-        System.out.print(solution.solveNQueens(4));
+//        System.out.print(solution.rotate(arr,9));
+        solution.rotate(arr,2);
     }
 
     //709
@@ -880,13 +885,14 @@ public class Solution {
         putQueen(list, cheers, 0);
         return list;
     }
+
     public static void putQueen(List list, char[][] cheers, int i) {
         if (i == cheers[0].length) {
             //if (isQueenSafety(cheers, i-1)) {
             String[] strings = new String[cheers.length];
             for (int x = 0; x < cheers.length; x++) {
                 StringBuffer stringBuffer = new StringBuffer();
-                for(int y = 0;y < cheers.length;y++){
+                for (int y = 0; y < cheers.length; y++) {
                     stringBuffer.append(cheers[x][y]);
                 }
                 strings[x] = stringBuffer.toString();
@@ -907,6 +913,7 @@ public class Solution {
         }
 
     }
+
     public static boolean isQueenSafety(char[][] cheers, int i) {
         if (0 == i) {
             return true;
@@ -942,6 +949,124 @@ public class Solution {
         }
         putQueen(list, cheers, 0);
         return list.size();
+    }
+
+    //328
+    public ListNode oddEvenList(ListNode head) {
+        if (head == null) {
+            return head;
+        }
+        ListNode p = head;
+        if (p.next == null) {
+            return head;
+        }
+        ListNode q = head.next;
+        ListNode resq = head.next;
+        if (q.next == null) {
+            return head;
+        }
+        ListNode t = p;
+        while ((p != null && p.next != null) || (q != null && q.next != null)) {
+            if (p.next != null) {
+                p.next = p.next.next;
+                t = p;
+                p = p.next;
+            }
+            if (q.next != null) {
+                q.next = q.next.next;
+                q = q.next;
+            }
+        }
+        if (p != null) {
+            p.next = resq;
+        } else {
+            t.next = resq;
+        }
+        return head;
+    }
+
+    //725
+    public ListNode[] splitListToParts(ListNode root, int k) {
+        ListNode[] listNodes = new ListNode[k];
+        ListNode p = root;
+        int i = 0;
+        while (p != null) {
+            i++;
+            p = p.next;
+        }
+        int a = i % k;
+        int b = i / k;
+        ListNode q = root;
+        for (int j = 0; j < k; j++) {
+            if (q != null) {
+                ListNode t = q;
+                ListNode tt = t;
+                int c = a > 0 ? b + 1 : b;
+                while (c > 1) {
+                    tt = tt.next;
+                    q = q.next;
+                    c--;
+                }
+                q = q.next;
+                tt.next = null;
+                listNodes[j] = t;
+                a--;
+            } else {
+                listNodes[j] = q;
+            }
+        }
+        return listNodes;
+    }
+
+    //61
+    public ListNode rotateRight(ListNode head, int k) {
+        if(head == null){
+            return head;
+        }
+        int n = 1;
+        ListNode p = head;
+        while (p.next != null){
+            p = p.next;
+            n++;
+        }
+        k = k % n;
+        k = (n - k) % n;
+        if(0 == k){
+            return head;
+        }
+        ListNode q = head;
+        while (k > 1){
+            q = q.next;
+            k--;
+        }
+        p.next = head;
+        head = q.next;
+        q.next = null;
+        return head;
+    }
+
+    //189
+    public void rotate(int[] nums, int k) {
+        if(0 == nums.length){
+            return;
+        }
+        k = k % nums.length;
+        if(0 == k){
+            return;
+        }
+        rotateAss(nums,0,nums.length - k - 1);
+        rotateAss(nums, nums.length - k, nums.length - 1);
+        rotateAss(nums, 0 ,nums.length -1);
+        return;
+    }
+    public static void rotateAss(int[] nums,int b,int e){
+        while (b < e){
+            int t = nums[b];
+            nums[b] = nums[e];
+            nums[e] = t;
+            b++;
+            e--;
+        }
     }
 }
 
