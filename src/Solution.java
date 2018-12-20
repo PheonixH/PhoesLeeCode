@@ -30,12 +30,10 @@ public class Solution {
         p5.next = p6;
         p6.next = p7;
         TreeNode t1 = new TreeNode(1);
-        t1.right = null;
         TreeNode t2 = new TreeNode(2);
         TreeNode t3 = new TreeNode(3);
         t1.left = t2;
-        t2.left = t3;
-        t2.right = null;
+        t1.right = t3;
         TreeNode t4 = new TreeNode(4);
         TreeNode t5 = new TreeNode(5);
         t3.left = t4;
@@ -43,10 +41,10 @@ public class Solution {
 //        solution.postorderTraversal(t1);
         String[] strings = {"5", "2", "C", "D", "+"};
         int[] arr = {1, 2, 3, 4, 5, 6};
-        int[] brr = {1,2,2,5,3,5};
-        int[] crr = {3,2,1};
+        int[] brr = {1, 2, 2, 5, 3, 5};
+        int[] crr = {3, 2, 1};
 //        System.out.print(solution.rotate(arr,9));
-        solution.thirdMax(crr);
+        solution.findBottomLeftValue(t1);
     }
 
     //709
@@ -1020,22 +1018,22 @@ public class Solution {
 
     //61
     public ListNode rotateRight(ListNode head, int k) {
-        if(head == null){
+        if (head == null) {
             return head;
         }
         int n = 1;
         ListNode p = head;
-        while (p.next != null){
+        while (p.next != null) {
             p = p.next;
             n++;
         }
         k = k % n;
         k = (n - k) % n;
-        if(0 == k){
+        if (0 == k) {
             return head;
         }
         ListNode q = head;
-        while (k > 1){
+        while (k > 1) {
             q = q.next;
             k--;
         }
@@ -1047,20 +1045,21 @@ public class Solution {
 
     //189
     public void rotate(int[] nums, int k) {
-        if(0 == nums.length){
+        if (0 == nums.length) {
             return;
         }
         k = k % nums.length;
-        if(0 == k){
+        if (0 == k) {
             return;
         }
-        rotateAss(nums,0,nums.length - k - 1);
+        rotateAss(nums, 0, nums.length - k - 1);
         rotateAss(nums, nums.length - k, nums.length - 1);
-        rotateAss(nums, 0 ,nums.length -1);
+        rotateAss(nums, 0, nums.length - 1);
         return;
     }
-    public static void rotateAss(int[] nums,int b,int e){
-        while (b < e){
+
+    public static void rotateAss(int[] nums, int b, int e) {
+        while (b < e) {
             int t = nums[b];
             nums[b] = nums[e];
             nums[e] = t;
@@ -1071,57 +1070,101 @@ public class Solution {
 
     //414
     public int thirdMax(int[] nums) {
-        if(0 == nums.length){
+        if (0 == nums.length) {
             return 0;
         }
-        if (1 == nums.length){
+        if (1 == nums.length) {
             return nums[0];
         }
-        if(2 == nums.length){
-            return nums[0] > nums[1]?nums[0] : nums[1];
+        if (2 == nums.length) {
+            return nums[0] > nums[1] ? nums[0] : nums[1];
         }
         int x = nums[0];
         int y = 0, z = 0;
         boolean by = false;
         boolean bz = false;
         int k = 1;
-        while (k  < nums.length){
-            if(nums[k] != x){
+        while (k < nums.length) {
+            if (nums[k] != x) {
                 int t = nums[k];
-                if(x < nums[k]){
+                if (x < nums[k]) {
                     t = x;
                     x = nums[k];
                 }
-                if(!by){
+                if (!by) {
                     y = t;
                     by = true;
-                }
-                else if(!bz && t != y){
-                    if(y < t){
+                } else if (!bz && t != y) {
+                    if (y < t) {
                         int tt = t;
                         t = y;
                         y = tt;
                     }
                     z = t;
                     bz = true;
-                }
-                else if(bz && t != y){
+                } else if (bz && t != y) {
                     int tt = t;
-                    if(y < t){
+                    if (y < t) {
                         tt = y;
                         y = t;
                     }
-                    z = tt > z?tt : z;
+                    z = tt > z ? tt : z;
                 }
             }
             k++;
         }
-        if(!bz){
+        if (!bz) {
             return x;
-        }
-        else {
+        } else {
             return z;
         }
+    }
+
+    //513
+    public int findBottomLeftValue(TreeNode root) {
+        List<TreeNode> list1 = new LinkedList<>();
+        List<TreeNode> list2 = new LinkedList<>();
+        if (root == null) {
+            return 0;
+        }
+        list1.add(root);
+        int res = root.val;
+        while (!list1.isEmpty() || !list2.isEmpty()) {
+            if (list2.isEmpty()) {
+                TreeNode t = list1.get(0);
+                res = t.val;
+                while (!list1.isEmpty()) {
+                    t = list1.get(0);
+                    list1.remove(0);
+                    if (t.left != null) {
+                        list2.add(t.left);
+                    }
+                    if (t.right != null) {
+                        list2.add(t.right);
+                    }
+                }
+            }
+            else {
+                TreeNode t = list2.get(0);
+                res = t.val;
+                while (!list2.isEmpty()) {
+                    t = list2.get(0);
+                    list2.remove(0);
+                    if (t.left != null) {
+                        list1.add(t.left);
+                    }
+                    if (t.right != null) {
+                        list1.add(t.right);
+                    }
+                }
+            }
+        }
+        return res;
+    }
+
+    //514
+    public int findRotateSteps(String ring, String key) {
+
     }
 }
 
