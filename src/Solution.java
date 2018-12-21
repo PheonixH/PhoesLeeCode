@@ -44,7 +44,7 @@ public class Solution {
         int[] brr = {1, 2, 2, 5, 3, 5};
         int[] crr = {3, 2, 1};
 //        System.out.print(solution.rotate(arr,9));
-        solution.findBottomLeftValue(t1);
+        solution.titleToNumber("AA");
     }
 
     //709
@@ -1162,9 +1162,65 @@ public class Solution {
         return res;
     }
 
-    //514
-    public int findRotateSteps(String ring, String key) {
-
+    //168
+    public String convertToTitle(int n) {
+        StringBuffer res = new StringBuffer();
+        if(1 > n){
+            return null;
+        }
+        int x = n % 26;
+        n = n / 26;
+        Stack<Character> stack = new Stack<>();
+        while (x != 0||n != 0){
+            if(x == 0){
+                x = 26;
+                n = n - 1;
+            }
+            stack.push((char)('A' + x - 1));
+            x = n % 26;
+            n = n / 26;
+        }
+        while (!stack.empty()){
+            res.append(stack.pop());
+        }
+        return res.toString();
     }
+
+    //169
+    public int majorityElement(int[] nums) {
+        Map<Integer, Integer> map = new TreeMap<>();
+        for(int i : nums){
+            if(map.containsKey(i)){
+                map.put(i, map.get(i)+1);
+            }
+            else {
+                map.put(i, 1);
+            }
+        }
+        Iterator iterator = map.entrySet().iterator();
+        int key = 0;
+        int value = 0;
+        while (iterator.hasNext()){
+            Map.Entry<Integer,Integer> entry = (Map.Entry) iterator.next();
+            if(entry.getValue() > value){
+                key = entry.getKey();
+                value = entry.getValue();
+            }
+        }
+        return key;
+    }
+
+    //171
+    public int titleToNumber(String s) {
+        char[] chars = s.toCharArray();
+        int res = 0;
+        int i = 1;
+        for(int j = chars.length - 1; j >= 0;j--){
+            res = res + i * (int)(chars[j] - 'A' + 1);
+            i = i * 26;
+        }
+        return res;
+    }
+
 }
 
