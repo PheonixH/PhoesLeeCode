@@ -1,3 +1,5 @@
+import jdk.nashorn.api.tree.Tree;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,7 +30,9 @@ public class SolitionUbuntu {
         r2.left = r3;
         r3.left = r4;
         SolitionUbuntu solution = new SolitionUbuntu();
-        System.out.println(solution.zigzagLevelOrder(root));
+        String[] strings = {"9","3","4","#","#","1","#","#,","#","6","#","#"};
+
+        System.out.println(solution.isValidSerialization("9,3,4,#,#,1,#,#,2,#,6,#,#"));
 //        int[] arr = solution.findFrequentTreeSum(root);
         //List l = solution.zigzagLevelOrder(root);
 //        System.out.print(solution.nthMagicalNumber(1,2,3));
@@ -497,5 +501,44 @@ public class SolitionUbuntu {
             x ^= num;
         }
         return x == 0 || n % 2 == 0;
+    }
+
+    //331
+    public boolean isValidSerialization(String preorder) {
+        if(preorder == null){
+            return false;
+        }
+        if(preorder.equals("#")){
+            return true;
+        }
+        String[] strings = preorder.split(",");
+        if(strings[0].equals("#")){
+            return false;
+        }
+        TreeNode root = new TreeNode(Integer.valueOf(strings[0]));
+        Stack<TreeNode> stack = new Stack<>();
+        stack.push(root);
+        int i = 1;
+        while (!stack.empty()&&i < strings.length){
+            TreeNode tt = stack.pop();
+            if(tt == null){
+                if (!strings[i].equals("#")){
+                    tt = new TreeNode(Integer.valueOf(strings[i]));
+                    stack.push(tt.right);
+                    stack.push(tt.left);
+                }
+                i++;
+            }
+            else {
+                stack.push(tt.right);
+                stack.push(tt.left);
+            }
+        }
+        if(stack.empty()&&i == strings.length){
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 }

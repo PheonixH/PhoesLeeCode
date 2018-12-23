@@ -8,4 +8,8 @@ class TreeNode {
     TreeNode(int x) {
         val = x;
     }
+
+    TreeNode(String x){
+        val = Integer.getInteger(x);
+    }
 }
