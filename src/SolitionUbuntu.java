@@ -29,15 +29,13 @@ public class SolitionUbuntu {
         r1.left = r2;
         r2.left = r3;
         r3.left = r4;
-        SolitionUbuntu solution = new SolitionUbuntu();
+        SolitionUbuntu solution = new SolitionUbuntu()；
         String[] strings = {"9","3","4","#","#","1","#","#,","#","6","#","#"};
 
         System.out.println(solution.isValidSerialization("9,3,4,#,#,1,#,#,2,#,6,#,#"));
 //        int[] arr = solution.findFrequentTreeSum(root);
         //List l = solution.zigzagLevelOrder(root);
 //        System.out.print(solution.nthMagicalNumber(1,2,3));
-
-
     }
 
     //103
@@ -353,20 +351,33 @@ public class SolitionUbuntu {
 
     //771
     public int numJewelsInStones(String J, String S) {
-        char strJ[] = J.toCharArray();
-        char strS[] = S.toCharArray();
-        int result = 0;
-//        List<Character> listJ= new ArrayList<Character>(Arrays.asList(strJ));
-//        List<Character> listS= new ArrayList<Character>(Arrays.asList(strS));
-        for(int i = 0;i < strS.length;i++){
-            for(int j = 0; j < strJ.length;j++){
-                if(strS[i] == strJ[j]){
-                    result++;
-                    break;
-                }
+//        char strJ[] = J.toCharArray();
+//        char strS[] = S.toCharArray();
+//        int result = 0;
+////        List<Character> listJ= new ArrayList<Character>(Arrays.asList(strJ));
+////        List<Character> listS= new ArrayList<Character>(Arrays.asList(strS));
+//        for(int i = 0;i < strS.length;i++){
+//            for(int j = 0; j < strJ.length;j++){
+//                if(strS[i] == strJ[j]){
+//                    result++;
+//                    break;
+//                }
+//            }
+//        }
+//        return result;
+        char[] cj = J.toCharArray();
+        char[] cs = S.toCharArray();
+        Set<Character> set = new HashSet<>();
+        for(char c:cj){
+            set.add(c);
+        }
+        int re = 0;
+        for(char c:cs){
+            if(set.contains(c)){
+                re++;
             }
         }
-        return result;
+        return re;
     }
 
     //237
