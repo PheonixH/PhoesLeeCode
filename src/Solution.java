@@ -12,41 +12,6 @@ import static java.lang.Math.log10;
  * @Version: 1.0
  */
 public class Solution {
-    public static void main(String[] args) {
-        Solution solution = new Solution();
-        ListNode p = new ListNode(1);
-        ListNode p1 = new ListNode(2);
-        ListNode p2 = new ListNode(3);
-        ListNode p3 = new ListNode(4);
-        ListNode p4 = new ListNode(5);
-        ListNode p5 = new ListNode(6);
-        ListNode p6 = new ListNode(7);
-        ListNode p7 = new ListNode(8);
-        p.next = p1;
-        p1.next = p2;
-        p2.next = p3;
-        p3.next = p4;
-        p4.next = p5;
-        p5.next = p6;
-        p6.next = p7;
-        TreeNode t1 = new TreeNode(1);
-        TreeNode t2 = new TreeNode(2);
-        TreeNode t3 = new TreeNode(3);
-        t1.left = t2;
-        t1.right = t3;
-        TreeNode t4 = new TreeNode(4);
-        TreeNode t5 = new TreeNode(5);
-        t3.left = t4;
-        t4.left = t5;
-//        solution.postorderTraversal(t1);
-        String[] strings = {"5", "2", "C", "D", "+"};
-        int[] arr = {1, 2, 3, 4, 5, 6};
-        int[] brr = {1, 2, 2, 5, 3, 5};
-        int[] crr = {3, 2, 1};
-//        System.out.print(solution.rotate(arr,9));
-        solution.titleToNumber("AA");
-    }
-
     //709
     public String toLowerCase(String str) {
         char[] ch = str.toCharArray();
@@ -1220,6 +1185,68 @@ public class Solution {
             i = i * 26;
         }
         return res;
+    }
+
+    //558
+    public Node intersect(Node quadTree1, Node quadTree2) {
+        if (quadTree1.isLeaf && quadTree1.val) {
+            return quadTree1;
+        } else if (quadTree2.isLeaf && quadTree2.val) {
+            return quadTree2;
+        } else if (quadTree1.isLeaf && !quadTree1.val) {
+            return quadTree2;
+        } else if (quadTree2.isLeaf && !quadTree2.val) {
+            return quadTree1;
+        } else {
+            quadTree1.topLeft = intersect(quadTree1.topLeft, quadTree2.topLeft);
+            quadTree1.topRight = intersect(quadTree1.topRight, quadTree2.topRight);
+            quadTree1.bottomLeft = intersect(quadTree1.bottomLeft, quadTree2.bottomLeft);
+            quadTree1.bottomRight = intersect(quadTree1.bottomRight, quadTree2.bottomRight);
+            if (quadTree1.topLeft.isLeaf && quadTree1.bottomRight.isLeaf
+                    && quadTree1.topRight.isLeaf && quadTree1.bottomRight.isLeaf
+                    && quadTree1.bottomRight.val == quadTree1.bottomLeft.val
+                    && quadTree1.topLeft.val == quadTree1.bottomLeft.val
+                    && quadTree1.topRight.val == quadTree1.bottomLeft.val) {
+                quadTree1.val = quadTree1.topLeft.val;
+                quadTree1.isLeaf = true;
+            }
+            return quadTree1;
+        }
+    }
+
+    public static void main(String[] args) {
+        Solution solution = new Solution();
+        ListNode p = new ListNode(1);
+        ListNode p1 = new ListNode(2);
+        ListNode p2 = new ListNode(3);
+        ListNode p3 = new ListNode(4);
+        ListNode p4 = new ListNode(5);
+        ListNode p5 = new ListNode(6);
+        ListNode p6 = new ListNode(7);
+        ListNode p7 = new ListNode(8);
+        p.next = p1;
+        p1.next = p2;
+        p2.next = p3;
+        p3.next = p4;
+        p4.next = p5;
+        p5.next = p6;
+        p6.next = p7;
+        TreeNode t1 = new TreeNode(1);
+        TreeNode t2 = new TreeNode(2);
+        TreeNode t3 = new TreeNode(3);
+        t1.left = t2;
+        t1.right = t3;
+        TreeNode t4 = new TreeNode(4);
+        TreeNode t5 = new TreeNode(5);
+        t3.left = t4;
+        t4.left = t5;
+//        solution.postorderTraversal(t1);
+        String[] strings = {"5", "2", "C", "D", "+"};
+        int[] arr = {1, 2, 3, 4, 5, 6};
+        int[] brr = {1, 2, 2, 5, 3, 5};
+        int[] crr = {3, 2, 1};
+//        System.out.print(solution.rotate(arr,9));
+        solution.titleToNumber("AA");
     }
 
 }
