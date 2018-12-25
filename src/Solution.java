@@ -1108,8 +1108,7 @@ public class Solution {
                         list2.add(t.right);
                     }
                 }
-            }
-            else {
+            } else {
                 TreeNode t = list2.get(0);
                 res = t.val;
                 while (!list2.isEmpty()) {
@@ -1130,22 +1129,22 @@ public class Solution {
     //168
     public String convertToTitle(int n) {
         StringBuffer res = new StringBuffer();
-        if(1 > n){
+        if (1 > n) {
             return null;
         }
         int x = n % 26;
         n = n / 26;
         Stack<Character> stack = new Stack<>();
-        while (x != 0||n != 0){
-            if(x == 0){
+        while (x != 0 || n != 0) {
+            if (x == 0) {
                 x = 26;
                 n = n - 1;
             }
-            stack.push((char)('A' + x - 1));
+            stack.push((char) ('A' + x - 1));
             x = n % 26;
             n = n / 26;
         }
-        while (!stack.empty()){
+        while (!stack.empty()) {
             res.append(stack.pop());
         }
         return res.toString();
@@ -1154,20 +1153,19 @@ public class Solution {
     //169
     public int majorityElement(int[] nums) {
         Map<Integer, Integer> map = new TreeMap<>();
-        for(int i : nums){
-            if(map.containsKey(i)){
-                map.put(i, map.get(i)+1);
-            }
-            else {
+        for (int i : nums) {
+            if (map.containsKey(i)) {
+                map.put(i, map.get(i) + 1);
+            } else {
                 map.put(i, 1);
             }
         }
         Iterator iterator = map.entrySet().iterator();
         int key = 0;
         int value = 0;
-        while (iterator.hasNext()){
-            Map.Entry<Integer,Integer> entry = (Map.Entry) iterator.next();
-            if(entry.getValue() > value){
+        while (iterator.hasNext()) {
+            Map.Entry<Integer, Integer> entry = (Map.Entry) iterator.next();
+            if (entry.getValue() > value) {
                 key = entry.getKey();
                 value = entry.getValue();
             }
@@ -1180,8 +1178,8 @@ public class Solution {
         char[] chars = s.toCharArray();
         int res = 0;
         int i = 1;
-        for(int j = chars.length - 1; j >= 0;j--){
-            res = res + i * (int)(chars[j] - 'A' + 1);
+        for (int j = chars.length - 1; j >= 0; j--) {
+            res = res + i * (int) (chars[j] - 'A' + 1);
             i = i * 26;
         }
         return res;
@@ -1214,6 +1212,95 @@ public class Solution {
         }
     }
 
+    //695
+    public int maxAreaOfIsland(int[][] grid) {
+        if (grid.length == 1) {
+            if (grid[0].length == 1) {
+                return grid[0][0] == 1 ? 1 : 0;
+            } else {
+                int max = 0;
+                for (int j = 0; j < grid[0].length; j++) {
+                    int m = 0;
+                    while (j < grid[0].length&&grid[0][j] == 1) {
+                        m++;
+                        j++;
+                    }
+                    max = max > m ? max : m;
+                }
+                return max;
+            }
+        }
+        if (grid[0].length == 1) {
+            int max = 0;
+            for (int i = 0; i < grid.length; i++) {
+                int m = 0;
+                while (i < grid.length&&grid[i][0] == 1) {
+                    m++;
+                    i++;
+                }
+                max = max > m ? max : m;
+            }
+            return max;
+        }
+        boolean[][] booleans = new boolean[grid.length][grid[0].length];
+        int max = 0;
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[0].length; j++) {
+                if (!booleans[i][j] && 1 == grid[i][j]) {
+                    booleans[i][j] = true;
+                    int m = maxAreaOfIslandAss(grid, booleans, i, j, 1);
+                    max = max > m ? max : m;
+                }
+            }
+        }
+        return max;
+    }
+    public static int maxAreaOfIslandAss(int[][] grid, boolean[][] booleans, int i, int j, int re) {
+        boolean visit = false;
+        if (i == 0) {
+            if (!booleans[i + 1][j] && 1 == grid[i + 1][j]) {
+                booleans[i + 1][j] = true;
+                re = maxAreaOfIslandAss(grid, booleans, i + 1, j, re + 1);
+            }
+        } else if (i == grid.length - 1) {
+            if (!booleans[i - 1][j] && 1 == grid[i - 1][j]) {
+                booleans[i - 1][j] = true;
+                re = maxAreaOfIslandAss(grid, booleans, i - 1, j, re + 1);
+            }
+        } else {
+            if (!booleans[i - 1][j] && 1 == grid[i - 1][j]) {
+                booleans[i - 1][j] = true;
+                re = maxAreaOfIslandAss(grid, booleans, i - 1, j, re + 1);
+            }
+            if (!booleans[i + 1][j] && 1 == grid[i + 1][j]) {
+                visit = true;
+                booleans[i + 1][j] = true;
+                re = maxAreaOfIslandAss(grid, booleans, i + 1, j, re + 1);
+            }
+        }
+        if (j == 0) {
+            if (!booleans[i][j + 1] && 1 == grid[i][j + 1]) {
+                booleans[i][j + 1] = true;
+                re = maxAreaOfIslandAss(grid, booleans, i, j + 1, re + 1);
+            }
+        } else if (j == grid[0].length - 1) {
+            if (!booleans[i][j - 1] && 1 == grid[i][j - 1]) {
+                booleans[i][j - 1] = true;
+                re = maxAreaOfIslandAss(grid, booleans, i, j - 1, re + 1);
+            }
+        } else {
+            if (!booleans[i][j - 1] && 1 == grid[i][j - 1]) {
+                booleans[i][j - 1] = true;
+                re = maxAreaOfIslandAss(grid, booleans, i, j - 1, re + 1);
+            }
+            if (!booleans[i][j + 1] && 1 == grid[i][j + 1]) {
+                booleans[i][j + 1] = true;
+                re = maxAreaOfIslandAss(grid, booleans, i, j + 1, re + 1);
+            }
+        }
+        return re;
+    }
+
     public static void main(String[] args) {
         Solution solution = new Solution();
         ListNode p = new ListNode(1);
@@ -1244,9 +1331,24 @@ public class Solution {
         String[] strings = {"5", "2", "C", "D", "+"};
         int[] arr = {1, 2, 3, 4, 5, 6};
         int[] brr = {1, 2, 2, 5, 3, 5};
-        int[] crr = {3, 2, 1};
+        int[][] crr = {{0}, {1}};
 //        System.out.print(solution.rotate(arr,9));
-        solution.titleToNumber("AA");
+        int[][] ins = {
+                {1,1,0,0,0},
+                {1,1,0,0,0},
+                {0,0,0,1,1},
+                {0,0,0,1,1}
+        };
+        int[][] ints = {
+                {0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0},
+                {0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0},
+                {0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0},
+                {0, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0},
+                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0},
+                {0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0},
+                {0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0}};
+        System.out.print(solution.maxAreaOfIsland(crr));
     }
 
 }
