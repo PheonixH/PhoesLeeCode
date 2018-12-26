@@ -1221,7 +1221,7 @@ public class Solution {
                 int max = 0;
                 for (int j = 0; j < grid[0].length; j++) {
                     int m = 0;
-                    while (j < grid[0].length&&grid[0][j] == 1) {
+                    while (j < grid[0].length && grid[0][j] == 1) {
                         m++;
                         j++;
                     }
@@ -1234,7 +1234,7 @@ public class Solution {
             int max = 0;
             for (int i = 0; i < grid.length; i++) {
                 int m = 0;
-                while (i < grid.length&&grid[i][0] == 1) {
+                while (i < grid.length && grid[i][0] == 1) {
                     m++;
                     i++;
                 }
@@ -1255,6 +1255,7 @@ public class Solution {
         }
         return max;
     }
+
     public static int maxAreaOfIslandAss(int[][] grid, boolean[][] booleans, int i, int j, int re) {
         boolean visit = false;
         if (i == 0) {
@@ -1301,6 +1302,115 @@ public class Solution {
         return re;
     }
 
+    //79
+    public boolean exist(char[][] board, String word) {
+        if (word.equals("")) {
+            return true;
+        }
+        if (board == null) {
+            return false;
+        }
+        boolean[][] booleans = new boolean[board.length][board[0].length];
+        char[] chars = word.toCharArray();
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                if (board[i][j] == chars[0]) {
+                    booleans[i][j] = true;
+                    boolean b = existAss(board, chars, booleans, 1, i, j, false);
+                    if (b) {
+                        return b;
+                    } else {
+                        booleans[i][j] = false;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean existAss(char[][] board, char[] chars, boolean[][] booleans, int k, int x, int y, boolean e) {
+        if (k >= chars.length) {
+            return true;
+        }
+        if (!e && x < board.length - 1 && !booleans[x + 1][y]) {
+            if (board[x + 1][y] == chars[k]) {
+                booleans[x + 1][y] = true;
+                e = existAss(board, chars, booleans, k + 1, x + 1, y, e);
+                if (!e) {
+                    booleans[x + 1][y] = false;
+                }
+            }
+
+        }
+        if (!e && x > 0 && !booleans[x - 1][y]) {
+            if (board[x - 1][y] == chars[k]) {
+                booleans[x - 1][y] = true;
+                e = existAss(board, chars, booleans, k + 1, x - 1, y, e);
+                if (!e) {
+                    booleans[x - 1][y] = false;
+                }
+            }
+        }
+        if (!e && y < board[0].length - 1 && !booleans[x][y + 1]) {
+            if (board[x][y + 1] == chars[k]) {
+                booleans[x][y + 1] = true;
+                e = existAss(board, chars, booleans, k + 1, x, y + 1, e);
+                if (!e) {
+                    booleans[x][y + 1] = false;
+                }
+            }
+        }
+        if (!e && y > 0 && !booleans[x][y - 1]) {
+            if (board[x][y - 1] == chars[k]) {
+                booleans[x][y - 1] = true;
+                e = existAss(board, chars, booleans, k + 1, x, y - 1, e);
+                if (!e) {
+                    booleans[x][y - 1] = false;
+                }
+            }
+        }
+        return e;
+    }
+
+    //404
+    public int sumOfLeftLeaves(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        if (root.left == null && root.right == null) {
+            return 0;
+        }
+        Stack<TreeNode> stackl = new Stack<>();
+        Stack<TreeNode> stackr = new Stack<>();
+        stackr.add(root);
+        int res = 0;
+        while (!stackr.empty() || !stackl.empty()) {
+            if (!stackr.empty()) {
+                TreeNode tr = stackr.pop();
+                if (tr.left != null) {
+                    stackl.add(tr.left);
+                }
+                if (tr.right != null) {
+                    stackr.add(tr.right);
+                }
+            }
+            if (!stackl.empty()) {
+                TreeNode tl = stackl.pop();
+                if (tl.left != null) {
+                    stackl.add(tl.left);
+                }
+                if (tl.right != null) {
+                    stackr.add(tl.right);
+                }
+                if (tl.left == null && tl.right == null) {
+                    res = res + tl.val;
+                }
+            }
+        }
+        return res;
+    }
+
+
     public static void main(String[] args) {
         Solution solution = new Solution();
         ListNode p = new ListNode(1);
@@ -1334,10 +1444,10 @@ public class Solution {
         int[][] crr = {{0}, {1}};
 //        System.out.print(solution.rotate(arr,9));
         int[][] ins = {
-                {1,1,0,0,0},
-                {1,1,0,0,0},
-                {0,0,0,1,1},
-                {0,0,0,1,1}
+                {1, 1, 0, 0, 0},
+                {1, 1, 0, 0, 0},
+                {0, 0, 0, 1, 1},
+                {0, 0, 0, 1, 1}
         };
         int[][] ints = {
                 {0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0},
@@ -1348,7 +1458,13 @@ public class Solution {
                 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0},
                 {0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0},
                 {0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0}};
-        System.out.print(solution.maxAreaOfIsland(crr));
+        char[][] board = {
+                {'A', 'B', 'C', 'E'},
+                {'S', 'F', 'C', 'S'},
+                {'A', 'D', 'E', 'E'}
+        };
+        char[][] boards = {};
+        System.out.print(solution.exist(board, "ABCB"));
     }
 
 }
