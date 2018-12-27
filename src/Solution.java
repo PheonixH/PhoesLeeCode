@@ -1410,6 +1410,116 @@ public class Solution {
         return res;
     }
 
+    //455
+    public int findContentChildren(int[] g, int[] s) {
+        if (0 == s.length || 0 == g.length) {
+            return 0;
+        }
+        quickSort(g, 0, g.length - 1);
+        quickSort(s, 0, s.length - 1);
+        int res = 0;
+        int x = 0, y = 0;
+        while (x < g.length && y < s.length) {
+            if (g[x] > s[y]) {
+                x++;
+            } else if (g[x] <= s[y]) {
+                x++;
+                y++;
+                res++;
+            }
+        }
+        return res;
+    }
+
+    public void quickSort(int[] a, int l, int h) {
+        if (l > h) {
+            return;
+        }
+        int b = l, e = h;
+        int k = a[l];
+        while (b < e) {
+            while (b < e && a[e] <= k) {
+                e--;
+            }
+            if (b < e) {
+                a[b] = a[e];
+                b++;
+            }
+            while (a[b] >= k && b < e) {
+                b++;
+            }
+            if (b < e) {
+                a[e] = a[b];
+                e--;
+            }
+        }
+        /*此时i==j*/
+        a[b] = k;
+
+        /*递归调用，把key前面的完成排序*/
+        this.quickSort(a, l, b - 1);
+
+
+        /*递归调用，把key后面的完成排序*/
+        this.quickSort(a, e + 1, h);
+    }
+
+    //876
+    public ListNode middleNode(ListNode head) {
+        if (null == head) {
+            return null;
+        }
+//        if(null == head.next||null == head.next.next){
+//            return null;
+//        }
+        ListNode p = head, q = head;
+        while (q.next != null) {
+            if (q.next != null) {
+                q = q.next;
+            }
+            p = p.next;
+            if (q.next != null) {
+                q = q.next;
+            }
+        }
+        return p;
+    }
+
+    //859
+    public boolean buddyStrings(String A, String B) {
+        if (A == null && B != null) {
+            return false;
+        }
+        if (B == null && A != null) {
+            return false;
+        }
+        char[] charAs = A.toCharArray();
+        char[] charBs = B.toCharArray();
+        if (charAs.length != charBs.length) {
+            return false;
+        }
+        char[] charCs = new char[4];
+        int k = 0;
+        Set<Character> set = new HashSet<>();
+        for (int i = 0; i < charAs.length; i++) {
+            set.add(charAs[i]);
+            if (charAs[i] != charBs[i]) {
+                k++;
+                if (k > 2) {
+                    return false;
+                }
+                charCs[k * 2 - 2] = charAs[i];
+                charCs[k * 2 - 1] = charBs[i];
+            }
+        }
+        if (k == 2 && charCs[0] == charCs[3] && charCs[1] == charCs[2]) {
+            return true;
+        }
+        if (k == 0 && set.size() < charAs.length) {
+            return true;
+        }
+        return false;
+    }
 
     public static void main(String[] args) {
         Solution solution = new Solution();
@@ -1439,8 +1549,8 @@ public class Solution {
         t4.left = t5;
 //        solution.postorderTraversal(t1);
         String[] strings = {"5", "2", "C", "D", "+"};
-        int[] arr = {1, 2, 3, 4, 5, 6};
-        int[] brr = {1, 2, 2, 5, 3, 5};
+        int[] arr = {4, 2, 3, 4, 1, 1};
+        int[] brr = {5, 2, 2, 5, 3, 5};
         int[][] crr = {{0}, {1}};
 //        System.out.print(solution.rotate(arr,9));
         int[][] ins = {
@@ -1464,7 +1574,7 @@ public class Solution {
                 {'A', 'D', 'E', 'E'}
         };
         char[][] boards = {};
-        System.out.print(solution.exist(board, "ABCB"));
+        System.out.print(solution.buddyStrings("aa", "aa"));
     }
 
 }
