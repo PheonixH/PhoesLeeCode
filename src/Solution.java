@@ -1521,6 +1521,233 @@ public class Solution {
         return false;
     }
 
+    //142
+    public ListNode detectCycle(ListNode head) {
+//        //解法一
+//        if(head == null||head.next == null){
+//            return null;
+//        }
+//        Set<ListNode> set = new HashSet<>();
+//        set.add(head);
+//        ListNode p = head;
+//        int i = 1;
+//        while (p.next != null&&set.size() == i){
+//            p = p.next;
+//            set.add(p);
+//            i++;
+//        }
+//        if(p.next == null){
+//            return null;
+//        }
+//        return p;
+
+        //解法二,不占空间
+        if (head == null || head.next == null) {
+            return null;
+        }
+        ListNode p1 = head, p2 = head;
+        boolean hasCycle = false;
+        while (!hasCycle && p2.next != null && p2.next.next != null) {
+            p1 = p1.next;
+            p2 = p2.next.next;
+            if (p1 == p2) {
+                hasCycle = true;
+            }
+        }
+        if (!hasCycle) {
+            return null;
+        }
+        ListNode q = head;
+        while (p1 != q) {
+            p1 = p1.next;
+            q = q.next;
+        }
+        return q;
+    }
+
+    //657
+    public boolean judgeCircle(String moves) {
+        if (moves == "") {
+            return false;
+        }
+        char[] chars = moves.toCharArray();
+        int x = 0;
+        int y = 0;
+        for (char c : chars) {
+            switch (c) {
+                case 'R':
+                    x++;
+                    break;
+                case 'L':
+                    x--;
+                    break;
+                case 'U':
+                    y++;
+                    break;
+                case 'D':
+                    y--;
+                    break;
+            }
+        }
+        if (x == 0 && y == 0) {
+            return true;
+        }
+        return false;
+    }
+
+    //337
+    public int rob(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        return robAss(root, false, 0);
+    }
+
+    //失败
+    public int rob1(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        Stack<TreeNode> s1 = new Stack<>();
+        s1.add(root);
+        Stack<TreeNode> s2 = new Stack<>();
+        List<Integer> list = new ArrayList<>();
+        int s = 0;
+        while (!s1.empty() || !s2.empty()) {
+            s = 0;
+            while (!s1.empty()) {
+                TreeNode t = s1.pop();
+                if (t.left != null) {
+                    s2.push(t.left);
+                }
+                if (t.right != null) {
+                    s2.push(t.right);
+                }
+                s = s + t.val;
+            }
+            list.add(s);
+            s = 0;
+            while (!s2.empty()) {
+                TreeNode t = s2.pop();
+                if (t.left != null) {
+                    s1.push(t.left);
+                }
+                if (t.right != null) {
+                    s1.push(t.right);
+                }
+                s = s + t.val;
+            }
+            list.add(s);
+        }
+        if (list.size() == 1) {
+            return list.get(0);
+        }
+        boolean[] booleans = new boolean[list.size()];
+        for (int i = 1; i < list.size() - 2; i++) {
+            if (list.get(i) >= list.get(i - 1) + list.get(i + 1)) {
+                booleans[i] = true;
+            }
+        }
+        if (list.size() > 1 && list.get(0) > list.get(1)) {
+            booleans[0] = true;
+        }
+        if (list.size() > 1 && list.get(list.size() - 1) > list.get(list.size() - 2)) {
+            booleans[list.size() - 1] = true;
+        }
+        int r1 = 0, r2 = 0, res = 0;
+        for (int i = 0; i < list.size(); i++) {
+            r1 = 0;
+            r2 = 0;
+            while (i + 1 < list.size() && booleans[i + 1] != true) {
+                if (i % 2 == 0) {
+                    r1 = r1 + list.get(i);
+                } else {
+                    r2 = r2 + list.get(i);
+                }
+                i++;
+            }
+            if (i + 1 == list.size()) {
+                if (i % 2 == 0) {
+                    r1 = r1 + list.get(i);
+                } else {
+                    r2 = r2 + list.get(i);
+                }
+            }
+            res = r1 > r2 ? res + r1 : res + r2;
+            i++;
+            if (i < list.size() && booleans[i] == true) {
+                res = res + list.get(i);
+            }
+            i++;
+        }
+        return res;
+    }
+
+    //超时
+    public int robAss(TreeNode root, boolean b, int s) {
+        int sl = 0;
+        int sr = 0;
+        if (!b) {
+            sl = sl + root.val;
+        }
+        if (root.left != null) {
+            sl = sl + robAss(root.left, true, sl);
+        }
+        if (root.right != null) {
+            sl = sl + robAss(root.right, true, sl);
+        }
+        if (root.left != null) {
+            sr = sr + robAss(root.left, false, sr);
+        }
+        if (root.right != null) {
+            sr = sr + robAss(root.right, false, sr);
+        }
+        return sl > sr ? sl : sr;
+    }
+
+    //成功
+    public int robAss2(TreeNode root) {
+        int a = 0;
+        int b = root.val;
+        if (root.left == null && root.right == null) {
+            return root.val;
+        }
+        if (root.left != null) {
+            a = a + robAss2(root.left);
+            if (root.left.left != null) {
+                b = b + robAss2(root.left.left);
+            }
+            if (root.left.right != null) {
+                b = b + robAss2(root.left.right);
+            }
+        }
+        if (root.right != null) {
+            a = a + robAss2(root.right);
+            if (root.right.left != null) {
+                b = b + robAss2(root.right.left);
+            }
+            if (root.right.right != null) {
+                b = b + robAss2(root.right.right);
+            }
+        }
+        return a > b ? a : b;
+//        if(root == null) {
+//            return 0;
+//        }
+//        int s0 = 0;
+//        int s1 = root.val;
+//
+//        s0 = robAss2(root.left) + robAss2(root.right);
+//
+//        if(root.left != null) {
+//            s1 += robAss2(root.left.left) + robAss2(root.left.right);
+//        }
+//        if(root.right != null) {
+//            s1 += robAss2(root.right.left) + robAss2(root.right.right);
+//        }
+//        return Math.max(s0,s1);
+    }
+
     public static void main(String[] args) {
         Solution solution = new Solution();
         ListNode p = new ListNode(1);
@@ -1538,15 +1765,18 @@ public class Solution {
         p4.next = p5;
         p5.next = p6;
         p6.next = p7;
-        TreeNode t1 = new TreeNode(1);
-        TreeNode t2 = new TreeNode(2);
+        p7.next = p2;
+        TreeNode t = new TreeNode(3);
+        TreeNode t1 = new TreeNode(2);
+        TreeNode t2 = new TreeNode(3);
         TreeNode t3 = new TreeNode(3);
-        t1.left = t2;
+        TreeNode t4 = new TreeNode(1);
+        TreeNode t5 = new TreeNode(3);
+        t.left = t1;
+        t.right = t2;
         t1.right = t3;
-        TreeNode t4 = new TreeNode(4);
-        TreeNode t5 = new TreeNode(5);
-        t3.left = t4;
-        t4.left = t5;
+        t2.right = t4;
+//        t3.right = t5;
 //        solution.postorderTraversal(t1);
         String[] strings = {"5", "2", "C", "D", "+"};
         int[] arr = {4, 2, 3, 4, 1, 1};
@@ -1574,7 +1804,7 @@ public class Solution {
                 {'A', 'D', 'E', 'E'}
         };
         char[][] boards = {};
-        System.out.print(solution.buddyStrings("aa", "aa"));
+        System.out.print(solution.rob(t));
     }
 
 }
