@@ -565,6 +565,42 @@ public class SolitionUbuntu {
     }
 
 
+    //258
+    public int addDigits(int num) {
+        if (num == 0) {
+            return 0;
+        }
+        int m = num % 9;
+        if (m != 0) {
+            return m;
+        }
+        return 9;
+    }
+
+    //260
+    public int[] singleNumber(int[] nums) {
+        int[] re = new int[2];
+        int sum = nums[0];
+
+        for (int i = 1; i < nums.length; i++) {
+            sum ^= nums[i];
+        }
+
+        int flag = sum & (~(sum - 1));
+
+        for (int num : nums) {
+            if ((num & flag) == 0) {
+                re[0] ^= num;
+            } else {
+                re[1] ^= num;
+            }
+        }
+
+        return re;
+
+    }
+
+
     public static void main(String[] args) {
         TreeNode root = new TreeNode(1);
         TreeNode r1 = new TreeNode(2);
