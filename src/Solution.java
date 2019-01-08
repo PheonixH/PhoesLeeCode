@@ -1748,6 +1748,236 @@ public class Solution {
 //        return Math.max(s0,s1);
     }
 
+    //679
+    public boolean judgePoint24(int[] nums) {
+        List<Float> list = new LinkedList<>();
+        list.add((float) nums[0]);
+        list.add((float) nums[1]);
+        list.add((float) nums[2]);
+        list.add((float) nums[3]);
+        boolean res = judgePoint24Ass(list);
+        return res;
+    }
+
+    public boolean judgePoint24Ass(List<Float> list) {
+        if (list.size() == 2) {
+            for (int i = 0; i < 6; i++) {
+                if (Math.abs(24.0 - judgePoint24Ass(list.get(0), list.get(1), i)) < 0.1) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        boolean b = false;
+        for (int i = 0; i < list.size() && !b; i++) {
+            for (int j = i + 1; j < list.size() && !b; j++) {
+                for (int s = 0; s < 6 && !b; s++) {
+                    List<Float> list1 = new ArrayList<>();
+                    list1.add(judgePoint24Ass(list.get(i), list.get(j), s));
+                    int k = 0;
+                    while (k < list.size()) {
+                        if (k != i && k != j) {
+                            list1.add(list.get(k));
+                        }
+                        k++;
+                    }
+                    b = judgePoint24Ass(list1);
+                }
+            }
+        }
+        return b;
+    }
+
+    public float judgePoint24Ass(float x, float y, int which) {
+        switch (which) {
+            case 0:
+                return x + y;
+            case 1:
+                return x - y;
+            case 2:
+                return x * y;
+            case 3:
+                return x / y;
+            case 4:
+                return y / x;
+            case 5:
+                return y - x;
+        }
+        return 0;
+    }
+
+    //464
+    public boolean canIWin(int maxChoosableInteger, int desiredTotal) {
+        //如果目标数<=选择数,一次就赢,返回true
+        if (desiredTotal <= maxChoosableInteger) {
+            return true;
+        }
+        //获得总数之和,选择数总数比目标数小,结果不可达,返回false
+        if (maxChoosableInteger * (maxChoosableInteger + 1) / 2 < desiredTotal) {
+            return false;
+        }
+        Boolean[] dp = new Boolean[1 << maxChoosableInteger];
+        return doResolve(0, maxChoosableInteger, desiredTotal, dp);
+    }
+
+    private boolean doResolve(int flag, int chooseArea, int total, Boolean[] dp) {
+        if (total <= 0) {
+            return false;
+        }
+        //dp代表已经使用了哪个数字情况下是否能赢
+        if (dp[flag] == null) {
+            dp[flag] = false;
+            int comp = 1;
+            for (int i = 1; i <= chooseArea; i++) {
+                int used = flag | comp;
+                //如果,我能用这个数,且用了这个数对方赢不了
+                if (used != flag && !doResolve(used, chooseArea, total - i, dp)) {
+                    dp[flag] = true;
+                    break;
+                }
+                comp <<= 1;
+            }
+        }
+        return dp[flag];
+    }
+
+    //955
+    public int minDeletionSize(String[] A) {
+        List<List<Character>> list = new ArrayList<>();
+        for (String str : A) {
+            List<Character> list1 = new LinkedList<>();
+            char[] chars = str.toCharArray();
+            for (char c : chars) {
+                list1.add(c);
+            }
+            list.add(list1);
+        }
+        int res = 0;
+        return minDeletionSizeAss(res, list);
+    }
+
+    public int minDeletionSizeAss(int res, List<List<Character>> list) {
+        for (int i = 0; i < list.size() - 1; i++) {
+            int k = isRight(list.get(i), list.get(i + 1));
+            if (k != -1) {
+                for (int j = 0; j < list.size(); j++) {
+                    list.get(j).remove(k);
+                }
+                res = minDeletionSizeAss(res + 1, list);
+                break;
+            }
+        }
+        return res;
+    }
+
+    public int isRight(List<Character> list1, List<Character> list2) {
+        int alen = list1.size();
+//        int blen = b.length;
+        int i = 0;
+        while (i < alen) {
+            if (list1.get(i) < list2.get(i)) {
+                return -1;
+            } else if (list1.get(i) > list2.get(i)) {
+                return i;
+            }
+            i++;
+        }
+        return -1;
+//        if(i >= alen){
+//            return -1;
+//        }
+//        return i;
+    }
+
+    //956 - 暴力
+    public int tallestBillboard(int[] rods) {
+        int total = 0;
+        for (int i : rods) {
+            total += i;
+        }
+        return tallestBillboardAss(rods, 0, 0, 0, total, 0);
+    }
+
+    public int tallestBillboardAss(int[] rods, int left, int right, int i, int total, int re) {
+        if (i == rods.length && left == right) {
+            return left;
+        } else if (i == rods.length && left != right) {
+            return 0;
+        } else if (Math.abs(left - right) > total) {
+            return 0;
+        } else if (re > (left + right + total) / 2) {
+            return 0;
+        }
+        int b = tallestBillboardAss(rods, left + rods[i], right, i + 1, total - rods[i], re);
+        re = b > re ? b : re;
+        int c = tallestBillboardAss(rods, left, right + rods[i], i + 1, total - rods[i], re);
+        re = re > c ? re : c;
+        int a = tallestBillboardAss(rods, left, right, i + 1, total - rods[i], re);
+        return Math.max(re, a);
+    }
+
+    //956 - 动态规划
+    public int tallestBillboard2(int[] rods) {
+        int len = rods.length;
+        int[][] dp = new int[len + 1][5001];
+        for (int i = 0; i < len + 1; i++) {
+            for (int j = 0; j < dp[0].length; j++) {
+                dp[i][j] = -5001;
+            }
+        }
+        int sum = 0;
+        dp[0][0] = 0;
+        for (int i = 1; i <= len; i++) {
+            sum += rods[i - 1];
+            for (int j = 0; j <= sum; j++) {
+                dp[i][j] = Math.max(dp[i - 1][j], dp[i][j]);
+                if (j + rods[i - 1] <= sum) {
+                    dp[i][j + rods[i - 1]] = Math.max(dp[i - 1][j], dp[i][j + rods[i - 1]]);
+                }
+
+                dp[i][Math.abs(j - rods[i - 1])] = Math.max(dp[i][Math.abs(j - rods[i - 1])], dp[i - 1][j] + Math.min(j, rods[i - 1]));
+            }
+        }
+        return dp[len][0];
+    }
+
+    //605
+    public boolean canPlaceFlowers(int[] flowerbed, int n) {
+        if (n > flowerbed.length / 2 + 1) {
+            return false;
+        } else if (flowerbed.length == 0) {
+            return false;
+        } else if (flowerbed.length == 1) {
+            return n == 0 || (n == 1 && flowerbed[0] == 0);
+        }
+        for (int i = 0; i < flowerbed.length; i++) {
+            if (i == 0) {
+                if (flowerbed[1] == 0 && flowerbed[i] == 0) {
+                    flowerbed[0] = 1;
+                    n--;
+                }
+            } else if (i == flowerbed.length - 1) {
+                if (flowerbed[flowerbed.length - 2] == 0 && flowerbed[i] == 0) {
+                    flowerbed[flowerbed.length - 1] = 1;
+                    n--;
+                }
+            } else {
+                if (flowerbed[i - 1] == 0 && flowerbed[i + 1] == 0 && flowerbed[i] == 0) {
+                    flowerbed[i] = 1;
+                    n--;
+                }
+            }
+            if (n == 0) {
+                return true;
+            }
+        }
+        if (n <= 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public static void main(String[] args) {
         Solution solution = new Solution();
         ListNode p = new ListNode(1);
@@ -1779,7 +2009,7 @@ public class Solution {
 //        t3.right = t5;
 //        solution.postorderTraversal(t1);
         String[] strings = {"5", "2", "C", "D", "+"};
-        int[] arr = {4, 2, 3, 4, 1, 1};
+        int[] arr = {1, 2, 3, 6};
         int[] brr = {5, 2, 2, 5, 3, 5};
         int[][] crr = {{0}, {1}};
 //        System.out.print(solution.rotate(arr,9));
@@ -1804,7 +2034,7 @@ public class Solution {
                 {'A', 'D', 'E', 'E'}
         };
         char[][] boards = {};
-        System.out.print(solution.rob(t));
+        System.out.print(solution.tallestBillboard(arr));
     }
 
 }
