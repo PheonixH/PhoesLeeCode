@@ -1978,6 +1978,81 @@ public class Solution {
         }
     }
 
+    //389 - map:低效
+    public char findTheDifference1(String s, String t) {
+        if (s.equals("")) {
+            return t.charAt(0);
+        }
+        Map<Character, Integer> map = new HashMap<>();
+        char[] chs = s.toCharArray();
+        char[] cht = t.toCharArray();
+        for (char c : chs) {
+            if (!map.containsKey(c)) {
+                map.put(c, 1);
+            } else {
+                map.put(c, map.get(c) + 1);
+            }
+        }
+        for (char c : cht) {
+            if (!map.containsKey(c)) {
+                return c;
+            } else {
+                int i = map.get(c) - 1;
+                if (i < 0) {
+                    return c;
+                }
+                map.put(c, i);
+            }
+        }
+        return s.charAt(0);
+    }
+
+    //389 - 异或：高效
+    public char findTheDifference(String s, String t) {
+        char ci = t.charAt(0);
+        for (int i = 0; i < s.length(); ++i) {
+            ci ^= s.charAt(i);
+            ci ^= t.charAt(i + 1);
+        }
+        return ci;
+    }
+
+    //963
+    public double minAreaFreeRect(int[][] points) {
+        Map<String, List<int[]>> map = new HashMap<>();
+        double result = 0.0;
+        boolean bb = false;
+        for (int i = 0; i < points.length; i++) {
+            for (int j = i + 1; j < points.length; j++) {
+                double[] ints = new double[2];
+                double len = Math.sqrt(Math.pow(points[i][0] - points[j][0], 2) + Math.pow(points[i][1] - points[j][1], 2));
+                ints[0] = ((double) (points[i][0] + points[j][0])) / 2;
+                ints[1] = ((double) (points[i][1] + points[j][1])) / 2;
+                String str = "" + ints[0] + ints[1] + len;
+                if (map.containsKey(str)) {
+                    List<int[]> list = map.get(str);
+                    for (int k = 0; k < list.size(); k++) {
+                        double a = Math.sqrt(Math.pow(list.get(k)[0] - points[i][0], 2) + Math.pow(list.get(k)[1] - points[i][1], 2));
+                        double b = Math.sqrt(Math.pow(list.get(k)[0] - points[j][0], 2) + Math.pow(list.get(k)[1] - points[j][1], 2));
+                        double area = a * b;
+                        if (!bb) {
+                            result = area;
+                            bb = true;
+                        } else {
+                            result = result > area ? area : result;
+                        }
+                    }
+                    list.add(points[i]);
+                } else {
+                    List<int[]> list = new LinkedList<>();
+                    list.add(points[i]);
+                    map.put(str, list);
+                }
+            }
+        }
+        return result;
+    }
+
     public static void main(String[] args) {
         Solution solution = new Solution();
         ListNode p = new ListNode(1);
@@ -2011,7 +2086,7 @@ public class Solution {
         String[] strings = {"5", "2", "C", "D", "+"};
         int[] arr = {1, 2, 3, 6};
         int[] brr = {5, 2, 2, 5, 3, 5};
-        int[][] crr = {{0}, {1}};
+        int[][] crr = {{3, 1}, {1, 1}, {0, 1}, {2, 1}, {3, 3}, {3, 2}, {0, 2}, {2, 3}};
 //        System.out.print(solution.rotate(arr,9));
         int[][] ins = {
                 {1, 1, 0, 0, 0},
@@ -2034,7 +2109,7 @@ public class Solution {
                 {'A', 'D', 'E', 'E'}
         };
         char[][] boards = {};
-        System.out.print(solution.tallestBillboard(arr));
+        System.out.print(solution.minAreaFreeRect(crr));
     }
 
 }
