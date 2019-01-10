@@ -2053,6 +2053,74 @@ public class Solution {
         return result;
     }
 
+
+    //783
+    public int minDiffInBST(TreeNode root) {
+        if (root == null) {
+            return 0;
+        } else if (root.left == null && root.right == null) {
+            return 0;
+        }
+        List<Integer> list = new LinkedList<Integer>();
+        list.add(root.val);
+        minDiffInBSTAss(root, list);
+        Collections.sort(list);
+        int res = list.get(1) - list.get(0);
+        for (int i = 1; i < list.size() - 1; i++) {
+            res = res < list.get(i + 1) - list.get(i) ? res : list.get(i + 1) - list.get(i);
+        }
+        return res;
+    }
+
+    public void minDiffInBSTAss(TreeNode root, List<Integer> list) {
+        if (root.left == null && root.right == null) {
+            return;
+        }
+        if (root.left != null) {
+            list.add(root.left.val);
+            minDiffInBSTAss(root.left, list);
+        }
+        if (root.right != null) {
+            list.add(root.right.val);
+            minDiffInBSTAss(root.right, list);
+        }
+        return;
+    }
+
+    //530
+    public int getMinimumDifference(TreeNode root) {
+        if (root == null || (root.left == null && root.right == null)) {
+            return 0;
+        }
+        Stack<TreeNode> stack = new Stack();
+        int res = 0, x = 0;
+        boolean y = false, resy = false;
+        while (root != null || !stack.empty()) {
+            while (root != null) {
+                stack.push(root);
+                root = root.left;
+            }
+            if (!stack.empty()) {
+                root = stack.pop();
+                if (!y) {
+                    x = root.val;
+                    y = true;
+                } else if (!resy) {
+                    res = root.val - x;
+                    x = root.val;
+                    resy = true;
+                } else {
+                    x = root.val - x;
+                    res = res < x ? res : x;
+                    x = root.val;
+                }
+                root = root.right;
+            }
+        }
+        return res;
+    }
+
+
     public static void main(String[] args) {
         Solution solution = new Solution();
         ListNode p = new ListNode(1);
