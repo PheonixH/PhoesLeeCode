@@ -2120,6 +2120,124 @@ public class Solution {
         return res;
     }
 
+    //557 -- 低效 -- StringBuffer: append() 的效率远高于 String: +
+    public String reverseWords(String s) {
+        String[] strings = s.split(" ");
+        StringBuffer res = new StringBuffer();
+        for (int j = 0; j < strings.length; j++) {
+            String re = "";
+            for (int i = strings[j].length() - 1; i >= 0; i--) {
+                re = re + strings[j].charAt(i);
+            }
+            if (j == strings.length - 1) {
+                res.append(re);
+            } else {
+                res.append(re + " ");
+            }
+        }
+        return res.toString();
+    }
+
+    //557 -- 高效
+    public String reverseWords0(String s) {
+        StringBuilder res = new StringBuilder();
+        String[] split = s.split(" ");
+        for (int i = 0; i < split.length; i++) {
+            String str = split[i];
+            char[] chars = str.toCharArray();
+            int front = 0;
+            int tail = chars.length - 1;
+            for (int j = 0; j < chars.length; j++) {
+                if (front > tail) {
+                    break;
+                }
+                char temp = chars[front];
+                chars[front] = chars[tail];
+                chars[tail] = temp;
+                front++;
+                tail--;
+            }
+            res.append(new String(chars) + (i == split.length - 1 ? "" : " "));
+        }
+        return res.toString();
+    }
+
+    //316
+    public String removeDuplicateLetters0(String s) {
+        if (s.equals("")) {
+            return "";
+        }
+        int[] ints = new int[26];
+        for (int i = 0; i < 26; i++) {
+            ints[i] = -1;
+        }
+        List<Character> list = new LinkedList<>();
+        for (int i = 0; i < s.length(); i++) {
+            int x = s.charAt(i) - 'a';
+            if (ints[x] != -1) {
+                int j = ints[x];
+                if (list.size() == j + 1 || list.get(j) - list.get(j + 1) < 0) {
+                    continue;
+                } else {
+                    list.remove(j);
+                    ints[x] = list.size();
+                    list.add(s.charAt(i));
+                }
+            } else {
+                ints[x] = list.size();
+                list.add(s.charAt(i));
+            }
+        }
+        StringBuffer str = new StringBuffer();
+        for (int i = 0; i < list.size(); i++) {
+            str.append(list.get(i));
+        }
+        return str.toString();
+    }
+
+    //316
+    public String removeDuplicateLetters(String s) {
+        //计算26字母数量
+        int[] charsCount = new int[26];
+        //标记字母是否已经入栈
+        boolean[] visited = new boolean[26];
+        int len = s.length();
+        char[] sChars = s.toCharArray();
+        for (char c : sChars) {
+            charsCount[c - 'a']++;
+        }
+        Stack<Character> stack = new Stack<>();
+        //最终字符的长度
+        int index = 0;
+        for (int count : charsCount) {
+            if (count > 0) {
+                index++;
+            }
+        }
+        char[] res = new char[index];
+        for (int i = 0; i < len; i++) {
+            char c = s.charAt(i);
+            //有小字符的且满足其前面的字符在小字符后还有同样字符的，则出栈
+            while (!stack.isEmpty() && c < stack.peek()
+                    && charsCount[stack.peek() - 'a'] > 1 && !visited[c - 'a']) {
+                Character pop = stack.pop();
+                visited[pop - 'a'] = false;
+                charsCount[pop - 'a']--;
+            }
+            if (visited[c - 'a']) {
+                //重复的字符根据游标往后移动，数量减一
+                charsCount[c - 'a']--;
+                continue;
+            }
+            stack.push(c);
+            visited[c - 'a'] = true;
+        }
+
+        while (!stack.isEmpty()) {
+            res[--index] = stack.pop();
+        }
+        return String.valueOf(res);
+    }
 
     public static void main(String[] args) {
         Solution solution = new Solution();
@@ -2177,7 +2295,7 @@ public class Solution {
                 {'A', 'D', 'E', 'E'}
         };
         char[][] boards = {};
-        System.out.print(solution.minAreaFreeRect(crr));
+        System.out.print(solution.removeDuplicateLetters("cbacdcbc"));
     }
 
 }
