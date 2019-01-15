@@ -1,4 +1,5 @@
 import java.util.*;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import static java.lang.Math.log10;
 
@@ -2239,6 +2240,201 @@ public class Solution {
         return String.valueOf(res);
     }
 
+    //450
+    public TreeNode deleteNode(TreeNode root, int key) {
+        if (root == null) {
+            return root;
+        }
+        if (root.val == key) {
+            if (root.left == null && root.right == null) {
+                root = null;
+                return root;
+            } else if (root.left != null) {
+                TreeNode p = root;
+                TreeNode q = root.left;
+                boolean b = false;
+                while (q.right != null) {
+                    p = q;
+                    q = q.right;
+                    b = true;
+                }
+                if (b) {
+                    p.right = q.left;
+                } else {
+                    p.left = q.left;
+                }
+                root.val = q.val;
+                return root;
+            } else {
+                root = root.right;
+                return root;
+            }
+        } else if (root.val > key) {
+            root.left = deleteNode(root.left, key);
+        } else if (root.val < key) {
+            root.right = deleteNode(root.right, key);
+        }
+        return root;
+    }
+
+    //864:DFS:failed
+    public int shortestPathAllKeys1(String[] grid) {
+        int res = 0;
+        boolean[] bls = new boolean[6];
+        char[][] chars = new char[grid.length][grid[0].length()];
+        for (int i = 0; i < grid.length; i++) {
+            chars[i] = grid[i].toCharArray();
+        }
+        int bx = 0, by = 0;
+        int end = 0;
+        for (int i = 0; i < chars.length; i++) {
+            for (int j = 0; j < chars[0].length; j++) {
+                if (chars[i][j] == '@') {
+                    bx = i;
+                    by = j;
+                    chars[i][j] = '.';
+//                    break;
+                } else if (chars[i][j] >= 'a' && chars[i][j] <= 'f') {
+                    end++;
+                }
+            }
+        }
+        int[] have = new int[2];
+        have[0] = 0;
+        have[1] = end;
+        res = shortestPathAllKeysDFS(chars, bx, by, bls, have, 0, 0);
+        return have[0] != have[1] ? -1 : res;
+    }
+
+    //from 0:起点, 1:左, 2:右, 3:上,4:下
+    public int shortestPathAllKeysDFS(char[][] chars, int x, int y, boolean[] keys, int[] have, int walks, int from) {
+        if (have[0] == have[1]) {
+            return walks;
+        } else {
+            int h = have[0];
+            if (y > 0 && chars[x][y - 1] != '#' && from != 1 && have[0] != have[1]) {
+                walks = shortestPathAllKeysDFSAss(chars, x, y - 1, keys, have, walks, 2);
+            }
+            if (y < chars[0].length - 1 && chars[x][y + 1] != '#' && from != 2 && have[0] != have[1]) {
+                walks = shortestPathAllKeysDFSAss(chars, x, y + 1, keys, have, walks, 1);
+            }
+            if (x > 0 && chars[x - 1][y] != '#' && from != 3 && have[0] != have[1]) {
+                walks = shortestPathAllKeysDFSAss(chars, x - 1, y, keys, have, walks, 4);
+            }
+            if (x < chars.length - 1 && chars[x + 1][y] != '#' && from != 4 && have[0] != have[1]) {
+                walks = shortestPathAllKeysDFSAss(chars, x + 1, y, keys, have, walks, 3);
+            }
+//            if (have[0] != h) {
+//                return walks+1;
+//            }
+            return walks;
+        }
+    }
+
+    public int shortestPathAllKeysDFSAss(char[][] chars, int x, int y, boolean[] keys, int[] have, int walks, int from) {
+        if (chars[x][y] != '.') {
+            if (chars[x][y] >= 'a') {
+                keys[chars[x][y] - 'a'] = true;
+                have[0]++;
+                walks = shortestPathAllKeysDFS(chars, x, y, keys, have, walks + 1, from);
+            } else if (keys[chars[x][y] - 'A']) {
+                walks = shortestPathAllKeysDFS(chars, x, y, keys, have, walks + 1, from);
+            } else {
+                return walks;
+            }
+        } else {
+            walks = shortestPathAllKeysDFS(chars, x, y, keys, have, walks + 1, from);
+        }
+        return have[0] == have[1] ? walks : walks + 1;
+    }
+
+    //864:BFS
+    public int shortestPathAllKeys(String[] grid) {
+        int m = grid.length;
+        int n = grid[0].length();
+        int totalkeys = 0;
+        int havekeys = 0;
+        int[][][] status = new int[m][n][64];
+        char[][] chars = new char[m][n];
+        for (int i = 0; i < m; i++) {
+            chars[i] = grid[i].toCharArray();
+        }
+        int[] keys = new int[6];
+        int x = 0, y = 0;
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                char c = chars[i][j];
+                if (c == '@') {
+                    x = i;
+                    y = j;
+                } else if (c >= 'a' && c <= 'f') {
+                    keys[c - 'a'] = 1;
+                    totalkeys = totalkeys | (1 << c - 'a');
+                }
+            }
+        }
+
+        Deque<int[]> deque = new ArrayDeque();
+        int[] point = new int[3];
+        point[0] = x;
+        point[1] = y;
+        point[2] = havekeys;
+        deque.add(point);
+        int[][] dirs = new int[4][2];
+        dirs[0][0] = 0;
+        dirs[0][1] = 1;
+        dirs[1][0] = 0;
+        dirs[1][1] = -1;
+        dirs[2][0] = 1;
+        dirs[2][1] = 0;
+        dirs[3][0] = -1;
+        dirs[3][1] = 0;
+        int step = 0;
+        while (!deque.isEmpty()) {
+            int nq = deque.size();
+            while (nq > 0) {
+                nq--;
+                int[] p = deque.pop();
+                havekeys = p[2];
+                if (havekeys == totalkeys) {
+                    return step;
+                }
+                for (int i = 0; i < 4; i++) {
+                    x = p[0] + dirs[i][0];
+                    y = p[1] + dirs[i][1];
+                    havekeys = p[2];
+                    if (x < 0 || x >= m || y < 0 || y >= n) {
+                        continue;
+                    }
+                    char c = chars[x][y];
+                    if (c == '#') {
+                        continue;
+                    }
+                    if (c >= 'A' && c <= 'F') {
+                        if ((havekeys & (1 << (c - 'A'))) == 0) {
+                            continue;
+                        }
+                    }
+                    if (c >= 'a' && c <= 'f') {
+                        keys[c - 'a'] = 2;
+                        havekeys = havekeys | (1 << c - 'a');
+                    }
+                    if (status[x][y][havekeys] == 1) {
+                        continue;
+                    }
+                    int[] newpoint = new int[3];
+                    newpoint[0] = x;
+                    newpoint[1] = y;
+                    newpoint[2] = havekeys;
+                    deque.add(newpoint);
+                    status[x][y][havekeys] = 1;
+                }
+            }
+            step = step + 1;
+        }
+        return -1;
+    }
+
     public static void main(String[] args) {
         Solution solution = new Solution();
         ListNode p = new ListNode(1);
@@ -2257,19 +2453,29 @@ public class Solution {
         p5.next = p6;
         p6.next = p7;
         p7.next = p2;
-        TreeNode t = new TreeNode(3);
-        TreeNode t1 = new TreeNode(2);
-        TreeNode t2 = new TreeNode(3);
-        TreeNode t3 = new TreeNode(3);
-        TreeNode t4 = new TreeNode(1);
-        TreeNode t5 = new TreeNode(3);
+        TreeNode t = new TreeNode(5);
+        TreeNode t1 = new TreeNode(3);
+        TreeNode t2 = new TreeNode(6);
+        TreeNode t3 = new TreeNode(2);
+        TreeNode t4 = new TreeNode(4);
+        TreeNode t5 = new TreeNode(7);
         t.left = t1;
         t.right = t2;
-        t1.right = t3;
-        t2.right = t4;
-//        t3.right = t5;
-//        solution.postorderTraversal(t1);
-        String[] strings = {"5", "2", "C", "D", "+"};
+        t1.left = t3;
+        t1.right = t4;
+        t2.right = t5;
+        solution.postorderTraversal(t1);
+        String[] strings = {".#@..", "#.##.", ".#...", "A...#", ".#.#a"};
+        String[] strings2 = {".#.#..#.b...............#.#..#", ".#..##.........#......d.......", "..#...e.#.##....##.....#.....#",
+                "..#..#.#.#.##..........#.....#", "...#...##....#.....#..........", "#........###....#..#.........f",
+                "...............#......#...#...", "..........##.#...#.E..#......#", ".#...##...#.##.D....##..#.....",
+                ".......#...........#....#..##.", "...#..........##.....#.......#", ".F#....#......#...............",
+                "..##.#.#.....#..##...#.#.....#", ".............##..##..#.#......", "#..@..#.#.......#..........#..",
+                ".........##..................#", ".#.......##...##..#.......#...", ".......#.#...A.a......#.##.#..",
+                ".......#......##..#.###.#.....", ".##.#....##...#.#.....#.#.....", ".#.....#.c..#.....#......#..##",
+                "##.....##........B.#.......#.#", ".....#...#....#..##...........", "#.#.##.#....#.#...............",
+                ".#.#..#.####............#.....", "#.#..........###.#........#...", "..#..#.........#.......#..#.##",
+                "..#..#C#...............#......", ".........#.##.##......#.#.....", "..#........##.#..##.#.....#.#."};
         int[] arr = {1, 2, 3, 6};
         int[] brr = {5, 2, 2, 5, 3, 5};
         int[][] crr = {{3, 1}, {1, 1}, {0, 1}, {2, 1}, {3, 3}, {3, 2}, {0, 2}, {2, 3}};
@@ -2295,8 +2501,7 @@ public class Solution {
                 {'A', 'D', 'E', 'E'}
         };
         char[][] boards = {};
-        System.out.print(solution.removeDuplicateLetters("cbacdcbc"));
+        System.out.print(solution.shortestPathAllKeys(strings2));
     }
 
 }
-
