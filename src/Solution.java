@@ -1,7 +1,11 @@
+import datestruct.ListNode;
+import datestruct.Node;
+import datestruct.TreeNode;
+
 import java.util.*;
-import java.util.concurrent.LinkedBlockingQueue;
 
 import static java.lang.Math.log10;
+import static java.lang.Math.tan;
 
 /**
  * @ProjectName: LeeCode
@@ -1528,9 +1532,9 @@ public class Solution {
 //        if(head == null||head.next == null){
 //            return null;
 //        }
-//        Set<ListNode> set = new HashSet<>();
+//        Set<datestruct.ListNode> set = new HashSet<>();
 //        set.add(head);
-//        ListNode p = head;
+//        datestruct.ListNode p = head;
 //        int i = 1;
 //        while (p.next != null&&set.size() == i){
 //            p = p.next;
@@ -2435,6 +2439,57 @@ public class Solution {
         return -1;
     }
 
+    //507: ****  求约数的好解法 ****
+    public boolean checkPerfectNumber(int num) {
+        if (num == 0) {
+            return false;
+        }
+        List<Integer> list = new ArrayList<>();
+        for (int i = 1; i * i <= num; i++) {
+            if (num % i == 0) {
+                list.add(i);
+                if (num != i * i) {
+                    list.add(num / i);
+                }
+            }
+        }
+        int res = 0;
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i) != num) {
+                res += list.get(i);
+            }
+        }
+        return res == num;
+    }
+
+    //857: -- 2285ms -- 0%
+    public double mincostToHireWorkers(int[] quality, int[] wage, int K) {
+        Worker ws = new Worker();
+        for (int i = 0; i < wage.length; i++) {
+            ws.add(quality[i], wage[i]);
+        }
+        ws.sortByPay(2);
+        double res = 0.0;
+        double pay = ws.qua.get(K - 1).get(2);
+        int totalq = 0;
+        Worker wuse = new Worker();
+        for (int i = 0; i < K; i++) {
+            totalq += ws.qua.get(i).get(0);
+            wuse.add(ws.qua.get(i));
+        }
+        res = pay * (double) totalq;
+        for (int i = K; i < wage.length; i++) {
+            double r = 0;
+            wuse.sortByPay(0);
+            wuse.qua.remove(wuse.qua.size() - 1);
+            wuse.add(ws.qua.get(i));
+            pay = ws.qua.get(i).get(2);
+            r = (double) wuse.sum(K) * pay;
+            res = res < r ? res : r;
+        }
+        return res;
+    }
+
     public static void main(String[] args) {
         Solution solution = new Solution();
         ListNode p = new ListNode(1);
@@ -2476,8 +2531,8 @@ public class Solution {
                 "##.....##........B.#.......#.#", ".....#...#....#..##...........", "#.#.##.#....#.#...............",
                 ".#.#..#.####............#.....", "#.#..........###.#........#...", "..#..#.........#.......#..#.##",
                 "..#..#C#...............#......", ".........#.##.##......#.#.....", "..#........##.#..##.#.....#.#."};
-        int[] arr = {1, 2, 3, 6};
-        int[] brr = {5, 2, 2, 5, 3, 5};
+        int[] arr = {3, 1, 10, 10, 1};
+        int[] brr = {4, 8, 2, 2, 7};
         int[][] crr = {{3, 1}, {1, 1}, {0, 1}, {2, 1}, {3, 3}, {3, 2}, {0, 2}, {2, 3}};
 //        System.out.print(solution.rotate(arr,9));
         int[][] ins = {
@@ -2501,7 +2556,50 @@ public class Solution {
                 {'A', 'D', 'E', 'E'}
         };
         char[][] boards = {};
-        System.out.print(solution.shortestPathAllKeys(strings2));
+        System.out.print(solution.mincostToHireWorkers(arr, brr, 3));
     }
 
+}
+
+class Worker {
+    //    List<List<Double>> pay;
+    List<List<Double>> qua;
+
+    public Worker() {
+//        this.pay = new LinkedList<>();
+        this.qua = new ArrayList<>();
+    }
+
+    public void add(int qual, int wage) {
+        List<Double> list = new ArrayList<>();
+        list.add((double) qual);
+        list.add((double) wage);
+        list.add((double) wage / (double) qual);
+        qua.add(list);
+    }
+
+    public void add(List<Double> l) {
+        qua.add(l);
+    }
+
+    public void sortByPay(int key) {
+        Collections.sort(qua, new Comparator<List<Double>>() {
+            @Override
+            public int compare(List<Double> o1, List<Double> o2) {
+                if (o1.get(key) >= o2.get(key)) {
+                    return 1;
+                } else {
+                    return -1;
+                }
+            }
+        });
+    }
+
+    public int sum(int K) {
+        int totalq = 0;
+        for (int i = 0; i < K; i++) {
+            totalq += this.qua.get(i).get(0);
+        }
+        return totalq;
+    }
 }
