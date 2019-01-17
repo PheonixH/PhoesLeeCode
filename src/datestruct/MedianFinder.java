@@ -4,7 +4,7 @@ package datestruct;
  * @ProjectName: PhoesLeeCode
  * @Package: PACKAGE_NAME
  * @ClassName: datestruct.MedianFinder
- * @Description: 数据流中位数
+ * @Description: 295 数据流中位数
  * @Author: Pheonix
  * @CreateDate: 2019/1/16 10:13
  * @Version: 1.0

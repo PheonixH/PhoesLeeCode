@@ -6,7 +6,7 @@ import java.util.*;
  * @ProjectName: PhoesLeeCode
  * @Package: datestruct
  * @ClassName: RandomizedCollection
- * @Description: 318:平均 时间复杂度 O(1) 下， 执行以下操作的数据结构  双链表 -- 288ms
+ * @Description: 381:平均 时间复杂度 O(1) 下， 执行以下操作的数据结构  双链表 -- 288ms
  * @Author: Pheonix
  * @CreateDate: 2019/1/16 14:12
  * @Version: 1.0

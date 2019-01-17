@@ -1,11 +1,11 @@
 import datestruct.ListNode;
 import datestruct.Node;
 import datestruct.TreeNode;
+import datestruct.Worker;
 
 import java.util.*;
 
 import static java.lang.Math.log10;
-import static java.lang.Math.tan;
 
 /**
  * @ProjectName: LeeCode
@@ -52,7 +52,7 @@ public class Solution {
     }
 
     //15:超时
-    public List<List<Integer>> threeSum(int[] nums) {
+    public List<List<Integer>> threeSum0(int[] nums) {
         List sum0 = new ArrayList<>();
 //        List<Integer> list = new ArrayList<>();
 //        for(int i:nums){
@@ -112,6 +112,163 @@ public class Solution {
             }
         }
         return sum0;
+    }
+
+    //15: --- 11145ms --- 0.99%
+    public List<List<Integer>> threeSum(int[] nums) {
+        List<Integer> positive = new LinkedList<>();
+        List<Integer> negative = new LinkedList<>();
+        int zero = 0;
+        for (int i : nums) {
+            if (i > 0) {
+                positive.add(i);
+            } else if (i < 0) {
+                negative.add(i);
+            } else {
+                zero++;
+            }
+        }
+        List<List<Integer>> res = new ArrayList();
+        if (zero > 2) {
+            List<Integer> re = new ArrayList<>();
+            re.add(0);
+            re.add(0);
+            re.add(0);
+            res.add(re);
+        }
+        if (positive.size() == 0 || negative.size() == 0) {
+
+            return res;
+        }
+        Collections.sort(positive, new Comparator<Integer>() {
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                return o1 - o2;
+            }
+        });
+        Collections.sort(negative, new Comparator<Integer>() {
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                return o2 - o1;
+            }
+        });
+        Set<String> set = new HashSet<>();
+        int i = 0;
+        int j = 0;
+        if (zero != 0) {
+            while (i < positive.size() && j < negative.size()) {
+                int p = positive.get(i);
+                int q = negative.get(j);
+                int m = 0 - p - q;
+                if (m > 0) {
+                    i++;
+                } else if (m < 0) {
+                    j++;
+                } else {
+                    i++;
+                    j++;
+                    if (zero != 0) {
+                        StringBuffer str = new StringBuffer();
+                        str.append(p).append(0).append(q);
+                        if (!set.contains(str.toString())) {
+                            set.add(str.toString());
+                            List<Integer> re = new ArrayList<>();
+                            re.add(0);
+                            re.add(p);
+                            re.add(q);
+                            res.add(re);
+                        }
+                    }
+                }
+            }
+        }
+        i = 0;
+        while (i < positive.size()) {
+            int p = positive.get(i);
+            for (int k = 0; k < negative.size(); k++) {
+                int q = negative.get(k);
+                int m = 0 - p - q;
+                if (m >= 0) {
+                    break;
+                }
+                if (negative.contains(m)) {
+                    if (m < q) {
+                        continue;
+                    }
+                    if (m == q) {
+                        int q1 = k - 1 >= 0 ? negative.get(k - 1) : 1;
+                        int q2 = k + 1 < negative.size() ? negative.get(k + 1) : 1;
+                        if (q1 == 1 && q2 == 1) {
+                            continue;
+                        }
+                        if (q1 != 1 && q1 != q && q2 != 1 && q2 != p) {
+                            continue;
+                        }
+                        if (q1 != 1 && q1 != q && q2 == 1) {
+                            continue;
+                        }
+                        if (q1 == 1 && q2 != 1 && q2 != q) {
+                            continue;
+                        }
+                    }
+                    StringBuffer str = new StringBuffer();
+                    str.append(p).append(m).append(q);
+                    if (!set.contains(str.toString())) {
+                        set.add(str.toString());
+                        List<Integer> re = new ArrayList<>();
+                        re.add(p);
+                        re.add(q);
+                        re.add(m);
+                        res.add(re);
+                    }
+                }
+            }
+            i++;
+        }
+        j = 0;
+        while (j < negative.size()) {
+            int q = negative.get(j);
+            for (int k = 0; k < positive.size(); k++) {
+                int p = positive.get(k);
+                int m = 0 - p - q;
+                if (m <= 0) {
+                    break;
+                }
+                if (positive.contains(m)) {
+                    if (m > p) {
+                        continue;
+                    }
+                    if (m == p) {
+                        int p1 = k - 1 >= 0 ? positive.get(k - 1) : -1;
+                        int p2 = k + 1 < positive.size() ? positive.get(k + 1) : -1;
+                        if (p1 == -1 && p2 == -1) {
+                            continue;
+                        }
+                        if (p1 != -1 && p1 != p && p2 != -1 && p2 != p) {
+                            continue;
+                        }
+                        if (p1 != -1 && p1 != p && p2 == -1) {
+                            continue;
+                        }
+                        if (p1 == -1 && p2 != -1 && p2 != p) {
+                            continue;
+                        }
+                    }
+                    StringBuffer str = new StringBuffer();
+                    str.append(p).append(m).append(q);
+                    if (!set.contains(str.toString())) {
+                        set.add(str.toString());
+                        List<Integer> re = new ArrayList<>();
+                        re.add(p);
+                        re.add(q);
+                        re.add(m);
+                        res.add(re);
+                    }
+                }
+            }
+            j++;
+        }
+        return res;
     }
 
     //77
@@ -2490,6 +2647,138 @@ public class Solution {
         return res;
     }
 
+    //733
+    public int[][] floodFill(int[][] image, int sr, int sc, int newColor) {
+        if (sr < 0 || sc < 0 || sr >= image.length || sc >= image[0].length) {
+            return image;
+        }
+        if (image[sr][sc] == newColor) {
+            return image;
+        }
+        int key = image[sr][sc];
+        image[sr][sc] = newColor;
+        int[][] dir = new int[4][2];
+        dir[0][0] = 0;
+        dir[0][1] = 1;
+        dir[1][0] = 0;
+        dir[1][1] = -1;
+        dir[2][0] = 1;
+        dir[2][1] = 0;
+        dir[3][0] = -1;
+        dir[3][1] = 0;
+        int[] point = new int[2];
+        point[0] = sr;
+        point[1] = sc;
+        Queue<int[]> q = new LinkedList<>();
+        q.add(point);
+        while (!q.isEmpty()) {
+            int[] p = q.poll();
+            for (int i = 0; i < 4; i++) {
+                int x = p[0] + dir[i][0];
+                int y = p[1] + dir[i][1];
+                if (x < 0 || x >= image.length || y < 0 || y >= image[0].length) {
+                    continue;
+                }
+                if (image[x][y] != key) {
+                    continue;
+                }
+                image[x][y] = newColor;
+                int[] np = new int[2];
+                np[0] = x;
+                np[1] = y;
+                q.add(np);
+            }
+        }
+        return image;
+    }
+
+    //837 -- 超时
+    public double new21Game0(int N, int K, int W) {
+        if (K == 0) {
+            return 1.0;
+        }
+        double pickOne = 1 / (double) W;
+        Map<Integer, Double> map = new HashMap<>();
+        int min = 1;
+        for (int i = 1; i <= W; i++) {
+            map.put(i, pickOne);
+        }
+        while (min < K) {
+            double p = map.get(min);
+            map.remove(min);
+            for (int i = 1; i <= W; i++) {
+                int k = min + i;
+                if (map.containsKey(k)) {
+                    map.put(k, map.get(k) + p * pickOne);
+                } else {
+                    map.put(k, p * pickOne);
+                }
+            }
+            min++;
+        }
+        int n = K;
+        double res = 0.0;
+        while (map.containsKey(n) && n <= N) {
+            res += map.get(n);
+            n++;
+        }
+        return res;
+    }
+
+    //837 -- 251ms -- 0%
+    public double new21Game(int N, int K, int W) {
+        if (K == 0) {
+            return 1;
+        }
+        if (K <= 1) {
+            return (double) N / (double) W;
+        }
+        if (N < K) {
+            return 0.0;
+        }
+        double res = 0.0;
+        int min = 1;
+        double rate = 1 / (double) W;
+        List<Double> list = new LinkedList<>();
+        list.add(1.0);
+        double st = rate;
+        list.add(st);
+        while (min < W && min < K) {
+            st = st * (1 + rate);
+            list.add(st);
+            min++;
+        }
+        int sr = 0;
+        while (min >= W && min < K) {
+            st = st * (1 + rate) - list.get(sr) / W;
+            list.add(st);
+            sr++;
+            min++;
+        }
+//        while (min < W + K) {
+//            if (min >= W) {
+//                st = st - list.get(sr) / W;
+//                sr++;
+//            }
+//            list.add(st);
+//            min++;
+//        }
+//        for(int i = K;i < list.size();i++){
+//            res = res + list.get(i);
+//        }
+        res = 0.0;
+        while (min >= K && min <= N && sr < list.size()) {
+            res = res + st;
+            if (min >= W) {
+                st = st - list.get(sr) / W;
+                list.add(st);
+                sr++;
+            }
+            min++;
+        }
+        return res > 1 ? 1 : res;
+    }
+
     public static void main(String[] args) {
         Solution solution = new Solution();
         ListNode p = new ListNode(1);
@@ -2531,7 +2820,7 @@ public class Solution {
                 "##.....##........B.#.......#.#", ".....#...#....#..##...........", "#.#.##.#....#.#...............",
                 ".#.#..#.####............#.....", "#.#..........###.#........#...", "..#..#.........#.......#..#.##",
                 "..#..#C#...............#......", ".........#.##.##......#.#.....", "..#........##.#..##.#.....#.#."};
-        int[] arr = {3, 1, 10, 10, 1};
+        int[] arr = {-4, -2, -2, -2, 0, 1, 2, 2, 2, 3, 3, 4, 4, 6, 6};
         int[] brr = {4, 8, 2, 2, 7};
         int[][] crr = {{3, 1}, {1, 1}, {0, 1}, {2, 1}, {3, 3}, {3, 2}, {0, 2}, {2, 3}};
 //        System.out.print(solution.rotate(arr,9));
@@ -2556,50 +2845,8 @@ public class Solution {
                 {'A', 'D', 'E', 'E'}
         };
         char[][] boards = {};
-        System.out.print(solution.mincostToHireWorkers(arr, brr, 3));
+        System.out.print(solution.new21Game(9, 3, 6));
     }
 
 }
 
-class Worker {
-    //    List<List<Double>> pay;
-    List<List<Double>> qua;
-
-    public Worker() {
-//        this.pay = new LinkedList<>();
-        this.qua = new ArrayList<>();
-    }
-
-    public void add(int qual, int wage) {
-        List<Double> list = new ArrayList<>();
-        list.add((double) qual);
-        list.add((double) wage);
-        list.add((double) wage / (double) qual);
-        qua.add(list);
-    }
-
-    public void add(List<Double> l) {
-        qua.add(l);
-    }
-
-    public void sortByPay(int key) {
-        Collections.sort(qua, new Comparator<List<Double>>() {
-            @Override
-            public int compare(List<Double> o1, List<Double> o2) {
-                if (o1.get(key) >= o2.get(key)) {
-                    return 1;
-                } else {
-                    return -1;
-                }
-            }
-        });
-    }
-
-    public int sum(int K) {
-        int totalq = 0;
-        for (int i = 0; i < K; i++) {
-            totalq += this.qua.get(i).get(0);
-        }
-        return totalq;
-    }
-}

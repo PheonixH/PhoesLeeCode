@@ -395,7 +395,9 @@ public class SolitionUbuntu {
                 134217727, 268435455, 536870911, 1073741823, 2147483647};
         int i = 0;
         for (; i < 32; i++) {
-            if (num <= arr[i]) break;
+            if (num <= arr[i]) {
+                break;
+            }
         }
         return arr[i] - num;
     }
@@ -527,14 +529,13 @@ public class SolitionUbuntu {
         double[] res = new double[K];
         List<int[]> list = new LinkedList();
         for (int i = 0; i < K; i++) {
-            if(K < A.length){
+            if (K < A.length) {
                 res[i] = 1.0 / (double) A[A.length - K];
-                int[] tt = {1,A[A.length - K]};
+                int[] tt = {1, A[A.length - K]};
                 list.add(tt);
-            }
-            else {
+            } else {
                 res[i] = 1.0;
-                int[] tt = {1,1};
+                int[] tt = {1, 1};
                 list.add(tt);
             }
         }
@@ -557,7 +558,7 @@ public class SolitionUbuntu {
                         list.set(ii, list.get(ii - 1));
                     }
                     res[k] = t;
-                    int[] tt = {A[i],A[j]};
+                    int[] tt = {A[i], A[j]};
                     list.set(k, tt);
                 }
             }
