@@ -2779,6 +2779,162 @@ public class Solution {
         return res > 1 ? 1 : res;
     }
 
+    //818 -- BFS + Set -- 2053ms -- 0.00%
+    public int racecar0(int target) {
+        if (0 == target) {
+            return 0;
+        }
+        Queue<int[]> queue = new ArrayDeque<>();
+        Set<String> had = new HashSet<>();
+        int[] stp = new int[3];
+        stp[0] = 0;
+        stp[1] = 1;
+        stp[2] = 0;
+        queue.add(stp);
+        String str = "s=" + stp[0] + "v=" + stp[1];
+        had.add(str);
+        while (!queue.isEmpty()) {
+            for (int i = 0; i < 2; i++) {
+                int s = queue.peek()[0];
+                int v = queue.peek()[1];
+                int t = queue.peek()[2] + 1;
+                if (i == 0) {
+                    s += v;
+                    v *= 2;
+                } else {
+                    v = v > 0 ? -1 : 1;
+                }
+                if (s == target) {
+                    return t;
+                }
+                int[] po = new int[3];
+                po[0] = s;
+                po[1] = v;
+                po[2] = t;
+                str = "s=" + s + "v=" + v;
+                if (had.contains(str)) {
+                    continue;
+                }
+                had.add(str);
+                queue.add(po);
+            }
+            queue.poll();
+        }
+        return 0;
+    }
+
+    //818 -- 动态规划 -- 16ms -- 53.53%
+    public int racecar(int target) {
+        //加2防止target过小，省去写多个if-return
+        int[] dp = new int[target + 2];
+        Arrays.fill(dp, Integer.MAX_VALUE);
+
+        dp[0] = 0;
+        dp[1] = 1;
+        dp[2] = 4;
+
+        for (int i = 3; i <= target; i++) {
+            //注意这里的技巧，32 - numberOfLeadingZeros(i)返回i的最高位从右往左对应的下标
+            //例如11返回2
+            int k = 32 - Integer.numberOfLeadingZeros(i);
+            //最好的情况，直接等于k
+            if ((1 << k) - 1 == i) {
+                dp[i] = k;
+                continue;
+            }
+
+            for (int j = 0; j < k - 1; j++) {
+                dp[i] = Math.min(dp[i], dp[i - (1 << (k - 1)) + (1 << j)] + k - 1 + j + 2);
+            }
+            if ((1 << k) - 1 - i < i) {
+                dp[i] = Math.min(dp[i], dp[(1 << k) - 1 - i] + k + 1);
+            }
+        }
+
+        return dp[target];
+    }
+
+    //264 -- 暴力 -- 885ms --0.95%
+    public int nthUglyNumber0(int n) {
+        if (1 == n) {
+            return 1;
+        }
+        int vall1 = 2;
+        int vall2 = 3;
+        int vall3 = 5;
+        int i1 = 0;
+        int i2 = 0;
+        int i3 = 0;
+        List<Integer> list = new LinkedList<>();
+        list.add(1);
+        for (int i = 1; i < n; ) {
+            int current = Math.min(vall1, Math.min(vall2, vall3));
+            if (!list.contains(current)) {
+                list.add(current);
+                i++;
+            }
+            if (current == vall1) {
+                i1 += 1;
+                vall1 = list.get(i1) * 2;
+            } else if (current == vall2) {
+                i2 += 1;
+                vall2 = list.get(i2) * 3;
+            } else if (current == vall3) {
+                i3 += 1;
+                vall3 = list.get(i3) * 5;
+            }
+        }
+        return list.get(n - 1);
+    }
+
+    //264 -- 10ms -- 65%
+    public int nthUglyNumber1(int n) {
+        int[] num = new int[n];
+        num[0] = 1;
+        int index2 = 0, index3 = 0, index5 = 0;
+        int[] result = new int[n];
+        result[0] = 1;
+
+        int begin = 1;
+        while (begin < n) {
+            result[begin] = Math.min(result[index2] * 2, Math.min(result[index3] * 3, result[index5] * 5));
+            if (result[begin] == result[index2] * 2) {
+                index2++;
+            }
+            if (result[begin] == result[index3] * 3) {
+                index3++;
+            }
+            if (result[begin] == result[index5] * 5) {
+                index5++;
+            }
+            begin++;
+        }
+        return result[--begin];
+    }
+
+    //264 -- 11ms -- 56.43%
+    public int nthUglyNumber(int n) {
+        int[] res = new int[n + 1];
+        int i2 = 0, i3 = 0, i5 = 0;
+        res[0] = 1;
+        int k = 0;
+        while (k < n) {
+            int m2 = res[i2] * 2, m3 = res[i3] * 3, m5 = res[i5] * 5;
+            int mn = Math.min(Math.min(m2, m3), m5);
+            if (m2 == mn) {
+                i2 += 1;
+            }
+            if (m3 == mn) {
+                i3 += 1;
+            }
+            if (m5 == mn) {
+                i5 += 1;
+            }
+            res[++k] = mn;
+        }
+        return res[k - 1];
+    }
+
     public static void main(String[] args) {
         Solution solution = new Solution();
         ListNode p = new ListNode(1);
@@ -2845,7 +3001,7 @@ public class Solution {
                 {'A', 'D', 'E', 'E'}
         };
         char[][] boards = {};
-        System.out.print(solution.new21Game(9, 3, 6));
+        System.out.print(solution.nthUglyNumber(101));
     }
 
 }
