@@ -1,3 +1,4 @@
+import com.sun.source.tree.Tree;
 import datestruct.ListNode;
 import datestruct.Node;
 import datestruct.TreeNode;
@@ -980,8 +981,8 @@ public class Solution {
         }
     }
 
-    //220:超时
-    public boolean containsNearbyAlmostDuplicate(int[] nums, int k, int t) {
+    //220 -- 624ms -- 4.31%
+    public boolean containsNearbyAlmostDuplicate0(int[] nums, int k, int t) {
         for (int i = 0; i < nums.length; i++) {
             for (int j = i + 1; j <= i + k && j < nums.length; j++) {
                 long l = Math.abs((long) nums[j] - (long) nums[i]);
@@ -989,6 +990,24 @@ public class Solution {
                     return true;
                 }
             }
+        }
+        return false;
+    }
+
+    //220 -- 55ms -- 29.08%
+    public boolean containsNearbyAlmostDuplicate(int[] nums, int k, int t) {
+        if(t < 0 || k < 1) {
+            return false;
+        }
+        SortedSet<Long> binSet = new TreeSet<Long>();
+        int start = 0, n = nums.length;
+        for(int i = 0; i < n; i++){
+            SortedSet<Long> sub = binSet.subSet((long)nums[i] - t, (long)nums[i] + t + 1);
+            if(!sub.isEmpty())return true;
+            if(i - start >= k){
+                binSet.remove((long)nums[start++]);
+            }
+            binSet.add((long)nums[i]);
         }
         return false;
     }
@@ -2935,6 +2954,178 @@ public class Solution {
         return res[k - 1];
     }
 
+    //649 -- 518ms -- 9.33%
+    public String predictPartyVictory(String senate) {
+        List<Integer> radiant = new LinkedList<>();
+        List<Integer> dire = new LinkedList<>();
+        for (int i = 0; i < senate.length(); i++) {
+            if (senate.charAt(i) == 'R') {
+                radiant.add(i);
+            } else {
+                dire.add(i);
+            }
+        }
+        while (!radiant.isEmpty() && !dire.isEmpty()) {
+            int x = 0;
+            int y = 0;
+            while (x < radiant.size() && y < dire.size()) {
+                int a = radiant.get(x);
+                int b = dire.get(y);
+                if (a < b) {
+                    dire.remove(y);
+                    x++;
+                } else {
+                    radiant.remove(x);
+                    y++;
+                }
+            }
+            while (!dire.isEmpty() && x < radiant.size()) {
+                dire.remove(0);
+                x++;
+            }
+            while (!radiant.isEmpty() && y < dire.size()) {
+                radiant.remove(0);
+                y++;
+            }
+        }
+        if (radiant.isEmpty()) {
+            return "Dire";
+        } else {
+            return "Radiant";
+        }
+    }
+
+    //865 -- 7ms -- 36.59%
+    public TreeNode subtreeWithAllDeepest0(TreeNode root) {
+        if (root == null) {
+            return root;
+        }
+        if (root.left == null && root.right == null) {
+            return root;
+        }
+        Queue<TreeNode> queue = new LinkedList<>();
+        Map<TreeNode, Integer> map = new HashMap<>();
+        Map<TreeNode, TreeNode> m = new HashMap<>();
+        queue.add(root);
+        int l = 0;
+        while (!queue.isEmpty()) {
+            int i = queue.size();
+            l++;
+            while (i > 0) {
+                TreeNode t = queue.poll();
+                if (t.left == null && t.right == null) {
+                    map.put(t, l);
+                } else if (t.left != null) {
+                    queue.add(t.left);
+                    m.put(t.left, t);
+                }
+                if (t.right != null) {
+                    queue.add(t.right);
+                    m.put(t.right, t);
+                }
+                i--;
+            }
+        }
+        Set<TreeNode> set = new HashSet<>();
+        Iterator<Map.Entry<TreeNode, Integer>> it = map.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry<TreeNode, Integer> entry = it.next();
+            if (l == entry.getValue()) {
+                set.add(entry.getKey());
+            }
+        }
+        while (set.size() != 1) {
+            Set<TreeNode> st = new HashSet<>();
+            for (TreeNode t : set) {
+                TreeNode p = m.get(t);
+                st.add(p);
+            }
+            set.removeAll(set);
+            set.addAll(st);
+            st.removeAll(st);
+        }
+        for (TreeNode t : set) {
+            return t;
+        }
+        return null;
+    }
+
+    //865 -- 4ms -- 95.12%
+    public TreeNode subtreeWithAllDeepest(TreeNode root) {
+        /**
+         根据题意描述, 是要找到一个节点, 以该节点为根的树中包含所有最大深度节点
+         那么只要左子树的最大深度等于右子树的最大深度, 就说明左右子树都包含最大
+         深度节点, 此时该节点就是满足条件的节点. 否则进入深度较大的那侧继续判断
+         **/
+        if (root == null) {
+            return null;
+        }
+        int left = depth(root.left);
+        int right = depth(root.right);
+        if (left == right) {
+            return root;
+        }
+        if (left > right) {
+            return subtreeWithAllDeepest(root.left);
+        } else {
+            return subtreeWithAllDeepest(root.right);
+        }
+    }
+
+    private int depth(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        return Math.max(depth(root.left), depth(root.right)) + 1;
+    }
+
+    //888 -- 358ms -- 26.96%
+    public int[] fairCandySwap0(int[] A, int[] B) {
+        int sumA = 0;
+        for (int i : A) {
+            sumA += i;
+        }
+        int sumB = 0;
+        for (int i : B) {
+            sumB += i;
+        }
+        int sub = (sumA - sumB) / 2;
+        int[] res = new int[2];
+        for (int i : A) {
+            for (int j : B) {
+                if (i == sub + j) {
+                    res[0] = i;
+                    res[1] = j;
+                    return res;
+                }
+            }
+        }
+        return res;
+    }
+
+    //888 -- 35ms -- 83.37%
+    public int[] fairCandySwap(int[] A, int[] B) {
+        Arrays.sort(B);
+        //每个人的总量：
+        int t = 0;
+        int ta = 0;
+        for (int n : A) {
+            t += n;
+            ta += n;
+        }
+        for (int n : B) {
+            t += n;
+        }
+        t /= 2;
+        for (int x : A) {
+            int y = ta - x;
+            if (Arrays.binarySearch(B, t - y) >= 0) {
+                return new int[]{x, t - y};
+            }
+        }
+        return new int[]{};
+    }
+
     public static void main(String[] args) {
         Solution solution = new Solution();
         ListNode p = new ListNode(1);
@@ -2953,17 +3144,17 @@ public class Solution {
         p5.next = p6;
         p6.next = p7;
         p7.next = p2;
-        TreeNode t = new TreeNode(5);
-        TreeNode t1 = new TreeNode(3);
-        TreeNode t2 = new TreeNode(6);
-        TreeNode t3 = new TreeNode(2);
+        TreeNode t = new TreeNode(0);
+        TreeNode t1 = new TreeNode(1);
+        TreeNode t2 = new TreeNode(2);
+        TreeNode t3 = new TreeNode(3);
         TreeNode t4 = new TreeNode(4);
-        TreeNode t5 = new TreeNode(7);
+        TreeNode t5 = new TreeNode(5);
         t.left = t1;
         t.right = t2;
         t1.left = t3;
-        t1.right = t4;
-        t2.right = t5;
+        t3.left = t4;
+        t3.right = t5;
         solution.postorderTraversal(t1);
         String[] strings = {".#@..", "#.##.", ".#...", "A...#", ".#.#a"};
         String[] strings2 = {".#.#..#.b...............#.#..#", ".#..##.........#......d.......", "..#...e.#.##....##.....#.....#",
@@ -3001,7 +3192,7 @@ public class Solution {
                 {'A', 'D', 'E', 'E'}
         };
         char[][] boards = {};
-        System.out.print(solution.nthUglyNumber(101));
+        System.out.print(solution.subtreeWithAllDeepest(t));
     }
 
 }
