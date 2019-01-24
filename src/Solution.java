@@ -6,6 +6,7 @@ import datestruct.Worker;
 
 import java.util.*;
 
+import static java.lang.Math.floorMod;
 import static java.lang.Math.log10;
 
 /**
@@ -996,18 +997,18 @@ public class Solution {
 
     //220 -- 55ms -- 29.08%
     public boolean containsNearbyAlmostDuplicate(int[] nums, int k, int t) {
-        if(t < 0 || k < 1) {
+        if (t < 0 || k < 1) {
             return false;
         }
         SortedSet<Long> binSet = new TreeSet<Long>();
         int start = 0, n = nums.length;
-        for(int i = 0; i < n; i++){
-            SortedSet<Long> sub = binSet.subSet((long)nums[i] - t, (long)nums[i] + t + 1);
-            if(!sub.isEmpty())return true;
-            if(i - start >= k){
-                binSet.remove((long)nums[start++]);
+        for (int i = 0; i < n; i++) {
+            SortedSet<Long> sub = binSet.subSet((long) nums[i] - t, (long) nums[i] + t + 1);
+            if (!sub.isEmpty()) return true;
+            if (i - start >= k) {
+                binSet.remove((long) nums[start++]);
             }
-            binSet.add((long)nums[i]);
+            binSet.add((long) nums[i]);
         }
         return false;
     }
@@ -3126,6 +3127,267 @@ public class Solution {
         return new int[]{};
     }
 
+    //407 -- 115ms -- 13.95% -- not me
+    public int trapRainWater(int[][] heightMap) {
+        //一个单元格用一个Cell来表示
+        class Cell {
+            int x, y, h;
+
+            Cell(int x, int y, int height) {
+                this.x = x;
+                this.y = y;
+                h = height;
+            }
+        }
+        if (heightMap == null || heightMap.length == 0 || heightMap[0].length == 0) {
+            return 0;
+        }
+
+        int m = heightMap.length;
+        int n = heightMap[0].length;
+        //优先队列，每次按照优先度输出队列，而不是按照顺序，这里是每次输出最矮的哪一个
+        PriorityQueue<Cell> pq = new PriorityQueue<>(Comparator.comparingInt(v -> v.h));
+        boolean[][] visited = new boolean[m][n];
+        //将四周初始化为访问过的，周围的一边是怎么都没法盛水的
+        for (int i = 0; i < n; i++) {
+            visited[0][i] = true;
+            visited[m - 1][i] = true;
+            pq.offer(new Cell(0, i, heightMap[0][i]));
+            pq.offer(new Cell(m - 1, i, heightMap[m - 1][i]));
+        }
+        for (int i = 1; i < m - 1; i++) {
+            visited[i][0] = true;
+            visited[i][n - 1] = true;
+            pq.offer(new Cell(i, 0, heightMap[i][0]));
+            pq.offer(new Cell(i, n - 1, heightMap[i][n - 1]));
+        }
+        //四个方向
+        int[] xs = {0, 0, 1, -1};
+        int[] ys = {1, -1, 0, 0};
+        int sum = 0;
+        //开始计算收集到的雨水，每次取出符合条件最矮的按个，然后计算差值，就是当前单元格可以容纳的了
+        while (!pq.isEmpty()) {
+            Cell cell = pq.poll();
+            for (int i = 0; i < 4; i++) {
+                int nx = cell.x + xs[i];
+                int ny = cell.y + ys[i];
+                if (nx >= 0 && nx < m && ny >= 0 && ny < n && !visited[nx][ny]) {
+                    visited[nx][ny] = true;
+                    sum += Math.max(0, cell.h - heightMap[nx][ny]);
+                    pq.offer(new Cell(nx, ny, Math.max(heightMap[nx][ny], cell.h)));
+                }
+            }
+        }
+        return sum;
+    }
+
+    //20 -- 11ms -- 60.42%
+    public boolean isValid(String s) {
+        if (s.length() == 0) {
+            return true;
+        } else if (s.length() == 1) {
+            return false;
+        }
+        char[] cs = s.toCharArray();
+        Stack<Character> st = new Stack<>();
+        for (char c : cs) {
+            if (c == '(' || c == '[' || c == '{') {
+                st.push(c);
+                continue;
+            }
+            if (c == ')') {
+                if (st.empty()) {
+                    return false;
+                }
+                char t = st.pop();
+                if (t != '(') {
+                    return false;
+                }
+                continue;
+            }
+            if (c == ']') {
+                if (st.empty()) {
+                    return false;
+                }
+                char t = st.pop();
+                if (t != '[') {
+                    return false;
+                }
+                continue;
+            }
+            if (c == '}') {
+                if (st.empty()) {
+                    return false;
+                }
+                char t = st.pop();
+                if (t != '{') {
+                    return false;
+                }
+                continue;
+            }
+        }
+        if (st.empty()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    //290 -- 2ms -- 70.40%
+    public boolean wordPattern(String pattern, String str) {
+        if (pattern == null && str == null) {
+            return true;
+        } else if (pattern == null && str != null) {
+            return false;
+        } else if (pattern != null && str == null) {
+            return false;
+        }
+        String[] sts = str.split(" ");
+        char[] cs = pattern.toCharArray();
+        if (cs.length != sts.length) {
+            return false;
+        }
+        Map<Character, String> map = new HashMap<>();
+//        Set<String> set = new HashSet<>();
+        for (int i = 0; i < cs.length; i++) {
+            if (map.containsKey(cs[i])) {
+                if (!map.get(cs[i]).equals(sts[i])) {
+                    return false;
+                }
+            } else if (map.containsValue(sts[i])) {
+                return false;
+            } else {
+                map.put(cs[i], sts[i]);
+//                set.add(sts[i]);
+            }
+        }
+        return true;
+    }
+
+    //773 -- 13ms -- 80.00%
+    public int slidingPuzzle(int[][] board) {
+        int r1 = 123450;
+        int r2 = 123540;
+        int b = 0;
+        for (int[] i : board) {
+            for (int j : i) {
+                b = b * 10 + j;
+            }
+        }
+        Queue<Integer> q = new ArrayDeque<>();
+        Set<Integer> set = new HashSet<>();
+        q.add(b);
+        int k = 0;
+        while (!q.isEmpty()) {
+            int p = q.poll();
+            k = p / 1000000;
+            int t = p % 1000000;
+            if (t == r2) {
+                return -1;
+            }
+            if (t == r1) {
+                return k;
+            }
+            int i = 6;
+            int tt = t;
+            while (tt / 10 * 10 != tt) {
+                tt = tt / 10;
+                i--;
+            }
+            switch (i) {
+                case 6: {
+                    int newp = t - t % 10000 + t % 1000 + t % 10000 / 1000;
+                    if(!set.contains(newp)) {
+                        set.add(newp);
+                        q.add((k + 1) * 1000000 + newp);
+                    }
+                    newp =  t - t % 100 + t % 100 / 10;
+                    if(!set.contains(newp)) {
+                        set.add(newp);
+                        q.add((k + 1) * 1000000 + newp);
+                    }
+                    break;
+                }
+                case 5: {
+                    int newp = t - t / 10000 % 10 * 9990;
+                    if(!set.contains(newp)) {
+                        set.add(newp);
+                        q.add((k + 1) * 1000000 + newp);
+                    }
+                    newp =  t - t / 100 % 10 * 90;
+                    if(!set.contains(newp)) {
+                        set.add(newp);
+                        q.add((k + 1) * 1000000 + newp);
+                    }
+                    newp = t + t % 10 * 9;
+                    if(!set.contains(newp)) {
+                        set.add(newp);
+                        q.add((k + 1) * 1000000 + newp);
+                    }
+                    break;
+                }
+                case 4: {
+                    int newp = t - t / 100000 * 99900;
+                    if(!set.contains(newp)) {
+                        set.add(newp);
+                        q.add((k + 1) * 1000000 + newp);
+                    }
+                    newp = t + t / 10 % 10 * 90;
+                    if(!set.contains(newp)) {
+                        set.add(newp);
+                        q.add((k + 1) * 1000000 + newp);
+                    }
+                    break;
+                }
+                case 3: {
+                    int newp = t - t % 100000 + t % 1000 + t % 100000 / 10000 * 1000;
+                    if(!set.contains(newp)) {
+                        set.add(newp);
+                        q.add((k + 1) * 1000000 + newp);
+                    }
+                    newp =  t - t % 10 + t % 10 * 1000;
+                    if(!set.contains(newp)) {
+                        set.add(newp);
+                        q.add((k + 1) * 1000000 + newp);
+                    }
+                    break;
+                }
+                case 2: {
+                    int newp =  t - t / 100000 * 90000;
+                    if(!set.contains(newp)) {
+                        set.add(newp);
+                        q.add((k + 1) * 1000000 + newp);
+                    }
+                    newp = t + t % 10000 / 1000 * 9000;
+                    if(!set.contains(newp)) {
+                        set.add(newp);
+                        q.add((k + 1) * 1000000 + newp);
+                    }
+                    newp =  t + t % 100 / 10 * 9990;
+                    if(!set.contains(newp)) {
+                        set.add(newp);
+                        q.add((k + 1) * 1000000 + newp);
+                    }
+                    break;
+                }
+                case 1: {
+                    int newp =  t + t / 10000 * 90000;
+                    if(!set.contains(newp)) {
+                        set.add(newp);
+                        q.add((k + 1) * 1000000 + newp);
+                    }
+                    newp =  t - t / 100 % 10 * 100 + t / 100 % 10 * 100000;
+                    if(!set.contains(newp)) {
+                        set.add(newp);
+                        q.add((k + 1) * 1000000 + newp);
+                    }
+                    break;
+                }
+            }
+        }
+        return -1;
+    }
+
     public static void main(String[] args) {
         Solution solution = new Solution();
         ListNode p = new ListNode(1);
@@ -3172,10 +3434,10 @@ public class Solution {
         int[][] crr = {{3, 1}, {1, 1}, {0, 1}, {2, 1}, {3, 3}, {3, 2}, {0, 2}, {2, 3}};
 //        System.out.print(solution.rotate(arr,9));
         int[][] ins = {
-                {1, 1, 0, 0, 0},
-                {1, 1, 0, 0, 0},
-                {0, 0, 0, 1, 1},
-                {0, 0, 0, 1, 1}
+                {1, 3, 4, 0, 3, 2},
+                {4, 1, 2, 7, 1, 3},
+                {3, 4, 2, 1, 4, 1},
+                {0, 5, 3, 6, 1, 5}
         };
         int[][] ints = {
                 {0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0},
@@ -3191,8 +3453,12 @@ public class Solution {
                 {'S', 'F', 'C', 'S'},
                 {'A', 'D', 'E', 'E'}
         };
+        int[][] is = {
+                {0, 1, 4},
+                {5, 2, 3}
+        };
         char[][] boards = {};
-        System.out.print(solution.subtreeWithAllDeepest(t));
+        System.out.print(solution.slidingPuzzle(is));
     }
 
 }

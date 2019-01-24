@@ -566,6 +566,44 @@ public class SolitionUbuntu {
         return list.get(K - 1);
     }
 
+    //786 -- 14ms -- 89.29%
+    public int[] kthSmallestPrimeFraction1(int[] A, int K) {
+        double lo = 0.0, hi = 1.0;
+        int[] ans = {-1, -1};
+
+        while (hi - lo > 1e-9) {
+            // 一直压缩精确度到1e-9
+            double mid = lo + (hi - lo) / 2.0;
+            int[] res = under(A, mid);
+            if (res[2] < K) {
+                lo = mid;
+            } else {
+                hi = mid;
+                ans[0] = res[0];
+                ans[1] = res[1];
+            }
+        }
+
+        return ans;
+    }
+
+    private int[] under(int[] A, double bound) {
+        // 计算有多少数小于bound
+        int mol = 0, deno = 1, count = 0, i = -1;
+        for (int j = 1; j < A.length; j++) {
+            while (A[i + 1] < bound * A[j]) {
+                i++;
+            }
+
+            count += i + 1;
+
+            if (i >= 0 && mol * A[j] < deno * A[i]) {
+                mol = A[i];
+                deno = A[j];
+            }
+        }
+        return new int[]{mol, deno, count};
+    }
 
     //258
     public int addDigits(int num) {
@@ -616,8 +654,8 @@ public class SolitionUbuntu {
         r3.left = r4;
         SolitionUbuntu solution = new SolitionUbuntu();
         String[] strings = {"9", "3", "4", "#", "#", "1", "#", "#,", "#", "6", "#", "#"};
-        int[] ints = {1, 13, 17, 59};
-        System.out.println(solution.kthSmallestPrimeFraction(ints, 6));
+        int[] ints = {1, 7, 23, 29, 47};
+        System.out.println(solution.kthSmallestPrimeFraction(ints, 8));
 //        int[] arr = solution.findFrequentTreeSum(root);
         //List l = solution.zigzagLevelOrder(root);
 //        System.out.print(solution.nthMagicalNumber(1,2,3));
