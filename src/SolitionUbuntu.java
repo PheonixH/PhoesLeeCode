@@ -640,6 +640,78 @@ public class SolitionUbuntu {
 
     }
 
+    //14 -- 16ms -- 18.25% -- 横向比较
+    public String longestCommonPrefix0(String[] strs) {
+        String res = "";
+        if (strs.length == 0) {
+            return res;
+        }
+        String begin = strs[0];
+        if (strs.length == 1) {
+            return begin;
+        }
+        for (int i = 1; i < strs.length; i++) {
+            int bl = begin.length();
+            String s = strs[i];
+            int k = s.length() > bl ? bl : s.length();
+            StringBuffer r = new StringBuffer();
+            for (int j = 0; j < k; j++) {
+                if (s.charAt(j) == begin.charAt(j)) {
+                    r.append(s.charAt(j));
+                } else {
+                    break;
+                }
+            }
+            begin = r.toString();
+            if (begin.equals(res)) {
+                return res;
+            }
+        }
+        return begin;
+    }
+
+    //14 -- 8ms -- 83.66% -- 纵向比较
+    public String longestCommonPrefix(String[] strs) {
+        if (strs.length == 1) {
+            return strs[0];
+        }
+        StringBuilder sb = new StringBuilder();
+        if (strs.length > 1) {
+            int len = strs[0].length();
+            for (int i = 0; i < len; i++) {
+                char curr = strs[0].charAt(i);
+                for (int j = 1; j < strs.length; j++) {
+                    if (strs[j].length() <= i || strs[j].charAt(i) != curr) {
+                        return sb.toString();
+                    }
+                    if (strs[j].charAt(i) == curr && j == strs.length - 1) {
+                        sb.append(curr);
+                    }
+                }
+            }
+        }
+        return sb.toString();
+    }
+
+    //917 -- 13ms -- 18.45%
+    public String reverseOnlyLetters(String S) {
+        String res = "";
+        char[] cs = S.toCharArray();
+        Stack<Character> stack = new Stack<>();
+        for (char c : cs) {
+            if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z')) {
+                stack.add(c);
+            }
+        }
+        for (char c : cs) {
+            if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z')) {
+                res = res + stack.pop();
+            } else {
+                res = res + c;
+            }
+        }
+        return res;
+    }
 
     public static void main(String[] args) {
         TreeNode root = new TreeNode(1);
@@ -655,7 +727,7 @@ public class SolitionUbuntu {
         SolitionUbuntu solution = new SolitionUbuntu();
         String[] strings = {"9", "3", "4", "#", "#", "1", "#", "#,", "#", "6", "#", "#"};
         int[] ints = {1, 7, 23, 29, 47};
-        System.out.println(solution.kthSmallestPrimeFraction(ints, 8));
+        System.out.println(solution.reverseOnlyLetters("7_28]"));
 //        int[] arr = solution.findFrequentTreeSum(root);
         //List l = solution.zigzagLevelOrder(root);
 //        System.out.print(solution.nthMagicalNumber(1,2,3));
