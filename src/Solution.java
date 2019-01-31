@@ -6,7 +6,6 @@ import datestruct.Worker;
 
 import java.util.*;
 
-import static java.lang.Math.floorMod;
 import static java.lang.Math.log10;
 
 /**
@@ -3297,12 +3296,12 @@ public class Solution {
             switch (i) {
                 case 6: {
                     int newp = t - t % 10000 + t % 1000 + t % 10000 / 1000;
-                    if(!set.contains(newp)) {
+                    if (!set.contains(newp)) {
                         set.add(newp);
                         q.add((k + 1) * 1000000 + newp);
                     }
-                    newp =  t - t % 100 + t % 100 / 10;
-                    if(!set.contains(newp)) {
+                    newp = t - t % 100 + t % 100 / 10;
+                    if (!set.contains(newp)) {
                         set.add(newp);
                         q.add((k + 1) * 1000000 + newp);
                     }
@@ -3310,17 +3309,17 @@ public class Solution {
                 }
                 case 5: {
                     int newp = t - t / 10000 % 10 * 9990;
-                    if(!set.contains(newp)) {
+                    if (!set.contains(newp)) {
                         set.add(newp);
                         q.add((k + 1) * 1000000 + newp);
                     }
-                    newp =  t - t / 100 % 10 * 90;
-                    if(!set.contains(newp)) {
+                    newp = t - t / 100 % 10 * 90;
+                    if (!set.contains(newp)) {
                         set.add(newp);
                         q.add((k + 1) * 1000000 + newp);
                     }
                     newp = t + t % 10 * 9;
-                    if(!set.contains(newp)) {
+                    if (!set.contains(newp)) {
                         set.add(newp);
                         q.add((k + 1) * 1000000 + newp);
                     }
@@ -3328,12 +3327,12 @@ public class Solution {
                 }
                 case 4: {
                     int newp = t - t / 100000 * 99900;
-                    if(!set.contains(newp)) {
+                    if (!set.contains(newp)) {
                         set.add(newp);
                         q.add((k + 1) * 1000000 + newp);
                     }
                     newp = t + t / 10 % 10 * 90;
-                    if(!set.contains(newp)) {
+                    if (!set.contains(newp)) {
                         set.add(newp);
                         q.add((k + 1) * 1000000 + newp);
                     }
@@ -3341,47 +3340,560 @@ public class Solution {
                 }
                 case 3: {
                     int newp = t - t % 100000 + t % 1000 + t % 100000 / 10000 * 1000;
-                    if(!set.contains(newp)) {
+                    if (!set.contains(newp)) {
                         set.add(newp);
                         q.add((k + 1) * 1000000 + newp);
                     }
-                    newp =  t - t % 10 + t % 10 * 1000;
-                    if(!set.contains(newp)) {
+                    newp = t - t % 10 + t % 10 * 1000;
+                    if (!set.contains(newp)) {
                         set.add(newp);
                         q.add((k + 1) * 1000000 + newp);
                     }
                     break;
                 }
                 case 2: {
-                    int newp =  t - t / 100000 * 90000;
-                    if(!set.contains(newp)) {
+                    int newp = t - t / 100000 * 90000;
+                    if (!set.contains(newp)) {
                         set.add(newp);
                         q.add((k + 1) * 1000000 + newp);
                     }
                     newp = t + t % 10000 / 1000 * 9000;
-                    if(!set.contains(newp)) {
+                    if (!set.contains(newp)) {
                         set.add(newp);
                         q.add((k + 1) * 1000000 + newp);
                     }
-                    newp =  t + t % 100 / 10 * 9990;
-                    if(!set.contains(newp)) {
+                    newp = t + t % 100 / 10 * 9990;
+                    if (!set.contains(newp)) {
                         set.add(newp);
                         q.add((k + 1) * 1000000 + newp);
                     }
                     break;
                 }
                 case 1: {
-                    int newp =  t + t / 10000 * 90000;
-                    if(!set.contains(newp)) {
+                    int newp = t + t / 10000 * 90000;
+                    if (!set.contains(newp)) {
                         set.add(newp);
                         q.add((k + 1) * 1000000 + newp);
                     }
-                    newp =  t - t / 100 % 10 * 100 + t / 100 % 10 * 100000;
-                    if(!set.contains(newp)) {
+                    newp = t - t / 100 % 10 * 100 + t / 100 % 10 * 100000;
+                    if (!set.contains(newp)) {
                         set.add(newp);
                         q.add((k + 1) * 1000000 + newp);
                     }
                     break;
+                }
+            }
+        }
+        return -1;
+    }
+
+    //29 -- 25ms -- 87.50%
+    public int divide(int dividend, int divisor) {
+        //处理异常
+        if (divisor == 0) {
+            return 0;
+        }
+        int max = Integer.MAX_VALUE;
+        int min = Integer.MIN_VALUE;
+        //处理最大最小值取模的情况。
+        long divid = (long) dividend;
+        long divi = (long) divisor;
+        //减少重复运算
+        if (divi == 1) {
+            return (int) divid;
+        }
+        if (divi == -1) {
+            //处理溢出
+            if (divid <= min) {
+                return max;
+            }
+            return (int) -divid;
+        }
+        boolean flag = true;
+        //处理符号
+        if (divid < 0) {
+            divid = -divid;
+            if (divi < 0) {
+                divi = -divi;
+            } else {
+                flag = false;
+            }
+        } else if (divi < 0) {
+            divi = -divi;
+            flag = false;
+        }
+        long res = 0;
+        long tmp = 0;
+        long cnt = 1;
+        while (divi <= divid) {
+            //2^n次方
+            cnt = 1;
+            tmp = divi;
+            //找到第一个大于被除数的2^n次方
+            while (tmp <= divid) {
+                tmp <<= 1;
+                cnt <<= 1;
+            }
+            res += (cnt >> 1);
+            //减去基数的前一个数
+            divid -= (tmp >> 1);
+        }
+        return flag ? (int) res : (int) -res;
+    }
+
+    //35 -- 5ms -- 70.89%
+    public int searchInsert(int[] nums, int target) {
+        for (int i = 0; i <= nums.length - 1; i++) {
+            if (nums[i] >= target) {
+                return i;
+            }
+        }
+        return nums.length;
+    }
+
+    //763 -- 32ms -- 14.84%
+    public List<Integer> partitionLabels0(String S) {
+        char[] cs = S.toCharArray();
+        Map<Character, List<Integer>> map = new HashMap<>();
+        for (int i = 0; i < cs.length; i++) {
+            if (map.containsKey(cs[i])) {
+                List list = map.get(cs[i]);
+                list.add(i);
+            } else {
+                List<Integer> list = new LinkedList<>();
+                list.add(i);
+                map.put(cs[i], list);
+            }
+        }
+        List<Integer> res = new LinkedList<>();
+
+        int n = 0;
+        int end = cs.length;
+        int k = 0;
+        int m = -1;
+//        if(map.get(cs[0]).size() == 1){
+//            res.add(1);
+//            m++;
+//        }
+        while (n < end) {
+            List<Integer> l = map.get(cs[n]);
+            int kk = l.get(l.size() - 1);
+            k = kk > k ? kk : k;
+            if (n == k) {
+                res.add(n - m);
+                m = n;
+            }
+            n++;
+        }
+        return res;
+    }
+
+    //763 -- 13ms -- 79.68%
+    public List<Integer> partitionLabels(String S) {
+        List<Integer> res = new ArrayList<>();
+        int index, i, len = S.length();
+        int[] cache = new int[26];
+        for (i = 0; i < len; i++) {
+            cache[S.charAt(i) - 'a'] = i;
+        }
+        i = 0;
+        while (i < len) {
+            index = cache[S.charAt(i) - 'a'];
+            for (int j = i + 1; j < index && j < len; j++) {
+                if (cache[S.charAt(j) - 'a'] > index) {
+                    index = cache[S.charAt(j) - 'a'];
+                }
+            }
+            res.add(index - i + 1);
+            i = index + 1;
+        }
+        return res;
+    }
+
+    //632 -- 734ms -- 0.00%
+    public int[] smallestRange(List<List<Integer>> nums) {
+        int[] res = new int[2];
+        int[] q = new int[nums.size()];
+        List<Integer> p = new ArrayList<>();
+        for (List<Integer> l : nums) {
+            p.add(l.get(0));
+        }
+        int[] m = findMin(p, nums, q);
+        int min = m[0];
+        int max = m[1];
+        res[0] = nums.get(min).get(q[min]);
+        res[1] = nums.get(max).get(q[max]);
+        while (true) {
+            int mi = nums.get(min).get(q[min]);
+            int ma = nums.get(max).get(q[max]);
+            if (res[1] - res[0] > ma - mi) {
+                res[1] = ma;
+                res[0] = mi;
+            }
+            q[min]++;
+            if (q[min] >= nums.get(min).size()) {
+                break;
+            }
+            p.set(min, nums.get(min).get(q[min]));
+            m = findMin(p, nums, q);
+            min = m[0];
+            max = m[1];
+        }
+        return res;
+    }
+
+    public int[] findMin(List<Integer> l, List<List<Integer>> nums, int[] q) {
+        int min = 0;
+        int max = 0;
+        for (int i = 0; i < l.size(); i++) {
+            int mi = l.get(min);
+            int ma = l.get(max);
+            int ii = l.get(i);
+            min = mi > ii ? i : min;
+            max = ma < ii ? i : max;
+//            if (mi == ii) {
+//                int mmi = nums.get(mi).get(q[min]);
+//                int iii = nums.get(ii).get(q[ii]);
+//                min = mmi > iii ? i : min;
+//            }
+        }
+        int[] m = new int[2];
+        m[0] = min;
+        m[1] = max;
+        return m;
+    }
+
+    //537 -- 5ms -- 90.87%
+    public String complexNumberMultiply(String a, String b) {
+        String[] sa = a.split("\\+");
+        String[] sb = b.split("\\+");
+        int sa1 = Integer.valueOf(sa[0]);
+        int sb1 = Integer.valueOf(sb[0]);
+        int sa2 = Integer.valueOf(sa[1].substring(0, sa[1].length() - 1));
+        int sb2 = Integer.valueOf(sb[1].substring(0, sb[1].length() - 1));
+        int res1 = sa1 * sb1 - sa2 * sb2;
+        int res2 = sa1 * sb2 + sa2 * sb1;
+        StringBuffer res = new StringBuffer();
+        res.append(res1).append("+").append(res2).append("i");
+        return res.toString();
+    }
+
+    //59 -- 2ms -- 83.92%
+    public int[][] generateMatrix(int n) {
+        int[][] res = new int[n][n];
+        boolean[][] bs = new boolean[n][n];
+        int dir = 0;
+        int k = 1;
+        int nn = n * n;
+        int x = 0, y = -1;
+        while (k <= nn) {
+            switch (dir) {
+                case 0: {
+                    y++;
+                    while (y < n && !bs[x][y]) {
+                        res[x][y] = k;
+                        bs[x][y] = true;
+                        y++;
+                        k++;
+                    }
+                    y--;
+                    break;
+                }
+                case 1: {
+                    x++;
+                    while (x < n && !bs[x][y]) {
+                        res[x][y] = k;
+                        bs[x][y] = true;
+                        x++;
+                        k++;
+                    }
+                    x--;
+                    break;
+                }
+                case 2: {
+                    y--;
+                    while (y >= 0 && !bs[x][y]) {
+                        res[x][y] = k;
+                        bs[x][y] = true;
+                        y--;
+                        k++;
+                    }
+                    y++;
+                    break;
+                }
+                case 3: {
+                    x--;
+                    while (x > 0 && !bs[x][y]) {
+                        res[x][y] = k;
+                        bs[x][y] = true;
+                        x--;
+                        k++;
+                    }
+                    x++;
+                    break;
+                }
+            }
+            dir = (dir + 1) % 4;
+        }
+        return res;
+    }
+
+    //167 -- 6ms -- 31.06%
+    public int[] twoSum0(int[] numbers, int target) {
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int i = 0; i < numbers.length; i++) {
+            int j = target - numbers[i];
+            if (map.containsKey(j)) {
+                int[] res = new int[2];
+                res[0] = map.get(j) + 1;
+                res[1] = i + 1;
+                return res;
+            }
+            map.put(numbers[i], i);
+        }
+        return null;
+    }
+
+    public int[] twoSum(int[] numbers, int target) {
+        Map<Integer, Integer> map = new HashMap<>();
+        int l = 0;
+        int h = numbers.length;
+        while (l < h) {
+            int key = (l + h) / 2;
+            int j = target - numbers[key];
+            if (map.containsKey(j)) {
+                int[] res = new int[2];
+                res[0] = map.get(j) + 1;
+                res[1] = key + 1;
+                return res;
+            }
+            map.put(numbers[key], key);
+            if (j > 0) {
+                h = key;
+            } else {
+                l = key;
+            }
+        }
+        return null;
+    }
+
+    //915 -- 5ms -- 98.36%
+    public int partitionDisjoint(int[] A) {
+        int i = 0, len = A.length, j = len - 1;
+        int k = 0;
+        while (k < j) {
+            while (A[i] <= A[j]) {
+                j--;
+                if (j == k) {
+                    return k + 1;
+                }
+            }
+            while (k < j) {
+                if (A[i] < A[k]) {
+                    i = k;
+                }
+                k++;
+            }
+            j = len - 1;
+        }
+        return 0;
+    }
+
+    //70 -- 3ms -- 81.01%
+    public int climbStairs(int n) {
+        double d = Math.sqrt(5);
+        n = n + 1;
+        return (int) ((Math.pow((1 + d) / 2, n) - Math.pow((1 - d) / 2, n)) / d + 0.5);
+    }
+
+    //807 -- 8ms -- 96.35%
+    public int maxIncreaseKeepingSkyline(int[][] grid) {
+        int[] l = new int[grid.length];
+        int[] d = new int[grid[0].length];
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[0].length; j++) {
+                l[i] = l[i] > grid[i][j] ? l[i] : grid[i][j];
+                d[j] = d[j] > grid[i][j] ? d[j] : grid[i][j];
+            }
+        }
+        int res = 0;
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[0].length; j++) {
+                int max = l[i] < d[j] ? l[i] : d[j];
+                res = res + max - grid[i][j];
+            }
+        }
+        return res;
+    }
+
+    //299 -- 4ms -- 79.55%
+    public String getHint(String secret, String guess) {
+        int[] se = new int[10];
+        int[] gu = new int[10];
+        int nA = 0, nB = 0;
+        for (int i = 0; i < secret.length(); i++) {
+            if (secret.charAt(i) == guess.charAt(i)) {
+                nA++;
+            } else {
+                se[secret.charAt(i) - '0']++;
+                gu[guess.charAt(i) - '0']++;
+            }
+        }
+        for (int i = 0; i < 10; i++) {
+            nB += se[i] < gu[i] ? se[i] : gu[i];
+        }
+        StringBuffer s = new StringBuffer();
+        s.append(nA).append('A').append(nB).append('B');
+        return s.toString();
+    }
+
+    //101 -- 17ms -- 22.01%
+    public boolean isSymmetric(TreeNode root) {
+        if (root == null) {
+            return true;
+        }
+        if (root.left == null && root.right == null) {
+            return true;
+        }
+        if (root.left == null && root.right != null) {
+            return false;
+        }
+        if (root.left != null && root.right == null) {
+            return false;
+        }
+        Stack<TreeNode> ls = new Stack<>();
+        Stack<TreeNode> rs = new Stack<>();
+        ls.add(root.left);
+        rs.add(root.right);
+        while (!ls.empty() && !rs.empty()) {
+            TreeNode l = ls.pop();
+            TreeNode r = rs.pop();
+            if (l.val != r.val) {
+                return false;
+            }
+            if (l.left != null && r.right == null) {
+                return false;
+            }
+            if (l.left == null && r.right != null) {
+                return false;
+            }
+            if (l.right != null && r.left == null) {
+                return false;
+            }
+            if (l.right == null && r.left != null) {
+                return false;
+            }
+            if (l.left != null) {
+                ls.add(l.left);
+                rs.add(r.right);
+            }
+            if (l.right != null) {
+                ls.add(l.right);
+                rs.add(r.left);
+            }
+        }
+        return true;
+    }
+
+    //113 -- 67ms -- 1.13%
+    public List<List<Integer>> pathSum(TreeNode root, int sum) {
+
+        List<List<Integer>> res = new LinkedList<>();
+        if (root == null) {
+            return res;
+        }
+        List<Integer> li = new LinkedList<>();
+        li.add(root.val);
+        int s = root.val;
+        List<Object> l = new ArrayList<>();
+        l.add(root);
+        l.add(li);
+        l.add(s);
+        Stack<List<Object>> stack = new Stack();
+        stack.add(l);
+        while (!stack.isEmpty()) {
+            List<Object> p = stack.pop();
+            TreeNode pt = (TreeNode) p.get(0);
+            List<Integer> pl = (List<Integer>) p.get(1);
+            int ps = (int) p.get(2);
+            if (pt.left != null) {
+                TreeNode nt = pt.left;
+                List<Integer> nl = new LinkedList<>();
+                pl.forEach(i -> nl.add(i));
+                nl.add(nt.val);
+                int ns = ps + nt.val;
+                List<Object> n = new ArrayList<>();
+                n.add(nt);
+                n.add(nl);
+                n.add(ns);
+                stack.add(n);
+            }
+            if (pt.right != null) {
+                TreeNode nt = pt.right;
+                List<Integer> nl = new LinkedList<>();
+                pl.forEach(i -> nl.add(i));
+                nl.add(nt.val);
+                int ns = ps + nt.val;
+                List<Object> n = new ArrayList<>();
+                n.add(nt);
+                n.add(nl);
+                n.add(ns);
+                stack.add(n);
+            }
+            if (pt.left == null && pt.right == null) {
+                if (ps == sum) {
+                    res.add(pl);
+                }
+            }
+        }
+        return res;
+    }
+
+    //815 : 未完成
+    public int numBusesToDestination(int[][] routes, int S, int T) {
+        if (S == T) {
+            return 0;
+        }
+        Map<Integer, List<Integer>> map = new HashMap<>();
+        for (int i = 0; i < routes.length; i++) {
+            for (int r : routes[i]) {
+                if (map.containsKey(r)) {
+                    List<Integer> p = map.get(r);
+                    p.add(i);
+                } else {
+                    List<Integer> p = new LinkedList<>();
+                    p.add(i);
+                    map.put(r, p);
+                }
+            }
+        }
+        if (!map.containsKey(T)) {
+            return -1;
+        }
+        Map<Integer, Integer> ints = new HashMap<>();
+        Stack<Integer> stack = new Stack<>();
+        boolean[] bools = new boolean[routes.length];
+        int step = 0;
+        ints.put(S, 0);
+        stack.add(S);
+        while (!stack.isEmpty()) {
+            int key = stack.pop();
+            step = ints.get(key);
+            List<Integer> list = map.get(key);
+            for (int ii = 0; ii < list.size(); ii++) {
+                for (int j = 0; j < routes[ii].length; j++) {
+                    int i = routes[ii][j];
+                    if (i == T) {
+                        return step + 1;
+                    } else if (ints.containsKey(i)) {
+                        if (step + 1 < ints.get(i)) {
+                            ints.put(i, step + 1);
+                        }
+                        continue;
+                    } else {
+                        ints.put(i, step + 1);
+                        stack.add(i);
+                    }
                 }
             }
         }
@@ -3406,7 +3918,7 @@ public class Solution {
         p5.next = p6;
         p6.next = p7;
         p7.next = p2;
-        TreeNode t = new TreeNode(0);
+        TreeNode t = new TreeNode(10);
         TreeNode t1 = new TreeNode(1);
         TreeNode t2 = new TreeNode(2);
         TreeNode t3 = new TreeNode(3);
@@ -3415,8 +3927,8 @@ public class Solution {
         t.left = t1;
         t.right = t2;
         t1.left = t3;
-        t3.left = t4;
-        t3.right = t5;
+        t2.left = t4;
+        t2.right = t5;
         solution.postorderTraversal(t1);
         String[] strings = {".#@..", "#.##.", ".#...", "A...#", ".#.#a"};
         String[] strings2 = {".#.#..#.b...............#.#..#", ".#..##.........#......d.......", "..#...e.#.##....##.....#.....#",
@@ -3430,7 +3942,7 @@ public class Solution {
                 ".#.#..#.####............#.....", "#.#..........###.#........#...", "..#..#.........#.......#..#.##",
                 "..#..#C#...............#......", ".........#.##.##......#.#.....", "..#........##.#..##.#.....#.#."};
         int[] arr = {-4, -2, -2, -2, 0, 1, 2, 2, 2, 3, 3, 4, 4, 6, 6};
-        int[] brr = {4, 8, 2, 2, 7};
+        int[] brr = {1, 1};
         int[][] crr = {{3, 1}, {1, 1}, {0, 1}, {2, 1}, {3, 3}, {3, 2}, {0, 2}, {2, 3}};
 //        System.out.print(solution.rotate(arr,9));
         int[][] ins = {
@@ -3454,11 +3966,34 @@ public class Solution {
                 {'A', 'D', 'E', 'E'}
         };
         int[][] is = {
-                {0, 1, 4},
-                {5, 2, 3}
+                {1, 2, 4},
+                {5, 2, 3},
+                {5, 6, 9}
         };
         char[][] boards = {};
-        System.out.print(solution.slidingPuzzle(is));
+        List<List<Integer>> nums = new LinkedList();
+        List<Integer> l1 = new ArrayList<>();
+        l1.add(4);
+        l1.add(14);
+        l1.add(24);
+        l1.add(34);
+        l1.add(40);
+        List<Integer> l2 = new ArrayList<>();
+        l2.add(12);
+        l2.add(14);
+        l2.add(25);
+        l2.add(38);
+        l2.add(41);
+        List<Integer> l3 = new ArrayList<>();
+        l3.add(9);
+        l3.add(19);
+        l3.add(20);
+        l3.add(26);
+        l3.add(50);
+        nums.add(l1);
+        nums.add(l2);
+        nums.add(l3);
+        System.out.print(solution.numBusesToDestination(is, 1, 9));
     }
 
 }
