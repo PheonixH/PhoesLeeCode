@@ -631,6 +631,111 @@ public class Games {
         return res;
     }
 
+    //2019.2.10 - 第123周赛
+    //989
+    public List<Integer> addToArrayForm(int[] A, int K) {
+        List res = new LinkedList();
+        int isEnough = 0;
+        int j = 10;
+        for (int i = A.length - 1; i >= 0; i--) {
+            int n = A[i] + K % j / (j / 10) + isEnough;
+            if (n >= 10) {
+                isEnough = 1;
+                n = n % 10;
+            } else {
+                isEnough = 0;
+            }
+            res.add(0, n);
+            if (K >= j / 10) {
+                j = j * 10;
+            }
+        }
+        if (K >= j / 10) {
+            while (j <= K * 10) {
+                int n = K % j / (j / 10) + isEnough;
+                if (n >= 10) {
+                    isEnough = 1;
+                    n = n % 10;
+                } else {
+                    isEnough = 0;
+                }
+                res.add(0, n);
+                j = j * 10;
+            }
+        }
+        if (isEnough == 1) {
+            res.add(0, 1);
+        }
+        return res;
+    }
+
+    //990
+    public boolean equationsPossible(String[] equations) {
+        Map<Character, Integer> map = new HashMap<>();
+        for (String equation : equations) {
+            char c1 = equation.charAt(0);
+            char c2 = equation.charAt(3);
+            char c3 = equation.charAt(1);
+            if (c3 == '!') {
+                if (map.containsKey(c1) && map.containsKey(c2)) {
+                    if ((int) map.get(c1) == map.get(c2)) {
+                        return false;
+                    }
+                    continue;
+                }
+                if (map.containsKey(c1) && !map.containsKey(c2)) {
+                    int k = map.get(c1);
+                    map.put(c2, k + (int) c2);
+                    continue;
+                }
+                if (!map.containsKey(c1) && map.containsKey(c2)) {
+                    int k = map.get(c2);
+                    map.put(c1, k + (int) c1);
+                    continue;
+                }
+                if (!map.containsKey(c1) && !map.containsKey(c2)){
+                    map.put(c1, (int)c1);
+                    map.put(c2, (int)c2);
+                }
+            } else {
+                continue;
+            }
+        }
+        if(map.isEmpty()){
+            return true;
+        }
+        for(String equation: equations){
+            char c1 = equation.charAt(0);
+            char c2 = equation.charAt(3);
+            char c3 = equation.charAt(1);
+            if(c3 == '!'){
+                continue;
+            }
+            if (map.containsKey(c1) && map.containsKey(c2)) {
+                int k1 = map.get(c1);
+                int k2 = map.get(c2);
+                if (k1 != k2) {
+                    return false;
+                }
+                continue;
+            }
+            if (map.containsKey(c1) && !map.containsKey(c2)) {
+                int k = map.get(c1);
+                map.put(c2, k);
+                continue;
+            }
+            if (!map.containsKey(c1) && map.containsKey(c2)) {
+                int k = map.get(c2);
+                map.put(c1, k);
+            }
+//            if (!map.containsKey(c1) && !map.containsKey(c2)){
+//                map.put(c1, (int)c1);
+//                map.put(c2, (int)c1);
+//            }
+        }
+        return true;
+    }
+
     public static void main(String[] args) {
         Games games = new Games();
         int[] arr = {9, 8, 1, 0, 1, 9, 4, 0, 4, 1};
