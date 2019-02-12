@@ -713,6 +713,194 @@ public class SolitionUbuntu {
         return res;
     }
 
+    //378 -- 39ms -- 37.86%
+    public int kthSmallest0(int[][] matrix, int k) {
+        int[] ints = new int[matrix.length];
+        int[] is = new int[matrix.length];
+        int j = 0;
+        for (int[] i : matrix) {
+            ints[j] = i[0];
+            is[j++] = 0;
+        }
+        j = 0;
+        int res = matrix[0][0];
+        while (j < k) {
+            int min = 0;
+            int m = ints[0];
+            for (int i = 1; i < ints.length; i++) {
+                if (m > ints[i]) {
+                    min = i;
+                    m = ints[i];
+                }
+            }
+            res = ints[min];
+            if (is[min] + 1 >= matrix[min].length) {
+                ints[min] = Integer.MAX_VALUE;
+            } else {
+                ints[min] = matrix[min][++is[min]];
+            }
+            j++;
+        }
+        return res;
+    }
+
+    //378 -- 最大堆 -- 26ms -- 51.96%
+    public int kthSmallest(int[][] m, int k) {
+        /*
+        26ms
+        int[] a = new int[m.length * m.length];
+        for(int i = 0;i < m.length;i++){
+            for(int j = 0;j < m[i].length;j++){
+                a[i * m.length + j] = m[i][j];
+            }
+        }
+        Arrays.sort(a);
+        return a[k - 1];
+        */
+        //堆排序 15ms (建堆整理堆真的是好麻烦啊。。。)
+        if (k == m.length * m[0].length) return m[m.length - 1][m[0].length - 1];
+        int[] heap = generateHeap(m);
+        int count = 1;
+        while (count <= k) {
+            heapSort(heap, count);
+            //System.out.println(heap[heap.length - count]);
+            count++;
+        }
+        return heap[heap.length - count + 1];
+    }
+
+    private int[] generateHeap(int[][] m) {
+        int[] heap = new int[m.length * m.length + 1];
+        heap[0] = 0;
+        for (int i = 0; i < m.length; i++) {
+            for (int j = 0; j < m[i].length; j++) {
+                heap[i * m[0].length + j + 1] = m[i][j];
+            }
+        }
+        /*
+        建堆，向上调整，可能包含向下调整
+        */
+        for (int i = (heap.length - 1) / 2; i > 0; i--) {
+            int l = 2 * i, r = 2 * i + 1;
+            if (r >= heap.length - 1) {
+                if (heap[l] < heap[i]) {
+                    swap(heap, l, i);
+                    downToHeap(heap, l, 1);
+                }
+            } else if (heap[l] < heap[r] && heap[l] < heap[i]) {
+                swap(heap, l, i);
+                downToHeap(heap, l, 1);
+            } else if (heap[r] <= heap[l] && heap[r] < heap[i]) {
+                swap(heap, r, i);
+                downToHeap(heap, r, 1);
+            }
+        }
+        /*
+        for(int num:heap){
+            System.out.print(num + " ");
+        }
+        System.out.println();
+        */
+        return heap;
+    }
+
+    /*
+    向下调整，在建堆和堆整理过程中都可能会用到
+    */
+    private void downToHeap(int[] heap, int i, int count) {
+        while (i * 2 < heap.length - count) {
+            int l = 2 * i, r = 2 * i + 1;
+            if (r == heap.length - count) {
+                if (heap[l] <= heap[i]) {
+                    swap(heap, l, i);
+                    i = l;
+                } else break;
+            } else {
+                if (heap[l] < heap[r] && heap[l] <= heap[i]) {
+                    swap(heap, l, i);
+                    i = l;
+                } else if (heap[r] <= heap[l] && heap[r] < heap[i]) {
+                    swap(heap, r, i);
+                    i = r;
+                } else break;
+            }
+        }
+    }
+
+    private void heapSort(int[] heap, int count) {
+        swap(heap, 1, heap.length - count);
+        //System.out.println("ok " + heap[heap.length - count]);
+        downToHeap(heap, 1, count);
+    }
+
+    private void swap(int[] a, int i1, int i2) {
+        int tmp = a[i1];
+        a[i1] = a[i2];
+        a[i2] = tmp;
+    }
+
+    //136 -- 1ms -- 99.46%
+    public int singleNumber1(int[] nums) {
+        int res = 0;
+        for (int num : nums) {
+            res = res ^ num;
+        }
+        return res;
+    }
+
+    //137 -- 7ms -- 43.92%
+    public int singleNumber2(int[] nums) {
+        Set<Integer> set = new HashSet<>();
+        Set<Integer> set1 = new HashSet<>();
+        for (int n : nums) {
+            if (set.contains(n)) {
+                set1.add(n);
+            } else {
+                set.add(n);
+            }
+        }
+        int res = 0;
+        for (int n : nums) {
+            if (set1.contains(n)) {
+                continue;
+            } else {
+                res = n;
+                break;
+            }
+        }
+        return res;
+    }
+
+    //137 -- 类似异或 -- 1ms -- 96.76%
+    /*
+    * 【笔记】网上大佬曾经说，如果能设计一个状态转换电路，使得一个数出现3次时能自动抵消为0，最后剩下的就是只出现1次的数。
+
+开始设计：一个二进制位只能表示0或者1。也就是天生可以记录一个数出现了一次还是两次。
+
+x ^ 0 = x;
+x ^ x = 0;
+要记录出现3次，需要两个二进制位。那么上面单独的x就不行了。我们需要两个变量，每个变量取一位：
+
+ab ^ 00 = ab;
+ab ^ ab = 00;
+这里，a、b都是32位的变量。我们使用a的第k位与b的第k位组合起来的两位二进制，表示当前位出现了几次。也就是，一个8位的二进制x就变成了16位来表示。
+
+x = x[7] x[6] x[5] x[4] x[3] x[2] x[1] x[0]
+
+x = (a[7]b[7]) (a[6]b[6]) ... (a[1]b[1]) (a[0]b[0])
+
+于是，就有了这一幕....
+
+它是一个逻辑电路，a、b变量中，相同位置上，分别取出一位，负责完成00->01->10->00，也就是开头的那句话，当数字出现3次时置零。*/
+    public int singleNumber0(int[] nums) {
+        int a = 0, b = 0;
+        for (int x : nums) {
+            a = (a ^ x) & ~b;
+            b = (b ^ x) & ~a;
+        }
+        return a;
+    }
+
     public static void main(String[] args) {
         TreeNode root = new TreeNode(1);
         TreeNode r1 = new TreeNode(2);
