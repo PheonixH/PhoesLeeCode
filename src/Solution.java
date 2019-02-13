@@ -3849,7 +3849,7 @@ public class Solution {
         return res;
     }
 
-    //815 : 未完成
+    //815 : 超时
     public int numBusesToDestination(int[][] routes, int S, int T) {
         if (S == T) {
             return 0;
@@ -3871,28 +3871,25 @@ public class Solution {
             return -1;
         }
         Map<Integer, Integer> ints = new HashMap<>();
-        Stack<Integer> stack = new Stack<>();
+        Queue<Integer> queue = new LinkedList<>();
         boolean[] bools = new boolean[routes.length];
         int step = 0;
         ints.put(S, 0);
-        stack.add(S);
-        while (!stack.isEmpty()) {
-            int key = stack.pop();
+        queue.add(S);
+        while (!queue.isEmpty()) {
+            int key = queue.poll();
             step = ints.get(key);
             List<Integer> list = map.get(key);
             for (int ii = 0; ii < list.size(); ii++) {
-                for (int j = 0; j < routes[ii].length; j++) {
-                    int i = routes[ii][j];
+                for (int j = 0; j < routes[list.get(ii)].length; j++) {
+                    int i = routes[list.get(ii)][j];
                     if (i == T) {
                         return step + 1;
                     } else if (ints.containsKey(i)) {
-                        if (step + 1 < ints.get(i)) {
-                            ints.put(i, step + 1);
-                        }
                         continue;
                     } else {
                         ints.put(i, step + 1);
-                        stack.add(i);
+                        queue.add(i);
                     }
                 }
             }
@@ -3946,10 +3943,7 @@ public class Solution {
         int[][] crr = {{3, 1}, {1, 1}, {0, 1}, {2, 1}, {3, 3}, {3, 2}, {0, 2}, {2, 3}};
 //        System.out.print(solution.rotate(arr,9));
         int[][] ins = {
-                {1, 3, 4, 0, 3, 2},
-                {4, 1, 2, 7, 1, 3},
-                {3, 4, 2, 1, 4, 1},
-                {0, 5, 3, 6, 1, 5}
+                {0, 1, 6, 16, 22, 23}, {14, 15, 24, 32}, {4, 10, 12, 20, 24, 28, 33}, {1, 10, 11, 19, 27, 33}, {11, 23, 25, 28}, {15, 20, 21, 23, 29}, {29}
         };
         int[][] ints = {
                 {0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0},
@@ -3993,7 +3987,7 @@ public class Solution {
         nums.add(l1);
         nums.add(l2);
         nums.add(l3);
-        System.out.print(solution.numBusesToDestination(is, 1, 9));
+        System.out.print(solution.numBusesToDestination(ins, 4, 21));
     }
 
 }
