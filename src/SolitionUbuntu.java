@@ -758,7 +758,9 @@ public class SolitionUbuntu {
         return a[k - 1];
         */
         //堆排序 15ms (建堆整理堆真的是好麻烦啊。。。)
-        if (k == m.length * m[0].length) return m[m.length - 1][m[0].length - 1];
+        if (k == m.length * m[0].length) {
+            return m[m.length - 1][m[0].length - 1];
+        }
         int[] heap = generateHeap(m);
         int count = 1;
         while (count <= k) {
@@ -814,7 +816,9 @@ public class SolitionUbuntu {
                 if (heap[l] <= heap[i]) {
                     swap(heap, l, i);
                     i = l;
-                } else break;
+                } else {
+                    break;
+                }
             } else {
                 if (heap[l] < heap[r] && heap[l] <= heap[i]) {
                     swap(heap, l, i);
@@ -822,7 +826,10 @@ public class SolitionUbuntu {
                 } else if (heap[r] <= heap[l] && heap[r] < heap[i]) {
                     swap(heap, r, i);
                     i = r;
-                } else break;
+                } else {
+                    break;
+                }
+
             }
         }
     }
