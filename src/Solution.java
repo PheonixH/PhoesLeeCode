@@ -3897,6 +3897,280 @@ public class Solution {
         return -1;
     }
 
+    //377 -- 动态规划 -- 2ms -- 92.67% -- 19.3MB -- 75.76%
+    public int combinationSum4(int[] nums, int target) {
+        int[] memo = new int[target + 1];
+        memo[0] = 1;
+        for (int i = 0; i < target; i++) {
+            for (int num : nums) {
+                if (i + num <= target) {
+                    memo[i + num] += memo[i];
+                }
+            }
+        }
+        return memo[target];
+    }
+
+    //377 -- 简单递归 -- 超时
+    public int combinationSum4_1(int[] nums, int target) {
+        if (target == 0) {
+            return 1;
+        }
+        int res = 0;
+        for (int num : nums) {
+            if (target >= num) {
+                res += combinationSum4_1(nums, target - num);
+            }
+        }
+        return res;
+    }
+
+    //377 -- 记忆化搜索 -- 1ms -- 100% -- 20.5MB -- 19.69%
+    private int[] memo;
+
+    public int combinationSum4_2(int[] nums, int target) {
+        memo = new int[target + 1];
+        Arrays.fill(memo, -1);
+        memo[0] = 1;
+        return search(nums, target);
+    }
+
+    private int search(int[] nums, int target) {
+        if (memo[target] != -1) {
+            return memo[target];
+        }
+        int res = 0;
+        for (int num : nums) {
+            if (target >= num) {
+                res += search(nums, target - num);
+            }
+        }
+        memo[target] = res;
+        return res;
+    }
+
+    //39 -- 递归 -- 21ms -- 58.65% -- 32.8MB -- 30.35%
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+        List<List<Integer>> listAll = new ArrayList<List<Integer>>();
+        List<Integer> list = new ArrayList<Integer>();
+        //排序
+        Arrays.sort(candidates);
+        find(listAll, list, candidates, target, 0);
+        return listAll;
+    }
+
+    public void find(List<List<Integer>> listAll, List<Integer> tmp, int[] candidates, int target, int num) {
+        //递归的终点
+        if (target == 0) {
+            listAll.add(tmp);
+            return;
+        }
+        if (target < candidates[0]) {
+            return;
+        }
+        for (int i = num; i < candidates.length && candidates[i] <= target; i++) {
+            //深拷贝
+            List<Integer> list = new ArrayList<>(tmp);
+            list.add(candidates[i]);
+            //递归运算，将i传递至下一次运算是为了避免结果重复。
+            find(listAll, list, candidates, target - candidates[i], i);
+        }
+    }
+
+    //81 -- 2ms -- 65.20% -- 22.2MB -- 81.61%
+    public boolean search81(int[] nums, int target) {
+        if (nums.length == 0) {
+            return false;
+        }
+        int p = nums[0];
+        boolean isOver = false;
+        for (int num : nums) {
+            if (num == target) {
+                return true;
+            }
+            if (p > num) {
+                isOver = true;
+            } else if (isOver && num > target) {
+                return false;
+            }
+        }
+        return false;
+    }
+
+    //33 -- 15ms -- 55.59% -- 26MB -- 61.44%
+    public int search33_1(int[] nums, int target) {
+        if (nums.length == 0) {
+            return -1;
+        }
+        int p = nums[0];
+        boolean isOver = false;
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] == target) {
+                return i;
+            }
+            if (p > nums[i]) {
+                isOver = true;
+            } else if (isOver && nums[i] > target) {
+                return -1;
+            }
+        }
+        return -1;
+    }
+
+    //33 -- 二分法 -- 11ms -- 76.61% -- 26.9MB -- 14.59%
+    public int search33_2(int[] nums, int target) {
+        return search33_2Ass2(0, nums.length - 1, nums, target);
+    }
+
+    //常规二分
+    public int search33_2Ass(int b, int e, int[] nums, int target) {
+        if (b > e) {
+            return -1;
+        }
+        if (b == e) {
+            return nums[b] == target ? b : -1;
+        }
+        if (nums[b] == target) {
+            return b;
+        }
+        if (nums[e] == target) {
+            return e;
+        }
+        int k = (b + e) / 2;
+        int res = 0;
+        if (target == nums[k]) {
+            return k;
+        } else if (nums[k] > target) {
+            res = search33_2Ass(b + 1, k - 1, nums, target);
+        } else {
+            res = search33_2Ass(k + 1, e - 1, nums, target);
+        }
+        return res;
+    }
+
+    //非常规二分
+    public int search33_2Ass2(int b, int e, int[] nums, int target) {
+        if (b > e) {
+            return -1;
+        }
+        if (b == e) {
+            return nums[b] == target ? b : -1;
+        }
+        if (nums[b] == target) {
+            return b;
+        }
+        if (nums[e] == target) {
+            return e;
+        }
+        int k = (b + e) / 2;
+        if (target == nums[k]) {
+            return k;
+        }
+        int res = -1;
+        if (nums[b] < nums[k]) {
+            res = search33_2Ass(b + 1, k - 1, nums, target);
+            if (res != -1) {
+                return res;
+            }
+            res = search33_2Ass2(k + 1, e - 1, nums, target);
+            if (res != -1) {
+                return res;
+            }
+        } else {
+            res = search33_2Ass2(b + 1, k - 1, nums, target);
+            if (res != -1) {
+                return res;
+            }
+            res = search33_2Ass(k + 1, e - 1, nums, target);
+            if (res != -1) {
+                return res;
+            }
+        }
+        return res;
+    }
+
+    //50 -- 17ms -- 74.69% -- 27.3MB -- 51.25%
+    public double myPow(double x, int n) {
+        return Math.pow(x, n);
+    }
+
+    //767 -- 14ms -- 54.14% -- 26.7MB -- 36.36%
+    public String reorganizeString(String S) {
+        char[] chars = S.toCharArray();
+        int[] res = new int[26];
+        List<Integer> list = new LinkedList<>();
+        int max = 0;
+        for (char c : chars) {
+            res[c - 'a']++;
+            if (res[c - 'a'] > max) {
+                max = res[c - 'a'];
+            }
+            if (!list.contains(c - 'a')) {
+                list.add(c - 'a');
+            }
+        }
+        if (max > (S.length() + 1) / 2) {
+            return "";
+        }
+        Object[] objects = list.toArray();
+        StringBuffer stb = new StringBuffer();
+        int m = -1;
+        for (int i = 0; i < S.length(); i++) {
+            int ma = m == 0 ? 1 : 0;
+            for (Object jj : objects) {
+                int j = (int) jj;
+                if (j != m) {
+                    ma = res[j] > res[ma] ? j : ma;
+                }
+            }
+            stb.append((char) (ma + 'a'));
+            res[ma]--;
+            m = ma;
+        }
+        return stb.toString();
+    }
+
+    //980 -- 3ms -- 97.83% -- 26.5MB -- 100%
+    public int uniquePathsIII(int[][] grid) {
+        int[] start = new int[2];
+        int[] end = new int[2];
+        int p = 1;
+        int row = grid.length, col = grid[0].length;
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                if (grid[i][j] == 1) {
+                    start[0] = i;
+                    start[1] = j;
+                }
+                if (grid[i][j] == 2) {
+                    end[0] = i;
+                    end[1] = j;
+                }
+                if (grid[i][j] == 0) {
+                    p++;
+                }
+            }
+        }
+        return dfs(start[0], start[1], p, row, col, grid, end);
+    }
+
+    public int dfs(int x, int y, int p, int row, int col, int[][] grid, int[] end) {
+        boolean b = 0 <= x && x < row && 0 <= y && y < col && grid[x][y] >= 0;
+        if (!b) {
+            return 0;
+        }
+        if (end[0] == x && end[1] == y && p == 0) {
+            return 1;
+        }
+        grid[x][y] = -1;
+        int res = dfs(x + 1, y, p - 1, row, col, grid, end) +
+                dfs(x, y + 1, p - 1, row, col, grid, end) +
+                dfs(x - 1, y, p - 1, row, col, grid, end) +
+                dfs(x, y - 1, p - 1, row, col, grid, end);
+        grid[x][y] = 0;
+        return res;
+    }
+
     public static void main(String[] args) {
         Solution solution = new Solution();
         ListNode p = new ListNode(1);
@@ -3939,7 +4213,7 @@ public class Solution {
                 ".#.#..#.####............#.....", "#.#..........###.#........#...", "..#..#.........#.......#..#.##",
                 "..#..#C#...............#......", ".........#.##.##......#.#.....", "..#........##.#..##.#.....#.#."};
         int[] arr = {-4, -2, -2, -2, 0, 1, 2, 2, 2, 3, 3, 4, 4, 6, 6};
-        int[] brr = {1, 1};
+        int[] brr = {3, 5, 6, 0, 1, 2};
         int[][] crr = {{3, 1}, {1, 1}, {0, 1}, {2, 1}, {3, 3}, {3, 2}, {0, 2}, {2, 3}};
 //        System.out.print(solution.rotate(arr,9));
         int[][] ins = {
@@ -3987,7 +4261,7 @@ public class Solution {
         nums.add(l1);
         nums.add(l2);
         nums.add(l3);
-        System.out.print(solution.numBusesToDestination(ins, 4, 21));
+        System.out.print(solution.reorganizeString("aab"));
     }
 
 }
