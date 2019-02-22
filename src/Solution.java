@@ -4171,6 +4171,56 @@ public class Solution {
         return res;
     }
 
+
+    //699 -- 88ms -- 40% -- 37.6MB -- 100%
+    public List<Integer> fallingSquares(int[][] positions) {
+        List<Integer> res = new LinkedList<>();
+        List<int[]> status = new ArrayList<>();
+        int totalmax = 0;
+        for (int[] p : positions) {
+            int x = p[0];
+            int l = p[1];
+            int max = 0;
+            int y = x + l;
+            List<Integer> rem = new ArrayList<>();
+            for (int j = 0; j < status.size(); j++) {
+                int[] st = status.get(j);
+                if (st[0] >= x && st[1] <= y) {
+                    rem.add(j);
+                    max = max > st[2] ? max : st[2];
+                } else if (st[0] >= x && st[1] > y && st[0] < y) {
+                    st[0] = y;
+                    max = max > st[2] ? max : st[2];
+                } else if (st[0] < x && st[1] <= y && st[1] > x) {
+                    st[1] = x;
+                    max = max > st[2] ? max : st[2];
+                } else if (st[0] < x && st[1] > y) {
+                    int[] newst = new int[3];
+                    newst[0] = y;
+                    newst[1] = st[1];
+                    newst[2] = st[2];
+                    status.add(newst);
+                    st[1] = x;
+                    max = max > st[2] ? max : st[2];
+                }
+                totalmax = totalmax > st[2] ? totalmax : st[2];
+            }
+            max += l;
+            for (int j = rem.size() - 1; j >= 0; j--) {
+                int k = rem.get(j);
+                status.remove(k);
+            }
+            int[] newst = new int[3];
+            newst[0] = x;
+            newst[1] = y;
+            newst[2] = max;
+            status.add(newst);
+            totalmax = totalmax > max ? totalmax : max;
+            res.add(totalmax);
+        }
+        return res;
+    }
+
     public static void main(String[] args) {
         Solution solution = new Solution();
         ListNode p = new ListNode(1);
@@ -4214,8 +4264,7 @@ public class Solution {
                 "..#..#C#...............#......", ".........#.##.##......#.#.....", "..#........##.#..##.#.....#.#."};
         int[] arr = {-4, -2, -2, -2, 0, 1, 2, 2, 2, 3, 3, 4, 4, 6, 6};
         int[] brr = {3, 5, 6, 0, 1, 2};
-        int[][] crr = {{3, 1}, {1, 1}, {0, 1}, {2, 1}, {3, 3}, {3, 2}, {0, 2}, {2, 3}};
-//        System.out.print(solution.rotate(arr,9));
+        int[][] crr = {{2, 2}, {3, 3},{6, 1}};//{7, 2}, {1, 7}, {9, 5}, {1, 8}, {3, 4}};
         int[][] ins = {
                 {0, 1, 6, 16, 22, 23}, {14, 15, 24, 32}, {4, 10, 12, 20, 24, 28, 33}, {1, 10, 11, 19, 27, 33}, {11, 23, 25, 28}, {15, 20, 21, 23, 29}, {29}
         };
@@ -4261,7 +4310,7 @@ public class Solution {
         nums.add(l1);
         nums.add(l2);
         nums.add(l3);
-        System.out.print(solution.reorganizeString("aab"));
+        System.out.print(solution.fallingSquares(crr));
     }
 
 }
