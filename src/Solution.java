@@ -5,6 +5,7 @@ import datestruct.TreeNode;
 import datestruct.Worker;
 
 import java.util.*;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import static java.lang.Math.log10;
 
@@ -4221,6 +4222,250 @@ public class Solution {
         return res;
     }
 
+
+    //958 -- LinkedBlockingQueue
+    //执行用时 : 22 ms, 在Check Completeness of a Binary Tree的Java提交中击败了2.19% 的用户
+    //内存消耗 : 37.8 MB, 在Check Completeness of a Binary Tree的Java提交中击败了0.00% 的用户
+    public boolean isCompleteTree0(TreeNode root) {
+        if (root == null) {
+            return false;
+        }
+        Queue<TreeNode> queue = new ArrayDeque<>();
+        queue.add(root);
+        boolean flag = false;
+        while (!queue.isEmpty()) {
+            TreeNode t = queue.poll();
+            if (flag) {
+                if (t.left != null || t.right != null) {
+                    return false;
+                }
+            } else {
+                if (t.left != null) {
+                    queue.add(t.left);
+                } else {
+                    flag = true;
+                }
+                if (t.right != null) {
+                    if (flag) {
+                        return false;
+                    } else {
+                        queue.add(t.right);
+                    }
+                } else {
+                    flag = true;
+                }
+            }
+        }
+        return true;
+    }
+
+    //958 -- LinkList
+    //执行用时 : 11 ms, 在Check Completeness of a Binary Tree的Java提交中击败了66.42% 的用户
+    //内存消耗 : 37.4 MB, 在Check Completeness of a Binary Tree的Java提交中击败了0.00% 的用户
+    public boolean isCompleteTree1(TreeNode root) {
+        if (root == null) {
+            return false;
+        }
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.add(root);
+        boolean flag = false;
+        while (!queue.isEmpty()) {
+            TreeNode t = queue.poll();
+            if (flag) {
+                if (t.left != null || t.right != null) {
+                    return false;
+                }
+            } else {
+                if (t.left != null) {
+                    queue.add(t.left);
+                } else {
+                    flag = true;
+                }
+                if (t.right != null) {
+                    if (flag) {
+                        return false;
+                    } else {
+                        queue.add(t.right);
+                    }
+                } else {
+                    flag = true;
+                }
+            }
+        }
+        return true;
+    }
+
+    //958 -- LinkList
+    //执行用时 : 7 ms, 在Check Completeness of a Binary Tree的Java提交中击败了83.21% 的用户
+    //内存消耗 : 37.5 MB, 在Check Completeness of a Binary Tree的Java提交中击败了0.00% 的用户
+    public boolean isCompleteTree(TreeNode root) {
+        LinkedList<TreeNode> q = new LinkedList<>();
+        TreeNode cur;
+        q.addLast(root);
+        while ((cur = q.removeFirst()) != null) {
+            q.addLast(cur.left);
+            q.addLast(cur.right);
+        }
+        while (!q.isEmpty()) {
+            if (q.removeLast() != null) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    //64 -- 真正最短路径（无规定）
+    public int minPathSum(int[][] grid) {
+        int x = grid.length - 1;
+        int y = grid[0].length - 1;
+        int[] p = new int[3];
+        p[0] = x;
+        p[1] = y;
+        p[2] = grid[x][y];
+        int[][] status = new int[x + 1][y + 1];
+        for (int i = 0; i < status.length; i++) {
+            for (int j = 0; j < status[i].length; j++) {
+                status[i][j] = Integer.MAX_VALUE;
+            }
+        }
+        int[][] dir = new int[4][2];
+        dir[0][0] = 0;
+        dir[0][1] = 1;
+        dir[1][0] = 0;
+        dir[1][1] = -1;
+        dir[2][0] = 1;
+        dir[2][1] = 0;
+        dir[3][0] = -1;
+        dir[3][1] = 0;
+
+        Queue<int[]> queue = new LinkedList<>();
+        queue.add(p);
+        int res = Integer.MAX_VALUE;
+
+        //打印路径
+        Map<String, List<int[]>> road = new HashMap<>();
+        List<int[]> r = new LinkedList<>();
+        r.add(p);
+        String str = "x=" + p[0] + ",y=" + p[1];
+        road.put(str, r);
+        while (!queue.isEmpty()) {
+            int[] t = queue.poll();
+            int tx = t[0];
+            int ty = t[1];
+            int tv = t[2];
+            if (tx == 0 && ty == 0) {
+                res = res > tv ? tv : res;
+            }
+            for (int[] di : dir) {
+                if (tx + di[0] < 0 || tx + di[0] > x) {
+                    continue;
+                }
+                if (ty + di[1] < 0 || ty + di[1] > y) {
+                    continue;
+                }
+                if (tv + grid[tx + di[0]][ty + di[1]] >= status[tx + di[0]][ty + di[1]]) {
+                    continue;
+                }
+                status[tx + di[0]][ty + di[1]] = tv + grid[tx + di[0]][ty + di[1]];
+                int[] np = new int[3];
+                np[0] = tx + di[0];
+                np[1] = ty + di[1];
+                np[2] = tv + grid[tx + di[0]][ty + di[1]];
+                queue.add(np);
+
+                //添加路径
+                String nstr = "x=" + (tx + di[0]) + ",y=" + (ty + di[1]);
+                String ostr = "x=" + tx + ",y=" + ty;
+                List<int[]> oldr = road.get(ostr);
+                List<int[]> newr = new LinkedList<>();
+                for (int[] i : oldr) {
+                    newr.add(i);
+                }
+                newr.add(np);
+
+                road.put(nstr, newr);
+
+
+            }
+        }
+        str = "x=" + 0 + ",y=" + 1;
+        String str2 = "x=" + 1 + ",y=" + 0;
+        List<int[]> resr1 = road.get(str);
+        List<int[]> resr2 = road.get(str2);
+        return res;
+    }
+
+    //64 -- 只能向下或者向右（向上或者向左）
+    //执行用时 : 10 ms, 在Minimum Path Sum的Java提交中击败了41.68% 的用户
+    //内存消耗 : 43.4 MB, 在Minimum Path Sum的Java提交中击败了0.87% 的用户
+    public int minPathSum1(int[][] grid) {
+        int row = grid.length, col = grid[0].length;
+        int[][] dp = new int[row][col];
+        //dp[i][j]表示到(i,j)的最小和
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                if (i != 0 || j != 0) {
+                    if (i == 0) {
+                        dp[i][j] = dp[i][j - 1] + grid[i][j];
+                    } else if (j == 0) {
+                        dp[i][j] = dp[i - 1][j] + grid[i][j];
+                    } else {
+                        dp[i][j] = Math.min(dp[i - 1][j], dp[i][j - 1]) + grid[i][j];
+                    }
+                } else {
+                    dp[i][j] = grid[i][j];
+                }
+            }
+        }
+        return dp[row - 1][col - 1];
+    }
+
+    //581
+    //执行用时 : 25 ms, 在Shortest Unsorted Continuous Subarray的Java提交中击败了73.47% 的用户
+    //内存消耗 : 48.5 MB, 在Shortest Unsorted Continuous Subarray的Java提交中击败了9.26% 的用户
+    public int findUnsortedSubarray(int[] nums) {
+        int min = nums[0];
+        int max = nums[nums.length - 1];
+        boolean mi = false;
+        boolean ma = false;
+        int res = nums.length;
+        int bb = nums.length - 1;
+        int ee = 0;
+        for (int i = 0; i < nums.length; i++) {
+            if (min > nums[i]) {
+                mi = true;
+                min = nums[i];
+                int b = 0;
+                for (int j : nums) {
+                    if (j <= min) {
+                        b++;
+                    } else {
+                        break;
+                    }
+                }
+                bb = b > bb ? bb : b;
+            } else if (!mi) {
+                min = nums[i];
+            }
+            if (max < nums[nums.length - i - 1]) {
+                ma = true;
+                max = nums[nums.length - i - 1];
+                int e = nums.length - 1;
+                for (int j = nums.length - 1; j >= 0; j--) {
+                    if (nums[j] >= max) {
+                        e--;
+                    } else {
+                        break;
+                    }
+                }
+                ee = e < ee ? ee : e;
+            } else if (!ma) {
+                max = nums[nums.length - i - 1];
+            }
+        }
+        return ee - bb > 0 ? ee - bb + 1 : 0;
+    }
+
     public static void main(String[] args) {
         Solution solution = new Solution();
         ListNode p = new ListNode(1);
@@ -4239,17 +4484,17 @@ public class Solution {
         p5.next = p6;
         p6.next = p7;
         p7.next = p2;
-        TreeNode t = new TreeNode(10);
-        TreeNode t1 = new TreeNode(1);
-        TreeNode t2 = new TreeNode(2);
-        TreeNode t3 = new TreeNode(3);
-        TreeNode t4 = new TreeNode(4);
-        TreeNode t5 = new TreeNode(5);
+        TreeNode t = new TreeNode(1);
+        TreeNode t1 = new TreeNode(2);
+        TreeNode t2 = new TreeNode(3);
+        TreeNode t3 = new TreeNode(4);
+        TreeNode t4 = new TreeNode(5);
+        TreeNode t5 = new TreeNode(6);
         t.left = t1;
         t.right = t2;
         t1.left = t3;
-        t2.left = t4;
-        t2.right = t5;
+        t1.right = t4;
+        t2.left = t5;
         solution.postorderTraversal(t1);
         String[] strings = {".#@..", "#.##.", ".#...", "A...#", ".#.#a"};
         String[] strings2 = {".#.#..#.b...............#.#..#", ".#..##.........#......d.......", "..#...e.#.##....##.....#.....#",
@@ -4263,20 +4508,31 @@ public class Solution {
                 ".#.#..#.####............#.....", "#.#..........###.#........#...", "..#..#.........#.......#..#.##",
                 "..#..#C#...............#......", ".........#.##.##......#.#.....", "..#........##.#..##.#.....#.#."};
         int[] arr = {-4, -2, -2, -2, 0, 1, 2, 2, 2, 3, 3, 4, 4, 6, 6};
-        int[] brr = {3, 5, 6, 0, 1, 2};
-        int[][] crr = {{2, 2}, {3, 3},{6, 1}};//{7, 2}, {1, 7}, {9, 5}, {1, 8}, {3, 4}};
+        int[] brr = {3, 6, 4, 5, 7, 9};
+        int[][] crr = {{2, 2}, {3, 3}, {6, 1}};//{7, 2}, {1, 7}, {9, 5}, {1, 8}, {3, 4}};
         int[][] ins = {
                 {0, 1, 6, 16, 22, 23}, {14, 15, 24, 32}, {4, 10, 12, 20, 24, 28, 33}, {1, 10, 11, 19, 27, 33}, {11, 23, 25, 28}, {15, 20, 21, 23, 29}, {29}
         };
         int[][] ints = {
-                {0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0},
-                {0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0},
-                {0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0},
-                {0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0},
-                {0, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0},
-                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0},
-                {0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0},
-                {0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0}};
+                {5, 4, 2, 9, 6, 0, 3, 5, 1, 4, 9, 8, 4, 9, 7, 5, 1},
+                {3, 4, 9, 2, 9, 9, 0, 9, 7, 9, 4, 7, 8, 4, 4, 5, 8},
+                {6, 1, 8, 9, 8, 0, 3, 7, 0, 9, 8, 7, 4, 9, 2, 0, 1},
+                {4, 0, 0, 5, 1, 7, 4, 7, 6, 4, 1, 0, 1, 0, 6, 2, 8},
+                {7, 2, 0, 2, 9, 3, 4, 7, 0, 8, 9, 5, 9, 0, 1, 1, 0},
+                {8, 2, 9, 4, 9, 7, 9, 3, 7, 0, 3, 6, 5, 3, 5, 9, 6},
+                {8, 9, 9, 2, 6, 1, 2, 5, 8, 3, 7, 0, 4, 9, 8, 8, 8},
+                {5, 8, 5, 4, 1, 5, 6, 6, 3, 3, 1, 8, 3, 9, 6, 4, 8},
+                {0, 2, 2, 3, 0, 2, 6, 7, 2, 3, 7, 3, 1, 5, 8, 1, 3},
+                {4, 4, 0, 2, 0, 3, 8, 4, 1, 3, 3, 0, 7, 4, 2, 9, 8},
+                {5, 9, 0, 4, 7, 5, 7, 6, 0, 8, 3, 0, 0, 6, 6, 6, 8},
+                {0, 7, 1, 8, 3, 5, 1, 8, 7, 0, 2, 9, 2, 2, 7, 1, 5},
+                {1, 0, 0, 0, 6, 2, 0, 0, 2, 2, 8, 0, 9, 7, 0, 8, 0},
+                {1, 1, 7, 2, 9, 6, 5, 4, 8, 7, 8, 5, 0, 3, 8, 1, 5},
+                {8, 9, 7, 8, 1, 1, 3, 0, 1, 2, 9, 4, 0, 1, 5, 3, 1},
+                {9, 2, 7, 4, 8, 7, 3, 9, 2, 4, 2, 2, 7, 8, 2, 6, 7},
+                {3, 8, 1, 6, 0, 4, 8, 9, 8, 0, 2, 5, 3, 5, 5, 7, 5},
+                {1, 8, 2, 5, 7, 7, 1, 9, 9, 8, 9, 2, 4, 9, 5, 4, 0},
+                {3, 4, 4, 1, 5, 3, 3, 8, 8, 6, 3, 5, 3, 8, 7, 1, 3}};
         char[][] board = {
                 {'A', 'B', 'C', 'E'},
                 {'S', 'F', 'C', 'S'},
@@ -4310,7 +4566,7 @@ public class Solution {
         nums.add(l1);
         nums.add(l2);
         nums.add(l3);
-        System.out.print(solution.fallingSquares(crr));
+        System.out.print(solution.findUnsortedSubarray(brr));
     }
 
 }
