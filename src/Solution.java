@@ -4466,6 +4466,277 @@ public class Solution {
         return ee - bb > 0 ? ee - bb + 1 : 0;
     }
 
+    //951
+    //执行用时 : 5 ms, 在Flip Equivalent Binary Trees的Java提交中击败了58.54% 的用户
+    //内存消耗 : 36.8 MB, 在Flip Equivalent Binary Trees的Java提交中击败了0.00% 的用户
+    public boolean flipEquiv(TreeNode root1, TreeNode root2) {
+        if (root1 == null && root2 == null) {
+            return true;
+        } else if (root1 == null || root2 == null) {
+            return false;
+        } else {
+            TreeNode t1l = root1.left;
+            TreeNode t1r = root1.right;
+            TreeNode t2l = root2.left;
+            TreeNode t2r = root2.right;
+            if (t1l != null && t1r != null) {
+                if (t2l == null || t2r == null) {
+                    return false;
+                }
+                if (t1l.val != t1r.val) {
+                    if (t1l.val == t2l.val && t1r.val == t2r.val) {
+                        return flipEquiv(t1l, t2l) && flipEquiv(t1r, t2r);
+                    } else if (t1l.val == t2r.val && t1r.val == t2l.val) {
+                        return flipEquiv(t1l, t2r) && flipEquiv(t1r, t2l);
+                    } else {
+                        return false;
+                    }
+                } else {
+                    boolean b1 = flipEquiv(t1l, t2l) && flipEquiv(t1r, t2r);
+                    boolean b2 = flipEquiv(t1l, t2r) && flipEquiv(t1r, t2l);
+                    return b1 || b2;
+                }
+            } else if (t1l == null && t1r == null) {
+                if (t2l != null || t2r != null) {
+                    return false;
+                } else {
+                    return true;
+                }
+            } else if (t1l != null) {
+                if (t2l == null && t2r == null) {
+                    return false;
+                } else if (t2l != null && t2r != null) {
+                    return false;
+                } else if (t2l != null) {
+                    return flipEquiv(t1l, t2l);
+                } else {
+                    return flipEquiv(t1l, t2r);
+                }
+            } else {
+                if (t2l == null && t2r == null) {
+                    return false;
+                } else if (t2l != null && t2r != null) {
+                    return false;
+                } else if (t2l != null) {
+                    return flipEquiv(t1r, t2l);
+                } else {
+                    return flipEquiv(t1r, t2r);
+                }
+            }
+        }
+    }
+
+    //951
+    //执行用时 : 6 ms, 在Flip Equivalent Binary Trees的Java提交中击败了57.72% 的用户
+    //内存消耗 : 38.4 MB, 在Flip Equivalent Binary Trees的Java提交中击败了0.00% 的用户
+    public boolean flipEquiv0(TreeNode root1, TreeNode root2) {
+        if (root1 == root2) {
+            return true;
+        }
+        if (root1 == null || root2 == null || root1.val != root2.val) {
+            return false;
+        }
+        return (flipEquiv0(root1.left, root2.left)
+                && flipEquiv0(root1.right, root2.right))
+                || (flipEquiv0(root1.left, root2.right)
+                && flipEquiv0(root1.right, root2.left));
+    }
+
+    //268 -- 快速排序
+    //执行用时 : 1029 ms, 在Missing Number的Java提交中击败了0.99% 的用户
+    //内存消耗 : 48.1 MB, 在Missing Number的Java提交中击败了1.00% 的用户
+    public int missingNumber0(int[] nums) {
+        quickSort0(nums, 0, nums.length - 1);
+        int b = -1;
+        for (int i : nums) {
+            if (i - b != 1) {
+                return i - 1;
+            }
+            b = i;
+        }
+        return b + 1;
+    }
+
+    public void quickSort0(int[] nums, int b, int e) {
+        if (b >= e) {
+            return;
+        }
+        int bb = b;
+        int ee = e;
+        int t = nums[bb];
+        while (bb < ee) {
+            while (nums[ee] >= t && bb < ee) {
+                ee--;
+            }
+            nums[ee] = t ^ nums[ee];
+            t = t ^ nums[ee];
+            nums[ee] = t ^ nums[ee];
+            while (nums[bb] <= t && bb < ee) {
+                bb++;
+            }
+        }
+        quickSort0(nums, b, bb - 1);
+        quickSort0(nums, ee + 1, e);
+    }
+
+    //268
+    //执行用时 : 3 ms, 在Missing Number的Java提交中击败了32.50% 的用户
+    //内存消耗 : 51.5 MB, 在Missing Number的Java提交中击败了1.00% 的用户
+    public int missingNumber1(int[] nums) {
+        int[] map = new int[nums.length + 1];
+        for (int i : nums) {
+            map[i] = i;
+        }
+        for (int i = 0; i < map.length; i++) {
+            if (map[i] != i) {
+                return i;
+            }
+        }
+        return 0;
+    }
+
+    //268
+    //执行用时 : 1 ms, 在Missing Number的Java提交中击败了99.53% 的用户
+    //内存消耗 : 48.5 MB, 在Missing Number的Java提交中击败了1.00% 的用户
+    public int missingNumber(int[] nums) {
+        int res = nums.length;
+        for (int i = 0; i < nums.length; i++) {
+            res = res ^ i ^ nums[i];
+        }
+        return res;
+    }
+
+    //3
+    //执行用时 : 33 ms, 在Longest Substring Without Repeating Characters的Java提交中击败了92.27% 的用户
+    //内存消耗 : 37.3 MB, 在Longest Substring Without Repeating Characters的Java提交中击败了24.05% 的用户
+    public int lengthOfLongestSubstring(String s) {
+        char[] chars = s.toCharArray();
+        int maxl = 0;
+        Map<Character, Integer> map = new HashMap<>();
+        int l = 0;
+        int least = 0;
+        for (int i = 0; i < chars.length; i++) {
+            if (!map.containsKey(chars[i])) {
+                map.put(chars[i], i);
+                l++;
+            } else {
+                maxl = l > maxl ? l : maxl;
+                least = map.get(chars[i]) > least ? map.get(chars[i]) : least;
+                l = i - least;
+                map.put(chars[i], i);
+            }
+        }
+        maxl = l > maxl ? l : maxl;
+        return maxl;
+    }
+
+    //1000 -- failed
+    public int mergeStones0(int[] stones, int K) {
+        if (stones.length == 1) {
+            return 0;
+        }
+        List<Integer> list = new LinkedList<>();
+        for (int i : stones) {
+            list.add(i);
+        }
+        int s = 0;
+        try {
+            s = mergeStonesAss(list, K, 0);
+        } catch (Exception e) {
+            return -1;
+        }
+        return s;
+    }
+
+    public int mergeStonesAss(List<Integer> list, int K, int s) throws Exception {
+        if (K == list.size()) {
+            int sum = s;
+            for (int j = 0; j < K; j++) {
+                sum += list.get(j);
+            }
+            return sum;
+        }
+        int i = 0;
+        int sum = 0;
+        int j = 0;
+        for (; j < K; j++) {
+            sum += list.get(j);
+        }
+        int min = sum;
+        for (; j < list.size(); j++) {
+            sum = sum - list.get(j - K) + list.get(j);
+            if (min > sum) {
+                min = sum;
+                i = j - K + 1;
+            } else if (min == sum) {
+                int a = 0;
+                int b = 0;
+                for (int jj = j - K; jj < K; jj++) {
+                    a += list.get(jj);
+                }
+                for (int jj = j; jj < K; jj++) {
+                    b += list.get(jj);
+                }
+                i = a > b ? i : j - K + 1;
+            }
+        }
+        for (int jj = i + K - 1; jj >= i; jj--) {
+            list.remove(jj);
+        }
+        list.add(i, min);
+        s = s + min;
+        s = mergeStonesAss(list, K, s);
+        return s;
+    }
+
+    //1000
+    public int mergeStones(int[] stones, int K) {
+        int len = stones.length;
+        //本来就是一堆的话,没有合并成本
+        if (len < 2) {
+            return 0;
+        }
+        //无论用什么方式,石头每次减少K-1个,但最终要剩K个石头
+        if (len < K || (len - K) % (K - 1) != 0) {
+            return -1;
+        }
+        //sum[index]表示stones[0]加至stones[index]的总和(PS:sum[0]设为0)
+        //动态方程:dp[left][right][heap]表示将编号left到right的石头合为heap堆的成本
+        int[] sum=new int[32];
+        Arrays.fill(sum,0);
+        int[][][] dp = new int[32][32][32];
+        for(int[][] i:dp){
+            for(int[] j:i){
+                Arrays.fill(j, 0x3f);
+            }
+        }
+        for (int index = 1; index <= len; index++) {
+            sum[index] = sum[index - 1] + stones[index - 1];
+            //每个石子自成一堆,没有合并成本
+            dp[index][index][1] = 0;
+        }
+
+        int span, left, right, mid, heap;
+        //问题由小递推至大,因此先两个两个石头考虑,再三个三个石头考虑,通过span控制left与right的间距,从而递增考虑石子的个数
+        for (span = 1; span < len; span++) {
+            for (left = 1; left <= len - span; left++) {
+                right = left + span;
+                //决定在哪将要考虑的石子分为两部分
+                for (mid = left; mid < right; mid++) {
+                    //先考虑分为两堆,三堆,仍然是递增考虑,堆数不可能超过石子数
+                    for (heap = 2; heap <= span + 1; heap++) {
+                        //将本次考虑的所有石子合并为heap堆的成本,就是左部分是heap-1堆而右部分1堆相加的成本,反复更新dp[left][right][heap]以获取最小值
+                        dp[left][right][heap] = Math.min(dp[left][right][heap], dp[left][mid][heap - 1] + dp[mid + 1][right][1]);
+                    }
+                }
+                //将本次考虑的所有石子合并为一堆的代价,就是将K堆石子合并起来的代价,反复更新dp[left][right][1]以获取最小值
+                dp[left][right][1] = Math.min(dp[left][right][1], dp[left][right][K] + sum[right] - sum[left - 1]);
+            }
+        }
+        //将编号为1到len的石子合成一堆的成本即最终答案
+        return dp[1][len][1];
+    }
+
     public static void main(String[] args) {
         Solution solution = new Solution();
         ListNode p = new ListNode(1);
@@ -4508,7 +4779,7 @@ public class Solution {
                 ".#.#..#.####............#.....", "#.#..........###.#........#...", "..#..#.........#.......#..#.##",
                 "..#..#C#...............#......", ".........#.##.##......#.#.....", "..#........##.#..##.#.....#.#."};
         int[] arr = {-4, -2, -2, -2, 0, 1, 2, 2, 2, 3, 3, 4, 4, 6, 6};
-        int[] brr = {3, 6, 4, 5, 7, 9};
+        int[] brr = {9,8,3,2,9,4};
         int[][] crr = {{2, 2}, {3, 3}, {6, 1}};//{7, 2}, {1, 7}, {9, 5}, {1, 8}, {3, 4}};
         int[][] ins = {
                 {0, 1, 6, 16, 22, 23}, {14, 15, 24, 32}, {4, 10, 12, 20, 24, 28, 33}, {1, 10, 11, 19, 27, 33}, {11, 23, 25, 28}, {15, 20, 21, 23, 29}, {29}
@@ -4566,7 +4837,7 @@ public class Solution {
         nums.add(l1);
         nums.add(l2);
         nums.add(l3);
-        System.out.print(solution.findUnsortedSubarray(brr));
+        System.out.print(solution.mergeStones(brr, 2));
     }
 
 }
