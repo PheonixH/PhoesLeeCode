@@ -5,6 +5,7 @@ import datestruct.TreeNode;
 import datestruct.Worker;
 
 import java.util.*;
+import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import static java.lang.Math.log10;
@@ -4702,11 +4703,11 @@ public class Solution {
         }
         //sum[index]表示stones[0]加至stones[index]的总和(PS:sum[0]设为0)
         //动态方程:dp[left][right][heap]表示将编号left到right的石头合为heap堆的成本
-        int[] sum=new int[32];
-        Arrays.fill(sum,0);
+        int[] sum = new int[32];
+        Arrays.fill(sum, 0);
         int[][][] dp = new int[32][32][32];
-        for(int[][] i:dp){
-            for(int[] j:i){
+        for (int[][] i : dp) {
+            for (int[] j : i) {
                 Arrays.fill(j, 0x3f);
             }
         }
@@ -4735,6 +4736,170 @@ public class Solution {
         }
         //将编号为1到len的石子合成一堆的成本即最终答案
         return dp[1][len][1];
+    }
+
+
+    //515
+    //执行用时 : 8 ms, 在Find Largest Value in Each Tree Row的Java提交中击败了78.01% 的用户
+    //内存消耗 : 40.7 MB, 在Find Largest Value in Each Tree Row的Java提交中击败了0.00% 的用户
+    public List<Integer> largestValues(TreeNode root) {
+        List<Integer> res = new LinkedList<>();
+        if (root == null) {
+            return res;
+        }
+        int a = 1, b = 0;
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.add(root);
+        int max = Integer.MIN_VALUE;
+        while (!queue.isEmpty()) {
+            TreeNode t = queue.poll();
+            a--;
+            max = t.val > max ? t.val : max;
+            if (t.left != null) {
+                queue.add(t.left);
+                b++;
+            }
+            if (t.right != null) {
+                queue.add(t.right);
+                b++;
+            }
+            if (a == 0) {
+                a = b;
+                b = 0;
+                res.add(max);
+                max = Integer.MIN_VALUE;
+            }
+        }
+        return res;
+    }
+
+    //324
+    //执行用时 : 6 ms, 在Wiggle Sort II的Java提交中击败了71.50% 的用户
+    //内存消耗 : 49.6 MB, 在Wiggle Sort II的Java提交中击败了0.00% 的用户
+    public void wiggleSort(int[] nums) {
+        Arrays.sort(nums);
+        int n = nums.length / 2;
+        int[] nums2 = Arrays.copyOf(nums, nums.length);
+        int j = 0;
+        int k = nums.length - 1;
+        if ((nums.length & 1) == 0) {
+            for (int i = n - 1; i >= 0; i--) {
+                nums[j++] = nums2[i];
+                nums[j++] = nums2[k];
+                k--;
+            }
+        } else {
+            for (int i = n; i > 0; i--) {
+                nums[j++] = nums2[i];
+                nums[j++] = nums2[k];
+                k--;
+            }
+            nums[j] = nums2[0];
+        }
+    }
+
+    //215
+    //执行用时 : 6 ms, 在Kth Largest Element in an Array的Java提交中击败了86.33% 的用户
+    //内存消耗 : 38.3 MB, 在Kth Largest Element in an Array的Java提交中击败了0.88% 的用户
+    public int findKthLargest(int[] nums, int k) {
+        Arrays.sort(nums);
+        return nums[nums.length - k];
+    }
+
+    //973
+    //执行用时 : 98 ms, 在K Closest Points to Origin的Java提交中击败了44.88% 的用户
+    //内存消耗 : 66.5 MB, 在K Closest Points to Origin的Java提交中击败了100.00% 的用户
+    public int[][] kClosest0(int[][] points, int K) {
+        Map<Double, List<int[]>> map = new HashMap<>();
+        int k = 0;
+        List<Double> mm = new LinkedList<>();
+        double x = Double.MIN_VALUE;
+        for (int[] p : points) {
+            double m = Math.pow(p[0], 2) + Math.pow(p[1], 2);
+            if (k > K && m > x) {
+                continue;
+            }
+            mm.add(m);
+            if (map.containsKey(m)) {
+                List l = map.get(m);
+                l.add(p);
+            } else {
+                List<int[]> l = new LinkedList<>();
+                l.add(p);
+                map.put(m, l);
+            }
+            k++;
+            if (k <= K) {
+                x = x > m ? x : m;
+            }
+        }
+        double[] mmm = new double[mm.size()];
+        int ij = 0;
+        for (double d : mm) {
+            mmm[ij++] = d;
+        }
+        Arrays.sort(mmm);
+        int[][] res = new int[K][2];
+        for (int i = 0; i < K; i++) {
+            List<int[]> l = map.get(mmm[i]);
+            for (int[] li : l) {
+                res[i++] = li;
+            }
+            i--;
+        }
+        return res;
+    }
+
+    //973
+    //执行用时 : 24 ms, 在K Closest Points to Origin的Java提交中击败了91.86% 的用户
+    //内存消耗 : 82.8 MB, 在K Closest Points to Origin的Java提交中击败了100.00% 的用户
+    private double dist(int[] point) {
+        return point[0] * point[0] + point[1] * point[1];
+    }
+
+    public int[][] kClosest(int[][] points, int K) {
+        int[][] res = new int[K][];
+        int k = 0;
+        int l = 0, r = points.length - 1;
+        while (l <= r) {
+            int p = partition(points, l, r);
+            if (p <= K - 1) {
+                // 从l到p的所有加入结果集
+                for (int i = l; i <= p; i++) {
+                    res[k++] = points[i];
+                }
+                l = p + 1;
+            } else {
+                r = p - 1;
+            }
+        }
+        return res;
+    }
+
+    private int partition(int[][] points, int l, int r) {
+        // 可以取中间值或随机位置
+        // int m = (l + r) / 2;
+        int m = l + (int) (Math.random() * (r - l));
+        // 把最小的放在第一个位置
+        if (dist(points[m]) < dist(points[l])) {
+            int[] t = points[m];
+            points[m] = points[l];
+            points[l] = t;
+        }
+        // 也可以直接取第一个, 上面可以省略
+        int[] key = points[l];
+        while (l < r) {
+            while (dist(points[r]) >= dist(key) && l < r) {
+                r--;
+            }
+            points[l] = points[r];
+            while (dist(points[l]) <= dist(key) && l < r) {
+                l++;
+            }
+            points[r] = points[l];
+        }
+        points[r] = key;
+        return r;
     }
 
     public static void main(String[] args) {
@@ -4779,8 +4944,8 @@ public class Solution {
                 ".#.#..#.####............#.....", "#.#..........###.#........#...", "..#..#.........#.......#..#.##",
                 "..#..#C#...............#......", ".........#.##.##......#.#.....", "..#........##.#..##.#.....#.#."};
         int[] arr = {-4, -2, -2, -2, 0, 1, 2, 2, 2, 3, 3, 4, 4, 6, 6};
-        int[] brr = {9,8,3,2,9,4};
-        int[][] crr = {{2, 2}, {3, 3}, {6, 1}};//{7, 2}, {1, 7}, {9, 5}, {1, 8}, {3, 4}};
+        int[] brr = {1, 2, 1, 2, 1, 2, 1};
+        int[][] crr = {{68, 97}, {34, -84}, {60, 100}, {2, 31}, {-27, -38}, {-73, -74}, {-55, -39}, {62, 91}, {62, 92}, {-57, -67}};//{2, 2}, {3, 3}, {6, 1},{7, 2}, {1, 7}, {9, 5}, {1, 8}, {3, 4}};
         int[][] ins = {
                 {0, 1, 6, 16, 22, 23}, {14, 15, 24, 32}, {4, 10, 12, 20, 24, 28, 33}, {1, 10, 11, 19, 27, 33}, {11, 23, 25, 28}, {15, 20, 21, 23, 29}, {29}
         };
@@ -4837,7 +5002,7 @@ public class Solution {
         nums.add(l1);
         nums.add(l2);
         nums.add(l3);
-        System.out.print(solution.mergeStones(brr, 2));
+        System.out.print(solution.kClosest(crr, 5));
     }
 
 }
