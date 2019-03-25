@@ -3,6 +3,7 @@ import datestruct.Node;
 import datestruct.TreeNode;
 import datestruct.Worker;
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 import static java.lang.Math.log10;
@@ -4899,6 +4900,87 @@ public class Solution {
         return r;
     }
 
+    //118
+    //执行用时 : 0 ms, 在Pascal's Triangle的Java提交中击败了100.00% 的用户
+    //内存消耗 : 32.6 MB, 在Pascal's Triangle的Java提交中击败了0.93% 的用户
+    public List<List<Integer>> generate(int numRows) {
+        List<List<Integer>> res = new LinkedList<>();
+        for (int i = 0; i < numRows; i++) {
+            List<Integer> r = new LinkedList<>();
+            int number = 1;
+            //打印空格字符串
+//            System.out.format("%"+(rows-i)*2+"s","");
+            for (int j = 0; j <= i; j++) {
+                r.add(number);
+                number = number * (i - j) / (j + 1);
+            }
+            res.add(r);
+        }
+        return res;
+    }
+
+    //119
+    public List<Integer> getRow(int rowIndex) {
+        rowIndex = 3;
+        List<Integer> r = new LinkedList<>();
+        int number = 1;
+        for (int j = 0; j <= rowIndex; j++) {
+            r.add(number);
+            number = number / (j + 1) * (rowIndex - j);
+        }
+        return r;
+    }
+
+    //162
+    //执行用时 : 5 ms, 在Find Peak Element的Java提交中击败了62.57% 的用户
+    //内存消耗 : 37.8 MB, 在Find Peak Element的Java提交中击败了0.52% 的用户
+    public int findPeakElement(int[] nums) {
+        if (nums.length <= 1) {
+            return 0;
+        }
+        for (int i = 0; i < nums.length - 1; i++) {
+            if (i == 0) {
+                if (nums[i] > nums[i + 1]) {
+                    return 0;
+                }
+            } else if (i == nums.length - 1) {
+                if (nums[i] > nums[i - 1]) {
+                    return i;
+                }
+            } else if (nums[i] > nums[i - 1] && nums[i] > nums[i + 1]) {
+                return i;
+            }
+        }
+        return nums.length - 1;
+    }
+
+    //162
+    //执行用时 : 5 ms, 在Find Peak Element的Java提交中击败了62.57% 的用户
+    //内存消耗 : 39.7 MB, 在Find Peak Element的Java提交中击败了0.52% 的用户
+    public int findPeakElement1(int[] nums){
+        int lo = -1, hi = nums.length;
+        int mid;
+        while(true) {
+            if(hi-lo==2)
+                return lo+1;
+            mid = (lo+hi)/2;
+            if(nums[mid]<nums[mid+1])
+                lo = mid;
+            else
+                hi = mid+1;
+        }
+    }
+
+    //852
+    public int peakIndexInMountainArray(int[] A) {
+        return findPeakElement(A);
+    }
+
+    //969
+    public List<Integer> pancakeSort(int[] A) {
+
+    }
+
     public static void main(String[] args) {
         Solution solution = new Solution();
         ListNode p = new ListNode(1);
@@ -4941,7 +5023,7 @@ public class Solution {
                 ".#.#..#.####............#.....", "#.#..........###.#........#...", "..#..#.........#.......#..#.##",
                 "..#..#C#...............#......", ".........#.##.##......#.#.....", "..#........##.#..##.#.....#.#."};
         int[] arr = {-4, -2, -2, -2, 0, 1, 2, 2, 2, 3, 3, 4, 4, 6, 6};
-        int[] brr = {1, 2, 1, 2, 1, 2, 1};
+        int[] brr = {1, 2, 3, 1};
         int[][] crr = {{68, 97}, {34, -84}, {60, 100}, {2, 31}, {-27, -38}, {-73, -74}, {-55, -39}, {62, 91}, {62, 92}, {-57, -67}};//{2, 2}, {3, 3}, {6, 1},{7, 2}, {1, 7}, {9, 5}, {1, 8}, {3, 4}};
         int[][] ins = {
                 {0, 1, 6, 16, 22, 23}, {14, 15, 24, 32}, {4, 10, 12, 20, 24, 28, 33}, {1, 10, 11, 19, 27, 33}, {11, 23, 25, 28}, {15, 20, 21, 23, 29}, {29}
@@ -4999,7 +5081,7 @@ public class Solution {
         nums.add(l1);
         nums.add(l2);
         nums.add(l3);
-        System.out.print(solution.kClosest(crr, 5));
+        System.out.print(solution.findPeakElement(brr));
     }
 
 }
