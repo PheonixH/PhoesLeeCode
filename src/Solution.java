@@ -1,12 +1,9 @@
-import com.sun.source.tree.Tree;
 import datestruct.ListNode;
 import datestruct.Node;
 import datestruct.TreeNode;
 import datestruct.Worker;
 
 import java.util.*;
-import java.util.concurrent.LinkedBlockingDeque;
-import java.util.concurrent.LinkedBlockingQueue;
 
 import static java.lang.Math.log10;
 
