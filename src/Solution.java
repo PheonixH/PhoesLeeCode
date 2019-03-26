@@ -5061,12 +5061,10 @@ public class Solution {
             List<Integer> r = new LinkedList<>();
             boolean[] bs = new boolean[A.length];
             bs[b[0]] = true;
-            r.add(A[b[0]]);
             numSquarefulPermsAss(b[0], r, status, set, bs, A);
         } else {
             for (int i = 0; i < A.length; i++) {
                 List<Integer> r = new LinkedList<>();
-                r.add(A[i]);
                 boolean[] bs = new boolean[A.length];
                 bs[i] = true;
                 numSquarefulPermsAss(i, r, status, set, bs, A);
@@ -5077,7 +5075,6 @@ public class Solution {
             List<Integer> r = new LinkedList<>();
             boolean[] bs = new boolean[A.length];
             bs[b[1]] = true;
-            r.add(A[b[1]]);
             numSquarefulPermsAss(b[1], r, status, set, bs, A);
         }
         return set.size();
@@ -5092,27 +5089,25 @@ public class Solution {
             set.add(s);
             return;
         } else if (r.size() == A.length - 1) {
-//            if(!bs[nr]){
-                r.add(A[nr]);
-                numSquarefulPermsAss(nr, r, status, set, bs, A);
-                r.remove(r.size() - 1);
-//            }
+            r.add(A[nr]);
+            numSquarefulPermsAss(nr, r, status, set, bs, A);
+            r.remove(r.size() - 1);
             return;
         } else {
             int[] i = status[nr];
             if (i[0] < 1) {
                 return;
             }
+            r.add(A[nr]);
             for (int j = 1; j <= i[0]; j++) {
                 if (bs[i[j]]) {
                     continue;
                 }
-                r.add(A[i[j]]);
                 bs[i[j]] = true;
-                numSquarefulPermsAss(j, r, status, set, bs, A);
-                r.remove(r.size() - 1);
+                numSquarefulPermsAss(i[j], r, status, set, bs, A);
                 bs[i[j]] = false;
             }
+            r.remove(r.size() - 1);
             return;
         }
     }
@@ -5124,19 +5119,19 @@ public class Solution {
         Map<Integer, HashSet<Integer>> points = new HashMap<>();
         Map<Integer, Integer> weights = new HashMap<>();
 
-        for(int i = 0; i < A.length; i++) {
+        for (int i = 0; i < A.length; i++) {
             if (weights.keySet().contains(A[i])) {
-                weights.put(A[i], weights.get(A[i])+ 1);
+                weights.put(A[i], weights.get(A[i]) + 1);
             } else {
                 weights.put(A[i], 1);
-                for(int j = i + 1; j < A.length; j++) {
+                for (int j = i + 1; j < A.length; j++) {
                     if (!points.keySet().contains(A[i])) {
                         points.put(A[i], new HashSet<>());
                     }
                     if (!points.keySet().contains(A[j])) {
                         points.put(A[j], new HashSet<>());
                     }
-                    if(isSqrt(A[i] + A[j])) {
+                    if (isSqrt(A[i] + A[j])) {
                         points.get(A[j]).add(A[i]);
                         if (A[i] != A[j]) {
                             points.get(A[i]).add(A[j]);
@@ -5147,7 +5142,7 @@ public class Solution {
         }
 
         int res = 0;
-        for(int i : weights.keySet()) {
+        for (int i : weights.keySet()) {
             Map<Integer, HashSet<Integer>> ps = new HashMap<>(points);
             Map<Integer, Integer> ws = new HashMap<>(weights);
             res = res + calculateSquare(ps, ws, i);
@@ -5161,13 +5156,13 @@ public class Solution {
                                Map<Integer, Integer> weights,
                                int p) {
         int res = 0;
-        if (!weights.keySet().contains(p)){
+        if (!weights.keySet().contains(p)) {
             return 0;
         }
         if (weights.size() == 1 && weights.get(p) == 1) {
             return 1;
         }
-        if (weights.get(p) == 1){
+        if (weights.get(p) == 1) {
             weights.remove(p);
         } else {
             weights.put(p, weights.get(p) - 1);
@@ -5179,10 +5174,12 @@ public class Solution {
         }
         return res;
     }
+
     public boolean isSqrt(int x) {
         double d = Math.sqrt(x);
-        return d - (int)d == 0;
+        return d - (int) d == 0;
     }
+
     public static void main(String[] args) {
         Solution solution = new Solution();
         ListNode p = new ListNode(1);
@@ -5225,7 +5222,7 @@ public class Solution {
                 ".#.#..#.####............#.....", "#.#..........###.#........#...", "..#..#.........#.......#..#.##",
                 "..#..#C#...............#......", ".........#.##.##......#.#.....", "..#........##.#..##.#.....#.#."};
         int[] arr = {-4, -2, -2, -2, 0, 1, 2, 2, 2, 3, 3, 4, 4, 6, 6};
-        int[] brr = {1,17,8};
+        int[] brr = {2,2,2,2,2,2,2,2,2,2};
         int[][] crr = {{68, 97}, {34, -84}, {60, 100}, {2, 31}, {-27, -38}, {-73, -74}, {-55, -39}, {62, 91}, {62, 92}, {-57, -67}};//{2, 2}, {3, 3}, {6, 1},{7, 2}, {1, 7}, {9, 5}, {1, 8}, {3, 4}};
         int[][] ins = {
                 {0, 1, 6, 16, 22, 23}, {14, 15, 24, 32}, {4, 10, 12, 20, 24, 28, 33}, {1, 10, 11, 19, 27, 33}, {11, 23, 25, 28}, {15, 20, 21, 23, 29}, {29}
