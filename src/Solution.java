@@ -5090,6 +5090,14 @@ public class Solution {
                 s += i + ",";
             }
             set.add(s);
+            return;
+        } else if (r.size() == A.length - 1) {
+            if(!bs[nr]){
+                r.add(A[nr]);
+                numSquarefulPermsAss(nr, r, status, set, bs, A);
+                r.remove(r.size() - 1);
+            }
+            return;
         } else {
             int[] i = status[nr];
             if (i[0] < 1) {
