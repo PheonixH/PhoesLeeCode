@@ -4957,17 +4957,17 @@ public class Solution {
     //162
     //执行用时 : 5 ms, 在Find Peak Element的Java提交中击败了62.57% 的用户
     //内存消耗 : 39.7 MB, 在Find Peak Element的Java提交中击败了0.52% 的用户
-    public int findPeakElement1(int[] nums){
+    public int findPeakElement1(int[] nums) {
         int lo = -1, hi = nums.length;
         int mid;
-        while(true) {
-            if(hi-lo==2)
-                return lo+1;
-            mid = (lo+hi)/2;
-            if(nums[mid]<nums[mid+1])
+        while (true) {
+            if (hi - lo == 2)
+                return lo + 1;
+            mid = (lo + hi) / 2;
+            if (nums[mid] < nums[mid + 1])
                 lo = mid;
             else
-                hi = mid+1;
+                hi = mid + 1;
         }
     }
 
@@ -4976,9 +4976,131 @@ public class Solution {
         return findPeakElement(A);
     }
 
-    //969
-    public List<Integer> pancakeSort(int[] A) {
+    //124 --- 非自己所做的
+    //执行用时 : 3 ms, 在Binary Tree Maximum Path Sum的Java提交中击败了58.49% 的用户
+    //内存消耗 : 38.3 MB, 在Binary Tree Maximum Path Sum的Java提交中击败了0.00% 的用户
+    private int ret = Integer.MIN_VALUE;
 
+    public int maxPathSum(TreeNode root) {
+        /**
+         对于任意一个节点, 如果最大和路径包含该节点, 那么只可能是两种情况:
+         1. 其左右子树中所构成的和路径值较大的那个加上该节点的值后向父节点回溯构成最大路径
+         2. 左右子树都在最大路径中, 加上该节点的值构成了最终的最大路径
+         **/
+        getMax(root);
+        return ret;
+    }
+
+    private int getMax(TreeNode r) {
+        if (r == null) return 0;
+        int left = Math.max(0, getMax(r.left)); // 如果子树路径和为负则应当置0表示最大路径不包含子树
+        int right = Math.max(0, getMax(r.right));
+        ret = Math.max(ret, r.val + left + right); // 判断在该节点包含左右子树的路径和是否大于当前最大路径和
+        return Math.max(left, right) + r.val;
+    }
+
+    //129
+    //执行用时 : 2 ms, 在Sum Root to Leaf Numbers的Java提交中击败了31.41% 的用户
+    //内存消耗 : 36.6 MB, 在Sum Root to Leaf Numbers的Java提交中击败了0.99% 的用户
+    public int sumNumbers(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        int res = 0;
+        Stack<TreeNode> stack = new Stack<>();
+        stack.push(root);
+        while (!stack.empty()) {
+            TreeNode t = stack.pop();
+            if (t.right != null) {
+                t.right.val = t.val * 10 + t.right.val;
+                stack.push(t.right);
+            }
+            if (t.left != null) {
+                t.left.val = t.val * 10 + t.left.val;
+                stack.push(t.left);
+            }
+            if (t.left == null && t.right == null) {
+                res += t.val;
+            }
+        }
+        return res;
+    }
+
+    //996
+    public int numSquarefulPerms(int[] A) {
+        int[][] status = new int[A.length][A.length + 1];
+        for (int i = 0; i < A.length; i++) {
+            for (int j = i + 1; j < A.length; j++) {
+                int k = (int) Math.sqrt(A[i] + A[j]);
+                if (k == Math.sqrt(A[i] + A[j])) {
+                    status[i][++status[i][0]] = j;
+                    status[j][++status[j][0]] = i;
+                }
+            }
+        }
+        int[] b = new int[2];
+        int bn = 0;
+        try {
+            for (int[] i : status) {
+                if (i[0] == 0) {
+                    return 0;
+                } else if (i[0] == 1) {
+                    b[bn] = i[1];
+                    bn++;
+                }
+            }
+        } catch (Exception e) {
+            return 0;
+        }
+        Set<String> set = new HashSet<>();
+        if (bn >= 1) {
+            int nr = 0;
+            int[] r = new int[A.length];
+            boolean[] bs = new boolean[A.length];
+            bs[b[0]] = true;
+            r[0] = b[0];
+            numSquarefulPermsAss(nr, r, status, set, bs, A);
+        } else {
+            for (int i = 0; i < A.length; i++) {
+                int nr = 0;
+                int[] r = new int[A.length];
+                r[0] = A[i];
+                boolean[] bs = new boolean[A.length];
+                bs[i] = true;
+                numSquarefulPermsAss(nr, r, status, set, bs, A);
+            }
+        }
+        if (bn == 2) {
+            int nr = 0;
+            int[] r = new int[A.length];
+            r[0] = b[1];
+            boolean[] bs = new boolean[A.length];
+            bs[b[1]] = true;
+            numSquarefulPermsAss(nr, r, status, set, bs, A);
+        }
+        return set.size();
+    }
+
+    private void numSquarefulPermsAss(int nr, int[] r, int[][] status, Set set, boolean[] bs, int[] A) {
+        if (nr == r.length - 1) {
+            String s = r.toString();
+            set.add(s);
+        } else {
+            int[] i = status[r[nr]];
+            if (i[0] <= 1) {
+                return;
+            }
+            for (int j = 1; j <= i[0]; j++) {
+                if (bs[i[j]]) {
+                    continue;
+                }
+                r[++nr] = A[i[j]];
+                bs[i[j]] = true;
+                numSquarefulPermsAss(nr, r, status, set, bs, A);
+                bs[i[j]] = false;
+            }
+            return;
+        }
     }
 
     public static void main(String[] args) {
@@ -5023,7 +5145,7 @@ public class Solution {
                 ".#.#..#.####............#.....", "#.#..........###.#........#...", "..#..#.........#.......#..#.##",
                 "..#..#C#...............#......", ".........#.##.##......#.#.....", "..#........##.#..##.#.....#.#."};
         int[] arr = {-4, -2, -2, -2, 0, 1, 2, 2, 2, 3, 3, 4, 4, 6, 6};
-        int[] brr = {1, 2, 3, 1};
+        int[] brr = {2, 2, 2};
         int[][] crr = {{68, 97}, {34, -84}, {60, 100}, {2, 31}, {-27, -38}, {-73, -74}, {-55, -39}, {62, 91}, {62, 92}, {-57, -67}};//{2, 2}, {3, 3}, {6, 1},{7, 2}, {1, 7}, {9, 5}, {1, 8}, {3, 4}};
         int[][] ins = {
                 {0, 1, 6, 16, 22, 23}, {14, 15, 24, 32}, {4, 10, 12, 20, 24, 28, 33}, {1, 10, 11, 19, 27, 33}, {11, 23, 25, 28}, {15, 20, 21, 23, 29}, {29}
@@ -5081,7 +5203,7 @@ public class Solution {
         nums.add(l1);
         nums.add(l2);
         nums.add(l3);
-        System.out.print(solution.findPeakElement(brr));
+        System.out.print(solution.numSquarefulPerms(brr));
     }
 
 }
