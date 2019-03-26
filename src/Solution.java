@@ -4961,13 +4961,15 @@ public class Solution {
         int lo = -1, hi = nums.length;
         int mid;
         while (true) {
-            if (hi - lo == 2)
+            if (hi - lo == 2) {
                 return lo + 1;
+            }
             mid = (lo + hi) / 2;
-            if (nums[mid] < nums[mid + 1])
+            if (nums[mid] < nums[mid + 1]) {
                 lo = mid;
-            else
+            } else {
                 hi = mid + 1;
+            }
         }
     }
 
@@ -4992,7 +4994,9 @@ public class Solution {
     }
 
     private int getMax(TreeNode r) {
-        if (r == null) return 0;
+        if (r == null) {
+            return 0;
+        }
         int left = Math.max(0, getMax(r.left)); // 如果子树路径和为负则应当置0表示最大路径不包含子树
         int right = Math.max(0, getMax(r.right));
         ret = Math.max(ret, r.val + left + right); // 判断在该节点包含左右子树的路径和是否大于当前最大路径和
@@ -5041,11 +5045,11 @@ public class Solution {
         int[] b = new int[2];
         int bn = 0;
         try {
-            for (int[] i : status) {
-                if (i[0] == 0) {
+            for (int i = 0; i < A.length; i++) {
+                if (status[i][0] == 0) {
                     return 0;
-                } else if (i[0] == 1) {
-                    b[bn] = i[1];
+                } else if (status[i][0] == 1) {
+                    b[bn] = i;
                     bn++;
                 }
             }
@@ -5054,49 +5058,51 @@ public class Solution {
         }
         Set<String> set = new HashSet<>();
         if (bn >= 1) {
-            int nr = 0;
-            int[] r = new int[A.length];
+            List<Integer> r = new LinkedList<>();
             boolean[] bs = new boolean[A.length];
             bs[b[0]] = true;
-            r[0] = b[0];
-            numSquarefulPermsAss(nr, r, status, set, bs, A);
+            r.add(A[b[0]]);
+            numSquarefulPermsAss(b[0], r, status, set, bs, A);
         } else {
             for (int i = 0; i < A.length; i++) {
-                int nr = 0;
-                int[] r = new int[A.length];
-                r[0] = A[i];
+                List<Integer> r = new LinkedList<>();
+                r.add(A[i]);
                 boolean[] bs = new boolean[A.length];
                 bs[i] = true;
-                numSquarefulPermsAss(nr, r, status, set, bs, A);
+                numSquarefulPermsAss(i, r, status, set, bs, A);
             }
+            return set.size();
         }
         if (bn == 2) {
-            int nr = 0;
-            int[] r = new int[A.length];
-            r[0] = b[1];
+            List<Integer> r = new LinkedList<>();
             boolean[] bs = new boolean[A.length];
             bs[b[1]] = true;
-            numSquarefulPermsAss(nr, r, status, set, bs, A);
+            r.add(A[b[1]]);
+            numSquarefulPermsAss(b[1], r, status, set, bs, A);
         }
         return set.size();
     }
 
-    private void numSquarefulPermsAss(int nr, int[] r, int[][] status, Set set, boolean[] bs, int[] A) {
-        if (nr == r.length - 1) {
-            String s = r.toString();
+    private void numSquarefulPermsAss(int nr, List<Integer> r, int[][] status, Set set, boolean[] bs, int[] A) {
+        if (r.size() >= A.length) {
+            String s = "";
+            for (int i : r) {
+                s += i + ",";
+            }
             set.add(s);
         } else {
-            int[] i = status[r[nr]];
-            if (i[0] <= 1) {
+            int[] i = status[nr];
+            if (i[0] < 1) {
                 return;
             }
             for (int j = 1; j <= i[0]; j++) {
                 if (bs[i[j]]) {
                     continue;
                 }
-                r[++nr] = A[i[j]];
+                r.add(A[i[j]]);
                 bs[i[j]] = true;
-                numSquarefulPermsAss(nr, r, status, set, bs, A);
+                numSquarefulPermsAss(j, r, status, set, bs, A);
+                r.remove(r.size() - 1);
                 bs[i[j]] = false;
             }
             return;
