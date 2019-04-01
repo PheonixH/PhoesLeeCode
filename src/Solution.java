@@ -5180,6 +5180,30 @@ public class Solution {
         return d - (int) d == 0;
     }
 
+    //503
+    //执行用时 : 74 ms, 在Next Greater Element II的Java提交中击败了56.19% 的用户
+    //内存消耗 : 53.7 MB, 在Next Greater Element II的Java提交中击败了5.00% 的用户
+    public int[] nextGreaterElements(int[] nums) {
+        int[] p = new int[nums.length];
+
+        for (int i = 0; i < nums.length; i++) {
+            int jj = i;
+            p[i] = -1;
+            for (int j = 0; j < nums.length; j++) {
+                jj++;
+                if(jj >= nums.length){
+                    jj = 0;
+                }
+                if(nums[jj] > nums[i]){
+                    p[i] = nums[jj];
+                    break;
+                }
+            }
+        }
+
+        return p;
+    }
+
     public static void main(String[] args) {
         Solution solution = new Solution();
         ListNode p = new ListNode(1);
@@ -5222,7 +5246,7 @@ public class Solution {
                 ".#.#..#.####............#.....", "#.#..........###.#........#...", "..#..#.........#.......#..#.##",
                 "..#..#C#...............#......", ".........#.##.##......#.#.....", "..#........##.#..##.#.....#.#."};
         int[] arr = {-4, -2, -2, -2, 0, 1, 2, 2, 2, 3, 3, 4, 4, 6, 6};
-        int[] brr = {2,2,2,2,2,2,2,2,2,2};
+        int[] brr = {2, 2, 2, 2, 2, 2, 2, 2, 2, 2};
         int[][] crr = {{68, 97}, {34, -84}, {60, 100}, {2, 31}, {-27, -38}, {-73, -74}, {-55, -39}, {62, 91}, {62, 92}, {-57, -67}};//{2, 2}, {3, 3}, {6, 1},{7, 2}, {1, 7}, {9, 5}, {1, 8}, {3, 4}};
         int[][] ins = {
                 {0, 1, 6, 16, 22, 23}, {14, 15, 24, 32}, {4, 10, 12, 20, 24, 28, 33}, {1, 10, 11, 19, 27, 33}, {11, 23, 25, 28}, {15, 20, 21, 23, 29}, {29}
