@@ -5035,7 +5035,7 @@ public class Solution {
         int[][] status = new int[A.length][A.length + 1];
         for (int i = 0; i < A.length; i++) {
             for (int j = i + 1; j < A.length; j++) {
-                int k = (int) Math.sqrt(A[i] + A[j]);
+                int k = (int) Math.sqrt(A[i] + A[j]); 
                 if (k == Math.sqrt(A[i] + A[j])) {
                     status[i][++status[i][0]] = j;
                     status[j][++status[j][0]] = i;
