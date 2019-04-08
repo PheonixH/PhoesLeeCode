@@ -908,6 +908,162 @@ x = (a[7]b[7]) (a[6]b[6]) ... (a[1]b[1]) (a[0]b[0])
         return a;
     }
 
+
+    //877
+    //执行用时 : 0 ms, 在Stone Game的Java提交中击败了100.00% 的用户
+    //内存消耗 : 34.2 MB, 在Stone Game的Java提交中击败了7.50% 的用户
+    public boolean stoneGame(int[] piles) {
+        return true;
+    }
+
+    //877
+    //
+    public boolean stoneGame1(int[] piles) {
+        int length = piles.length;
+        //results[i][j]存储的是piles中第i个数到第j个数组成序列的最佳拿取方式下的得分
+        int[][] results = new int[length][length];
+        //当集合中只有一个堆的时候，拿的那个人直接得分
+        for (int i = 0; i < length; i++) {
+            results[i][i] = piles[i];
+        }
+        //当集合中有两个数的时候，先选的人肯定是拿较大数,分数为max-min
+        for (int i = 0; i < length - 1; i++) {
+            results[i][i + 1] = Math.abs(piles[i] - piles[i + 1]);
+        }
+        /**当集合中元素大于2时，先选的人从序列两头拿，可以分成两种情况
+         *以ABC为例，可以拿A，剩余BC，后手会选择BC的最佳拿取方式，
+         *所以先手得分为A-BC得分，即：results[i][j]=piles[i]-results[i+1][j]；
+         *也可以拿C，剩余AB，同理有results[i][j]=piles[j]-results[i][j-1]；
+         *选择分值较大的那个即可。上面两个式子都要求我们在求results[i][j]的时候知道
+         *它的下面和左边一个格子的值，所以我们从下到上，从左到右计算填表。
+         */
+        for (int i = length - 3; i >= 0; i--) {
+            for (int j = i + 2; j < length; j++) {
+                results[i][j] = Math.max(piles[i] - results[i + 1][j], piles[j] - results[i][j - 1]);
+            }
+        }
+        return results[0][length - 1] > 0;
+    }
+
+    //877
+    public boolean stoneGame2(int[] piles) {
+        //dp其实就是存储了递归过程中的数值
+        //dps[i][j]代表从i到j所能获得的最大的绝对分数
+        //（比如为1就说明亚历克斯从i到j可以赢李1分）
+        //如何计算dps[i][j]呢:max(piles[i]-dp[i+1][j],piles[j]-dp[i][j-1]);
+        //这里减去dps数组是因为李也要找到最大的
+        //最后dps=[5 2 4 1]
+        //        [0 3 1 4]
+        //        [0 0 4 1]
+        //        [0 0 0 5]
+        int n = piles.length;
+        int[][] dps = new int[n][n];
+        //dps[i][i]存储当前i的石子数
+        for (int i = 0; i < n; i++) {
+            dps[i][i] = piles[i];
+        }
+        //d=1,其实代表，先算两个子的时候
+        for (int d = 1; d < n; d++) {
+            //有多少组要比较
+            for (int j = 0; j < n - d; j++) {
+                //比较j到d+j
+                dps[j][d + j] = Math.max(piles[j] - dps[j + 1][d + j], piles[d + j] - dps[j][d + j - 1]);
+            }
+        }
+        return dps[0][n - 1] > 0;
+    }
+
+    //312
+    //执行用时 : 24 ms, 在Burst Balloons的Java提交中击败了9.71% 的用户
+    //内存消耗 : 36.2 MB, 在Burst Balloons的Java提交中击败了0.00% 的用户
+    public int maxCoins(int[] nums) {
+        int n = nums.length;
+        int[][] dp = new int[n + 2][n + 2];
+        int[] nums2 = new int[n + 2];
+        nums2[0] = 1;
+        nums2[n + 1] = 1;
+        for (int i = 1; i < n + 1; i++) {
+            nums2[i] = nums[i - 1];
+        }
+        //dp[i][j] = max(dp[i][k-1]+dp[k+1][j]+nums2[i-1]*nums2[j+1]*nums[k])
+        for (int i = 1; i < n + 1; i++) {
+            dp[i][i] = nums2[i - 1] * nums2[i] * nums2[i + 1];
+        }
+        for (int j = 1; j < n; j++) {
+            for (int i = 1; i < n + 1 - j; i++) {
+                int max;
+                for (int k = i; k <= i + j; k++) {
+                    int left = (k - 1 >= i) ? dp[i][k - 1] : 0;
+                    int right = (k + 1 <= i + j) ? dp[k + 1][i + j] : 0;
+                    dp[i][i + j] = Math.max(left + right + nums2[i - 1] * nums2[j + i + 1] * nums2[k], dp[i][i + j]);
+                }
+            }
+        }
+        return dp[1][n];
+    }
+
+    //983
+    //执行用时 : 2 ms, 在Minimum Cost For Tickets的Java提交中击败了100.00% 的用户
+    //内存消耗 : 33.7 MB, 在Minimum Cost For Tickets的Java提交中击败了100.00% 的用户
+    public int mincostTickets(int[] days, int[] costs) {
+        // 将从新年到某一天的花过的所有钱数全部记录起来。
+        int[] lastAllDaysCost = new int[366];
+        //  days的下标，确保遍历365天时，以便于知道下次旅游的日期。
+        int dayIdx = 0;
+        // 日，月，年的花费。
+        int ticketDay = costs[0];
+        int ticketWeek = costs[1];
+        int ticketMonth = costs[2];
+        // 因为是第一天，所以过去的总花费为0
+        lastAllDaysCost[0] = 0;
+        // lastAllCost[i] 是截至到今年的第 i 天的总花费.
+
+        // 模拟新年的第一天跑到旅行的最后一天。
+        for (int today = 1; today <= 365; today++) {
+            if (dayIdx >= days.length) {
+                break;
+            }
+            // 判断今天是否属于旅行日。
+            if (days[dayIdx] != today) {
+                // 如果这一天不旅行那么直接把上一天的过去总花费拿过来直接使用。
+                lastAllDaysCost[today] = lastAllDaysCost[today - 1];
+                continue;
+            }
+            // 开始等待下一个待旅行的日子到来。
+            dayIdx++;
+            // 如果一月前，买了月票，会不会更便宜？
+            // 如果一周前，买了周票，会不会更便宜？
+            // 如果都不会的话，那我暂时先买日票试试呗。
+            lastAllDaysCost[today] = Math.min(Math.min(
+                    lastAllDaysCost[Math.max(0, today - 1)] + ticketDay,
+                    lastAllDaysCost[Math.max(0, today - 7)] + ticketWeek),
+                    lastAllDaysCost[Math.max(0, today - 30)] + ticketMonth);
+        }
+        return lastAllDaysCost[days[days.length - 1]];
+    }
+
+    //714
+    //执行用时 : 38 ms, 在Best Time to Buy and Sell Stock with Transaction Fee的Java提交中击败了8.76% 的用户
+    //内存消耗 : 67.7 MB, 在Best Time to Buy and Sell Stock with Transaction Fee的Java提交中击败了0.00% 的用户
+    public int maxProfit(int[] prices, int fee) {
+        //n个交易日
+        int n = prices.length;
+        //截止第i天的资金 + 是否持有股票
+        int[][] res = new int[n][2];
+        //一开始无收益
+        res[0][0] = 0;
+        res[0][1] = -prices[0];
+        for (int i = 1; i < n; i++) {
+            // 今日非持有股票：昨天没买 || 卖了昨天买的；
+            res[i][0] = Math.max(res[i - 1][0], res[i - 1][1] + prices[i] - fee);
+            // 今日持有股票：昨天买了 || 昨天没有但是今日买入；
+            res[i][1] = Math.max(res[i - 1][1], res[i - 1][0] - prices[i]);
+        }
+        //返回最后一天不持有收益
+        return res[n-1][0];
+    }
+
+
     public static void main(String[] args) {
         TreeNode root = new TreeNode(1);
         TreeNode r1 = new TreeNode(2);
