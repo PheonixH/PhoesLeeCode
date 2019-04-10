@@ -5035,7 +5035,7 @@ public class Solution {
         int[][] status = new int[A.length][A.length + 1];
         for (int i = 0; i < A.length; i++) {
             for (int j = i + 1; j < A.length; j++) {
-                int k = (int) Math.sqrt(A[i] + A[j]); 
+                int k = (int) Math.sqrt(A[i] + A[j]);
                 if (k == Math.sqrt(A[i] + A[j])) {
                     status[i][++status[i][0]] = j;
                     status[j][++status[j][0]] = i;
@@ -5191,10 +5191,10 @@ public class Solution {
             p[i] = -1;
             for (int j = 0; j < nums.length; j++) {
                 jj++;
-                if(jj >= nums.length){
+                if (jj >= nums.length) {
                     jj = 0;
                 }
-                if(nums[jj] > nums[i]){
+                if (nums[jj] > nums[i]) {
                     p[i] = nums[jj];
                     break;
                 }
@@ -5202,6 +5202,145 @@ public class Solution {
         }
 
         return p;
+    }
+
+    //198
+    //执行用时 : 1 ms, 在House Robber的Java提交中击败了99.62% 的用户
+    //内存消耗 : 35.9 MB, 在House Robber的Java提交中击败了0.83% 的用户
+    public int rob0(int[] nums) {
+        int n = nums.length;
+        if (n <= 0) {
+            return 0;
+        }
+        int[][] status = new int[n][2];
+        status[0][0] = 0;
+        status[0][1] = nums[0];
+        for (int i = 1; i < nums.length; i++) {
+            status[i][0] = Math.max(status[i - 1][0], status[i - 1][1]);
+            status[i][1] = Math.max(status[i - 1][0] + nums[i], status[i - 1][1] - nums[i - 1] + nums[i]);
+        }
+        return Math.max(status[n - 1][0], status[n - 1][1]);
+    }
+
+    //213
+    //执行用时 : 1 ms, 在House Robber II的Java提交中击败了99.28% 的用户
+    //内存消耗 : 33.7 MB, 在House Robber II的Java提交中击败了0.00% 的用户
+    public int rob(int[] nums) {
+        if (nums == null || nums.length == 0) {
+            return 0;
+        }
+        if (nums.length == 1) {
+            return nums[0];
+        }
+        int[] dp1 = new int[nums.length];
+        int[] dp2 = new int[nums.length];
+        dp1[1] = nums[0]; //从第1个房屋开始偷
+        dp2[1] = nums[1]; //从第2个房屋开始偷
+        for (int i = 2; i < nums.length; i++) {
+            dp1[i] = Math.max(dp1[i - 2] + nums[i - 1], dp1[i - 1]);
+            dp2[i] = Math.max(dp2[i - 2] + nums[i], dp2[i - 1]);
+        }
+        return Math.max(dp1[nums.length - 1], dp2[nums.length - 1]);
+    }
+
+    //931
+    //执行用时 : 6 ms, 在Minimum Falling Path Sum的Java提交中击败了96.55% 的用户
+    //内存消耗 : 36.5 MB, 在Minimum Falling Path Sum的Java提交中击败了0.00% 的用户
+    public int minFallingPathSum(int[][] A) {
+        int min = Integer.MAX_VALUE;
+        int l = A.length;
+        int r = A[0].length;
+        int[][] road = new int[l][r + 2];
+        for (int i = 0; i < r; i++) {
+            road[0][i + 1] = A[0][i];
+        }
+        for (int i = 0; i < l; i++) {
+            road[i][0] = Integer.MAX_VALUE / 2;
+            road[i][r + 1] = Integer.MAX_VALUE / 2;
+        }
+        for (int i = 1; i < l; i++) {
+            for (int j = 1; j < r + 1; j++) {
+                int t = A[i][j - 1];
+                road[i][j] = Math.min(Math.min(road[i - 1][j - 1], road[i - 1][j]), road[i - 1][j + 1]);
+                road[i][j] += t;
+            }
+        }
+        int res = Integer.MAX_VALUE;
+        for (int j = 1; j < r + 1; j++) {
+            res = res < road[l - 1][j] ? res : road[l - 1][j];
+        }
+        return res;
+    }
+
+    //746
+    //执行用时 : 4 ms, 在Min Cost Climbing Stairs的Java提交中击败了87.38% 的用户
+    //内存消耗 : 35.2 MB, 在Min Cost Climbing Stairs的Java提交中击败了3.51% 的用户
+    public int minCostClimbingStairs(int[] cost) {
+        int n = cost.length;
+        int[][] road = new int[n][2];
+        road[0][1] = cost[0];
+        road[0][0] = 0;
+        road[1][1] = cost[1];
+        road[1][0] = 0;
+        for (int i = 2; i < n; i++) {
+            road[i][0] = road[i - 1][1];
+            road[i][1] = Math.min(road[i - 2][1] + cost[i], road[i - 1][1] + cost[i]);
+        }
+        int res = Math.min(road[n - 1][0], road[n - 1][1]);
+        return res;
+    }
+
+    //309
+    //执行用时 : 2 ms, 在Best Time to Buy and Sell Stock with Cooldown的Java提交中击败了99.69% 的用户
+    //内存消耗 : 34.1 MB, 在Best Time to Buy and Sell Stock with Cooldown的Java提交中击败了0.00% 的用户
+    public int maxProfit(int[] prices) {
+        /*三个状态的对应利润
+        1.s0可买入
+        2.s1可卖出
+        3.s2冷冻
+        maxlr=max(s0,s2);
+        */
+        if (prices.length == 0) {
+            return 0;
+        }
+        int s0 = 0;
+        int s1 = -prices[0];
+        int s2 = 0;
+        int pre0 = s0;
+        int pre1 = s1;
+        int pre2 = s2;
+        for (int i = 1; i < prices.length; i++) {
+            //不用开辟数组了，直接用变量记录上一个值
+            pre0 = s0;
+            pre1 = s1;
+            pre2 = s2;
+            //☆重点！！！状态转移方程
+            s0 = Math.max(pre0, pre2);//当前可买入状态利润=max(保持原状态，从冷冻状态转换过来)
+            s1 = Math.max(pre1, pre0 - prices[i]);//当前可卖出状态利润=max(保持原状态，买入物品后)
+            s2 = pre1 + prices[i];//当前冷冻状态利润=可卖出状态+卖出股票
+        }
+        return Math.max(s0, s2);
+    }
+
+    //309
+    //执行用时 : 3 ms, 在Best Time to Buy and Sell Stock with Cooldown的Java提交中击败了95.37% 的用户
+    //内存消耗 : 36.9 MB, 在Best Time to Buy and Sell Stock with Cooldown的Java提交中击败了0.00% 的用户
+    public int maxProfit1(int[] prices) {
+        int n = prices.length;
+        if(n == 0 ){
+            return 0;
+        }
+        //0：不持有 1：持有 2：冷冻
+        int[][] best = new int[n][3];
+        best[0][0] = 0;
+        best[0][1] = -prices[0];
+        best[0][2] = 0;
+        for (int i = 1; i < n; i++) {
+            best[i][0] = Math.max(best[i - 1][0], best[i - 1][2]);
+            best[i][1] = Math.max(best[i - 1][1], best[i - 1][0] - prices[i]);
+            best[i][2] = best[i - 1][1] + prices[i];
+        }
+        return Math.max(best[n - 1][0], best[n - 1][2]);
     }
 
     public static void main(String[] args) {
@@ -5246,10 +5385,10 @@ public class Solution {
                 ".#.#..#.####............#.....", "#.#..........###.#........#...", "..#..#.........#.......#..#.##",
                 "..#..#C#...............#......", ".........#.##.##......#.#.....", "..#........##.#..##.#.....#.#."};
         int[] arr = {-4, -2, -2, -2, 0, 1, 2, 2, 2, 3, 3, 4, 4, 6, 6};
-        int[] brr = {2, 2, 2, 2, 2, 2, 2, 2, 2, 2};
+        int[] brr = {1, 2, 3, 0, 2};
         int[][] crr = {{68, 97}, {34, -84}, {60, 100}, {2, 31}, {-27, -38}, {-73, -74}, {-55, -39}, {62, 91}, {62, 92}, {-57, -67}};//{2, 2}, {3, 3}, {6, 1},{7, 2}, {1, 7}, {9, 5}, {1, 8}, {3, 4}};
         int[][] ins = {
-                {0, 1, 6, 16, 22, 23}, {14, 15, 24, 32}, {4, 10, 12, 20, 24, 28, 33}, {1, 10, 11, 19, 27, 33}, {11, 23, 25, 28}, {15, 20, 21, 23, 29}, {29}
+                {1, 2, 3}, {4, 5, 6}, {7, 8, 9}
         };
         int[][] ints = {
                 {5, 4, 2, 9, 6, 0, 3, 5, 1, 4, 9, 8, 4, 9, 7, 5, 1},
@@ -5304,7 +5443,7 @@ public class Solution {
         nums.add(l1);
         nums.add(l2);
         nums.add(l3);
-        System.out.print(solution.numSquarefulPerms(brr));
+        System.out.print(solution.maxProfit(brr));
     }
 
 }
