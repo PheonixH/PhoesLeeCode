@@ -5327,7 +5327,7 @@ public class Solution {
     //内存消耗 : 36.9 MB, 在Best Time to Buy and Sell Stock with Cooldown的Java提交中击败了0.00% 的用户
     public int maxProfit1(int[] prices) {
         int n = prices.length;
-        if(n == 0 ){
+        if (n == 0) {
             return 0;
         }
         //0：不持有 1：持有 2：冷冻
@@ -5341,6 +5341,138 @@ public class Solution {
             best[i][2] = best[i - 1][1] + prices[i];
         }
         return Math.max(best[n - 1][0], best[n - 1][2]);
+    }
+
+    //62
+    //执行用时 : 1 ms, 在Unique Paths的Java提交中击败了83.10% 的用户
+    //内存消耗 : 32.1 MB, 在Unique Paths的Java提交中击败了61.91% 的用户
+    public int uniquePaths(int m, int n) {
+        int[][] road = new int[m][n];
+        road[0][0] = 1;
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                road[i][j] += i > 0 ? road[i - 1][j] : 0;
+                road[i][j] += j > 0 ? road[i][j - 1] : 0;
+            }
+        }
+        return road[m - 1][n - 1];
+    }
+
+    //741 -- failed  没考虑：
+    public int cherryPickup0(int[][] grid) {
+        int m = grid.length;
+        int n = grid[0].length;
+        int[][] droad = new int[m][n];
+        droad[0][0] = grid[0][0];
+        Map<String, List<int[]>> map = new HashMap<>();
+        String sbegin = "x=0,y=0";
+        int[] p = new int[2];
+        p[0] = 0;
+        p[1] = 0;
+        List road = new LinkedList();
+        road.add(p);
+        map.put(sbegin, road);
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (i == 0 && j == 0) {
+                    continue;
+                }
+                if (grid[i][j] == -1) {
+                    droad[i][j] = Integer.MIN_VALUE;
+                    String sr = "x=" + i + ",y=" + j;
+                    List<int[]> np = new LinkedList<>();
+                    map.put(sr, np);
+                    continue;
+                }
+                int t1 = 0, t2 = 0;
+                if (i - 1 >= 0) {
+                    t1 = grid[i - 1][j] == -1 ? -1 : grid[i][j] + droad[i - 1][j];
+                }
+                if (j - 1 >= 0) {
+                    t2 = grid[i][j - 1] == -1 ? -1 : grid[i][j] + droad[i][j - 1];
+                }
+                droad[i][j] = Math.max(t1, t2);
+                String sr = "x=" + i + ",y=" + j;
+                List<int[]> np = new LinkedList<>();
+//                if (t1 == -1 && t2 == -1) {
+//                    map.put(sr, np);
+//                    continue;
+//                }
+                String spre = t1 > t2 ? "x=" + (i - 1) + ",y=" + j : "x=" + i + ",y=" + (j - 1);
+                List<int[]> tp = map.get(spre);
+
+                if (tp != null) {
+                    for (int[] ts : tp) {
+                        np.add(ts);
+                    }
+                }
+                int[] ts = new int[2];
+                ts[0] = i;
+                ts[1] = j;
+                np.add(ts);
+                map.put(sr, np);
+            }
+        }
+        String ds = "x=" + (m - 1) + ",y=" + (n - 1);
+        List<int[]> list = map.get(ds);
+        for (int[] t : list) {
+            int x = t[0];
+            int y = t[1];
+            if (grid[x][y] == -1) {
+                return -1;
+            }
+            grid[x][y] = 0;
+        }
+        int res = droad[m - 1][n - 1];
+        int[][] uroad = new int[m][n];
+        uroad[m - 1][n - 1] = 0;
+        for (int i = m - 1; i >= 0; i--) {
+            for (int j = n - 1; j >= 0; j--) {
+                int t1 = 0, t2 = 0;
+                if (i + 1 < m) {
+                    t1 = grid[i + 1][j] == -1 ? -2 : grid[i][j] + uroad[i + 1][j];
+                }
+                if (j + 1 < n) {
+                    t2 = grid[i][j + 1] == -1 ? -2 : grid[i][j] + uroad[i][j + 1];
+                }
+                uroad[i][j] = Math.max(t1, t2);
+            }
+        }
+        res += uroad[0][0];
+        return res > 0 ? res : 0;
+    }
+
+    //741
+    //执行用时 : 51 ms, 在Cherry Pickup的Java提交中击败了66.67% 的用户
+    //内存消耗 : 41 MB, 在Cherry Pickup的Java提交中击败了85.71% 的用户
+    public int cherryPickup(int[][] grid) {
+        int n = grid.length, mx = 2 * n - 1;
+        int[][] dp = new int[n][grid[0].length];
+        dp[0][0] = grid[0][0];
+        for (int k = 1; k < mx; ++k) {
+            for (int i = n - 1; i >= 0; --i) {
+                for (int p = n - 1; p >= 0; --p) {
+                    int j = k - i, q = k - p;
+                    if (j < 0 || j >= n || q < 0 || q >= n || grid[i][j] < 0 || grid[p][q] < 0) {
+                        dp[i][p] = -1;
+                        continue;
+                    }
+                    if (i > 0) {
+                        dp[i][p] = Math.max(dp[i][p], dp[i - 1][p]);
+                    }
+                    if (p > 0) {
+                        dp[i][p] = Math.max(dp[i][p], dp[i][p - 1]);
+                    }
+                    if (i > 0 && p > 0) {
+                        dp[i][p] = Math.max(dp[i][p], dp[i - 1][p - 1]);
+                    }
+                    if (dp[i][p] >= 0) {
+                        dp[i][p] += grid[i][j] + (i != p ? grid[p][q] : 0);
+                    }
+                }
+            }
+        }
+        return Math.max(dp[n - 1][n - 1], 0);
     }
 
     public static void main(String[] args) {
@@ -5416,9 +5548,13 @@ public class Solution {
                 {'A', 'D', 'E', 'E'}
         };
         int[][] is = {
-                {1, 2, 4},
-                {5, 2, 3},
-                {5, 6, 9}
+                {1, 1, 1, 1, 0, 0, 0},
+                {0, 0, 0, 1, 0, 0, 0},
+                {0, 0, 0, 1, 0, 0, 1},
+                {1, 0, 0, 1, 0, 0, 0},
+                {0, 0, 0, 1, 0, 0, 0},
+                {0, 0, 0, 1, 0, 0, 0},
+                {0, 0, 0, 1, 1, 1, 1}
         };
         char[][] boards = {};
         List<List<Integer>> nums = new LinkedList();
@@ -5443,7 +5579,7 @@ public class Solution {
         nums.add(l1);
         nums.add(l2);
         nums.add(l3);
-        System.out.print(solution.maxProfit(brr));
+        System.out.print(solution.cherryPickup(is));
     }
 
 }
