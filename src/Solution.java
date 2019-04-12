@@ -5581,6 +5581,5 @@ public class Solution {
         nums.add(l3);
         System.out.print(solution.cherryPickup(is));
     }
-
 }
 
