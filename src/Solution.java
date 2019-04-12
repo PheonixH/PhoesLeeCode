@@ -5475,6 +5475,243 @@ public class Solution {
         return Math.max(dp[n - 1][n - 1], 0);
     }
 
+    //486
+    //执行用时 : 1 ms, 在Predict the Winner的Java提交中击败了100.00% 的用户
+    //内存消耗 : 35.2 MB, 在Predict the Winner的Java提交中击败了56.84% 的用户
+    public boolean PredictTheWinner(int[] nums) {
+        if (nums.length % 2 == 0) {
+            return true;
+        }
+        int n = nums.length;
+        int[][] dps = new int[n][n];
+        //dps[i][i]为玩家一从i到i赢得，肯定只能是nums[i]
+        for (int i = 0; i < n; i++) {
+            dps[i][i] = nums[i];
+        }
+        //d=1,其实代表，先算两个数的时候
+        for (int d = 1; d < n; d++) {
+            //有多少组要比较
+            for (int j = 0; j < n - d; j++) {
+                //比较j到d+j
+                //其实意思就是比较j到d+j时，玩家1，只能选择两端的，
+                //玩家一选择了j时，那么玩家二就从j+1到d+j中选最大的。
+                //玩家一选了d+j时，那么玩家二就从j到d+j-1中选最大的
+                dps[j][d + j] = Math.max(nums[j] - dps[j + 1][d + j], nums[d + j] - dps[j][d + j - 1]);
+            }
+        }
+        //两个玩家相等，玩家一仍然胜利。
+        return dps[0][n - 1] >= 0;
+    }
+
+    //403
+    public boolean canCross(int[] stones) {
+        if (stones.length == 0) {
+            return false;
+        }
+        Map<Integer, Set<Integer>> m = new HashMap<>();
+        for (int i = 0; i < stones.length; i++) {
+            m.put(stones[i], new HashSet<>());
+        }
+        m.get(0).add(0);
+        for (int i = 0; i < stones.length; i++) {
+            for (Integer now : m.get(stones[i])) {
+                for (int j = now - 1; j <= now + 1; j++) {
+                    if (j > 0 && m.containsKey(stones[i] + j)) {
+                        m.get(stones[i] + j).add(j);
+                    }
+                }
+            }
+        }
+        return !m.get(stones[stones.length - 1]).isEmpty();
+    }
+
+    //871
+    //执行用时 : 37 ms, 在Minimum Number of Refueling Stops的Java提交中击败了26.56% 的用户
+    //内存消耗 : 44.5 MB, 在Minimum Number of Refueling Stops的Java提交中击败了61.02% 的用户
+    public int minRefuelStops0(int target, int startFuel, int[][] stations) {
+        if (startFuel >= target) {
+            return 0;
+        }
+        int res = 0;
+        int n = stations.length;
+        List<Integer> pass = new LinkedList<>();
+        int arrive = startFuel;
+        for (int i = 0; i < n; i++) {
+            if (arrive >= target) {
+                return res;
+            }
+            if (stations[i][0] <= arrive) {
+                pass.add(stations[i][1]);
+            } else {
+                int max = 0;
+                int maxj = -1;
+                for (int j = 0; j < pass.size(); j++) {
+                    if (max <= pass.get(j)) {
+                        maxj = j;
+                        max = pass.get(j);
+                    }
+                }
+                if (maxj == -1) {
+                    return -1;
+                }
+                arrive += max;
+                pass.remove(maxj);
+                res++;
+                if (stations[i][0] <= arrive) {
+                    pass.add(stations[i][1]);
+                } else {
+                    i--;
+                }
+            }
+        }
+        if (arrive >= target) {
+            return res;
+        }
+        while (!pass.isEmpty()) {
+            int max = 0;
+            int maxj = -1;
+            for (int j = 0; j < pass.size(); j++) {
+                if (max <= pass.get(j)) {
+                    maxj = j;
+                    max = pass.get(j);
+                }
+            }
+            res++;
+            arrive += max;
+            pass.remove(maxj);
+            if (arrive >= target) {
+                return res;
+            }
+        }
+        return -1;
+    }
+
+    //871
+    //执行用时 : 11 ms, 在Minimum Number of Refueling Stops的Java提交中击败了74.22% 的用户
+    //内存消耗 : 44.2 MB, 在Minimum Number of Refueling Stops的Java提交中击败了67.80% 的用户
+    public int minRefuelStops(int target, int startFuel, int[][] stations) {
+        Queue<Integer> priorityQueue = new PriorityQueue<>(new Comparator<Integer>() {
+            @Override
+            public int compare(Integer e1, Integer e2) {
+                return e2 - e1;
+            }
+        });
+        int currentFuel = startFuel;
+        int times = 0;
+        int currentPosition = 0;
+        int stationsnums = stations.length;
+        while (currentFuel < target) {
+            while (currentPosition < stationsnums && stations[currentPosition][0] <= currentFuel) {
+                priorityQueue.add(stations[currentPosition++][1]);
+
+            }
+            if (priorityQueue.isEmpty()) {
+                return -1;
+            }
+            currentFuel += priorityQueue.poll();
+            times++;
+        }
+        return times;
+    }
+
+    //787
+    //执行用时 : 12 ms, 在Cheapest Flights Within K Stops的Java提交中击败了84.62% 的用户
+    //内存消耗 : 38.4 MB, 在Cheapest Flights Within K Stops的Java提交中击败了96.88% 的用户
+    public int findCheapestPrice0(int n, int[][] flights, int src, int dst, int K) {
+        /**
+         基于最短路径Dijkstra算法, 加上了k中转的约束, 利用一个优先队列按费用最低保存到达不同目标站
+         所需的中间站数和费用, 每次从优先队列中poll出一个当前最小花费的站, 如果该站为dst则直接返回
+         对应的费用(优先队列保证花费最低). 为了便于更新, 利用一个map保存不同的始发站可以到达的不同
+         下一站的和费用
+
+         Map<Integer, Map<Integer, Integer>> map = new HashMap<>();
+         for(int[] flight : flights) {
+         if(!map.containsKey(flight[0]))
+         map.put(flight[0], new HashMap<>(0));
+         map.get(flight[0]).put(flight[1], flight[2]);
+         }
+
+         // 数组内元素依次为: 到达站的最低费用(fee)、到达站(tar)和经过中转的站数(k)
+         PriorityQueue<int[]> pq = new PriorityQueue<>(
+         (a, b) -> (a[0]-b[0])
+         );
+         pq.offer(new int[]{0, src, 0});
+
+         while(!pq.isEmpty()) {
+         int[] temp = pq.poll();
+         int fee = temp[0];
+         int tar = temp[1];
+         int k = temp[2];
+         if(tar == dst) return fee;
+         if(k <= K) {
+         // 防止下一站城市不在map中
+         Map<Integer, Integer> nextHops = map.getOrDefault(tar, new HashMap<>());
+         for(Map.E***y<Integer, Integer> e***y : nextHops.e***ySet())
+         pq.offer(new int[]{fee + e***y.getValue(), e***y.getKey(), k+1});
+         }
+         }
+
+         return -1;
+         **/
+
+        /**
+         动态规划解法, dp[i][k]表示经过k个中转站后到达站i的最低费用
+         初始除了dp[src][0]~dp[src][k]之外所有的元素置为无穷大inf
+         则状态方程为: 对于所有目标地位i的航班(flight[1] = i)
+         只要dp[flight[0]][k-1] != inf就更新dp[i][k]
+         dp[i][k] = Math.min(dp[i][k], dp[flight[0]][k-1])
+         **/
+
+        int[][] dp = new int[n][K + 2];
+        for (int i = 0; i < n; ++i) {
+            Arrays.fill(dp[i], Integer.MAX_VALUE);
+        }
+        for (int k = 0; k <= K + 1; ++k) {
+            dp[src][k] = 0;
+        }
+        for (int k = 1; k <= K + 1; ++k) {
+            for (int[] flight : flights) {
+                if (dp[flight[0]][k - 1] != Integer.MAX_VALUE) {
+                    dp[flight[1]][k] = Math.min(dp[flight[1]][k], dp[flight[0]][k - 1] + flight[2]);
+                }
+            }
+        }
+        return dp[dst][K + 1] == Integer.MAX_VALUE ? -1 : dp[dst][K + 1];
+    }
+
+
+    //787
+    //执行用时 : 13 ms, 在Cheapest Flights Within K Stops的Java提交中击败了78.20% 的用户
+    //内存消耗 : 41.2 MB, 在Cheapest Flights Within K Stops的Java提交中击败了50.00% 的用户
+    public int findCheapestPrice(int n, int[][] flights, int src, int dst, int K) {
+        int[][] dp = new int[n][K + 1];
+        for (int i = 0; i < n; i++) {
+            Arrays.fill(dp[i], Integer.MAX_VALUE);
+        }
+        Arrays.fill(dp[src], 0);
+
+        for (int[] flight : flights) {
+            int s = flight[0];
+            int d = flight[1];
+            int p = flight[2];
+            if (s == src) {
+                dp[d][0] = p;
+            }
+        }
+
+        for (int i = 1; i < K + 1; i++) {
+            for (int[] flight : flights) {
+                int s = flight[0];
+                int d = flight[1];
+                int p = flight[2];
+                if (dp[s][i - 1] != Integer.MAX_VALUE) {
+                    dp[d][i] = Math.min(dp[d][i], dp[s][i - 1] + p);
+                }
+            }
+        }
+        return dp[dst][K] == Integer.MAX_VALUE ? -1 : dp[dst][K];
+    }
+
     public static void main(String[] args) {
         Solution solution = new Solution();
         ListNode p = new ListNode(1);
@@ -5517,10 +5754,10 @@ public class Solution {
                 ".#.#..#.####............#.....", "#.#..........###.#........#...", "..#..#.........#.......#..#.##",
                 "..#..#C#...............#......", ".........#.##.##......#.#.....", "..#........##.#..##.#.....#.#."};
         int[] arr = {-4, -2, -2, -2, 0, 1, 2, 2, 2, 3, 3, 4, 4, 6, 6};
-        int[] brr = {1, 2, 3, 0, 2};
+        int[] brr = {0, 1, 3, 5, 6, 8, 12, 17};
         int[][] crr = {{68, 97}, {34, -84}, {60, 100}, {2, 31}, {-27, -38}, {-73, -74}, {-55, -39}, {62, 91}, {62, 92}, {-57, -67}};//{2, 2}, {3, 3}, {6, 1},{7, 2}, {1, 7}, {9, 5}, {1, 8}, {3, 4}};
         int[][] ins = {
-                {1, 2, 3}, {4, 5, 6}, {7, 8, 9}
+                {13, 21}, {26, 115}, {100, 47}, {225, 99}, {299, 141}, {444, 198}, {608, 190}, {636, 157}, {647, 255}, {841, 123}
         };
         int[][] ints = {
                 {5, 4, 2, 9, 6, 0, 3, 5, 1, 4, 9, 8, 4, 9, 7, 5, 1},
@@ -5579,7 +5816,7 @@ public class Solution {
         nums.add(l1);
         nums.add(l2);
         nums.add(l3);
-        System.out.print(solution.cherryPickup(is));
+        System.out.print(solution.minRefuelStops(1000, 299, ins));
     }
 
 }
