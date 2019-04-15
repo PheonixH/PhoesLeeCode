@@ -5684,111 +5684,691 @@ public class Solution {
         return dp[dst][K] == Integer.MAX_VALUE ? -1 : dp[dst][K];
     }
 
+    //55
+    //执行用时 : 3 ms, 在Jump Game的Java提交中击败了95.28% 的用户
+    //内存消耗 : 40.5 MB, 在Jump Game的Java提交中击败了84.53% 的用户
+    //进行下一个挑战：
+    public boolean canJump(int[] nums) {
+        if (nums.length <= 1) {
+            return true;
+        }
+        int t = 1;
+        int i = 0;
+        for (; i < nums.length; i++) {
+            if (nums[i] != 0) {
+                t = (t - 1) > nums[i] ? (t - 1) : nums[i];
+            } else {
+                t--;
+            }
+            if (t == 0) {
+                break;
+            }
+        }
+        return i >= nums.length - 1;
+    }
+
+    //45
+    // 超出时间限制
+    public int jump0(int[] nums) {
+        int n = nums.length;
+        int[] teps = new int[n];
+        for (int i = 0; i < n; i++) {
+            teps[i] = Integer.MAX_VALUE;
+        }
+        teps[0] = 0;
+        for (int i = 0; i < n; i++) {
+            for (int j = nums[i]; j >= 1; j--) {
+                if (i + j >= n) {
+                    continue;
+                }
+                if (teps[i] > teps[i + j]) {
+                    break;
+                }
+                teps[i + j] = Math.min(teps[i] + 1, teps[i + j]);
+            }
+        }
+        return teps[n - 1];
+    }
+
+    //45
+    //执行用时 : 4 ms, 在Jump Game II的Java提交中击败了97.05% 的用户
+    //内存消耗 : 43.1 MB, 在Jump Game II的Java提交中击败了49.14% 的用户
+    public int jump(int[] nums) {
+        if (nums.length == 1) {
+            return 0;
+        }
+        int reach = 0;
+        int nextreach = nums[0];
+        int step = 0;
+        for (int i = 0; i < nums.length; i++) {
+            nextreach = Math.max(i + nums[i], nextreach);
+            if (nextreach >= nums.length - 1) {
+                return (step + 1);
+            }
+            if (i == reach) {
+                step++;
+                reach = nextreach;
+            }
+        }
+        return step;
+    }
+
+    //40
+    //执行用时 : 32 ms, 在Combination Sum II的Java提交中击败了33.07% 的用户
+    //内存消耗 : 45 MB, 在Combination Sum II的Java提交中击败了27.34% 的用户
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        List<List<Integer>> res = new LinkedList<>();
+        Map<String, PriorityQueue<Integer>> map = new HashMap<>();
+
+        quickSort(candidates, 0, candidates.length - 1);
+        for (int i = 0; i < candidates.length; i++) {
+            if (candidates[i] > target) {
+                continue;
+            }
+            List<Integer> re = new LinkedList<>();
+            re.add(candidates[i]);
+            if (candidates[i] == target) {
+                PriorityQueue<Integer> r = new PriorityQueue();
+                for (int k : re) {
+                    r.add(k);
+                }
+                String key = "";
+                for (int ii : r) {
+                    key += ii + ",";
+                }
+                map.put(key, r);
+                re.remove(re.size() - 1);
+                continue;
+            }
+            combinationSum2Ass(map, candidates, target - candidates[i], i, re);
+            re.remove(0);
+        }
+        for (PriorityQueue<Integer> p : map.values()) {
+            List<Integer> l = new LinkedList<>();
+            for (int i : p) {
+                l.add(i);
+            }
+            res.add(l);
+        }
+        return res;
+    }
+
+    public void combinationSum2Ass(Map<String, PriorityQueue<Integer>> map, int[] candidates,
+                                   int target, int i, List<Integer> re) {
+        for (int j = i + 1; j < candidates.length; j++) {
+            if (candidates[j] > target) {
+                continue;
+            }
+            re.add(candidates[j]);
+            if (candidates[j] == target) {
+                PriorityQueue<Integer> r = new PriorityQueue();
+                for (int k : re) {
+                    r.add(k);
+                }
+                String key = "";
+                for (int ii : r) {
+                    key += ii + ",";
+                }
+                map.put(key, r);
+                re.remove(re.size() - 1);
+                continue;
+            }
+            combinationSum2Ass(map, candidates, target - candidates[j], j, re);
+            re.remove(re.size() - 1);
+        }
+        return;
+    }
+
+    //40
+    //     递归回溯，同时要去重。
+    //为啥能通过比较相同然后移动扫描下标就能去重？
+    //假设[l, r]区间中要找一个和为target。通过函数backTracking(v, l, r， target)就能求出来解。
+    //而如果[l+1, r]区间有好几个值跟v[l]相等，但是此区间==v[l]元素的个数一定比v[l, r]区间==v[l]元素的个数少；
+    //所以对于"含有v[l]的解"中，前者的答案一定包含后者，所以我们只需要求一次就行；
+    //后面相同的元素直接跳过去。
+    //
+    //图示：假设这个相同的数为3
+    //
+    //3 [3......3333.....3(第k个3)]4677899....p
+    //l l+1                                   r
+    //
+    //既然区间[l+1, r]能够求出和为target的组合，其中包含了[l+1, r]区间所有含3的解的情况。
+    //而区间[l, r]3的个数比[l+1, r]3的个数更多，那么毫无疑问，[l, r]的解将覆盖[l+1, r]解中含有3的情况。
+
+    /*
+    class Solution {
+        private:
+        vector<vector<int>> ans;
+        vector<int> curComb;
+        public:
+
+        vector<vector<int>> combinationSum2(vector<int>&candidates, int target) {
+            vector<int> c = candidates;//拷贝vector，保证算法对输入数据不产生修改。
+            sort(c.begin(), c.end());//排序，方便后续操作
+            int start = 0, end = 0;//排序后，排除尾部所有>target的数
+            for (; end < c.size(); end++) {
+                if (c[end] > target) {
+                    break;
+                }
+            }
+            backTracking(c, start, end == c.size() ? end - 1 : end, target);
+            return ans;
+        }
+
+        private:
+
+        void backTracking(vector<int>&c, int l, int r, int target) {
+
+            if (target < 0) {
+                return;//target<0
+            }
+            if (!target) {//target==0
+                ans.push_back(curComb);
+                return;
+            }
+            //target > 0
+            for (int i = l; i <= r && c[i] <= target; i++) {
+                if (i != l && c[i] == c[i - 1]) {
+                    continue;//remove duplicate solution.
+                }
+                curComb.push_back(c[i]);
+                backTracking(c, i + 1, r, target - c[i]);
+                curComb.pop_back();
+            }
+        }
+    }
+    */
+
+    //141 -- set
+    //执行用时 : 13 ms, 在Linked List Cycle的Java提交中击败了19.19% 的用户
+    //内存消耗 : 43.9 MB, 在Linked List Cycle的Java提交中击败了5.04% 的用户
+    public boolean hasCycle0(ListNode head) {
+        Set<ListNode> set = new HashSet<>();
+        ListNode p = head;
+        while (p != null) {
+            if (set.contains(p)) {
+                return true;
+            }
+            set.add(p);
+            p = p.next;
+        }
+        return false;
+    }
+
+    //141 -- 快慢指针
+    //执行用时 : 1 ms, 在Linked List Cycle的Java提交中击败了90.53% 的用户
+    //内存消耗 : 40.7 MB, 在Linked List Cycle的Java提交中击败了34.58% 的用户
+    public boolean hasCycle(ListNode head) {
+        ListNode p = head;
+        ListNode q = head;
+        while (p != null && p.next != null) {
+            p = p.next.next;
+            q = q.next;
+            if (p.equals(q)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    //23 -- 分治
+    // 执行用时 : 6 ms, 在Merge k Sorted Lists的Java提交中击败了98.10% 的用户
+    // 内存消耗 : 42.2 MB, 在Merge k Sorted Lists的Java提交中击败了75.71% 的用户
+    public ListNode mergeKLists(ListNode[] lists) {
+        if (lists.length == 0) {
+            return null;
+        }
+        if (lists.length == 1) {
+            return lists[0];
+        }
+        if (lists.length == 2) {
+            return mergeTwoLists(lists[0], lists[1]);
+        }
+
+        int mid = lists.length / 2;
+        ListNode[] l1 = new ListNode[mid];
+        for (int i = 0; i < mid; i++) {
+            l1[i] = lists[i];
+        }
+
+        ListNode[] l2 = new ListNode[lists.length - mid];
+        for (int i = mid, j = 0; i < lists.length; i++, j++) {
+            l2[j] = lists[i];
+        }
+
+        return mergeTwoLists(mergeKLists(l1), mergeKLists(l2));
+
+    }
+
+    public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+        if (l1 == null) {
+            return l2;
+        }
+        if (l2 == null) {
+            return l1;
+        }
+
+        ListNode head = null;
+        if (l1.val <= l2.val) {
+            head = l1;
+            head.next = mergeTwoLists(l1.next, l2);
+        } else {
+            head = l2;
+            head.next = mergeTwoLists(l1, l2.next);
+        }
+        return head;
+    }
+
+    //53 -- 动态规划
+    //执行用时 : 2 ms, 在Maximum Subarray的Java提交中击败了99.59% 的用户
+    //内存消耗 : 42.2 MB, 在Maximum Subarray的Java提交中击败了56.96% 的用户
+    public int maxSubArray(int[] nums) {
+        int res = nums[0];
+        int sum = 0;
+        for (int num : nums) {
+            if (sum > 0) {
+                sum += num;
+            } else {
+                sum = num;
+            }
+            res = Math.max(res, sum);
+        }
+        return res;
+    }
+
+    //4
+    //执行用时 : 15 ms, 在Median of Two Sorted Arrays的Java提交中击败了90.45% 的用户
+    //内存消耗 : 49.4 MB, 在Median of Two Sorted Arrays的Java提交中击败了83.49% 的用户
+    public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+        int[] arrays = new int[nums1.length + nums2.length];
+        for (int i = 0; i < nums1.length; i++) {
+            arrays[i] = nums1[i];
+        }
+        for (int i = 0; i < nums2.length; i++) {
+            arrays[i + nums1.length] = nums2[i];
+        }
+        int len = arrays.length;
+        double d = 0.0;
+        quickSort(arrays, 0, len - 1);
+        if (len % 2 == 0) {
+            d = d + arrays[len / 2] + arrays[len / 2 - 1];
+            d = d / 2;
+        } else {
+            d = d + arrays[len / 2];
+        }
+        return d;
+    }
+
+    //4 -- 归并
+    //执行用时 : 14 ms, 在Median of Two Sorted Arrays的Java提交中击败了92.15% 的用户
+    //内存消耗 : 51 MB, 在Median of Two Sorted Arrays的Java提交中击败了76.36% 的用户
+    public double findMedianSortedArrays0(int[] nums1, int[] nums2) {
+        int[] array = merge(nums1, nums2);
+        int length = array.length;
+        if (length % 2 != 0) {
+            return (double) array[length / 2];
+        } else {
+            return ((double) (array[length / 2] + array[length / 2 - 1])) / 2;
+        }
+    }
+
+    private int[] merge(int[] nums1, int[] nums2) {
+        int len1 = nums1.length;
+        int len2 = nums2.length;
+        int[] array = new int[len1 + len2];
+        int pointer1 = 0;
+        int pointer2 = 0;
+        int pointer = 0;
+        while (pointer1 < len1 && pointer2 < len2) {
+            if (nums1[pointer1] < nums2[pointer2]) {
+                array[pointer++] = nums1[pointer1++];
+            } else {
+                array[pointer++] = nums2[pointer2++];
+            }
+        }
+        while (pointer1 < len1) {
+            array[pointer++] = nums1[pointer1++];
+        }
+        while (pointer2 < len2) {
+            array[pointer++] = nums2[pointer2++];
+        }
+        return array;
+    }
+
+    //4 -- 递归（官方）
+    //执行用时 : 13 ms, 在Median of Two Sorted Arrays的Java提交中击败了94.89% 的用户
+    //内存消耗 : 53.8 MB, 在Median of Two Sorted Arrays的Java提交中击败了65.21% 的用户
+    public double findMedianSortedArrays1(int[] A, int[] B) {
+        int m = A.length;
+        int n = B.length;
+        if (m > n) { // to ensure m<=n
+            int[] temp = A;
+            A = B;
+            B = temp;
+            int tmp = m;
+            m = n;
+            n = tmp;
+        }
+        int iMin = 0, iMax = m, halfLen = (m + n + 1) / 2;
+        while (iMin <= iMax) {
+            int i = (iMin + iMax) / 2;
+            int j = halfLen - i;
+            if (i < iMax && B[j - 1] > A[i]) {
+                iMin = i + 1; // i is too small
+            } else if (i > iMin && A[i - 1] > B[j]) {
+                iMax = i - 1; // i is too big
+            } else { // i is perfect
+                int maxLeft = 0;
+                if (i == 0) {
+                    maxLeft = B[j - 1];
+                } else if (j == 0) {
+                    maxLeft = A[i - 1];
+                } else {
+                    maxLeft = Math.max(A[i - 1], B[j - 1]);
+                }
+                if ((m + n) % 2 == 1) {
+                    return maxLeft;
+                }
+
+                int minRight = 0;
+                if (i == m) {
+                    minRight = B[j];
+                } else if (j == n) {
+                    minRight = A[i];
+                } else {
+                    minRight = Math.min(B[j], A[i]);
+                }
+
+                return (maxLeft + minRight) / 2.0;
+            }
+        }
+        return 0.0;
+    }
+
+    //120
+    //执行用时 : 5 ms, 在Triangle的Java提交中击败了91.35% 的用户
+    //内存消耗 : 39.3 MB, 在Triangle的Java提交中击败了25.04% 的用户
+    public int minimumTotal0(List<List<Integer>> triangle) {
+        int len = triangle.size();
+        int[][] status = new int[len][len];
+        status[0][0] = triangle.get(0).get(0);
+        for (int i = 1; i < len; i++) {
+            for (int j = 0; j <= i; j++) {
+                if (j == 0) {
+                    status[i][j] = triangle.get(i).get(0) + status[i - 1][0];
+                    continue;
+                }
+                if (j == i) {
+                    status[i][j] = triangle.get(i).get(i) + status[i - 1][i - 1];
+                    continue;
+                }
+                status[i][j] = Math.min(status[i - 1][j - 1], status[i - 1][j]);
+                status[i][j] += triangle.get(i).get(j);
+            }
+        }
+        int min = Integer.MAX_VALUE;
+        for (int i = 0; i < len; i++) {
+            min = Math.min(min, status[len - 1][i]);
+        }
+        return min == Integer.MAX_VALUE ? 0 : min;
+    }
+
+    //120 -- n空间复杂度
+    // 执行用时 : 4 ms, 在Triangle的Java提交中击败了98.66% 的用户
+    // 内存消耗 : 39.7 MB, 在Triangle的Java提交中击败了20.58% 的用户
+    public int minimumTotal(List<List<Integer>> triangle) {
+        if (triangle == null || triangle.size() == 0) {
+            return 0;
+        }
+        // 只需要记录每一层的最小值即可
+        int[] dp = new int[triangle.size() + 1];
+
+        for (int i = triangle.size() - 1; i >= 0; i--) {
+            List<Integer> curTr = triangle.get(i);
+            for (int j = 0; j < curTr.size(); j++) {
+                //这里的dp[j] 使用的时候默认是上一层的，赋值之后变成当前层
+                dp[j] = Math.min(dp[j], dp[j + 1]) + curTr.get(j);
+            }
+        }
+        return dp[0];
+    }
+
+    //63
+    //执行用时 : 2 ms, 在Unique Paths II的Java提交中击败了19.13% 的用户
+    //内存消耗 : 34.8 MB, 在Unique Paths II的Java提交中击败了63.15% 的用户
+    public int uniquePathsWithObstacles0(int[][] obstacleGrid) {
+        int x = obstacleGrid.length;
+        int y = obstacleGrid[0].length;
+        int[][] roads = new int[x][y];
+        if (obstacleGrid[0][0] == 1 || obstacleGrid[x - 1][y - 1] == 1) {
+            return 0;
+        }
+        for (int i = 0; i < x; i++) {
+            for (int j = 0; j < y; j++) {
+                if (i == 0 && j == 0) {
+                    roads[0][0] = 1;
+                    continue;
+                }
+                if (i == 0) {
+                    if (obstacleGrid[i][j] == 1) {
+                        roads[i][j] = 0;
+                        continue;
+                    }
+                    roads[i][j] = roads[i][j - 1];
+                    continue;
+                }
+                if (j == 0) {
+                    if (obstacleGrid[i][j] == 1) {
+                        roads[i][j] = 0;
+                        continue;
+                    }
+                    roads[i][j] = roads[i - 1][j];
+                    continue;
+                }
+                if (obstacleGrid[i][j] == 1) {
+                    roads[i][j] = 0;
+                    continue;
+                }
+                roads[i][j] = roads[i - 1][j] + roads[i][j - 1];
+            }
+        }
+        return roads[x - 1][y - 1];
+    }
+
+    //13
+    //执行用时 : 1 ms, 在Unique Paths II的Java提交中击败了96.69% 的用户
+    //内存消耗 : 34.4 MB, 在Unique Paths II的Java提交中击败了87.10% 的用户
+    public int uniquePathsWithObstacles(int[][] obstacleGrid) {
+        int m = obstacleGrid.length;
+        int n = obstacleGrid[0].length;
+
+        int[][] dp = new int[m][n];
+        int barrier = 1;
+        for (int i = 0; i < n; i++) {
+            if (obstacleGrid[0][i] == barrier) {
+                break;
+            }
+            dp[0][i] = 1;
+        }
+        for (int i = 0; i < m; i++) {
+            if (obstacleGrid[i][0] == barrier) {
+                break;
+            }
+            dp[i][0] = 1;
+        }
+        for (int i = 1; i < m; i++) {
+            for (int j = 1; j < n; j++) {
+                if (obstacleGrid[i][j] == barrier) {
+                    dp[i][j] = 0;
+                } else {
+                    dp[i][j] = dp[i - 1][j] + dp[i][j - 1];
+                }
+            }
+        }
+        return dp[m - 1][n - 1];
+    }
+
+    //152
+    //执行用时 : 5 ms, 在Maximum Product Subarray的Java提交中击败了28.73% 的用户
+    //内存消耗 : 38.7 MB, 在Maximum Product Subarray的Java提交中击败了7.23% 的用户
+    public int maxProduct0(int[] nums) {
+        int len = nums.length;
+        int[][] results = new int[len][2];
+        results[0][0] = nums[0];
+        results[0][1] = nums[0];
+        int max = nums[0];
+        for (int i = 1; i < len; i++) {
+            if (nums[i] == 0) {
+                results[i][0] = 0;
+                results[i][1] = 0;
+                continue;
+            }
+            if (nums[i] > 0) {
+                results[i][0] = Math.max(results[i - 1][0] * nums[i], nums[i]);
+                results[i][1] = results[i - 1][1] * nums[i];
+            } else {
+                results[i][1] = Math.min(results[i - 1][0] * nums[i], nums[i]);
+                results[i][0] = results[i - 1][1] * nums[i];
+            }
+            max = Math.max(max, results[i][0]);
+        }
+        return max;
+    }
+
+    //152
+    //执行用时 : 2 ms, 在Maximum Product Subarray的Java提交中击败了98.37% 的用户
+    //内存消耗 : 35.5 MB, 在Maximum Product Subarray的Java提交中击败了78.64% 的用户
+    public int maxProduct(int[] nums) {
+        if (nums.length == 1) {
+            return nums[0];
+        }
+        int[] B = new int[nums.length];
+        int j = 0;
+        for (int i = nums.length - 1; i >= 0; i--) {
+            B[j++] = nums[i];
+        }
+        int maxA = nums[0];
+        int maxB = B[0];
+        for (int i = 1; i < nums.length; i++) {
+            if (nums[i - 1] == 0) {
+                nums[i - 1] = 1;
+            }
+            nums[i] *= nums[i - 1];
+            if (B[i - 1] == 0) {
+                B[i - 1] = 1;
+            }
+            B[i] *= B[i - 1];
+            maxA = Math.max(maxA, nums[i]);
+            maxB = Math.max(B[i], maxB);
+        }
+        return Math.max(maxA, maxB);
+    }
+
     public static void main(String[] args) {
         Solution solution = new Solution();
-        ListNode p = new ListNode(1);
-        ListNode p1 = new ListNode(2);
-        ListNode p2 = new ListNode(3);
-        ListNode p3 = new ListNode(4);
-        ListNode p4 = new ListNode(5);
-        ListNode p5 = new ListNode(6);
-        ListNode p6 = new ListNode(7);
-        ListNode p7 = new ListNode(8);
-        p.next = p1;
-        p1.next = p2;
-        p2.next = p3;
-        p3.next = p4;
-        p4.next = p5;
-        p5.next = p6;
-        p6.next = p7;
-        p7.next = p2;
-        TreeNode t = new TreeNode(1);
-        TreeNode t1 = new TreeNode(2);
-        TreeNode t2 = new TreeNode(3);
-        TreeNode t3 = new TreeNode(4);
-        TreeNode t4 = new TreeNode(5);
-        TreeNode t5 = new TreeNode(6);
-        t.left = t1;
-        t.right = t2;
-        t1.left = t3;
-        t1.right = t4;
-        t2.left = t5;
-        solution.postorderTraversal(t1);
-        String[] strings = {".#@..", "#.##.", ".#...", "A...#", ".#.#a"};
-        String[] strings2 = {".#.#..#.b...............#.#..#", ".#..##.........#......d.......", "..#...e.#.##....##.....#.....#",
-                "..#..#.#.#.##..........#.....#", "...#...##....#.....#..........", "#........###....#..#.........f",
-                "...............#......#...#...", "..........##.#...#.E..#......#", ".#...##...#.##.D....##..#.....",
-                ".......#...........#....#..##.", "...#..........##.....#.......#", ".F#....#......#...............",
-                "..##.#.#.....#..##...#.#.....#", ".............##..##..#.#......", "#..@..#.#.......#..........#..",
-                ".........##..................#", ".#.......##...##..#.......#...", ".......#.#...A.a......#.##.#..",
-                ".......#......##..#.###.#.....", ".##.#....##...#.#.....#.#.....", ".#.....#.c..#.....#......#..##",
-                "##.....##........B.#.......#.#", ".....#...#....#..##...........", "#.#.##.#....#.#...............",
-                ".#.#..#.####............#.....", "#.#..........###.#........#...", "..#..#.........#.......#..#.##",
-                "..#..#C#...............#......", ".........#.##.##......#.#.....", "..#........##.#..##.#.....#.#."};
-        int[] arr = {-4, -2, -2, -2, 0, 1, 2, 2, 2, 3, 3, 4, 4, 6, 6};
-        int[] brr = {1, 2, 3, 0, 2};
-        int[][] crr = {{68, 97}, {34, -84}, {60, 100}, {2, 31}, {-27, -38}, {-73, -74}, {-55, -39}, {62, 91}, {62, 92}, {-57, -67}};//{2, 2}, {3, 3}, {6, 1},{7, 2}, {1, 7}, {9, 5}, {1, 8}, {3, 4}};
-        int[][] ins = {
-                {1, 2, 3}, {4, 5, 6}, {7, 8, 9}
-        };
-        int[][] ints = {
-                {5, 4, 2, 9, 6, 0, 3, 5, 1, 4, 9, 8, 4, 9, 7, 5, 1},
-                {3, 4, 9, 2, 9, 9, 0, 9, 7, 9, 4, 7, 8, 4, 4, 5, 8},
-                {6, 1, 8, 9, 8, 0, 3, 7, 0, 9, 8, 7, 4, 9, 2, 0, 1},
-                {4, 0, 0, 5, 1, 7, 4, 7, 6, 4, 1, 0, 1, 0, 6, 2, 8},
-                {7, 2, 0, 2, 9, 3, 4, 7, 0, 8, 9, 5, 9, 0, 1, 1, 0},
-                {8, 2, 9, 4, 9, 7, 9, 3, 7, 0, 3, 6, 5, 3, 5, 9, 6},
-                {8, 9, 9, 2, 6, 1, 2, 5, 8, 3, 7, 0, 4, 9, 8, 8, 8},
-                {5, 8, 5, 4, 1, 5, 6, 6, 3, 3, 1, 8, 3, 9, 6, 4, 8},
-                {0, 2, 2, 3, 0, 2, 6, 7, 2, 3, 7, 3, 1, 5, 8, 1, 3},
-                {4, 4, 0, 2, 0, 3, 8, 4, 1, 3, 3, 0, 7, 4, 2, 9, 8},
-                {5, 9, 0, 4, 7, 5, 7, 6, 0, 8, 3, 0, 0, 6, 6, 6, 8},
-                {0, 7, 1, 8, 3, 5, 1, 8, 7, 0, 2, 9, 2, 2, 7, 1, 5},
-                {1, 0, 0, 0, 6, 2, 0, 0, 2, 2, 8, 0, 9, 7, 0, 8, 0},
-                {1, 1, 7, 2, 9, 6, 5, 4, 8, 7, 8, 5, 0, 3, 8, 1, 5},
-                {8, 9, 7, 8, 1, 1, 3, 0, 1, 2, 9, 4, 0, 1, 5, 3, 1},
-                {9, 2, 7, 4, 8, 7, 3, 9, 2, 4, 2, 2, 7, 8, 2, 6, 7},
-                {3, 8, 1, 6, 0, 4, 8, 9, 8, 0, 2, 5, 3, 5, 5, 7, 5},
-                {1, 8, 2, 5, 7, 7, 1, 9, 9, 8, 9, 2, 4, 9, 5, 4, 0},
-                {3, 4, 4, 1, 5, 3, 3, 8, 8, 6, 3, 5, 3, 8, 7, 1, 3}};
-        char[][] board = {
-                {'A', 'B', 'C', 'E'},
-                {'S', 'F', 'C', 'S'},
-                {'A', 'D', 'E', 'E'}
-        };
-        int[][] is = {
-                {1, 1, 1, 1, 0, 0, 0},
-                {0, 0, 0, 1, 0, 0, 0},
-                {0, 0, 0, 1, 0, 0, 1},
-                {1, 0, 0, 1, 0, 0, 0},
-                {0, 0, 0, 1, 0, 0, 0},
-                {0, 0, 0, 1, 0, 0, 0},
-                {0, 0, 0, 1, 1, 1, 1}
-        };
-        char[][] boards = {};
-        List<List<Integer>> nums = new LinkedList();
-        List<Integer> l1 = new ArrayList<>();
-        l1.add(4);
-        l1.add(14);
-        l1.add(24);
-        l1.add(34);
-        l1.add(40);
-        List<Integer> l2 = new ArrayList<>();
-        l2.add(12);
-        l2.add(14);
-        l2.add(25);
-        l2.add(38);
-        l2.add(41);
-        List<Integer> l3 = new ArrayList<>();
-        l3.add(9);
-        l3.add(19);
-        l3.add(20);
-        l3.add(26);
-        l3.add(50);
-        nums.add(l1);
-        nums.add(l2);
-        nums.add(l3);
-        System.out.print(solution.cherryPickup(is));
+//        ListNode p = new ListNode(1);
+//        ListNode p1 = new ListNode(2);
+//        ListNode p2 = new ListNode(3);
+//        ListNode p3 = new ListNode(4);
+//        ListNode p4 = new ListNode(5);
+//        ListNode p5 = new ListNode(6);
+//        ListNode p6 = new ListNode(7);
+//        ListNode p7 = new ListNode(8);
+//        p.next = p1;
+//        p1.next = p2;
+//        p2.next = p3;
+//        p3.next = p4;
+//        p4.next = p5;
+//        p5.next = p6;
+//        p6.next = p7;
+//        p7.next = p2;
+//        TreeNode t = new TreeNode(1);
+//        TreeNode t1 = new TreeNode(2);
+//        TreeNode t2 = new TreeNode(3);
+//        TreeNode t3 = new TreeNode(4);
+//        TreeNode t4 = new TreeNode(5);
+//        TreeNode t5 = new TreeNode(6);
+//        t.left = t1;
+//        t.right = t2;
+//        t1.left = t3;
+//        t1.right = t4;
+//        t2.left = t5;
+//        solution.postorderTraversal(t1);
+//        String[] strings = {".#@..", "#.##.", ".#...", "A...#", ".#.#a"};
+//        String[] strings2 = {".#.#..#.b...............#.#..#", ".#..##.........#......d.......", "..#...e.#.##....##.....#.....#",
+//                "..#..#.#.#.##..........#.....#", "...#...##....#.....#..........", "#........###....#..#.........f",
+//                "...............#......#...#...", "..........##.#...#.E..#......#", ".#...##...#.##.D....##..#.....",
+//                ".......#...........#....#..##.", "...#..........##.....#.......#", ".F#....#......#...............",
+//                "..##.#.#.....#..##...#.#.....#", ".............##..##..#.#......", "#..@..#.#.......#..........#..",
+//                ".........##..................#", ".#.......##...##..#.......#...", ".......#.#...A.a......#.##.#..",
+//                ".......#......##..#.###.#.....", ".##.#....##...#.#.....#.#.....", ".#.....#.c..#.....#......#..##",
+//                "##.....##........B.#.......#.#", ".....#...#....#..##...........", "#.#.##.#....#.#...............",
+//                ".#.#..#.####............#.....", "#.#..........###.#........#...", "..#..#.........#.......#..#.##",
+//                "..#..#C#...............#......", ".........#.##.##......#.#.....", "..#........##.#..##.#.....#.#."};
+        int[] arr = {1, 3};
+        int[] brr = {2, -3, 4, -6, 8, 0, 9, 3, -1, 4, -2};
+//        int[][] crr = {{68, 97}, {34, -84}, {60, 100}, {2, 31}, {-27, -38}, {-73, -74}, {-55, -39}, {62, 91}, {62, 92}, {-57, -67}};//{2, 2}, {3, 3}, {6, 1},{7, 2}, {1, 7}, {9, 5}, {1, 8}, {3, 4}};
+//        int[][] ins = {
+//                {1, 2, 3}, {4, 5, 6}, {7, 8, 9}
+//        };
+//        int[][] ints = {
+//                {5, 4, 2, 9, 6, 0, 3, 5, 1, 4, 9, 8, 4, 9, 7, 5, 1},
+//                {3, 4, 9, 2, 9, 9, 0, 9, 7, 9, 4, 7, 8, 4, 4, 5, 8},
+//                {6, 1, 8, 9, 8, 0, 3, 7, 0, 9, 8, 7, 4, 9, 2, 0, 1},
+//                {4, 0, 0, 5, 1, 7, 4, 7, 6, 4, 1, 0, 1, 0, 6, 2, 8},
+//                {7, 2, 0, 2, 9, 3, 4, 7, 0, 8, 9, 5, 9, 0, 1, 1, 0},
+//                {8, 2, 9, 4, 9, 7, 9, 3, 7, 0, 3, 6, 5, 3, 5, 9, 6},
+//                {8, 9, 9, 2, 6, 1, 2, 5, 8, 3, 7, 0, 4, 9, 8, 8, 8},
+//                {5, 8, 5, 4, 1, 5, 6, 6, 3, 3, 1, 8, 3, 9, 6, 4, 8},
+//                {0, 2, 2, 3, 0, 2, 6, 7, 2, 3, 7, 3, 1, 5, 8, 1, 3},
+//                {4, 4, 0, 2, 0, 3, 8, 4, 1, 3, 3, 0, 7, 4, 2, 9, 8},
+//                {5, 9, 0, 4, 7, 5, 7, 6, 0, 8, 3, 0, 0, 6, 6, 6, 8},
+//                {0, 7, 1, 8, 3, 5, 1, 8, 7, 0, 2, 9, 2, 2, 7, 1, 5},
+//                {1, 0, 0, 0, 6, 2, 0, 0, 2, 2, 8, 0, 9, 7, 0, 8, 0},
+//                {1, 1, 7, 2, 9, 6, 5, 4, 8, 7, 8, 5, 0, 3, 8, 1, 5},
+//                {8, 9, 7, 8, 1, 1, 3, 0, 1, 2, 9, 4, 0, 1, 5, 3, 1},
+//                {9, 2, 7, 4, 8, 7, 3, 9, 2, 4, 2, 2, 7, 8, 2, 6, 7},
+//                {3, 8, 1, 6, 0, 4, 8, 9, 8, 0, 2, 5, 3, 5, 5, 7, 5},
+//                {1, 8, 2, 5, 7, 7, 1, 9, 9, 8, 9, 2, 4, 9, 5, 4, 0},
+//                {3, 4, 4, 1, 5, 3, 3, 8, 8, 6, 3, 5, 3, 8, 7, 1, 3}};
+//        char[][] board = {
+//                {'A', 'B', 'C', 'E'},
+//                {'S', 'F', 'C', 'S'},
+//                {'A', 'D', 'E', 'E'}
+//        };
+//        int[][] is = {
+//                {1, 1, 1, 1, 0, 0, 0},
+//                {0, 0, 0, 1, 0, 0, 0},
+//                {0, 0, 0, 1, 0, 0, 1},
+//                {1, 0, 0, 1, 0, 0, 0},
+//                {0, 0, 0, 1, 0, 0, 0},
+//                {0, 0, 0, 1, 0, 0, 0},
+//                {0, 0, 0, 1, 1, 1, 1}
+//        };
+//        char[][] boards = {};
+//        List<List<Integer>> nums = new LinkedList();
+//        List<Integer> l1 = new ArrayList<>();
+//        l1.add(4);
+//        l1.add(14);
+//        l1.add(24);
+//        l1.add(34);
+//        l1.add(40);
+//        List<Integer> l2 = new ArrayList<>();
+//        l2.add(12);
+//        l2.add(14);
+//        l2.add(25);
+//        l2.add(38);
+//        l2.add(41);
+//        List<Integer> l3 = new ArrayList<>();
+//        l3.add(9);
+//        l3.add(19);
+//        l3.add(20);
+//        l3.add(26);
+//        l3.add(50);
+//        nums.add(l1);
+//        nums.add(l2);
+//        nums.add(l3);
+        System.out.print(solution.maxProduct(brr));
     }
 }
 
