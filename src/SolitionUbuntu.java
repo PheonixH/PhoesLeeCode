@@ -1060,7 +1060,22 @@ x = (a[7]b[7]) (a[6]b[6]) ... (a[1]b[1]) (a[0]b[0])
             res[i][1] = Math.max(res[i - 1][1], res[i - 1][0] - prices[i]);
         }
         //返回最后一天不持有收益
-        return res[n-1][0];
+        return res[n - 1][0];
+    }
+
+    //978
+    public int maxTurbulenceSize(int[] A) {
+        int l = A.length;
+        if(l == 1){
+            return 1;
+        }
+        // 1:i-1 > i 2:i-1 < i 0:i = 1
+        int [][]status = new int[l][2];
+        status[0][0] = A[0];
+        status[0][1] = 0;
+        for(int i = 1;i < l;i++){
+            status[i][0] =
+        }
     }
 
 
