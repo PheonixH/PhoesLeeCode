@@ -1064,36 +1064,166 @@ x = (a[7]b[7]) (a[6]b[6]) ... (a[1]b[1]) (a[0]b[0])
     }
 
     //978
+    //执行用时 : 12 ms, 在Longest Turbulent Subarray的Java提交中击败了92.13% 的用户
+    //内存消耗 : 42.6 MB, 在Longest Turbulent Subarray的Java提交中击败了92.00% 的用户
     public int maxTurbulenceSize(int[] A) {
         int l = A.length;
-        if(l == 1){
-            return 1;
+        if (l == 0) {
+            return 0;
         }
-        // 1:i-1 > i 2:i-1 < i 0:i = 1
-        int [][]status = new int[l][2];
-        status[0][0] = A[0];
-        status[0][1] = 0;
-        for(int i = 1;i < l;i++){
-            status[i][0] =
+        int x0 = 1;
+        int x1 = 1;
+        int max0 = 1;
+        int max1 = 1;
+        for (int i = 1; i < l; i++) {
+            int t0 = A[i] > A[i - 1] ? x1 + 1 : 1;
+            x1 = A[i] < A[i - 1] ? x0 + 1 : 1;
+            max0 = Math.max(max0, t0);
+            max1 = Math.max(max1, x1);
+            x0 = t0;
         }
+        return Math.max(max0, max1);
+    }
+
+
+    //1012 -- 不懂
+    //执行用时 : 3 ms, 在Numbers With Repeated Digits的Java提交中击败了85.53% 的用户
+    //内存消耗 : 32.9 MB, 在Numbers With Repeated Digits的Java提交中击败了32.88% 的用户
+    public int numDupDigitsAtMostN(int N) {
+        String nowNstr = String.valueOf(N);
+        char[] nowNchar = nowNstr.toCharArray();
+        int nowNlen = nowNchar.length;
+        boolean flag = false;
+        int count = 0;
+        int dp9 = 0;
+
+        int firstN = Integer.parseInt(nowNchar[0] + "");//第一位
+        dp9 = (int) ((firstN + 1) * Math.pow(10, nowNlen - 1) - 1);
+
+        if (nowNlen == 1) {
+            return N - N;
+        }
+
+        for (int i = 1; i < nowNlen; i++) {
+
+            int indexN = Integer.parseInt(nowNchar[i] + "");//当前位
+
+            if (flag) {
+                break;
+            }
+
+            int re = 9 - indexN;//当前位的取值范围
+
+            if (i == nowNlen - 1) {//最后一位和前几位比较
+                for (int k = 0; k < nowNlen - 1; k++) {
+                    int a = Integer.parseInt(nowNchar[k] + "");
+                    if (indexN < a && a != 0) {
+                        re--;
+                    }
+                }
+                count += re;
+                return N - dp9(dp9) + count;
+            }
+
+            for (int k = 0; k < i; k++) {//当前位和前几位比较,有几个减几
+                int a = Integer.parseInt(nowNchar[k] + "");
+                if (indexN < a && a != 0) {
+                    re--;
+                }
+            }
+
+            for (int j = i; j < nowNlen - 1; j++) {//当前位是i i=1时 开始为7
+                re *= (9 - j);
+            }
+
+            count += re;
+
+            for (int k = 0; k < i; k++) {//本次的数字前几位出现过
+                int a = Integer.parseInt(nowNchar[k] + "");
+                if (indexN == a) {
+                    flag = true;
+                    break;
+                }
+            }
+
+        }
+
+        return N - dp9(dp9) + count;
+    }
+
+    public int dp9(int N) {
+        String nowNstr = String.valueOf(N);
+        char[] nowNchar = nowNstr.toCharArray();
+        int nowNlen = nowNchar.length;
+
+        if (nowNlen == 1) {
+            return N;
+        } else {
+            int first = Integer.parseInt(nowNchar[0] + "");
+            int thisNum = first;
+
+            for (int i = 1; i < nowNlen; i++) {
+                thisNum *= (10 - i);
+            }
+
+            int newN = (int) (N - first * Math.pow(10, nowNlen - 1));
+
+            return thisNum + dp9(newN);
+        }
+    }
+
+    //188
+    //执行用时 : 7 ms, 在Best Time to Buy and Sell Stock IV的Java提交中击败了64.16% 的用户
+    //内存消耗 : 37.4 MB, 在Best Time to Buy and Sell Stock IV的Java提交中击败了38.35% 的用户
+    public int maxProfit4(int k, int[] prices) {
+        /**
+         当k大于等于数组长度一半时, 问题退化为贪心问题此时采用 买卖股票的最佳时机 II
+         的贪心方法解决可以大幅提升时间性能, 对于其他的k, 可以采用 买卖股票的最佳时机 III
+         的方法来解决, 在III中定义了两次买入和卖出时最大收益的变量, 在这里就是k租这样的
+         变量, 即问题IV是对问题III的推广, t[i][0]和t[i][1]分别表示第i比交易买入和卖出时
+         各自的最大收益
+         **/
+        if (k < 1) return 0;
+        if (k >= prices.length / 2) return greedy(prices);
+        int[][] t = new int[k][2];
+        for (int i = 0; i < k; ++i)
+            t[i][0] = Integer.MIN_VALUE;
+        for (int p : prices) {
+            t[0][0] = Math.max(t[0][0], -p);
+            t[0][1] = Math.max(t[0][1], t[0][0] + p);
+            for (int i = 1; i < k; ++i) {
+                t[i][0] = Math.max(t[i][0], t[i - 1][1] - p);
+                t[i][1] = Math.max(t[i][1], t[i][0] + p);
+            }
+        }
+        return t[k - 1][1];
+    }
+
+    private int greedy(int[] prices) {
+        int max = 0;
+        for (int i = 1; i < prices.length; ++i) {
+            if (prices[i] > prices[i - 1])
+                max += prices[i] - prices[i - 1];
+        }
+        return max;
     }
 
 
     public static void main(String[] args) {
-        TreeNode root = new TreeNode(1);
-        TreeNode r1 = new TreeNode(2);
-        TreeNode r2 = new TreeNode(3);
-        TreeNode r3 = new TreeNode(4);
-        TreeNode r4 = new TreeNode(5);
+//        TreeNode root = new TreeNode(1);
+//        TreeNode r1 = new TreeNode(2);
+//        TreeNode r2 = new TreeNode(3);
+//        TreeNode r3 = new TreeNode(4);
+//        TreeNode r4 = new TreeNode(5);
 //        datestruct.TreeNode r5 = new datestruct.TreeNode(15);
-        root.left = r1;
-        r1.left = r2;
-        r2.left = r3;
-        r3.left = r4;
+//        root.left = r1;
+//        r1.left = r2;
+//        r2.left = r3;
+//        r3.left = r4;
         SolitionUbuntu solution = new SolitionUbuntu();
         String[] strings = {"9", "3", "4", "#", "#", "1", "#", "#,", "#", "6", "#", "#"};
-        int[] ints = {1, 7, 23, 29, 47};
-        System.out.println(solution.reverseOnlyLetters("7_28]"));
+        int[] ints = {1, 2, 4, 2, 5, 7, 2, 4, 9, 0};
+        System.out.println(solution.maxProfit4(2, ints));
 //        int[] arr = solution.findFrequentTreeSum(root);
         //List l = solution.zigzagLevelOrder(root);
 //        System.out.print(solution.nthMagicalNumber(1,2,3));
