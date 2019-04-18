@@ -6264,6 +6264,116 @@ public class Solution {
         return Math.max(maxA, maxB);
     }
 
+    //664 -- ！！！非自己做的
+    //执行用时 : 52 ms, 在Strange Printer的Java提交中击败了65.22% 的用户
+    //内存消耗 : 38.6 MB, 在Strange Printer的Java提交中击败了68.75% 的用户
+    public int strangePrinter(String s) {
+        int[][] dp = new int[s.length()][s.length()];
+        int n = s.length();
+        if (n == 0) {
+            return 0;
+        }
+        for (int[] i : dp) {
+            Arrays.fill(i, 0x3f3f3f3f);
+        }
+        for (int i = 0; i < n; ++i) {
+            dp[i][i] = 1;
+        }
+        for (int p = 1; p < n; ++p) {
+            for (int i = 0; i < n - p; ++i) {
+                int j = i + p;
+                for (int k = i; k < j; ++k) {
+                    int w = dp[i][k] + dp[k + 1][j];
+                    if (s.charAt(i) == s.charAt(k + 1)) {
+                        --w; // 第一段的起点 和第二段的起点一样 执行--
+                    }
+                    dp[i][j] = Math.min(dp[i][j], w);
+                }
+            }
+        }
+        return dp[0][n - 1];
+    }
+
+    //860
+    //执行用时 : 4 ms, 在Lemonade Change的Java提交中击败了90.12% 的用户
+    //内存消耗 : 48 MB, 在Lemonade Change的Java提交中击败了51.29% 的用户
+    public boolean lemonadeChange(int[] bills) {
+        int[] have = new int[3];
+        Arrays.fill(have, 0);
+        for (int b : bills) {
+            switch (b) {
+                case 5: {
+                    have[0]++;
+                    break;
+                }
+                case 10: {
+                    have[0]--;
+                    have[1]++;
+                    break;
+                }
+                case 20: {
+                    if (have[1] > 0) {
+                        have[1]--;
+                        have[0]--;
+                    } else {
+                        have[0] = have[0] - 3;
+                    }
+                    break;
+                }
+            }
+            if (have[0] < 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    //134
+    //执行用时 : 64 ms, 在Gas Station的Java提交中击败了40.25% 的用户
+    //内存消耗 : 36.9 MB, 在Gas Station的Java提交中击败了88.09% 的用户
+    public int canCompleteCircuit0(int[] gas, int[] cost) {
+//        int[] status = new int[gas.length];
+//        for(int i = 0;i < gas.length;i++){
+//            status[i] = gas[i] - cost[i];
+//        }
+        int len = gas.length;
+        for (int i = 0; i < len; i++) {
+            int j = i;
+            int re = 0;
+            boolean b = true;
+            for (int k = 0; k < len; k++) {
+                if (j >= len) {
+                    j = 0;
+                }
+                re += gas[j] - cost[j];
+                j++;
+                if (re < 0) {
+                    b = false;
+                    break;
+                }
+            }
+            if (b) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    //134
+    public int canCompleteCircuit(int[] gas, int[] cost) {
+        int len = gas.length;
+        int[][] dps = new int[len][len];
+        for (int i = 0; i < len; i++) {
+            dps[0][0] = gas[0] - cost[0];
+        }
+        for (int i = 1; i < len; i++) {
+            for (int j = 0; j < i; j++) {
+                dps[i][j] = Math.max(dps[i - 1][j], dps[i - 1][j] + gas[i] - cost[i]);
+            }
+        }
+        return 0;
+    }
+
     public static void main(String[] args) {
         Solution solution = new Solution();
 //        ListNode p = new ListNode(1);
@@ -6305,8 +6415,8 @@ public class Solution {
 //                "##.....##........B.#.......#.#", ".....#...#....#..##...........", "#.#.##.#....#.#...............",
 //                ".#.#..#.####............#.....", "#.#..........###.#........#...", "..#..#.........#.......#..#.##",
 //                "..#..#C#...............#......", ".........#.##.##......#.#.....", "..#........##.#..##.#.....#.#."};
-        int[] arr = {1, 3};
-        int[] brr = {2, -3, 4, -6, 8, 0, 9, 3, -1, 4, -2};
+        int[] arr = {1, 2, 3, 4, 5};
+        int[] brr = {3, 4, 5, 1, 2};
 //        int[][] crr = {{68, 97}, {34, -84}, {60, 100}, {2, 31}, {-27, -38}, {-73, -74}, {-55, -39}, {62, 91}, {62, 92}, {-57, -67}};//{2, 2}, {3, 3}, {6, 1},{7, 2}, {1, 7}, {9, 5}, {1, 8}, {3, 4}};
 //        int[][] ins = {
 //                {1, 2, 3}, {4, 5, 6}, {7, 8, 9}
@@ -6368,7 +6478,7 @@ public class Solution {
 //        nums.add(l1);
 //        nums.add(l2);
 //        nums.add(l3);
-        System.out.print(solution.maxProduct(brr));
+        System.out.print(solution.canCompleteCircuit(arr, brr));
     }
 }
 
