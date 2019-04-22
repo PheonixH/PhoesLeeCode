@@ -6374,16 +6374,215 @@ public class Solution {
         return 0;
     }
 
+    //82
+    //执行用时 : 9 ms, 在Remove Duplicates from Sorted List II的Java提交中击败了5.84% 的用户
+    //内存消耗 : 38.8 MB, 在Remove Duplicates from Sorted List II的Java提交中击败了6.38% 的用户
+    public ListNode deleteDuplicates2(ListNode head) {
+        Set<Integer> set = new HashSet<>();
+        Set<Integer> setHave = new HashSet<>();
+        ListNode p = head;
+        while (p != null) {
+            if (set.contains(p.val)) {
+                setHave.add(p.val);
+            } else {
+                set.add(p.val);
+            }
+            p = p.next;
+        }
+        p = head;
+
+        while (head != null && setHave.contains(head.val)) {
+            head = head.next;
+        }
+        ListNode pre = head;
+        if (pre != null) {
+            p = pre.next;
+            while (p != null) {
+                if (setHave.contains(p.val)) {
+                    pre.next = p.next;
+                    p = p.next;
+                } else {
+                    pre = pre.next;
+                    p = p.next;
+                }
+
+            }
+        }
+        return head;
+    }
+
+    //32
+    //执行用时 : 2 ms, 在Remove Duplicates from Sorted List II的Java提交中击败了78.81% 的用户
+    //内存消耗 : 35.7 MB, 在Remove Duplicates from Sorted List II的Java提交中击败了85.62% 的用户
+    public ListNode deleteDuplicates3(ListNode head) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+        ListNode pre = null;
+
+        ListNode end = head;
+        ListNode node = head;
+        while (node != null && node.next != null) {
+            if (node.val == node.next.val) {
+
+                while (node.next != null && node.val == node.next.val) {
+                    node = node.next;
+                    end = node;
+                }
+                if (pre == null) {
+                    head = end.next;
+                    node = head;
+                } else {
+                    pre.next = end.next;
+                    node = end.next;
+                }
+            } else {
+                pre = node;
+                node = node.next;
+            }
+        }
+        return head;
+    }
+
+    //11
+    //执行用时 : 4 ms, 在Container With Most Water的Java提交中击败了98.95% 的用户
+    //内存消耗 : 44.6 MB, 在Container With Most Water的Java提交中击败了65.84% 的用户
+    public int maxArea(int[] height) {
+        int len = height.length;
+        int b = 0;
+        int e = len - 1;
+        int bl = height[b], el = height[e];
+        int res = Math.min(bl, el) * (e - b);
+        while (b < e) {
+            if (bl > el) {
+                while (bl > el) {
+                    e--;
+                    if (height[e] > el) {
+                        break;
+                    }
+                }
+                el = height[e];
+                res = Math.max(Math.min(bl, el) * (e - b), res);
+            } else {
+                while (b < e) {
+                    b++;
+                    if (height[b] > bl) {
+                        break;
+                    }
+                }
+                bl = height[b];
+                res = Math.max(Math.min(bl, el) * (e - b), res);
+            }
+        }
+        return res;
+    }
+
+    //42
+    //执行用时 : 3 ms, 在Trapping Rain Water的Java提交中击败了97.65% 的用户
+    //内存消耗 : 38.4 MB, 在Trapping Rain Water的Java提交中击败了76.70% 的用户
+    public int trap(int[] height) {
+        int len = height.length;
+        if (len == 0) {
+            return 0;
+        }
+        int b = 0, e = len - 1;
+//        while (b < e) {
+//            if (height[b + 1] < height[b]) {
+//                break;
+//            }
+//            b++;
+//        }
+//        while (b < e) {
+//            if (height[e - 1] < height[e]) {
+//                break;
+//            }
+//            e--;
+//        }
+        int bl = height[b], el = height[e];
+        int res = 0;
+        while (b < e) {
+            if (bl < el) {
+                while (b < e) {
+                    if (height[b] > bl) {
+                        bl = height[b];
+                        break;
+                    }
+                    res += Math.max(bl - height[b], 0);
+                    b++;
+                }
+            } else {
+                while (b < e) {
+                    if (height[e] > el) {
+                        el = height[e];
+                        break;
+                    }
+                    res += Math.max(el - height[e], 0);
+                    e--;
+                }
+            }
+        }
+        return res;
+    }
+
+    //238
+    //执行用时 : 8 ms, 在Product of Array Except Self的Java提交中击败了10.01% 的用户
+    //内存消耗 : 53.3 MB, 在Product of Array Except Self的Java提交中击败了8.22% 的用户
+    public int[] productExceptSelf0(int[] nums) {
+        int len = nums.length;
+        if (len <= 1) {
+            return nums;
+        }
+        int[] al = new int[len];
+        int[] ar = new int[len];
+        int[] res = new int[len];
+        for (int i = 0; i < len - 1; i++) {
+            if (i == 0) {
+                al[i] = nums[i];
+                ar[len - i - 1] = nums[len - i - 1];
+            } else {
+                al[i] = al[i - 1] * nums[i];
+                ar[len - i - 1] = ar[len - i] * nums[len - i - 1];
+            }
+            if (len - i - 1 <= i) {
+                res[len - i - 1] = al[len - i - 2] * ar[len - i];
+                res[i] = al[i - 1] * ar[i + 1];
+            }
+        }
+        res[0] = ar[1];
+        res[len - 1] = al[len - 2];
+        return res;
+    }
+
+    //238
+    //执行用时 : 2 ms, 在Product of Array Except Self的Java提交中击败了94.87% 的用户
+    //内存消耗 : 43.5 MB, 在Product of Array Except Self的Java提交中击败了91.01% 的用户
+    public int[] productExceptSelf(int[] nums) {
+        int left = 1;
+        int right = 1;
+        int len = nums.length;
+        int[] output = new int[len];
+        for (int i = 0; i < len; i++) {
+            output[i] = left;
+            left *= nums[i];
+        }
+        for (int j = len - 1; j >= 0; j--) {
+            output[j] *= right;
+            right *= nums[j];
+        }
+        return output;
+    }
+
+
     public static void main(String[] args) {
         Solution solution = new Solution();
 //        ListNode p = new ListNode(1);
-//        ListNode p1 = new ListNode(2);
-//        ListNode p2 = new ListNode(3);
-//        ListNode p3 = new ListNode(4);
-//        ListNode p4 = new ListNode(5);
-//        ListNode p5 = new ListNode(6);
-//        ListNode p6 = new ListNode(7);
-//        ListNode p7 = new ListNode(8);
+//        ListNode p1 = new ListNode(1);
+//        ListNode p2 = new ListNode(2);
+//        ListNode p3 = new ListNode(3);
+//        ListNode p4 = new ListNode(4);
+//        ListNode p5 = new ListNode(4);
+//        ListNode p6 = new ListNode(5);
+//        ListNode p7 = new ListNode(5);
 //        p.next = p1;
 //        p1.next = p2;
 //        p2.next = p3;
@@ -6391,7 +6590,7 @@ public class Solution {
 //        p4.next = p5;
 //        p5.next = p6;
 //        p6.next = p7;
-//        p7.next = p2;
+//        p7.next = null;
 //        TreeNode t = new TreeNode(1);
 //        TreeNode t1 = new TreeNode(2);
 //        TreeNode t2 = new TreeNode(3);
@@ -6415,7 +6614,7 @@ public class Solution {
 //                "##.....##........B.#.......#.#", ".....#...#....#..##...........", "#.#.##.#....#.#...............",
 //                ".#.#..#.####............#.....", "#.#..........###.#........#...", "..#..#.........#.......#..#.##",
 //                "..#..#C#...............#......", ".........#.##.##......#.#.....", "..#........##.#..##.#.....#.#."};
-        int[] arr = {1, 2, 3, 4, 5};
+        int[] arr = {2, 2, 3, 4, 5};
         int[] brr = {3, 4, 5, 1, 2};
 //        int[][] crr = {{68, 97}, {34, -84}, {60, 100}, {2, 31}, {-27, -38}, {-73, -74}, {-55, -39}, {62, 91}, {62, 92}, {-57, -67}};//{2, 2}, {3, 3}, {6, 1},{7, 2}, {1, 7}, {9, 5}, {1, 8}, {3, 4}};
 //        int[][] ins = {
@@ -6478,7 +6677,7 @@ public class Solution {
 //        nums.add(l1);
 //        nums.add(l2);
 //        nums.add(l3);
-        System.out.print(solution.canCompleteCircuit(arr, brr));
+        System.out.print(solution.productExceptSelf(arr));
     }
 }
 
