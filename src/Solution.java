@@ -6572,6 +6572,180 @@ public class Solution {
         return output;
     }
 
+    //349
+    //执行用时 : 4 ms, 在Intersection of Two Arrays的Java提交中击败了94.53% 的用户
+    //内存消耗 : 37.3 MB, 在Intersection of Two Arrays的Java提交中击败了36.50% 的用户
+    public int[] intersection(int[] nums1, int[] nums2) {
+        Set<Integer> set1 = new HashSet<>();
+        for (int i : nums1) {
+            set1.add(i);
+        }
+        Set<Integer> set2 = new HashSet<>();
+        for (int i : nums2) {
+            if (set1.contains(i)) {
+                set2.add(i);
+            }
+        }
+        int[] res = new int[set2.size()];
+        int j = 0;
+        for (int i : set2) {
+            res[j++] = i;
+        }
+        return res;
+    }
+
+    //287 -- set
+    //执行用时 : 9 ms, 在Find the Duplicate Number的Java提交中击败了21.53% 的用户
+    //内存消耗 : 41.7 MB, 在Find the Duplicate Number的Java提交中击败了5.13% 的用户
+    public int findDuplicate0(int[] nums) {
+//        int res = 0;
+        Set set = new HashSet();
+        for (int i : nums) {
+            if (set.contains(i)) {
+                return i;
+            }
+            set.add(i);
+//            res = res & i;
+        }
+        return 0;
+    }
+
+    //287 -- 快慢指针
+    //执行用时 : 1 ms, 在Find the Duplicate Number的Java提交中击败了97.06% 的用户
+    //内存消耗 : 38.3 MB, 在Find the Duplicate Number的Java提交中击败了68.01% 的用户
+    public int findDuplicate(int[] nums) {
+        /**
+         快慢指针思想, fast 和 slow 是指针, nums[slow] 表示取指针对应的元素
+         注意 nums 数组中的数字都是在 1 到 n 之间的(在数组中进行游走不会越界),
+         因为有重复数字的出现, 所以这个游走必然是成环的, 环的入口就是重复的元素,
+         即按照寻找链表环入口的思路来做
+         **/
+        int fast = 0, slow = 0;
+        while (true) {
+            fast = nums[nums[fast]];
+            slow = nums[slow];
+            if (slow == fast) {
+                fast = 0;
+                while (nums[slow] != nums[fast]) {
+                    fast = nums[fast];
+                    slow = nums[slow];
+                }
+                return nums[slow];
+            }
+        }
+    }
+
+    // 704
+    // 执行用时 : 1 ms, 在Binary Search的Java提交中击败了96.76% 的用户
+    // 内存消耗 : 48.5 MB, 在Binary Search的Java提交中击败了61.75% 的用户
+    public int search0(int[] nums, int target) {
+        return search(nums, target, 0, nums.length);
+    }
+
+    public int search(int[] nums, int target, int b, int e) {
+        if (b >= e) {
+            return -1;
+        }
+        if (b == e - 1) {
+            return nums[b] == target ? b : -1;
+        }
+        int len = (b + e) / 2;
+        if (target == nums[len]) {
+            return len;
+        } else if (target < nums[len]) {
+            return search(nums, target, b, len);
+        } else {
+            return search(nums, target, len + 1, e);
+        }
+    }
+
+    //778
+    public int swimInWater0(int[][] grid) {
+        int xlen = grid.length;
+        int ylen = grid[0].length;
+        int[][][] dps = new int[xlen][ylen][2];
+        for (int i = 0; i < xlen; i++) {
+            for (int j = 0; j < ylen; j++) {
+                dps[i][j][0] = grid[i][j];
+                dps[i][j][1] = -1;
+            }
+        }
+        for (int i = 0; i < xlen; i++) {
+            for (int j = 0; j < ylen; j++) {
+                if (i == 0 && j == 0) {
+                    dps[i][j][1] = 0;
+                    continue;
+                }
+                int t = Integer.MAX_VALUE;
+                if (i > 0 && dps[i - 1][j][1] >= 0) {
+                    t = Math.min(dps[i - 1][j][1], t);
+                }
+                if (i < xlen - 1 && dps[i + 1][j][1] >= 0) {
+                    t = Math.min(dps[i + 1][j][1], t);
+                }
+                if (j > 0 && dps[i][j - 1][1] >= 0) {
+                    t = Math.min(dps[i][j - 1][1], t);
+                }
+                if (j < ylen - 1 && dps[i][j + 1][1] >= 0) {
+                    t = Math.min(dps[i][j + 1][1], t);
+                }
+                dps[i][j][1] = Math.max(t, dps[i][j][0]);
+            }
+        }
+        return dps[xlen - 1][ylen - 1][1];
+    }
+
+
+    //778
+    //执行用时 : 68 ms, 在Swim in Rising Water的Java提交中击败了60.87% 的用户
+    //内存消耗 : 44.6 MB, 在Swim in Rising Water的Java提交中击败了34.61% 的用户
+    private int[] dx = {1, 0, -1, 0};
+    private int[] dy = {0, 1, 0, -1};
+
+    public int swimInWater(int[][] grid) {
+        int n = grid.length;
+        int res = grid[0][0];
+        int left = res, right = n * n - 1;
+        int mid = (left + right) / 2;
+
+        while (left <= right) {
+            res = mid;
+
+            int[][] vis = new int[n][n];
+            PriorityQueue<Pair> qt = new PriorityQueue<>();
+            qt.offer(new Pair(0, 0, res));
+            vis[0][0] = 1;
+            int flag = 0;
+            while (!qt.isEmpty()) {
+                Pair tmp = qt.poll();
+                int x = tmp.x;
+                int y = tmp.y;
+//                System.out.println(x+" "+y+" "+res);
+                for (int i = 0; i < 4; i++) {
+                    int tx = x + dx[i];
+                    int ty = y + dy[i];
+                    if (tx < 0 || ty < 0 || tx >= n || ty >= n || vis[tx][ty] == 1
+                            || grid[tx][ty] > res) {
+                        continue;
+                    }
+                    vis[tx][ty] = 1;
+                    if (tx == n - 1 && ty == n - 1) {
+                        flag = 1;
+                        break;
+                    }
+                    qt.offer(new Pair(tx, ty, grid[tx][ty]));
+                }
+            }
+            if (flag == 1) {
+                right = mid - 1;
+            } else {
+                left = mid + 1;
+            }
+            mid = (left + right) / 2;
+        }
+        return left;
+    }
+
 
     public static void main(String[] args) {
         Solution solution = new Solution();
@@ -6614,8 +6788,14 @@ public class Solution {
 //                "##.....##........B.#.......#.#", ".....#...#....#..##...........", "#.#.##.#....#.#...............",
 //                ".#.#..#.####............#.....", "#.#..........###.#........#...", "..#..#.........#.......#..#.##",
 //                "..#..#C#...............#......", ".........#.##.##......#.#.....", "..#........##.#..##.#.....#.#."};
-        int[] arr = {2, 2, 3, 4, 5};
-        int[] brr = {3, 4, 5, 1, 2};
+        int[] arr = {1, 3, 4, 8, 9};
+        int[][] brr = {
+                {0, 1, 2, 3, 4,},
+                {24, 23, 22, 21, 5},
+                {12, 13, 14, 15, 16},
+                {11, 17, 18, 19, 20},
+                {10, 9, 8, 7, 6}
+        };
 //        int[][] crr = {{68, 97}, {34, -84}, {60, 100}, {2, 31}, {-27, -38}, {-73, -74}, {-55, -39}, {62, 91}, {62, 92}, {-57, -67}};//{2, 2}, {3, 3}, {6, 1},{7, 2}, {1, 7}, {9, 5}, {1, 8}, {3, 4}};
 //        int[][] ins = {
 //                {1, 2, 3}, {4, 5, 6}, {7, 8, 9}
@@ -6677,7 +6857,28 @@ public class Solution {
 //        nums.add(l1);
 //        nums.add(l2);
 //        nums.add(l3);
-        System.out.print(solution.productExceptSelf(arr));
+        System.out.print(solution.swimInWater(brr));
+    }
+}
+
+class Pair implements Comparable<Pair> {
+    public int x, y, val;
+
+    public Pair(int x, int y, int val) {
+        this.x = x;
+        this.y = y;
+        this.val = val;
+    }
+
+    @Override
+    public int compareTo(Pair o) {
+        if (this.val > o.val) {
+            return -1;
+        }
+        if (this.val < o.val) {
+            return 1;
+        }
+        return 0;
     }
 }
 

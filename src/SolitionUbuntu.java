@@ -1673,7 +1673,7 @@ x = (a[7]b[7]) (a[6]b[6]) ... (a[1]b[1]) (a[0]b[0])
     //执行用时 : 2 ms, 在Convert Sorted Array to Binary Search Tree的Java提交中击败了37.98% 的用户
     //内存消耗 : 37.8 MB, 在Convert Sorted Array to Binary Search Tree的Java提交中击败了65.98% 的用户
     public TreeNode sortedArrayToBST(int[] nums) {
-        if(nums.length == 0){
+        if (nums.length == 0) {
             return null;
         }
         return sortedArrayToBST(nums, 0, nums.length);
@@ -1695,6 +1695,53 @@ x = (a[7]b[7]) (a[6]b[6]) ... (a[1]b[1]) (a[0]b[0])
             nt.right = sortedArrayToBST(nums, i + 1, e);
         }
         return nt;
+    }
+
+    //109
+    //执行用时 : 7 ms, 在Convert Sorted List to Binary Search Tree的Java提交中击败了6.42% 的用户
+    //内存消耗 : 41.3 MB, 在Convert Sorted List to Binary Search Tree的Java提交中击败了39.48% 的用户
+    public TreeNode sortedListToBST0(ListNode head) {
+        List<Integer> list = new LinkedList<>();
+        while (head != null) {
+            list.add(head.val);
+            head = head.next;
+        }
+        int[] arr = new int[list.size()];
+        int j = 0;
+        for (int i : list) {
+            arr[j++] = i;
+        }
+        return sortedArrayToBST(arr);
+    }
+
+    //109
+    //执行用时 : 3 ms, 在Convert Sorted List to Binary Search Tree的Java提交中击败了54.81% 的用户
+    //内存消耗 : 39.4 MB, 在Convert Sorted List to Binary Search Tree的Java提交中击败了96.22% 的用户
+    public TreeNode sortedListToBST(ListNode head) {
+        if (head == null) {
+            return null;
+        }
+        if (head.next == null) {
+            return new TreeNode(head.val);
+        }
+        ListNode preNode = preMiddleNode(head);
+        ListNode midNode = preNode.next;
+        preNode.next = null;
+        TreeNode root = new TreeNode(midNode.val);
+        root.left = sortedListToBST(head);
+        root.right = sortedListToBST(midNode.next);
+        return root;
+    }
+
+    public ListNode preMiddleNode(ListNode head) {
+        // slow表示中间节点(偶数取后一个), pre表示中间节点的前一个节点
+        ListNode slow = head, fast = head, pre = null;
+        while (fast != null && fast.next != null) {
+            pre = slow;
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        return pre;
     }
 
     public static void main(String[] args) {
