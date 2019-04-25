@@ -6660,39 +6660,52 @@ public class Solution {
     }
 
     //778
+    //执行用时 : 11 ms, 在Swim in Rising Water的Java提交中击败了93.48% 的用户
+    //内存消耗 : 39.1 MB, 在Swim in Rising Water的Java提交中击败了76.92% 的用户
     public int swimInWater0(int[][] grid) {
         int xlen = grid.length;
         int ylen = grid[0].length;
-        int[][][] dps = new int[xlen][ylen][2];
-        for (int i = 0; i < xlen; i++) {
-            for (int j = 0; j < ylen; j++) {
-                dps[i][j][0] = grid[i][j];
-                dps[i][j][1] = -1;
+        int min = Integer.MAX_VALUE;
+        int max = Integer.MIN_VALUE;
+        for (int[] i : grid) {
+            for (int j : i) {
+                min = Math.min(j, min);
+                max = Math.max(j, max);
             }
         }
-        for (int i = 0; i < xlen; i++) {
-            for (int j = 0; j < ylen; j++) {
-                if (i == 0 && j == 0) {
-                    dps[i][j][1] = 0;
-                    continue;
+        while (min < max) {
+            if(min == max -1){
+                boolean[][] visit = new boolean[xlen][ylen];
+                dps(grid, 0, 0, visit, min);
+                if(!visit[xlen - 1][ylen - 1]){
+                    min = max;
                 }
-                int t = Integer.MAX_VALUE;
-                if (i > 0 && dps[i - 1][j][1] >= 0) {
-                    t = Math.min(dps[i - 1][j][1], t);
-                }
-                if (i < xlen - 1 && dps[i + 1][j][1] >= 0) {
-                    t = Math.min(dps[i + 1][j][1], t);
-                }
-                if (j > 0 && dps[i][j - 1][1] >= 0) {
-                    t = Math.min(dps[i][j - 1][1], t);
-                }
-                if (j < ylen - 1 && dps[i][j + 1][1] >= 0) {
-                    t = Math.min(dps[i][j + 1][1], t);
-                }
-                dps[i][j][1] = Math.max(t, dps[i][j][0]);
+                break;
+            }
+            int m = (min + max) / 2;
+            boolean[][] visit = new boolean[xlen][ylen];
+            dps(grid, 0, 0, visit, m);
+            if (visit[xlen - 1][ylen - 1]) {
+                max = m;
+            } else {
+                min = m;
             }
         }
-        return dps[xlen - 1][ylen - 1][1];
+        return min;
+    }
+
+    public void dps(int[][] grid, int x, int y, boolean[][] visit, int key) {
+        int xlen = grid.length;
+        int ylen = grid[0].length;
+        if (x < 0 || y < 0 || x > xlen - 1 || y > ylen - 1 || visit[x][y] || grid[x][y] > key) {
+            return;
+        }
+        visit[x][y] = true;
+        dps(grid, x - 1, y, visit, key);
+        dps(grid, x + 1, y, visit, key);
+        dps(grid, x, y - 1, visit, key);
+        dps(grid, x, y + 1, visit, key);
+        return;
     }
 
 
