@@ -1,5 +1,12 @@
+
 import java.lang.reflect.Array;
 import java.util.*;
+import datestruct.ListNode;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @ProjectName: PhoesLeeCode
@@ -211,6 +218,80 @@ public class Solution2 {
                 } else if (cur < target) {
                     left += 1;
                 }
+            }
+        }
+    }
+
+    //977
+    //执行用时 : 317 ms, 在Squares of a Sorted Array的Java提交中击败了14.59% 的用户
+    //内存消耗 : 51.9 MB, 在Squares of a Sorted Array的Java提交中击败了48.32% 的用户
+    public int[] sortedSquares0(int[] A) {
+        int[] res = new int[A.length];
+        int j = 0;
+        for (int i : A) {
+            int ii = i * i;
+            int k = 0;
+            while (k < j) {
+                if (res[k] > ii) {
+                    break;
+                }
+                k++;
+            }
+            int kk = j;
+            while (kk > k) {
+                res[kk] = res[kk - 1];
+                kk--;
+            }
+            res[k] = ii;
+            j++;
+
+        }
+        return res;
+    }
+
+    //977
+    //执行用时 : 4 ms, 在Squares of a Sorted Array的Java提交中击败了98.75% 的用户
+    //内存消耗 : 39.2 MB, 在Squares of a Sorted Array的Java提交中击败了99.30% 的用户
+    public int[] sortedSquares(int[] A) {
+        int i = A.length - 1;
+        int j = 0;
+        int kk = -1;
+        while (A[i] * A[j] < 0 && i > j + 1) {
+            int k = (i + j) / 2;
+            if (A[k] == 0) {
+                i = k;
+                j = k;
+                break;
+            }
+            if (A[i] * A[k] < 0) {
+                j = k;
+            } else {
+                i = k;
+            }
+        }
+        if (0 - A[j] < A[i]) {
+            i = j;
+        }
+        int[] res = new int[A.length];
+        j = i - 1;
+        int k;
+        for (k = 0; k < A.length && j >= 0 && i <= A.length - 1; k++) {
+            if (A[i] * A[i] > A[j] * A[j]) {
+                res[k] = A[j] * A[j];
+                j--;
+            } else {
+                res[k] = A[i] * A[i];
+                i++;
+            }
+        }
+        if (k < A.length) {
+            while (j >= 0) {
+                res[k++] = A[j] * A[j];
+                j--;
+            }
+            while (i < A.length) {
+                res[k++] = A[i] * A[i];
+                i++;
             }
         }
         return res;
@@ -467,6 +548,147 @@ public class Solution2 {
     }
 
 
+    //88
+    //执行用时 : 1 ms, 在Merge Sorted Array的Java提交中击败了99.29% 的用户
+    //内存消耗 : 35.6 MB, 在Merge Sorted Array的Java提交中击败了86.11% 的用户
+    public void merge(int[] nums1, int m, int[] nums2, int n) {
+        int len = m + n - 1;
+        m--;
+        n--;
+        while (m >= 0 && n >= 0) {
+            nums1[len--] = nums1[m] > nums2[n] ? nums1[m--] : nums2[n--];
+        }
+        while (m >= 0) {
+            nums1[len--] = nums1[m--];
+        }
+        while (n >= 0) {
+            nums1[len--] = nums2[n--];
+        }
+        return;
+    }
+
+    //21
+    //执行用时 : 2 ms, 在Merge Two Sorted Lists的Java提交中击败了97.76% 的用户
+    //内存消耗 : 35.2 MB, 在Merge Two Sorted Lists的Java提交中击败了91.56% 的用户
+    public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+        if (l1 == null) {
+            return l2;
+        }
+        if (l2 == null) {
+            return l1;
+        }
+        ListNode p, q;
+        if (l1.val > l2.val) {
+            p = l2;
+            q = l1;
+        } else {
+            p = l1;
+            q = l2;
+        }
+        ListNode head = p;
+        while (p != null && q != null) {
+            while (p.next != null && p.next.val <= q.val) {
+                p = p.next;
+            }
+            if (p.next == null) {
+                break;
+            }
+            ListNode t = q.next;
+            q.next = p.next;
+            p.next = q;
+            q = t;
+        }
+        p.next = p.next != null ? p.next : q;
+        return head;
+    }
+
+    //148
+    //执行用时 : 927 ms, 在Sort List的Java提交中击败了6.13% 的用户
+    //内存消耗 : 38.9 MB, 在Sort List的Java提交中击败了98.74% 的用户
+    public ListNode sortList0(ListNode head) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+        ListNode res = new ListNode(Integer.MIN_VALUE);
+        while (head != null) {
+            ListNode p = res;
+            while (p.next != null) {
+                if (p.next.val < head.val) {
+                    p = p.next;
+                } else {
+                    break;
+                }
+            }
+            ListNode t = p.next;
+            p.next = head;
+            head = head.next;
+            p.next.next = t;
+        }
+        return res.next;
+    }
+
+    //148:归并:failed
+    public ListNode sortList(ListNode head) {
+        return mergesort(head);
+    }
+
+    ListNode mergesort(ListNode node) {
+        if (node != null || node.next != null) {
+            return node;
+        }
+        ListNode fast = node;//快指针走两步
+        ListNode slow = node;//慢指针走一步
+        ListNode brek = node;//断点
+        while (fast != null && fast.next != null) {
+            fast = fast.next.next;
+            brek = slow;
+            slow = slow.next;
+        }
+        brek.next = null;
+        ListNode l1 = mergesort(node);
+        ListNode l2 = mergesort(slow);
+        return merge(l1, l2);
+    }
+
+    ListNode merge(ListNode l1, ListNode l2) {
+        if (l1 == null) {
+            return l2;
+        }
+        if (l2 == null) {
+            return l1;
+        }
+        if (l1.val < l2.val) {
+            l1.next = merge(l1.next, l2);
+            return l1;
+        } else {
+            l2.next = merge(l2.next, l1);
+            return l2;
+        }
+    }
+
+    //969
+    public List<Integer> pancakeSort(int[] A) {
+        List<Integer> ans = new ArrayList();
+        int N = A.length;
+
+        Integer[] B = new Integer[N];
+        for (int i = 0; i < N; ++i) {
+            B[i] = i + 1;
+        }
+        Arrays.sort(B, h
+                ;
+
+        for (int i : B) {
+            for (int f : ans)
+                if (i <= f)
+                    i = f + 1 - i;
+            ans.add(i);
+            ans.add(N--);
+        }
+
+        return ans;
+    }
+
     public static void main(String[] argc) {
         Solution2 solution = new Solution2();
         List<Integer> p1 = new ArrayList<>();
@@ -495,5 +717,25 @@ public class Solution2 {
                 {'1', '0', '0', '1', '0'}
         };
         System.out.print(solution.canCross(brr));
+        int[] nums1 = {1, 2, 3, 0, 0, 0};
+        int[] nums2 = {2, 5, 6};
+
+//        ListNode p1 = new ListNode(-7);
+//        ListNode p2 = new ListNode(-1);
+//        ListNode p3 = new ListNode(-10);
+//        ListNode q1 = new ListNode(9);
+//        ListNode q2 = new ListNode(-4);
+//        ListNode q3 = new ListNode(1);
+//        ListNode q4 = new ListNode(6);
+//        ListNode q5 = new ListNode(2);
+//        p1.next = p2;
+//        p2.next = p3;
+//        p3.next = q1;
+//        q1.next = q2;
+//        q2.next = q3;
+//        q3.next = q4;
+//        q4.next = q5;
+//        solution.sortList(p1);
+        System.out.print("");
     }
 }
