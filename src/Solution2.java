@@ -1,8 +1,10 @@
 
 import java.lang.reflect.Array;
 import java.util.*;
+
 import datestruct.ListNode;
 
+import javax.swing.text.MutableAttributeSet;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -531,7 +533,7 @@ public class Solution2 {
     //343 -- 动态规划
     //执行用时 : 2 ms, 在Integer Break的Java提交中击败了56.56% 的用户
     //内存消耗 : 32.9 MB, 在Integer Break的Java提交中击败了15.42% 的用户
-    public int integerBreak1(int n){
+    public int integerBreak1(int n) {
         if (n <= 3) {
             return n - 1;
         }
@@ -679,9 +681,11 @@ public class Solution2 {
         Arrays.sort(B);
 
         for (int i : B) {
-            for (int f : ans)
-                if (i <= f)
+            for (int f : ans) {
+                if (i <= f) {
                     i = f + 1 - i;
+                }
+            }
             ans.add(i);
             ans.add(N--);
         }
@@ -689,12 +693,151 @@ public class Solution2 {
         return ans;
     }
 
+    //1024
+    //执行用时 : 4 ms, 在Video Stitching的Java提交中击败了33.54% 的用户
+    //内存消耗 : 33.8 MB, 在Video Stitching的Java提交中击败了77.78% 的用户
+    public int videoStitching(int[][] clips, int T) {
+        int len = clips.length;
+        videoSort(clips);
+        if (clips[0][0] > 0 || clips[len - 1][1] < T) {
+            return -1;
+        }
+        Stack<int[]> stack = new Stack<>();
+        int begin = 0;
+        boolean isFirst = true;
+        int res = 0;
+        for (int i = 0; i < len; i++) {
+            if (isFirst) {
+                for (; i < len; i++) {
+                    if (clips[i][0] != 0) {
+                        isFirst = false;
+                        break;
+                    }
+                    begin = clips[i][1];
+                }
+            } else {
+                if (clips[i][0] > begin) {
+                    return -1;
+                }
+                int newbegin = begin;
+                for (; i < len; i++) {
+                    if (clips[i][0] > begin) {
+                        break;
+                    }
+                    newbegin = Math.max(newbegin, clips[i][1]);
+                }
+                begin = newbegin;
+            }
+            i--;
+            res++;
+            if (begin > T) {
+                break;
+            }
+        }
+        return res;
+    }
+
+    private void videoSort(int[][] clips) {
+        int len = clips.length;
+        for (int i = 0; i < len; i++) {
+            int[] c = clips[len - 1 - i];
+            for (int j = 0; j < len - i - 1; j++) {
+                if (c[0] < clips[j][0] || (c[0] == clips[j][0] && c[1] < clips[j][1])) {
+                    c[0] = c[0] ^ clips[j][0];
+                    clips[j][0] = clips[j][0] ^ c[0];
+                    c[0] = c[0] ^ clips[j][0];
+                    c[1] = c[1] ^ clips[j][1];
+                    clips[j][1] = clips[j][1] ^ c[1];
+                    c[1] = c[1] ^ clips[j][1];
+                }
+            }
+        }
+    }
+
+    //1024 -- 动态规划
+    //执行用时 : 4 ms, 在Video Stitching的Java提交中击败了33.54% 的用户
+    //内存消耗 : 34.5 MB, 在Video Stitching的Java提交中击败了47.62% 的用户
+    public int videoStitching1(int[][] clips, int T) {
+        int[] dp = new int[T + 1];
+        Arrays.fill(dp, T + 1);
+        dp[0] = 0;
+        for (int i = 0; i < T + 1; i++) {
+            for (int[] c : clips) {
+                if (c[0] <= i && c[1] >= i) {
+                    dp[i] = Math.min(dp[i], dp[c[0]] + 1);
+                }
+            }
+        }
+        return dp[T] == T + 1 ? -1 : dp[T];
+    }
+
+    //1049
+    //执行用时 : 2 ms, 在Last Stone Weight II的Java提交中击败了90.48% 的用户
+    //内存消耗 : 33.4 MB, 在Last Stone Weight II的Java提交中击败了100.00% 的用户
+    public int lastStoneWeightII0(int[] stones) {
+        int sum = 0;
+        for (int st : stones) {
+            sum += st;
+        }
+        int half = sum >> 1;
+        boolean[] existWeight = new boolean[half + 1];
+        for (int i = 0; i < existWeight.length; i++) {
+            existWeight[i] = false;
+        }
+        existWeight[0] = true;
+        for (int stoneWeight : stones) {
+            for (int i = half - stoneWeight; i >= 0; i--) {
+                if (existWeight[i]) {
+                    existWeight[i + stoneWeight] = true;
+                    if (stoneWeight + i == half) {
+                        return sum % 2;
+                    }
+                }
+            }
+        }
+        for (int i = existWeight.length - 1; i > 0; i--) {
+            if (existWeight[i]) {
+                return sum - 2 * i;
+            }
+        }
+        return Integer.MAX_VALUE;
+    }
+
+    //1049
+    //执行用时 : 1 ms, 在Last Stone Weight II的Java提交中击败了100.00% 的用户
+    //内存消耗 : 34.1 MB, 在Last Stone Weight II的Java提交中击败了100.00% 的用户
+    public int lastStoneWeightII1(int[] stones) {
+        int sum = 0;
+        for (int st : stones) {
+            sum += st;
+        }
+        for (int i = (sum >> 1); ; i--) {
+            if (helper(stones, 0, 0, i)) {
+                return sum - 2 * i;
+            }
+        }
+    }
+
+    boolean helper(int[] nums, int idx, int sum, int target) {
+        if (sum == target) {
+            return true;
+        }
+        if (sum > target) {
+            return false;
+        }
+        if (idx == nums.length) {
+            return false;
+        }
+        return helper(nums, idx + 1, sum + nums[idx], target)
+                || helper(nums, idx + 1, sum, target);
+    }
+
 
 
     public static void main(String[] argc) {
         Solution2 solution = new Solution2();
         List<Integer> p1 = new ArrayList<>();
-        int[] brr = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 2333};
+        int[] brr = {10, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23};
         for (int i : brr) {
             p1.add(i);
         }
@@ -718,10 +861,10 @@ public class Solution2 {
                 {'1', '1', '1', '1', '1'},
                 {'1', '0', '0', '1', '0'}
         };
-        System.out.print(solution.canCross(brr));
-        int[] nums1 = {1, 2, 3, 0, 0, 0};
+//        System.out.print(solution.canCross(brr));
+        int[] nums1 = {1, 2, 3, 7, 4, 4};
         int[] nums2 = {2, 5, 6};
-
+        int[][] frr = {{0, 0}, {9, 9}, {2, 10}, {0, 3}, {0, 5}, {3, 4}, {6, 10}, {1, 2}, {4, 7}, {5, 6}};
 //        ListNode p1 = new ListNode(-7);
 //        ListNode p2 = new ListNode(-1);
 //        ListNode p3 = new ListNode(-10);
@@ -738,6 +881,6 @@ public class Solution2 {
 //        q3.next = q4;
 //        q4.next = q5;
 //        solution.sortList(p1);
-        System.out.print("");
+        System.out.print(solution.lastStoneWeightII(nums1));
     }
 }
