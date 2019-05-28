@@ -220,6 +220,7 @@ public class Solution2 {
                 }
             }
         }
+        return res;
     }
 
     //977
@@ -675,8 +676,7 @@ public class Solution2 {
         for (int i = 0; i < N; ++i) {
             B[i] = i + 1;
         }
-        Arrays.sort(B, h
-                ;
+        Arrays.sort(B);
 
         for (int i : B) {
             for (int f : ans)
@@ -688,6 +688,8 @@ public class Solution2 {
 
         return ans;
     }
+
+
 
     public static void main(String[] argc) {
         Solution2 solution = new Solution2();
