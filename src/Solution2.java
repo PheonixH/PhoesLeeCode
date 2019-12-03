@@ -832,6 +832,23 @@ public class Solution2 {
                 || helper(nums, idx + 1, sum, target);
     }
 
+    /*初级算法*/
+
+    //从排序数组中删除重复项
+    public int removeDuplicates(int[] nums) {
+        if (nums.length <= 1){
+            return nums.length;
+        }
+        int n = 0;
+        for(int i = 1;i < nums.length; i++){
+            if(nums[i] == nums[n]){
+                continue;
+            } else {
+                nums[++n] = nums[i];
+            }
+        }
+        return n+1;
+    }
 
 
     public static void main(String[] argc) {
@@ -862,7 +879,7 @@ public class Solution2 {
                 {'1', '0', '0', '1', '0'}
         };
 //        System.out.print(solution.canCross(brr));
-        int[] nums1 = {1, 2, 3, 7, 4, 4};
+        int[] nums1 = {1, 3, 3, 7, 8, 8};
         int[] nums2 = {2, 5, 6};
         int[][] frr = {{0, 0}, {9, 9}, {2, 10}, {0, 3}, {0, 5}, {3, 4}, {6, 10}, {1, 2}, {4, 7}, {5, 6}};
 //        ListNode p1 = new ListNode(-7);
@@ -881,6 +898,6 @@ public class Solution2 {
 //        q3.next = q4;
 //        q4.next = q5;
 //        solution.sortList(p1);
-        System.out.print(solution.lastStoneWeightII(nums1));
+        System.out.print(solution.removeDuplicates(nums1));
     }
 }
