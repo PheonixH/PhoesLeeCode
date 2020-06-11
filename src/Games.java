@@ -363,7 +363,7 @@ public class Games {
         }
         int[] re = new int[1];
         int i = minCameraCoverAss(root, re, false);
-        if(i == 0){
+        if (i == 0) {
             re[0]++;
         }
         return re[0];
@@ -384,30 +384,59 @@ public class Games {
         if (bl == 0 || br == 0) {
             bre = 1;
             re[0]++;
-        }
-        else if (bl == 1 || br == 1) {
+        } else if (bl == 1 || br == 1) {
             bre = 2;
         }
         return bre;
     }
 
+    //373
+    /*
+    执行用时 :21 ms, 在所有 Java 提交中击败了57.51%的用户
+    内存消耗 :40.2 MB, 在所有 Java 提交中击败了75.00%的用户
+    */
+    public List<List<Integer>> kSmallestPairs(int[] nums1, int[] nums2, int k) {
+        List<List<Integer>> res = new ArrayList<>();
+        k = Math.min(k,nums1.length*nums2.length); //注意k的取值
+        if(k==0) return res;
+
+        Queue<int[]> Q = new PriorityQueue<>(k,(o1,o2)->o2[0]+o2[1]-o1[0]-o1[1]);
+        for(int e1:nums1)
+            for(int e2:nums2){
+                if(Q.size()<k) {
+                    Q.offer(new int[]{e1,e2});
+                }else if(e1+e2<=Q.peek()[0]+Q.peek()[1]){
+                    Q.poll();
+                    Q.offer(new int[]{e1,e2});
+                }
+            }
+        while(k-->0){
+            int[] e = Q.poll();
+            res.add(0,Arrays.asList(e[0],e[1]));
+        }
+
+        return res;
+
+    }
+
     public static void main(String[] args) {
         Games games = new Games();
-        int[] arr = {9, 8, 1, 0, 1, 9, 4, 0, 4, 1};
-        int[] brr = {6, 0, 8, 2, 1, 5};
+        int[] arr = {1, 7, 11};
+        int[] brr = {2, 4, 6};
         int[] crr = {9, 8, 7, 6, 5, 4, 3, 2, 1};
 //        games.numsSameConsecDiff(2, 1);
-        TreeNode t = new TreeNode(1);
-        TreeNode t1 = new TreeNode(2);
-        TreeNode t2 = new TreeNode(3);
-        TreeNode t3 = new TreeNode(4);
-        TreeNode t4 = new TreeNode(5);
-        TreeNode t5 = new TreeNode(6);
-        t.left = t1;
-        t1.left = t2;
-        t1.right = t3;
-        t3.left = t4;
+//        TreeNode t = new TreeNode(1);
+//        TreeNode t1 = new TreeNode(2);
+//        TreeNode t2 = new TreeNode(3);
+//        TreeNode t3 = new TreeNode(4);
+//        TreeNode t4 = new TreeNode(5);
+//        TreeNode t5 = new TreeNode(6);
+//        t.left = t1;
+//        t1.left = t2;
+//        t1.right = t3;
+//        t3.left = t4;
 //        t4.left = t5;
-        games.minCameraCover(t);
+        games.kSmallestPairs(arr, brr, 3);
+        System.out.println("666");
     }
 }
