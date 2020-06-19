@@ -175,15 +175,16 @@ public class Games {
         return maxl;
     }
 
-    //964(wrong)
+    /**
+     * 964(wrong)
+     */
     public int leastOpsExpressTarget(int x, int target) {
         char[] ops = {'+', '-', '*', '/'};
         int res = 0;
         if (x == target) {
             return res;
         }
-        int ns = x;
-        res = leastOpsExpressTargetAss(x, target, res, ns, 1);
+        res = leastOpsExpressTargetAss(x, target, res, x, 1);
         return res;
     }
 
@@ -234,8 +235,10 @@ public class Games {
         return res;
     }
 
-    //2018.Dec.30 - 第117周赛 - 年终巅峰对决
-    //965
+    /**
+     * 2018.Dec.30 - 第117周赛 - 年终巅峰对决
+     * 965
+     * */
     public boolean isUnivalTree(TreeNode root) {
         if (root == null) {
             return false;
@@ -260,8 +263,7 @@ public class Games {
     //967
     public int[] numsSameConsecDiff(int N, int K) {
         if (K > 9) {
-            int[] ints = new int[0];
-            return ints;
+            return new int[0];
         }
         if (N == 1) {
             int[] ints = new int[10];
@@ -348,9 +350,7 @@ public class Games {
             numsSameConsecDiff(list, N - 1, ints, r, ints[i][0], is, key);
             r = r - ints[i][0] + ints[i][1];
             numsSameConsecDiff(list, N - 1, ints, r, ints[i][1], is, key);
-            return;
         }
-        return;
     }
 
     //968
@@ -390,53 +390,449 @@ public class Games {
         return bre;
     }
 
-    //373
-    /*
-    执行用时 :21 ms, 在所有 Java 提交中击败了57.51%的用户
-    内存消耗 :40.2 MB, 在所有 Java 提交中击败了75.00%的用户
+    /**
+     * 373
+     * 执行用时 :21 ms, 在所有 Java 提交中击败了57.51%的用户
+     * 内存消耗 :40.2 MB, 在所有 Java 提交中击败了75.00%的用户
     */
     public List<List<Integer>> kSmallestPairs(int[] nums1, int[] nums2, int k) {
         List<List<Integer>> res = new ArrayList<>();
-        k = Math.min(k,nums1.length*nums2.length); //注意k的取值
-        if(k==0) return res;
+        k = Math.min(k, nums1.length * nums2.length); //注意k的取值
+        if (k == 0) {
+            return res;
+        }
 
-        Queue<int[]> Q = new PriorityQueue<>(k,(o1,o2)->o2[0]+o2[1]-o1[0]-o1[1]);
-        for(int e1:nums1)
-            for(int e2:nums2){
-                if(Q.size()<k) {
-                    Q.offer(new int[]{e1,e2});
-                }else if(e1+e2<=Q.peek()[0]+Q.peek()[1]){
+        Queue<int[]> Q = new PriorityQueue<>(k, (o1, o2) -> o2[0] + o2[1] - o1[0] - o1[1]);
+        for (int e1 : nums1) {
+            for (int e2 : nums2) {
+                if (Q.size() < k) {
+                    Q.offer(new int[]{e1, e2});
+                } else if (e1 + e2 <= Q.peek()[0] + Q.peek()[1]) {
                     Q.poll();
-                    Q.offer(new int[]{e1,e2});
+                    Q.offer(new int[]{e1, e2});
                 }
             }
-        while(k-->0){
+        }
+        while (k-- > 0) {
             int[] e = Q.poll();
-            res.add(0,Arrays.asList(e[0],e[1]));
+            res.add(0, Arrays.asList(e[0], e[1]));
         }
 
         return res;
 
     }
 
+
+    public int[] finalPrices(int[] prices) {
+        int len = prices.length;
+        if (len == 0) {
+            return new int[0];
+        }
+        for (int i = 0; i < len; i++) {
+            for (int j = i + 1; j < len; j++) {
+                if (prices[i] >= prices[j]) {
+                    prices[i] = prices[i] - prices[j];
+                    break;
+                }
+            }
+        }
+        return prices;
+    }
+
+    Comparator<int[]> comparator = new Comparator<int[]>() {
+        @Override
+        public int compare(int[] o1, int[] o2) {
+            return (o1[0] - o2[0]);
+        }
+    };
+
+
+    public int minSumOfLengths(int[] arr, int target) {
+//        Comparator<int[]> comparator = new Comparator<int[]>() {
+//            @Override
+//            public int compare(int[] o1, int[] o2) {
+//                return (o1[0] - o2[0]);
+//            }
+//        };
+//        Queue<int[]> success = new PriorityQueue<int[]>(comparator);
+        List<int[]> success = new LinkedList<>();
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int i = 0; i < arr.length; i++) {
+            if (map.isEmpty()) {
+                if (arr[i] < target) {
+                    map.put(i, arr[i]);
+                } else if (arr[i] == target) {
+                    int[] tmp = new int[3];
+                    tmp[0] = 1;
+                    tmp[1] = i;
+                    tmp[2] = i;
+                    success.add(tmp);
+                }
+            } else {
+                if (arr[i] == target) {
+                    int[] tmp = new int[3];
+                    tmp[0] = 1;
+                    tmp[1] = i;
+                    tmp[2] = i;
+                    success.add(tmp);
+                } else if (arr[i] < target) {
+                    List<Integer> set = new ArrayList<>();
+                    for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+                        if (entry.getValue() + arr[i] < target) {
+                            map.put(entry.getKey(), entry.getValue() + arr[i]);
+                        } else if (entry.getValue() + arr[i] == target) {
+                            int[] tmp = new int[3];
+                            tmp[0] = i - entry.getKey() + 1;
+                            tmp[1] = entry.getKey();
+                            tmp[2] = i;
+                            success.add(tmp);
+                            set.add(entry.getKey());
+                        } else {
+                            set.add(entry.getKey());
+                        }
+                    }
+                    map.put(i, arr[i]);
+                    for (int s : set) {
+                        map.remove(s);
+                    }
+                }
+            }
+        }
+        if (success.size() <= 1) {
+            return -1;
+        } else {
+            int len = success.size();
+            Queue<Integer> queue1 = new PriorityQueue<Integer>();
+            for (int i = 0; i < len; i++) {
+                int tmp = 9999;
+                for (int j = i + 1; j < len; j++) {
+                    if (success.get(i)[2] < success.get(j)[1]) {
+                        tmp = Math.min(success.get(i)[0] + success.get(j)[0], tmp);
+                    }
+                }
+                if (tmp < 9999) {
+                    queue1.add(tmp);
+                }
+            }
+            if (!queue1.isEmpty()) {
+                int a = queue1.poll();
+                return a;
+            }
+            return -1;
+        }
+    }
+
+    public int[] runningSum(int[] nums) {
+        int len = nums.length;
+        int[] res = new int[len];
+        res[0] = nums[0];
+        for (int i = 1; i < len; i++) {
+            res[i] = nums[i] + res[i - 1];
+        }
+        return res;
+    }
+
+    public int findLeastNumOfUniqueInts0(int[] arr, int k) {
+        int len = arr.length;
+        Map<Integer, Integer> value = new HashMap<>();
+        for (int item : arr) {
+            if (value.get(item) != null) {
+                int kk = value.get(item);
+                value.put(item, kk + 1);
+            } else {
+                value.put(item, 1);
+            }
+        }
+
+        Comparator<int[]> comparator = new Comparator<int[]>() {
+            @Override
+            public int compare(int[] o1, int[] o2) {
+                return (o1[0] - o2[0]);
+            }
+        };
+        Queue<int[]> success = new PriorityQueue<int[]>(comparator);
+
+        int resLen = 0;
+        for (Map.Entry<Integer, Integer> entry : value.entrySet()) {
+            int[] tmp = new int[2];
+            tmp[0] = entry.getValue();
+            tmp[1] = entry.getKey();
+            success.add(tmp);
+            resLen++;
+        }
+        while (!success.isEmpty()) {
+            int[] tmp = success.poll();
+            if (k < tmp[0]) {
+                return resLen;
+            } else if (k == tmp[0]) {
+                return resLen - 1;
+            } else {
+                resLen--;
+                k = k - tmp[0];
+            }
+        }
+        return -1;
+    }
+
+
+    public int findLeastNumOfUniqueInts(int[] arr, int k) {
+        int len = arr.length;
+        quickSort(arr, 0, len - 1);
+        int tmp = arr[0];
+        Queue<Integer> queue = new PriorityQueue<Integer>();
+        for (int i = 1; i < len; i++) {
+            int n = 1;
+            while (i < len && tmp == arr[i]) {
+                n++;
+                i++;
+            }
+            if (i < len) {
+                tmp = arr[i];
+            }
+            queue.add(n);
+        }
+        if (arr.length == 1) {
+            queue.add(1);
+        }
+        int resLen = queue.size();
+        while (!queue.isEmpty()) {
+            int t = queue.poll();
+            if (k < t) {
+                return resLen;
+            } else if (k == t) {
+                return resLen - 1;
+            } else {
+                resLen--;
+                k = k - t;
+            }
+        }
+        return 0;
+    }
+
+    public void quickSort(int[] a, int l, int h) {
+        if (l > h) {
+            return;
+        }
+        int b = l, e = h;
+        int k = a[l];
+        while (b < e) {
+            while (b < e && a[e] <= k) {
+                e--;
+            }
+            if (b < e) {
+                a[b] = a[e];
+                b++;
+            }
+            while (a[b] >= k && b < e) {
+                b++;
+            }
+            if (b < e) {
+                a[e] = a[b];
+                e--;
+            }
+        }
+        /*此时i==j*/
+        a[b] = k;
+
+        /*递归调用，把key前面的完成排序*/
+        this.quickSort(a, l, b - 1);
+
+
+        /*递归调用，把key后面的完成排序*/
+        this.quickSort(a, e + 1, h);
+    }
+
+    public int minDays(int[] bloomDay, int m, int k) {
+        int len = bloomDay.length;
+        if (m * k > len) {
+            return -1;
+        }
+        int[] range = new int[len + 1];
+        range[0] = 1;
+        range[len] = Integer.MAX_VALUE;
+        int key = Integer.MIN_VALUE;
+        for (int i = 0; i < len; i++) {
+            int tmp = 1;
+            for (int j = 0; i > j; j++) {
+                if (bloomDay[j] > bloomDay[i]) {
+                    tmp++;
+                } else if (bloomDay[j] < bloomDay[i]) {
+                    range[j]++;
+                }
+            }
+            key = Math.max(key, bloomDay[i]);
+            range[i] = tmp;
+        }
+        for (int ii = 0; ii < len; ii++) {
+            int max = Integer.MAX_VALUE;
+            for (int i = 0; i < len; i++) {
+                max = Math.min(max, range[i]);
+            }
+            boolean flag = false;
+            int enough = m;
+            int tmp = 0;
+            int p = -1;
+            for (int i = 0; i < len + 1; i++) {
+                if (range[i] == max) {
+                    p = bloomDay[i];
+                    range[i] = Integer.MAX_VALUE;
+                }
+                if (range[i] == Integer.MAX_VALUE) {
+                    enough = enough - tmp / k;
+                    if (enough <= 0) {
+                        flag = true;
+                        break;
+                    }
+                    tmp = 0;
+                } else {
+                    tmp++;
+                }
+            }
+            if (!flag) {
+                return p;
+            }
+        }
+        return -1;
+    }
+
+    public String reformat(String s) {
+        char[] chars = s.toCharArray();
+        List<Character> stackInt = new ArrayList<>();
+        List<Character> stackChar = new ArrayList<>();
+        StringBuilder stringBuffer = new StringBuilder();
+
+        for (char aChar : chars) {
+            if ((int) aChar > 64) {
+                stackChar.add(aChar);
+            } else {
+                stackInt.add(aChar);
+            }
+        }
+        int abs = stackChar.size() - stackInt.size();
+        if (abs == 0) {
+            for (int i = 0; i < stackChar.size(); i++) {
+                stringBuffer.append(stackChar.get(i));
+                stringBuffer.append(stackInt.get(i));
+            }
+        } else if (abs == 1) {
+            for (int i = 0; i < stackInt.size(); i++) {
+                stringBuffer.append(stackChar.get(i));
+                stringBuffer.append(stackInt.get(i));
+            }
+            stringBuffer.append(stackChar.get(stackInt.size()));
+        } else if (abs == -1) {
+            for (int i = 0; i < stackChar.size(); i++) {
+                stringBuffer.append(stackInt.get(i));
+                stringBuffer.append(stackChar.get(i));
+            }
+            stringBuffer.append(stackInt.get(stackChar.size()));
+        } else {
+            return "";
+        }
+        return stringBuffer.toString();
+    }
+
+
+    public List<List<String>> displayTable(List<List<String>> orders) {
+        class Order {
+            final List<String> table;
+            final List<List<String>> displayTable;
+            int tableNumber;
+
+            Order() {
+                this.tableNumber = 0;
+                this.table = new LinkedList<>();
+                table.add("Table");
+                this.displayTable = new LinkedList<>();
+            }
+
+            int addTable(String table) {
+                int i = 1;
+                for (; i <= tableNumber; i++) {
+                    if (Integer.parseInt(this.table.get(i)) > Integer.parseInt(table)) {
+                        break;
+                    } else if (Integer.parseInt(this.table.get(i)) == Integer.parseInt(table)) {
+                        return i;
+                    }
+                }
+                this.table.add(i, table);
+                for (List<String> list : displayTable) {
+                    if (i <= tableNumber) {
+                        list.add(i, "0");
+                    } else {
+                        list.add("0");
+                    }
+                }
+                tableNumber++;
+                return i;
+            }
+
+            void addFood(String food, int tab) {
+                int i = 0;
+                for (; i < displayTable.size(); i++) {
+                    List<String> foodItem = displayTable.get(i);
+                    if (foodItem.get(0).compareTo(food) == 0) {
+                        foodItem.set(tab, String.valueOf(Integer.parseInt(foodItem.get(tab)) + 1));
+                        return;
+                    } else if (foodItem.get(0).compareTo(food) > 0) {
+                        break;
+                    }
+                }
+                List<String> newFoodItem = new LinkedList<>();
+                newFoodItem.add(food);
+                for (int j = 0; j < tableNumber; j++) {
+                    if (j != tab - 1) {
+                        newFoodItem.add("0");
+                    } else {
+                        newFoodItem.add("1");
+                    }
+                }
+                displayTable.add(i, newFoodItem);
+            }
+        }
+        Order order = new Order();
+        for (List<String> oneOrder : orders) {
+            String table = oneOrder.get(1);
+            String food = oneOrder.get(2);
+            int tab = order.addTable(table);
+            order.addFood(food, tab);
+        }
+        order.displayTable.add(0, order.table);
+        return order.displayTable;
+    }
+
+
     public static void main(String[] args) {
         Games games = new Games();
-        int[] arr = {1, 7, 11};
-        int[] brr = {2, 4, 6};
-        int[] crr = {9, 8, 7, 6, 5, 4, 3, 2, 1};
-//        games.numsSameConsecDiff(2, 1);
-//        TreeNode t = new TreeNode(1);
-//        TreeNode t1 = new TreeNode(2);
-//        TreeNode t2 = new TreeNode(3);
-//        TreeNode t3 = new TreeNode(4);
-//        TreeNode t4 = new TreeNode(5);
-//        TreeNode t5 = new TreeNode(6);
-//        t.left = t1;
-//        t1.left = t2;
-//        t1.right = t3;
-//        t3.left = t4;
-//        t4.left = t5;
-        games.kSmallestPairs(arr, brr, 3);
-        System.out.println("666");
+        List<List<String>> or = new ArrayList<>();
+        List<String> or1 = new ArrayList<>();
+        or1.add("James");
+        or1.add("12");
+        or1.add("Fried Chicken");
+        or.add(or1);
+        List<String> or2 = new ArrayList<>();
+        or2.add("Ratesh");
+        or2.add("1");
+        or2.add("Fried Chicken");
+        or.add(or2);
+        List<String> or3 = new ArrayList<>();
+        or3.add("Amadeus");
+        or3.add("12");
+        or3.add("Fried Chicken");
+        or.add(or3);
+        List<String> or4 = new ArrayList<>();
+        or4.add("Adam");
+        or4.add("1");
+        or4.add("Canadian Waffles");
+        or.add(or4);
+        List<String> or5 = new ArrayList<>();
+        or5.add("Brianna");
+        or5.add("11");
+        or5.add("Canadian Waffles");
+        or.add(or5);
+        List<List<String>> q = games.displayTable(or);
+        String p = games.reformat("12hhhhh34");
+        System.out.println(p + q.size());
+
     }
 }
