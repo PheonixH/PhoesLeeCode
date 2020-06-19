@@ -5,23 +5,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Stack;
 import java.util.*;
-/**
- * @ Author     ：Pheonix
- * @ Date       ：Created in 下午4:31 18年12月12日
- * @ Description：
- */
 
 /**
- * @ Author     ：Pheonix
- * @ Date       ：Created in 上午10:30 18年11月14日
- * @ Description：Leecode 103
- * @ Modified By：
- * @ Version    ：1.0
+ * @author ：Pheonix
+ * @version ：1.0
+ * @date ：Created in 上午10:30 18年11月14日
+ * @description ：LeetCode
+ * @modified By ：
  */
 public class SolitionUbuntu {
-    //103
+    /**
+     * 103
+     */
     public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
-        List re = new ArrayList();
+        List<List<Integer>> re = new ArrayList<>();
         Stack<TreeNode> st1 = new Stack<TreeNode>();
         Stack<TreeNode> st2 = new Stack<TreeNode>();
         if (root != null) {
@@ -31,12 +28,12 @@ public class SolitionUbuntu {
             if (root.right != null) {
                 st1.push(root.right);
             }
-            List rr = new ArrayList();
+            List<Integer> rr = new ArrayList<>();
             rr.add(root.val);
             re.add(rr);
             int useL = 1;
             while (!st1.isEmpty() || !st2.isEmpty()) {
-                List rr2 = new ArrayList();
+                List<Integer> rr2 = new ArrayList<>();
                 if (useL == 1) {
                     while (!st1.isEmpty()) {
                         TreeNode t = (TreeNode) st1.pop();
@@ -81,7 +78,9 @@ public class SolitionUbuntu {
         return deep;
     }
 
-    //227
+    /**
+     * 227
+     */
     public int nthMagicalNumber(int N, int A, int B) {
         //求最大公约数
         long a = A > B ? A : B;
@@ -140,13 +139,16 @@ public class SolitionUbuntu {
         long sss = ss;
         for (int i = 0; i < s; i++) {
             sss = sss + A / C * B;
-            if (sss > 1000000007)
+            if (sss > 1000000007) {
                 sss = sss % 1000000007;
+            }
         }
         return (int) sss;
     }
 
-    //508
+    /**
+     * 508
+     */
     public int[] findFrequentTreeSum(TreeNode root) {
         ArrayList tlist = new ArrayList();
 
@@ -246,18 +248,20 @@ public class SolitionUbuntu {
 
     }
 
-    //872
+    /**
+     * 872
+     */
     public boolean leafSimilar(TreeNode root1, TreeNode root2) {
         boolean re = true;
         Stack<TreeNode> s1 = new Stack<>();
         Stack<TreeNode> s2 = new Stack<>();
-        if (root1 == null && root2 == null)
+        if (root1 == null && root2 == null) {
             return true;
-        else if (root1 == null && root2 != null)
+        } else if (root1 == null) {
             return false;
-        else if (root1 != null && root2 == null)
+        } else if (root2 == null) {
             return false;
-        else {
+        } else {
             s1.push(root1);
             s2.push(root2);
             List lp = new ArrayList();
@@ -294,7 +298,9 @@ public class SolitionUbuntu {
         }
     }
 
-    //709
+    /**
+     * 709
+     */
     public String toLowerCase(String str) {
         char[] ch = str.toCharArray();
         for (int i = 0; i < ch.length; i++) {
@@ -305,7 +311,9 @@ public class SolitionUbuntu {
         return ch.toString();
     }
 
-    //461
+    /**
+     * 461
+     */
     public int hammingDistance(int x, int y) {
         int res = x ^ y;
         int resu = 0;
@@ -318,7 +326,9 @@ public class SolitionUbuntu {
         return resu;
     }
 
-    //771
+    /**
+     * 771
+     */
     public int numJewelsInStones(String J, String S) {
 //        char strJ[] = J.toCharArray();
 //        char strS[] = S.toCharArray();
@@ -349,7 +359,9 @@ public class SolitionUbuntu {
         return re;
     }
 
-    //237
+    /**
+     * 237
+     */
     public void deleteNode(ListNode node) {
         if (node.next != null) {
             ListNode p = node.next;
@@ -358,7 +370,9 @@ public class SolitionUbuntu {
         }
     }
 
-    //338
+    /**
+     * 338
+     */
     public int[] countBits(int num) {
         int[] re = new int[num + 1];
         if (num > 2) {
@@ -387,19 +401,25 @@ public class SolitionUbuntu {
         return re;
     }
 
-    //476
+    /**
+     * 476
+     */
     public int findComplement(int num) {
         int[] arr = {1, 3, 7, 15, 31, 63, 127, 255, 511, 1023, 2047, 4095, 8191, 16383, 32767, 65535,
                 131071, 262143, 524287, 1048575, 2097151, 4194303, 8388607, 16777215, 33554431, 67108863,
                 134217727, 268435455, 536870911, 1073741823, 2147483647};
         int i = 0;
         for (; i < 32; i++) {
-            if (num <= arr[i]) break;
+            if (num <= arr[i]) {
+                break;
+            }
         }
         return arr[i] - num;
     }
 
-    //728
+    /**
+     * 728
+     */
     public List<Integer> selfDividingNumbers(int left, int right) {
         List<Integer> res = new ArrayList<Integer>();
         for (int i = left; i <= right; i++) {
@@ -424,16 +444,26 @@ public class SolitionUbuntu {
         return res;
     }
 
-    //463
+    /**
+     * 463
+     */
     public int islandPerimeter(int[][] grid) {
         int res = 0;
         for (int i = 0; i < grid.length; i++) {
             for (int j = 0; j < grid[0].length; j++) {
                 if (grid[i][j] == 1) {
-                    if (i == 0 || grid[i - 1][j] == 0) res++;
-                    if (i == grid.length - 1 || grid[i + 1][j] == 0) res++;
-                    if (j == 0 || grid[i][j - 1] == 0) res++;
-                    if (j == grid[i].length - 1 || grid[i][j + 1] == 0) res++;
+                    if (i == 0 || grid[i - 1][j] == 0) {
+                        res++;
+                    }
+                    if (i == grid.length - 1 || grid[i + 1][j] == 0) {
+                        res++;
+                    }
+                    if (j == 0 || grid[i][j - 1] == 0) {
+                        res++;
+                    }
+                    if (j == grid[i].length - 1 || grid[i][j + 1] == 0) {
+                        res++;
+                    }
                 }
             }
         }
@@ -471,7 +501,9 @@ public class SolitionUbuntu {
 //        }
 //        return re;}
 
-    //810
+    /**
+     * 810
+     */
     public boolean xorGame(int[] nums) {
         int x = 0, n = nums.length;
         for (int num : nums) {
@@ -480,7 +512,9 @@ public class SolitionUbuntu {
         return x == 0 || n % 2 == 0;
     }
 
-    //331
+    /**
+     * 331
+     */
     public boolean isValidSerialization(String preorder) {
         if (preorder == null) {
             return false;
@@ -517,7 +551,9 @@ public class SolitionUbuntu {
         }
     }
 
-    //786:超时
+    /**
+     * 786:超时
+     */
     public int[] kthSmallestPrimeFraction(int[] A, int K) {
         if (A.length <= 1) {
             int[] res = new int[1];
@@ -526,14 +562,13 @@ public class SolitionUbuntu {
         double[] res = new double[K];
         List<int[]> list = new LinkedList();
         for (int i = 0; i < K; i++) {
-            if(K < A.length){
+            if (K < A.length) {
                 res[i] = 1.0 / (double) A[A.length - K];
-                int[] tt = {1,A[A.length - K]};
+                int[] tt = {1, A[A.length - K]};
                 list.add(tt);
-            }
-            else {
+            } else {
                 res[i] = 1.0;
-                int[] tt = {1,1};
+                int[] tt = {1, 1};
                 list.add(tt);
             }
         }
@@ -556,7 +591,7 @@ public class SolitionUbuntu {
                         list.set(ii, list.get(ii - 1));
                     }
                     res[k] = t;
-                    int[] tt = {A[i],A[j]};
+                    int[] tt = {A[i], A[j]};
                     list.set(k, tt);
                 }
             }
@@ -565,7 +600,9 @@ public class SolitionUbuntu {
     }
 
 
-    //258
+    /**
+     * 258
+     */
     public int addDigits(int num) {
         if (num == 0) {
             return 0;
@@ -577,7 +614,9 @@ public class SolitionUbuntu {
         return 9;
     }
 
-    //260
+    /**
+     * 260
+     */
     public int[] singleNumber(int[] nums) {
         int[] re = new int[2];
         int sum = nums[0];
@@ -601,6 +640,48 @@ public class SolitionUbuntu {
     }
 
 
+    /**
+     * 125. 验证回文串
+     * 执行用时：2 ms, 在所有 Java 提交中击败了99.91%的用户
+     * 内存消耗：39.7 MB, 在所有 Java 提交中击败了7.14%的用户
+     */
+    public boolean isPalindrome(String s) {
+        char[] chars = s.toCharArray();
+        int len = chars.length;
+        if (len <= 1) {
+            return true;
+        }
+        int i = 0, j = len - 1;
+        while (i <= j) {
+            while (i <= j && allToInteger(chars[i]) == -1) {
+                i++;
+            }
+            while (i <= j && allToInteger(chars[j]) == -1) {
+                j--;
+            }
+            if (i <= j) {
+                if (allToInteger(chars[i]) != allToInteger(chars[j])) {
+                    return false;
+                }
+                i++;
+                j--;
+            }
+        }
+        return true;
+    }
+
+    public int allToInteger(char a) {
+        if (48 <= (int) a && (int) a <= 57) {
+            return a;
+        } else if (65 <= (int) a && (int) a <= 90) {
+            return a;
+        } else if (97 <= (int) a && (int) a <= 122) {
+            return a - 32;
+        } else {
+            return -1;
+        }
+    }
+
     public static void main(String[] args) {
         TreeNode root = new TreeNode(1);
         TreeNode r1 = new TreeNode(2);
@@ -615,7 +696,7 @@ public class SolitionUbuntu {
         SolitionUbuntu solution = new SolitionUbuntu();
         String[] strings = {"9", "3", "4", "#", "#", "1", "#", "#,", "#", "6", "#", "#"};
         int[] ints = {1, 13, 17, 59};
-        System.out.println(solution.kthSmallestPrimeFraction(ints, 6));
+        System.out.println(solution.isPalindrome(".."));
 //        int[] arr = solution.findFrequentTreeSum(root);
         //List l = solution.zigzagLevelOrder(root);
 //        System.out.print(solution.nthMagicalNumber(1,2,3));
