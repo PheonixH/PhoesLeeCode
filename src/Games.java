@@ -238,7 +238,7 @@ public class Games {
     /**
      * 2018.Dec.30 - 第117周赛 - 年终巅峰对决
      * 965
-     * */
+     */
     public boolean isUnivalTree(TreeNode root) {
         if (root == null) {
             return false;
@@ -394,7 +394,7 @@ public class Games {
      * 373
      * 执行用时 :21 ms, 在所有 Java 提交中击败了57.51%的用户
      * 内存消耗 :40.2 MB, 在所有 Java 提交中击败了75.00%的用户
-    */
+     */
     public List<List<Integer>> kSmallestPairs(int[] nums1, int[] nums2, int k) {
         List<List<Integer>> res = new ArrayList<>();
         k = Math.min(k, nums1.length * nums2.length); //注意k的取值
@@ -802,6 +802,79 @@ public class Games {
     }
 
 
+    public int xorOperation(int n, int start) {
+        int i = 0;
+        int res = 0;
+        while (n > i) {
+            int index = start + 2 * i;
+            res = res ^ index;
+            i++;
+        }
+        return res;
+    }
+
+    public String[] getFolderNames(String[] names) {
+        Map<String, Integer> map = new HashMap();
+        String[] res = new String[names.length];
+        for (int i = 0; i < names.length; i++) {
+            if (map.containsKey(names[i])) {
+                int tmp = map.get(names[i]) + 1;
+                res[i] = names[i] + '(' + tmp + ')';
+                while (map.containsKey(res[i])) {
+                    tmp = tmp + 1;
+                    res[i] = names[i] + '(' + tmp + ')';
+                }
+                map.put(names[i], tmp);
+                map.put(res[i], 0);
+            } else {
+                res[i] = names[i];
+                map.put(names[i], 0);
+            }
+        }
+        return res;
+    }
+
+
+    public int[] avoidFlood(int[] rains) {
+        int len = rains.length;
+        int[] mem = new int[len];
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int i = len - 1; i >= 0; --i) {
+            if (map.containsKey(rains[i])) {
+                mem[i] = map.get(rains[i]);
+            } else {
+                mem[i] = -1;
+            }
+            map.put(rains[i], i);
+        }
+        int[] res = new int[len];
+        PriorityQueue<Integer> queue = new PriorityQueue<>((a, b) -> (mem[a] - mem[b]));
+        Set<Integer> set = new HashSet<>();
+        for (int i = 0; i < len; ++i) {
+            if (rains[i] == 0) {
+                if (!queue.isEmpty()) {
+                    int tmp = rains[queue.poll()];
+                    set.remove(tmp);
+                    res[i] = tmp;
+                } else {
+                    res[i] = 1;
+                }
+            } else if (set.contains(rains[i])) {
+                return new int[0];
+            } else {
+                set.add(rains[i]);
+                if (mem[i] != -1) {
+                    queue.add(i);
+                }
+                res[i] = -1;
+            }
+        }
+        return res;
+    }
+
+
+
+
     public static void main(String[] args) {
         Games games = new Games();
         List<List<String>> or = new ArrayList<>();
@@ -831,8 +904,11 @@ public class Games {
         or5.add("Canadian Waffles");
         or.add(or5);
         List<List<String>> q = games.displayTable(or);
-        String p = games.reformat("12hhhhh34");
-        System.out.println(p + q.size());
+        String[] s = {"kaido", "kaido(1)", "kaido", "kaido(1)", "kaido(2)"};
+        int[] us = {1, 0, 0, 0, 2, 2};
+        int[] p = games.avoidFlood(us);
+        System.out.println(p);
 
     }
 }
+
