@@ -1,0 +1,43 @@
+# 175组合两个表
+执行用时：251 ms, 在所有 MySQL 提交中击败了56.54%的用户
+内存消耗：0B, 在所有 MySQL 提交中击败了100.00%的用户
+
+select FirstName, LastName, City, State from
+Person left join Address
+on Person.PersonId = Address.PersonId;
+
+
+# 595. 大的国家
+执行用时：201 ms, 在所有 MySQL 提交中击败了61.25%的用户
+内存消耗：0B, 在所有 MySQL 提交中击败了100.00%的用户
+
+select name, population, area from World
+where population > 25000000
+union
+select name, population, area from World
+where area > 3000000;
+
+
+# 596. 超过5名学生的课
+执行用时：287 ms, 在所有 MySQL 提交中击败了15.76%的用户
+内存消耗：0B, 在所有 MySQL 提交中击败了100.00%的用户
+
+SELECT
+    class
+FROM
+    (SELECT
+        class, COUNT(DISTINCT student) AS num
+    FROM
+        courses
+    GROUP BY class) AS temp_table
+WHERE
+    num >= 5
+
+# 196. 删除重复的电子邮箱
+执行用时：1690 ms, 在所有 MySQL 提交中击败了13.69%的用户
+内存消耗：0B, 在所有 MySQL 提交中击败了100.00%的用户
+
+DELETE p1 FROM Person p1,
+    Person p2
+WHERE
+    p1.Email = p2.Email AND p1.Id > p2.Id
