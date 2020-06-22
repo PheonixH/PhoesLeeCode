@@ -620,19 +620,16 @@ public class SolutionVmware {
         }
         int[] shorts = new int[128];
         for (int i = 0; i < s1.length(); i++) {
-            shorts[s1.charAt(i)-32]++;
-            shorts[s2.charAt(i)-32]--;
+            shorts[s1.charAt(i) - 32]++;
+            shorts[s2.charAt(i) - 32]--;
         }
         for (int i = 0; i < 128; i++) {
-            if(shorts[i] != 0){
+            if (shorts[i] != 0) {
                 return false;
             }
         }
         return true;
     }
-
-
-
 
 
     /**
@@ -723,11 +720,23 @@ public class SolutionVmware {
                 num++;
             }
         }
-        if (num >= 2) {
-            return false;
-        } else {
-            return true;
+        return num < 2;
+    }
+
+
+    /**
+     * 面试题 01.04. 回文排列
+     * 执行用时：1 ms, 在所有 Java 提交中击败了73.49%的用户
+     * 内存消耗：37.2 MB, 在所有 Java 提交中击败了100.00%的用户
+     */
+    public boolean canPermutePalindrome0(String s) {
+        Set<Character> set = new HashSet<>();
+        for (char c : s.toCharArray()) {
+            if (!set.add(c)) {
+                set.remove(c);
+            }
         }
+        return set.size() <= 1;
     }
 
 
