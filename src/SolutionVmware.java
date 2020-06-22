@@ -784,14 +784,42 @@ public class SolutionVmware {
         }
 
         // 保持第一个比第二个长
-        for (int i = 0; i < len2; i++){
-            if (first.charAt(i) != second.charAt(i)){
+        for (int i = 0; i < len2; i++) {
+            if (first.charAt(i) != second.charAt(i)) {
                 // 如果是长度相同字符串，那就比较下一个，如果长度不一样，那就从该字符开始进行比较。
                 return first.substring(i + 1).equals(second.substring(len1 == len2 ? i + 1 : i));
             }
         }
         return true;
+    }
 
+    /**
+     * 面试题 01.06. 字符串压缩
+     * 执行用时：3 ms, 在所有 Java 提交中击败了99.81%的用户
+     * 内存消耗：39.5 MB, 在所有 Java 提交中击败了100.00%的用户
+     */
+    public String compressString(String S) {
+        int len = S.length();
+        if (len <= 2) {
+            return S;
+        }
+        char[] chars = S.toCharArray();
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < len; i++) {
+            int tmp = 1;
+            stringBuilder.append(chars[i]);
+            while (i + tmp < len && chars[i + tmp] == chars[i]) {
+                tmp++;
+            }
+            stringBuilder.append(tmp);
+            if (i + tmp >= len) {
+                break;
+            } else {
+                i = i + tmp - 1;
+            }
+        }
+        String str = stringBuilder.toString();
+        return str.length() >= len ? S : str;
     }
 
 
@@ -811,7 +839,7 @@ public class SolutionVmware {
         t2.right = t4;
         int[][] goAhead = new int[][]{{0, 0, 0}, {0, 0, 1}};
         char[] chars = {'d', 'c', 'e', 'a', 'f', 'g', 'b'};
-        boolean b = solutionVmware.CheckPermutation1("aabc", "bbac");
+        String b = solutionVmware.compressString("aabcccs");
         System.out.println(b);
         for (char c : chars) {
             System.out.println(c);
