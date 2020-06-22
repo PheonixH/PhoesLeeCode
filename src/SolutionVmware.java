@@ -823,6 +823,50 @@ public class SolutionVmware {
     }
 
 
+    /**
+     * 面试题 01.07. 旋转矩阵:原地旋转
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
+     * 内存消耗：40 MB, 在所有 Java 提交中击败了100.00%的用户
+     */
+    public void rotate(int[][] matrix) {
+        int n = matrix.length;
+        for (int i = 0; i < n / 2; i++) {
+            for (int j = 0; j < (n + 1) / 2; j++) {
+                int temp = matrix[i][j];
+                matrix[i][j] = matrix[n - j - 1][i];
+                matrix[n - j - 1][i] = matrix[n - i - 1][n - j - 1];
+                matrix[n - i - 1][n - j - 1] = matrix[j][n - i - 1];
+                matrix[j][n - i - 1] = temp;
+            }
+        }
+    }
+
+    /**
+     * 面试题 01.07. 旋转矩阵:翻转
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
+     * 内存消耗：39.8 MB, 在所有 Java 提交中击败了100.00%的用户
+     */
+    public void rotate0(int[][] matrix) {
+        int n = matrix.length;
+        // 水平翻转
+        for (int i = 0; i < n / 2; ++i) {
+            for (int j = 0; j < n; ++j) {
+                matrix[i][j] = matrix[i][j] ^ matrix[n - i - 1][j];
+                matrix[n - i - 1][j] = matrix[i][j] ^ matrix[n - i - 1][j];
+                matrix[i][j] = matrix[i][j] ^ matrix[n - i - 1][j];
+            }
+        }
+        // 主对角线翻转
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < i; ++j) {
+                matrix[i][j] = matrix[i][j] ^ matrix[j][i];
+                matrix[j][i] = matrix[i][j] ^ matrix[j][i];
+                matrix[i][j] = matrix[i][j] ^ matrix[j][i];
+            }
+        }
+    }
+
+
     public static void main(String[] args) {
         SolutionVmware solutionVmware = new SolutionVmware();
         String[] strings = {"flower", "flow", "flight"};
