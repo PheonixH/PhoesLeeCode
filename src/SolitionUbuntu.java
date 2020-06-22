@@ -1,5 +1,8 @@
 //import jdk.nashorn.api.tree.Tree;
 
+import data.ListNode;
+import data.TreeNode;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -688,7 +691,7 @@ public class SolitionUbuntu {
         TreeNode r2 = new TreeNode(3);
         TreeNode r3 = new TreeNode(4);
         TreeNode r4 = new TreeNode(5);
-//        TreeNode r5 = new TreeNode(15);
+//        data.TreeNode r5 = new data.TreeNode(15);
         root.left = r1;
         r1.left = r2;
         r2.left = r3;

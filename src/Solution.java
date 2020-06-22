@@ -1,3 +1,7 @@
+import data.ListNode;
+import data.Node;
+import data.TreeNode;
+
 import java.util.*;
 
 import static java.lang.Math.log10;
@@ -1527,9 +1531,9 @@ public class Solution {
 //        if(head == null||head.next == null){
 //            return null;
 //        }
-//        Set<ListNode> set = new HashSet<>();
+//        Set<data.ListNode> set = new HashSet<>();
 //        set.add(head);
-//        ListNode p = head;
+//        data.ListNode p = head;
 //        int i = 1;
 //        while (p.next != null&&set.size() == i){
 //            p = p.next;

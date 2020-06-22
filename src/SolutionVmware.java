@@ -1,3 +1,5 @@
+import data.TreeNode;
+
 import java.util.*;
 
 
@@ -488,7 +490,7 @@ public class SolutionVmware {
      * 面试题 08.11. 硬币
      * 执行用时 :42 ms, 在所有 Java 提交中击败了71.94%的用户
      * 内存消耗 :43.7 MB, 在所有 Java 提交中击败了100.00%的用户
-     * */
+     */
     public int waysToChange(int n) {
         int[] coins = {1, 5, 10, 25};
         int[] dp = new int[n + 1];
@@ -501,6 +503,147 @@ public class SolutionVmware {
             }
         }
         return dp[n];
+    }
+
+
+    /**
+     * 面试题 01.01. 判定字符是否唯一
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
+     * 内存消耗：37.5 MB, 在所有 Java 提交中击败了100.00%的用户
+     */
+    public boolean isUnique(String astr) {
+        for (int i = 0; i < astr.length(); i++) {
+            String s = astr;
+            s = s.replace(String.valueOf(s.charAt(i)), "");
+            if (s.length() != astr.length() - 1) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+    /**
+     * 面试题 01.01. 判定字符是否唯一
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
+     * 内存消耗：37.2 MB, 在所有 Java 提交中击败了100.00%的用户
+     */
+    public boolean isUnique0(String astr) {
+        for (char ch : astr.toCharArray()) {
+            if (astr.indexOf(ch) != astr.lastIndexOf(ch)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+    /**
+     * 面试题 01.02. 判定是否互为字符重排
+     * 执行用时：1 ms, 在所有 Java 提交中击败了23.82%的用户
+     * 内存消耗：37.5 MB, 在所有 Java 提交中击败了100.00%的用户
+     */
+    public boolean CheckPermutation(String s1, String s2) {
+        if (s1.length() != s2.length()) {
+            return false;
+        }
+        Map<Character, Integer> map1 = new HashMap<>();
+        Map<Character, Integer> map2 = new HashMap<>();
+        for (int i = 0; i < s1.length(); i++) {
+            map1.put(s1.charAt(i), map1.get(s1.charAt(i)) != null ? map1.get(s1.charAt(i)) + 1 : 0);
+            map2.put(s2.charAt(i), map2.get(s2.charAt(i)) != null ? map2.get(s2.charAt(i)) + 1 : 0);
+        }
+        if (map1.size() != map2.size()) {
+            return false;
+        }
+        for (int i = 0; i < s1.length(); i++) {
+            if (map1.get(s1.charAt(i)) != map2.get(s1.charAt(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+    /**
+     * 面试题 01.02. 判定是否互为字符重排
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
+     * 内存消耗：37.5 MB, 在所有 Java 提交中击败了100.00%的用户
+     */
+    public boolean CheckPermutation0(String s1, String s2) {
+        if (s1.length() != s2.length()) {
+            return false;
+        }
+        char[] chars1 = s1.toCharArray();
+        char[] chars2 = s2.toCharArray();
+        quickSortChars(chars1, 0, s1.length() - 1);
+        quickSortChars(chars2, 0, s2.length() - 1);
+        for (int i = 0; i < s1.length(); i++) {
+            if (chars1[i] != chars2[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+    public void quickSortChars(char[] chars, int begin, int end) {
+        if (begin >= end) {
+            return;
+        }
+        char tmp = chars[begin];
+        int b = begin;
+        int e = end;
+        while (b < e) {
+            while (b < e && chars[e] >= tmp) {
+                e--;
+            }
+            chars[b] = chars[e];
+            while (b < e && chars[b] <= tmp) {
+                b++;
+            }
+            chars[e] = chars[b];
+        }
+        chars[b] = tmp;
+        quickSortChars(chars, begin, b - 1);
+        quickSortChars(chars, b + 1, end);
+    }
+
+
+    /**
+     * 面试题 01.03. URL化
+     * 执行用时：22 ms, 在所有 Java 提交中击败了37.82%的用户
+     * 内存消耗：47.7 MB, 在所有 Java 提交中击败了100.00%的用户
+     */
+    public String replaceSpaces0(String S, int length) {
+        char[] chars = S.toCharArray();
+        StringBuffer stringBuffer = new StringBuffer();
+        for (int i = 0; i < length; i++) {
+            char c = chars[i];
+            if (' ' == c) {
+                stringBuffer.append("%20");
+            } else {
+                stringBuffer.append(c);
+            }
+        }
+        return stringBuffer.toString();
+    }
+
+
+    /**
+     * 面试题 01.03. URL化
+     * 执行用时：22 ms, 在所有 Java 提交中击败了37.82%的用户
+     * 内存消耗：47.7 MB, 在所有 Java 提交中击败了100.00%的用户
+     */
+    public String replaceSpaces(String S, int length) {
+        int num = 0;
+        for (int i = 0; i < length; i++) {
+            if (' ' == S.charAt(i)) {
+                num++;
+            }
+        }
+        String news = S.replace(" ", "%20");
+        return news.substring(0, length + 2 * num);
     }
 
 
@@ -519,7 +662,11 @@ public class SolutionVmware {
         t1.right = t3;
         t2.right = t4;
         int[][] goAhead = new int[][]{{0, 0, 0}, {0, 0, 1}};
-        int i = solutionVmware.waysToChange(5);
-        System.out.println(i);
+        char[] chars = {'d', 'c', 'e', 'a', 'f', 'g', 'b'};
+        boolean b = solutionVmware.CheckPermutation0("aa", "bb");
+        System.out.println(b);
+        for (char c : chars) {
+            System.out.println(c);
+        }
     }
 }

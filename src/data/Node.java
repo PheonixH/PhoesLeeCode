@@ -1,7 +1,9 @@
+package data;
+
 /**
  * @ProjectName: PhoesLeeCode
  * @Package: PACKAGE_NAME
- * @ClassName: Node
+ * @ClassName: data.Node
  * @Description: 四叉树接口
  * @Author: Pheonix
  * @CreateDate: 2018/12/24 16:38
