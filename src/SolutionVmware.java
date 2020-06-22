@@ -1,5 +1,6 @@
 import java.util.*;
 
+
 /**
  * @program: PhoesLeeCode
  * @className: SolutionVmware
@@ -375,6 +376,134 @@ public class SolutionVmware {
         return false;
     }
 
+    /**
+     * 1028. 从先序遍历还原二叉树
+     * 执行用时 :16 ms, 在所有 Java 提交中击败了23.36%的用户
+     * 内存消耗 :40.3 MB, 在所有 Java 提交中击败了25.00%的用户
+     */
+    public TreeNode recoverFromPreorder(String S) {
+        String[] chars = S.split("-");
+        TreeNode tree = new TreeNode(Integer.parseInt(chars[0]));
+        List<TreeNode> map = new ArrayList<>();
+        int father = -1;
+        map.add(tree);
+        for (int i = 1; i < chars.length; i++) {
+            int k = i;
+            for (; i < chars.length; i++) {
+                if ("".equals(chars[i])) {
+                } else {
+                    break;
+                }
+            }
+            if (i == chars.length) {
+                break;
+            }
+            k = i - k;
+            if (k > father) {
+                TreeNode fatherTree = map.get(k);
+                TreeNode newTree = new TreeNode(Integer.parseInt(chars[i]));
+                fatherTree.left = newTree;
+                father = k;
+                if (map.size() <= k + 1) {
+                    map.add(newTree);
+                } else {
+                    map.set(k + 1, newTree);
+                }
+            } else {
+                TreeNode fatherTree = map.get(k);
+                TreeNode newTree = new TreeNode(Integer.parseInt(chars[i]));
+                fatherTree.right = newTree;
+                father = k;
+                map.set(k + 1, newTree);
+            }
+        }
+        return tree;
+    }
+
+
+    /**
+     * 面试题 08.10. 颜色填充
+     * 执行用时 :11 ms, 在所有 Java 提交中击败了16.10%的用户
+     * 内存消耗 :40.9 MB, 在所有 Java 提交中击败了100.00%的用户
+     */
+    public int[][] floodFill(int[][] image, int sr, int sc, int newColor) {
+        int[][] maybeAround = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+        Set<String> isVisited = new HashSet<>();
+        Stack<int[]> isAround = new Stack();
+        int oldColor = image[sr][sc];
+        int[] point = {sr, sc};
+        isAround.push(point);
+        isVisited.add(point[0] + ":" + point[1]);
+        int maxr = image.length, maxc = image[0].length;
+        while (!isAround.isEmpty()) {
+            int[] tmpPoint = isAround.pop();
+            image[tmpPoint[0]][tmpPoint[1]] = newColor;
+            for (int[] m : maybeAround) {
+                if (m[0] + tmpPoint[0] >= 0 && m[0] + tmpPoint[0] < maxr && m[1] + tmpPoint[1] >= 0 && m[1] + tmpPoint[1] < maxc) {
+                    if (image[m[0] + tmpPoint[0]][m[1] + tmpPoint[1]] == oldColor) {
+                        int[] newp = {m[0] + tmpPoint[0], m[1] + tmpPoint[1]};
+                        if (!isVisited.contains(newp[0] + ":" + newp[1])) {
+                            isAround.push(newp);
+                            isVisited.add(newp[0] + ":" + newp[1]);
+                        }
+                    }
+                }
+            }
+        }
+        return image;
+    }
+
+    /**
+     * 面试题 08.10. 颜色填充
+     * 执行用时 :1 ms, 在所有 Java 提交中击败了93.96%的用户
+     * 内存消耗 :41 MB, 在所有 Java 提交中击败了100.00%的用户
+     */
+    public int[][] floodFill0(int[][] image, int sr, int sc, int newColor) {
+        int x = image.length;
+        int y = image[0].length;
+        if ((sr < 0 || sr >= x) || (sc < 0 || sc >= y)) {
+            return image;
+        }
+        int oldColor = image[sr][sc];
+        return floodFill(image, sr, sc, oldColor, newColor);
+    }
+
+    public int[][] floodFill(int[][] image, int sr, int sc, int oloColor, int newColor) {
+        int x = image.length;
+        int y = image[0].length;
+        if ((sr < 0 || sr >= x) || (sc < 0 || sc >= y)) {
+            return image;
+        }
+        if (image[sr][sc] == oloColor && image[sr][sc] != newColor) {
+            image[sr][sc] = newColor;
+            image = floodFill(image, sr - 1, sc, oloColor, newColor);
+            image = floodFill(image, sr + 1, sc, oloColor, newColor);
+            image = floodFill(image, sr, sc - 1, oloColor, newColor);
+            image = floodFill(image, sr, sc + 1, oloColor, newColor);
+        }
+        return image;
+    }
+
+    /**
+     * 面试题 08.11. 硬币
+     * 执行用时 :42 ms, 在所有 Java 提交中击败了71.94%的用户
+     * 内存消耗 :43.7 MB, 在所有 Java 提交中击败了100.00%的用户
+     * */
+    public int waysToChange(int n) {
+        int[] coins = {1, 5, 10, 25};
+        int[] dp = new int[n + 1];
+        dp[0] = 1;
+        for (int coin : coins) {
+            if (n + 1 > coin) {
+                for (int i = coin; i <= n; i++) {
+                    dp[i] = (dp[i] + dp[i - coin]) % 1000000007;
+                }
+            }
+        }
+        return dp[n];
+    }
+
+
     public static void main(String[] args) {
         SolutionVmware solutionVmware = new SolutionVmware();
         String[] strings = {"flower", "flow", "flight"};
@@ -389,8 +518,8 @@ public class SolutionVmware {
         t.right = t2;
         t1.right = t3;
         t2.right = t4;
-        int[][] goAhead = new int[][]{{0}, {0}, {0}};
-        int i = solutionVmware.findRepeatNumber0(arr);
+        int[][] goAhead = new int[][]{{0, 0, 0}, {0, 0, 1}};
+        int i = solutionVmware.waysToChange(5);
         System.out.println(i);
     }
 }
