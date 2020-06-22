@@ -867,6 +867,77 @@ public class SolutionVmware {
     }
 
 
+    /**
+     * 面试题 01.08. 零矩阵
+     * 执行用时：1 ms, 在所有 Java 提交中击败了100.00%的用户
+     * 内存消耗：41.5 MB, 在所有 Java 提交中击败了100.00%的用户
+     */
+    public void setZeroes(int[][] matrix) {
+        int row = matrix.length;
+        if (row == 0) {
+            return;
+        }
+        int col = matrix[0].length;
+        if (col == 0) {
+            return;
+        }
+        ArrayList<int[]> list = new ArrayList<>();
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                if (matrix[i][j] == 0) {
+                    list.add(new int[]{i, j});
+                }
+            }
+        }
+        for (int[] li : list) {
+            int pi = li[0];
+            int pj = li[1];
+            for (int i = 0; i < row; i++) {
+                matrix[i][pj] = 0;
+            }
+            for (int j = 0; j < col; j++) {
+                matrix[pi][j] = 0;
+            }
+        }
+    }
+
+
+    /**
+     * 面试题 01.08. 零矩阵
+     * 执行用时：3 ms, 在所有 Java 提交中击败了19.83%的用户
+     * 内存消耗：41.4 MB, 在所有 Java 提交中击败了100.00%的用户
+     */
+    public void setZeroes0(int[][] matrix) {
+        int row = matrix.length;
+        if (row == 0) {
+            return;
+        }
+        int col = matrix[0].length;
+        if (col == 0) {
+            return;
+        }
+        Set<Integer> rowSet = new HashSet<>();
+        Set<Integer> colSet = new HashSet<>();
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                if (matrix[i][j] == 0) {
+                    rowSet.add(i);
+                    colSet.add(j);
+                }
+            }
+        }
+        for (int ro : rowSet) {
+            for (int j = 0; j < col; j++) {
+                matrix[ro][j] = 0;
+            }
+        }
+        for (int co : colSet) {
+            for (int i = 0; i < row; i++) {
+                matrix[i][co] = 0;
+            }
+        }
+    }
+
     public static void main(String[] args) {
         SolutionVmware solutionVmware = new SolutionVmware();
         String[] strings = {"flower", "flow", "flight"};
@@ -881,10 +952,10 @@ public class SolutionVmware {
         t.right = t2;
         t1.right = t3;
         t2.right = t4;
-        int[][] goAhead = new int[][]{{0, 0, 0}, {0, 0, 1}};
+        int[][] goAhead = new int[][]{{1, 2, 0}, {4, 5, 1}};
         char[] chars = {'d', 'c', 'e', 'a', 'f', 'g', 'b'};
-        String b = solutionVmware.compressString("aabcccs");
-        System.out.println(b);
+        solutionVmware.setZeroes0(goAhead);
+//        System.out.println(b);
         for (char c : chars) {
             System.out.println(c);
         }
