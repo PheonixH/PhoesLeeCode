@@ -609,6 +609,31 @@ public class SolutionVmware {
         quickSortChars(chars, b + 1, end);
     }
 
+    /**
+     * 面试题 01.02. 判定是否互为字符重排
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
+     * 内存消耗：37.5 MB, 在所有 Java 提交中击败了100.00%的用户
+     */
+    public boolean CheckPermutation1(String s1, String s2) {
+        if (s1.length() != s2.length()) {
+            return false;
+        }
+        int[] shorts = new int[128];
+        for (int i = 0; i < s1.length(); i++) {
+            shorts[s1.charAt(i)-32]++;
+            shorts[s2.charAt(i)-32]--;
+        }
+        for (int i = 0; i < 128; i++) {
+            if(shorts[i] != 0){
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+
+
 
     /**
      * 面试题 01.03. URL化
@@ -617,7 +642,7 @@ public class SolutionVmware {
      */
     public String replaceSpaces0(String S, int length) {
         char[] chars = S.toCharArray();
-        StringBuffer stringBuffer = new StringBuffer();
+        StringBuilder stringBuffer = new StringBuilder();
         for (int i = 0; i < length; i++) {
             char c = chars[i];
             if (' ' == c) {
@@ -647,6 +672,65 @@ public class SolutionVmware {
     }
 
 
+    /**
+     * 5. 最长回文子串
+     * 执行用时：165 ms, 在所有 Java 提交中击败了21.65%的用户
+     * 内存消耗：43.2 MB, 在所有 Java 提交中击败了14.28%的用户
+     */
+    public String longestPalindrome(String s) {
+        int n = s.length();
+        boolean[][] dp = new boolean[n][n];
+        String ans = "";
+        // 枚举子串的长度 l+1
+        for (int l = 0; l < n; l++) {
+            //#枚举子串的起始位置 i，这样可以通过 j = i + l 得到子串的结束位置
+            for (int i = 0; i < n; i++) {
+                int j = i + l;
+                if (j >= n) {
+                    break;
+                }
+                if (l == 0) {
+                    dp[i][j] = true;
+                } else if (l == 1) {
+                    dp[i][j] = (s.charAt(i) == s.charAt(j));
+                } else {
+                    dp[i][j] = (dp[i + 1][j - 1] && s.charAt(i) == s.charAt(j));
+                }
+                if (dp[i][j] && l + 1 > ans.length()) {
+                    ans = s.substring(i, j + 1);
+                }
+            }
+        }
+        return ans;
+    }
+
+
+    /**
+     * 面试题 01.04. 回文排列
+     * 执行用时：1 ms, 在所有 Java 提交中击败了73.49%的用户
+     * 内存消耗：37.2 MB, 在所有 Java 提交中击败了100.00%的用户
+     */
+    public boolean canPermutePalindrome(String s) {
+        int n = s.length();
+        Map<Character, Integer> map = new HashMap<>();
+        for (int i = 0; i < n; i++) {
+            char c = s.charAt(i);
+            map.merge(c, 1, Integer::sum);
+        }
+        int num = 0;
+        for (Character key : map.keySet()) {
+            if (map.get(key) % 2 != 0) {
+                num++;
+            }
+        }
+        if (num >= 2) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+
     public static void main(String[] args) {
         SolutionVmware solutionVmware = new SolutionVmware();
         String[] strings = {"flower", "flow", "flight"};
@@ -663,7 +747,7 @@ public class SolutionVmware {
         t2.right = t4;
         int[][] goAhead = new int[][]{{0, 0, 0}, {0, 0, 1}};
         char[] chars = {'d', 'c', 'e', 'a', 'f', 'g', 'b'};
-        boolean b = solutionVmware.CheckPermutation0("aa", "bb");
+        boolean b = solutionVmware.CheckPermutation1("aabc", "bbac");
         System.out.println(b);
         for (char c : chars) {
             System.out.println(c);
