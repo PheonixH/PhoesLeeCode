@@ -1172,10 +1172,47 @@ public class SolutionVmware {
     }
 
 
+    /**
+     * 1481. 不同整数的最少数目
+     * 执行用时：70 ms, 在所有 Java 提交中击败了40.73%的用户
+     * 内存消耗：55.5 MB, 在所有 Java 提交中击败了100.00%的用户
+     */
+    public int findLeastNumOfUniqueInts(int[] arr, int k) {
+        if (arr.length <= k) {
+            return 0;
+        }
+        Map<Integer, Integer> map = new HashMap<>();
+
+        Comparator<int[]> comparator = new Comparator<int[]>() {
+            @Override
+            public int compare(int[] o1, int[] o2) {
+                return (o1[1] - o2[1]);
+            }
+        };
+        PriorityQueue<int[]> queue = new PriorityQueue<int[]>(comparator);
+        for (int i : arr) {
+            if (map.containsKey(i)) {
+                map.put(i, map.get(i) + 1);
+            } else {
+                map.put(i, 1);
+            }
+        }
+        for (int i : map.keySet()) {
+            int j = map.get(i);
+            queue.add(new int[]{i, j});
+        }
+        while (k >= 0) {
+            int[] tmp = queue.poll();
+            k = k - tmp[1];
+        }
+        return queue.size() + 1;
+    }
+
+
     public static void main(String[] args) {
         SolutionVmware solutionVmware = new SolutionVmware();
         String[] strings = {"flower", "flow", "flight"};
-        int[] arr = {3, 4, 5, 6, 1, 1, 2, 0};
+        int[] arr = {3, 3, 1};
         TreeNode t = new TreeNode(3);
         TreeNode t1 = new TreeNode(2);
         TreeNode t2 = new TreeNode(3);
@@ -1188,7 +1225,7 @@ public class SolutionVmware {
         t2.right = t4;
         int[][] goAhead = new int[][]{{1, 2, 7}, {4, 5, 8}, {3, 6, 4, 8, 9}, {2, 5}};
         char[] chars = {'d', 'c', 'e', 'a', 'f', 'g', 'b'};
-        solutionVmware.minDays(arr, 1, 9);
+        solutionVmware.findLeastNumOfUniqueInts(arr, 1);
         for (char c : chars) {
             System.out.println(c);
         }
