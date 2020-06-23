@@ -942,7 +942,7 @@ public class SolutionVmware {
     /**
      * 67. 二进制求和
      * 直接二进制求和
-     * */
+     */
     public String addBinary0(String a, String b) {
         return Integer.toBinaryString(
                 Integer.parseInt(a, 2) + Integer.parseInt(b, 2)
@@ -953,11 +953,11 @@ public class SolutionVmware {
     /**
      * 67. 二进制求和
      * 直接二进制求和
-     * */
+     */
     public String addBinary(String a, String b) {
         StringBuilder ans = new StringBuilder();
         int ca = 0;
-        for(int i = a.length() - 1, j = b.length() - 1;i >= 0 || j >= 0; i--, j--) {
+        for (int i = a.length() - 1, j = b.length() - 1; i >= 0 || j >= 0; i--, j--) {
             int sum = ca;
             sum += i >= 0 ? a.charAt(i) - '0' : 0;
             sum += j >= 0 ? b.charAt(j) - '0' : 0;
@@ -967,6 +967,160 @@ public class SolutionVmware {
         ans.append(ca == 1 ? ca : "");
         return ans.reverse().toString();
     }
+
+
+    /**
+     * 223. 矩形面积
+     * 执行用时：3 ms, 在所有 Java 提交中击败了98.73%的用户
+     * 内存消耗：39.2 MB, 在所有 Java 提交中击败了25.00%的用户
+     */
+    public int computeArea(int A, int B, int C, int D, int E, int F, int G, int H) {
+        //计算重叠面积
+        int overArea = 0;
+        if (Math.min(C, G) > Math.max(A, E) && Math.min(D, H) > Math.max(B, F)) {
+            //x轴（有可能是负数）：Math.min(C,G) - Math.max(A,E)
+            //y轴（有可能是负数）：Math.min(D,H) - Math.max(B,F)
+            //最后结果取绝对值
+            overArea = Math.abs((Math.min(C, G) - Math.max(A, E)) *
+                    (Math.min(D, H) - Math.max(B, F)));
+        }
+        //第一个矩阵面积
+        int firstRecArea = Math.abs((C - A) * (D - B));
+
+        //第二个矩阵面积
+        int secondRecArea = Math.abs((G - E) * (H - F));
+
+        //最终的面积=第一个矩阵面积+第二个矩阵面积-重叠面积
+        return firstRecArea + secondRecArea - overArea;
+    }
+
+
+    /**
+     * 815. 公交路线
+     * 执行用时：42 ms, 在所有 Java 提交中击败了66.04%的用户
+     * 内存消耗：80.6 MB, 在所有 Java 提交中击败了100.00%的用户
+     */
+    public int numBusesToDestination0(int[][] routes, int S, int T) {
+        if (S == T) {
+            return 0;
+        }
+        //这里用list存会超时
+        Map<Integer, Set<Integer>> posMap = new HashMap<>();
+        for (int i = 0; i < routes.length; i++) {
+            for (int k : routes[i]) {
+                if (!posMap.containsKey(k)) {
+                    posMap.put(k, new HashSet<Integer>());
+                }
+                posMap.get(k).add(i);
+            }
+        }
+        boolean[] visited = new boolean[routes.length];
+        Deque<Integer> queue = new ArrayDeque<>();
+        queue.addAll(posMap.get(S)); // 加入所有车信息
+        for (int k : posMap.get(S)) {
+            visited[k] = true;
+        }
+        int res = 1;
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            for (int i = 0; i < size; i++) {
+                int bus = queue.poll();
+                for (int k : routes[bus]) { // 当前车经过的站
+                    if (k == T) {
+                        return res;
+                    }
+                    for (int busindex : posMap.get(k)) {
+                        if (visited[busindex]) {
+                            continue;
+                        }
+                        queue.add(busindex);
+                        visited[busindex] = true;
+                    }
+                }
+            }
+            res++;
+        }
+        return -1;
+    }
+
+
+    /**
+     * 815. 公交路线
+     * 执行用时：314 ms, 在所有 Java 提交中击败了26.41%的用户
+     * 内存消耗：49.3 MB, 在所有 Java 提交中击败了100.00%的用户
+     */
+    public int numBusesToDestination(int[][] routes, int S, int T) {
+        Set<Integer> start = null;
+        Set<Integer> end = null;
+
+        // 用List构建图上的节点关系，用Set存放一个路线（一个节点）
+        List<Set<Integer>> routeList = new LinkedList<>();
+        for (int i = 0; i < routes.length; i++) {
+            HashSet s = new HashSet<Integer>();
+            for (int j = 0; j < routes[i].length; j++) {
+                s.add(routes[i][j]);
+            }
+            if (s.contains(S)) {
+                if (s.contains(T)) {
+                    return S == T ? 0 : 1;
+                }
+                if (start == null) {
+                    start = s;
+                } else {
+                    start.addAll(s);
+                }
+            } else if (s.contains(T)) {
+                if (end == null) {
+                    end = s;
+                    routeList.add(s);
+                } else {
+                    end.addAll(s);
+                }
+            } else {
+                routeList.add(s);
+            }
+        }
+        // 快速返回
+        if (start == null || end == null) {
+            return -1;
+        }
+
+        // 直接将BFS的每一步的所有节点合并成一个大Set(不用队列)，简化分层查找
+        int ret = 1;
+        Set<Integer> lastLevel = start;
+        while (!lastLevel.isEmpty()) {
+            ret++;
+            Iterator<Set<Integer>> iter = routeList.iterator();
+            Set<Integer> curLevel = new HashSet<>();
+            while (iter.hasNext()) {
+                Set<Integer> ss = iter.next();
+                if (ss.size() == 0) {
+                    iter.remove();
+                    continue;
+                }
+                // 去掉交集(交集部分都在本层可以下车)
+                Set<Integer> r = removeBfromA(ss, lastLevel);
+                if (r.contains(T)) {
+                    return ret;
+                }
+                curLevel.addAll(r);
+            }
+            // 去下一层找剩余部分的交集
+            lastLevel = curLevel;
+        }
+
+        return -1;
+    }
+
+    private Set<Integer> removeBfromA(Set<Integer> a, Set<Integer> b) {
+        int len = a.size();
+        a.removeAll(b);
+        if (a.size() == len) {
+            return new HashSet<Integer>();
+        }
+        return a;
+    }
+
 
     public static void main(String[] args) {
         SolutionVmware solutionVmware = new SolutionVmware();
@@ -982,10 +1136,9 @@ public class SolutionVmware {
         t.right = t2;
         t1.right = t3;
         t2.right = t4;
-        int[][] goAhead = new int[][]{{1, 2, 0}, {4, 5, 1}};
+        int[][] goAhead = new int[][]{{1, 2, 7}, {4, 5, 8}, {3, 6, 4, 8, 9}, {2, 5}};
         char[] chars = {'d', 'c', 'e', 'a', 'f', 'g', 'b'};
-        solutionVmware.addBinary("1000101", "101101");
-//        System.out.println(b);
+        solutionVmware.numBusesToDestination(goAhead, 1, 9);
         for (char c : chars) {
             System.out.println(c);
         }
