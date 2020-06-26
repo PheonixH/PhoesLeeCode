@@ -2103,6 +2103,17 @@ public class Solution {
         return p.val;
     }
 
+
+    /**
+     * 面试题 02.03. 删除中间节点
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
+     * 内存消耗：39.3 MB, 在所有 Java 提交中击败了100.00%的用户
+     * */
+    public void deleteNode(ListNode node) {
+        node.val = node.next.val;
+        node.next = node.next.next;
+    }
+
     public static void main(String[] args) {
         Solution solution = new Solution();
         ListNode p = new ListNode(1);
