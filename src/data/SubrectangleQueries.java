@@ -1,6 +1,8 @@
+package data;
+
 /**
  * @program: PhoesLeeCode
- * @className: SubrectangleQueries
+ * @className: data.SubrectangleQueries
  * @description:
  * @author: lov.moran
  * @date 2020/6/13 下午10:47
