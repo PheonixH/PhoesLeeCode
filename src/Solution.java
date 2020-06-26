@@ -2083,6 +2083,26 @@ public class Solution {
         return head;
     }
 
+
+    /**
+     * 面试题 02.02. 返回倒数第 k 个节点
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
+     * 内存消耗：37.4 MB, 在所有 Java 提交中击败了100.00%的用户
+     */
+    public int kthToLast(ListNode head, int k) {
+        ListNode q = head;
+        while (k > 0) {
+            q = q.next;
+            k--;
+        }
+        ListNode p = head;
+        while (q != null) {
+            p = p.next;
+            q = q.next;
+        }
+        return p.val;
+    }
+
     public static void main(String[] args) {
         Solution solution = new Solution();
         ListNode p = new ListNode(1);
