@@ -2057,16 +2057,42 @@ public class Solution {
         return result;
     }
 
+
+    /**
+     * 面试题 02.01. 移除重复节点
+     * 执行用时：5 ms, 在所有 Java 提交中击败了91.68%的用户
+     * 内存消耗：41.4 MB, 在所有 Java 提交中击败了100.00%的用户
+     */
+    public ListNode removeDuplicateNodes(ListNode head) {
+        if (head == null) {
+            return head;
+        }
+        Set<Integer> set = new HashSet<>();
+        ListNode p = head;
+        set.add(p.val);
+        ListNode q = head.next;
+        while (q != null) {
+            if (set.add(q.val)) {
+                p = p.next;
+                q = q.next;
+            } else {
+                q = q.next;
+                p.next = q;
+            }
+        }
+        return head;
+    }
+
     public static void main(String[] args) {
         Solution solution = new Solution();
         ListNode p = new ListNode(1);
         ListNode p1 = new ListNode(2);
-        ListNode p2 = new ListNode(3);
+        ListNode p2 = new ListNode(2);
         ListNode p3 = new ListNode(4);
         ListNode p4 = new ListNode(5);
-        ListNode p5 = new ListNode(6);
-        ListNode p6 = new ListNode(7);
-        ListNode p7 = new ListNode(8);
+        ListNode p5 = new ListNode(3);
+        ListNode p6 = new ListNode(2);
+        ListNode p7 = new ListNode(1);
         p.next = p1;
         p1.next = p2;
         p2.next = p3;
@@ -2074,7 +2100,7 @@ public class Solution {
         p4.next = p5;
         p5.next = p6;
         p6.next = p7;
-        p7.next = p2;
+
         TreeNode t = new TreeNode(3);
         TreeNode t1 = new TreeNode(2);
         TreeNode t2 = new TreeNode(3);
@@ -2113,7 +2139,7 @@ public class Solution {
                 {'A', 'D', 'E', 'E'}
         };
         char[][] boards = {};
-        System.out.print(solution.minAreaFreeRect(crr));
+        System.out.print(solution.removeDuplicateNodes(p));
     }
 
 }
