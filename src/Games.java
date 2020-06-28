@@ -240,7 +240,7 @@ public class Games {
     /**
      * 2018.Dec.30 - 第117周赛 - 年终巅峰对决
      * 965
-     * */
+     */
     public boolean isUnivalTree(TreeNode root) {
         if (root == null) {
             return false;
@@ -396,7 +396,7 @@ public class Games {
      * 373
      * 执行用时 :21 ms, 在所有 Java 提交中击败了57.51%的用户
      * 内存消耗 :40.2 MB, 在所有 Java 提交中击败了75.00%的用户
-    */
+     */
     public List<List<Integer>> kSmallestPairs(int[] nums1, int[] nums2, int k) {
         List<List<Integer>> res = new ArrayList<>();
         k = Math.min(k, nums1.length * nums2.length); //注意k的取值
@@ -804,6 +804,123 @@ public class Games {
     }
 
 
+    public boolean isPathCrossing(String path) {
+        int x = 0, y = 0;
+        Set<String> arrived = new HashSet<>();
+        String begin = x + "," + y;
+        arrived.add(begin);
+        for (char p : path.toCharArray()) {
+            //'N'、'S'、'E' 或者 'W'
+            if (p == 'N') {
+                y++;
+            } else if (p == 'S') {
+                y--;
+            } else if (p == 'E') {
+                x++;
+            } else {
+                x--;
+            }
+            String newPoint = x + "," + y;
+            if (!arrived.add(newPoint)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    public boolean canArrange(int[] arr, int k) {
+        if (arr.length % 2 != 0) {
+            return false;
+        }
+        int[] brr = new int[k];
+        for (int a : arr) {
+            int tmp = a % k;
+            if (tmp >= 0) {
+                brr[tmp]++;
+            } else {
+                brr[tmp + k]++;
+            }
+        }
+        for (int i = 1; i < k - i; i++) {
+            if (brr[i] != brr[k - i]) {
+                return false;
+            }
+        }
+        if (k % 2 == 0) {
+            if (brr[k / 2] % 2 != 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public int findMaxValueOfEquation0(int[][] points, int k) {
+        int max = Integer.MIN_VALUE;
+        for (int i = 0; i < points.length; i++) {
+            int[] pointI = points[i];
+            for (int j = i + 1; j < points.length; j++) {
+                int[] pointJ = points[j];
+                if (pointJ[0] - pointI[0] > k) {
+                    break;
+                }
+                int tmp = pointI[1] + pointJ[1] + pointJ[0] - pointI[0];
+                max = Math.max(max, tmp);
+            }
+        }
+        return max;
+    }
+
+    public int findMaxValueOfEquation(int[][] points, int k) {
+        int[] arrI = new int[points.length];
+        int[] arrJ = new int[points.length];
+        int[] dp = new int[points.length];
+        for (int i = 0; i < points.length; i++) {
+            arrI[i] = points[i][1] - points[i][0];
+            arrJ[i] = points[i][1] + points[i][0];
+        }
+        int jmax = -1;
+        int imax = points[0][0] + k;
+        int max = Integer.MIN_VALUE;
+        for (int ii = 0; ii < points.length; ii++) {
+            if (jmax == -1 || jmax == ii) {
+                int tmpMax = Integer.MIN_VALUE;
+                for (int j = ii + 1; j < points.length; j++) {
+                    if (ii == j) {
+                        continue;
+                    }
+                    if (points[j][0] - points[ii][0] > k) {
+                        break;
+                    }
+                    if (arrJ[j] > tmpMax) {
+                        jmax = j;
+                    }
+                    imax = j;
+                }
+                if (jmax != -1) {
+                    max = Math.max(arrI[ii] + arrJ[jmax], max);
+                }
+            } else {
+                for (int j = imax + 1; j < points.length; j++) {
+                    if (ii == j) {
+                        continue;
+                    }
+                    if (points[j][0] - points[ii][0] > k) {
+                        break;
+                    }
+                    if (arrJ[j] > arrJ[jmax]) {
+                        jmax = j;
+                    }
+                    imax = j;
+                }
+                if (jmax != -1) {
+                    max = Math.max(arrI[ii] + arrJ[jmax], max);
+                }
+            }
+        }
+        return max;
+    }
+
     public static void main(String[] args) {
         Games games = new Games();
         List<List<String>> or = new ArrayList<>();
@@ -834,7 +951,11 @@ public class Games {
         or.add(or5);
         List<List<String>> q = games.displayTable(or);
         String p = games.reformat("12hhhhh34");
-        System.out.println(p + q.size());
+        int[][] arr = {{1, 3}, {2, 0}, {5, 10}, {6, -10}};
+        int[] brr = {};
+        boolean f = games.canArrange(brr, 2);
+        System.out.println(f);
+//        System.out.println(p + q.size());
 
     }
 }
