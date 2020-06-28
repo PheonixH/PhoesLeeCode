@@ -1208,6 +1208,66 @@ public class SolutionVmware {
         return queue.size() + 1;
     }
 
+    /**
+     * 209. 长度最小的子数组
+     * 时间复杂度O(n×log(n))
+     * 执行用时：4 ms, 在所有 Java 提交中击败了23.26%的用户
+     * 内存消耗：39.9 MB, 在所有 Java 提交中击败了6.67%的用户
+     */
+    public int minSubArrayLen(int s, int[] nums) {
+        int n = nums.length;
+        if (n == 0) {
+            return 0;
+        }
+        int ans = Integer.MAX_VALUE;
+        int[] sums = new int[n + 1];
+        // 为了方便计算，令 size = n + 1
+        // sums[0] = 0 意味着前 0 个元素的前缀和为 0
+        // sums[1] = A[0] 前 1 个元素的前缀和为 A[0]
+        // 以此类推
+        for (int i = 1; i <= n; i++) {
+            sums[i] = sums[i - 1] + nums[i - 1];
+        }
+        for (int i = 1; i <= n; i++) {
+            int target = s + sums[i - 1];
+            int bound = Arrays.binarySearch(sums, target);
+            if (bound < 0) {
+                bound = -bound - 1;
+            }
+            if (bound <= n) {
+                ans = Math.min(ans, bound - (i - 1));
+            }
+        }
+        return ans == Integer.MAX_VALUE ? 0 : ans;
+    }
+
+
+    /**
+     * 209. 长度最小的子数组
+     * 时间复杂度O(n)
+     * 执行用时：2 ms, 在所有 Java 提交中击败了83.23%的用户
+     * 内存消耗：40 MB, 在所有 Java 提交中击败了6.67%的用户
+     */
+    public int minSubArrayLen0(int s, int[] nums) {
+        int n = nums.length;
+        if (n == 0) {
+            return 0;
+        }
+        int ans = Integer.MAX_VALUE;
+        int start = 0, end = 0;
+        int sum = 0;
+        while (end < n) {
+            sum += nums[end];
+            while (sum >= s) {
+                ans = Math.min(ans, end - start + 1);
+                sum -= nums[start];
+                start++;
+            }
+            end++;
+        }
+        return ans == Integer.MAX_VALUE ? 0 : ans;
+    }
+
 
     public static void main(String[] args) {
         SolutionVmware solutionVmware = new SolutionVmware();
@@ -1225,7 +1285,8 @@ public class SolutionVmware {
         t2.right = t4;
         int[][] goAhead = new int[][]{{1, 2, 7}, {4, 5, 8}, {3, 6, 4, 8, 9}, {2, 5}};
         char[] chars = {'d', 'c', 'e', 'a', 'f', 'g', 'b'};
-        solutionVmware.findLeastNumOfUniqueInts(arr, 1);
+        int[] brr = {1, 3, 5, 4, 9, 12, 5, 8, 4, 4};
+        solutionVmware.minSubArrayLen(10, brr);
         for (char c : chars) {
             System.out.println(c);
         }
