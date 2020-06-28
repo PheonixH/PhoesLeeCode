@@ -1268,6 +1268,108 @@ public class SolutionVmware {
         return ans == Integer.MAX_VALUE ? 0 : ans;
     }
 
+    /**
+     * 210. 课程表 II
+     * 执行用时：9 ms, 在所有 Java 提交中击败了55.80%的用户
+     * 内存消耗：41.2 MB, 在所有 Java 提交中击败了93.33%的用户
+     */
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        Map<Integer, List<Integer>> map = new HashMap<>();
+        for (int[] course : prerequisites) {
+            int dest = course[1];
+            int src = course[0];
+            List<Integer> lst = map.getOrDefault(src, new ArrayList<>());
+            lst.add(dest);
+            map.put(src, lst);
+        }
+
+        int[] visited = new int[numCourses];
+        List<Integer> ans = new ArrayList<>();
+        for (int i = 0; i < numCourses; i++) {
+            if (!dfs(i, map, visited, ans)) {
+                return new int[0];
+            }
+        }
+        return ans.stream().mapToInt(Integer::intValue).toArray();
+    }
+
+    /**
+     * node: 当前节点
+     * map: 图
+     * visited: 0表示未访问, 1表示访问中, 2表示访问完成
+     * ans: 储存拓扑排序结果
+     * return: 是否无环
+     */
+    private boolean dfs(int node, Map<Integer, List<Integer>> map, int[] visited, List<Integer> ans) {
+        // 已访问
+        if (visited[node] == 2) {
+            return true;
+        }
+        // 发现环
+        if (visited[node] == 1) {
+            return false;
+        }
+        // 标记访问
+        visited[node] = 1;
+        // 无出节点, 加入答案，并标记访问完成
+        if (!map.containsKey(node)) {
+            ans.add(node);
+            visited[node] = 2;
+            return true;
+        }
+        // 遍历出节点
+        List<Integer> neighbour = map.get(node);
+        for (int nei : neighbour) {
+            if (!dfs(nei, map, visited, ans)) {
+                return false;
+            }
+        }
+        // 当前节点访问完成
+        visited[node] = 2;
+        ans.add(node);
+        return true;
+    }
+
+
+    public int[] findOrder0(int numCourses, int[][] prerequisites) {
+        //受课程影响的后续课程
+        int[] after = new int[numCourses];
+        //课程的前置课程
+        int[] before = new int[numCourses];
+        for (int[] pre : prerequisites) {
+            int a = pre[0];
+            int b = pre[1];
+            after[b] += 1 << a;
+            before[a] += 1 << b;
+        }
+        //已经上过的课程数量
+        int have = 0;
+        int[] res = new int[numCourses];
+        while (have != numCourses) {
+            boolean flag = false;
+            for (int i = 0; i < numCourses; i++) {
+                if (before[i] == 0) {
+                    flag = true;
+                    before[i] = -1;
+                    res[have++] = i;
+                    int tmp = after[i];
+                    int t = 0;
+                    while (tmp != 0) {
+                        if (tmp % 2 == 1) {
+                            before[t] = before[t] - (1 << i);
+                        }
+                        tmp = tmp >> 1;
+                        t++;
+                    }
+                }
+            }
+            if (!flag) {
+                return new int[]{};
+            }
+        }
+        return res;
+    }
+
 
     public static void main(String[] args) {
         SolutionVmware solutionVmware = new SolutionVmware();
@@ -1283,12 +1385,12 @@ public class SolutionVmware {
         t.right = t2;
         t1.right = t3;
         t2.right = t4;
-        int[][] goAhead = new int[][]{{1, 2, 7}, {4, 5, 8}, {3, 6, 4, 8, 9}, {2, 5}};
+        int[][] goAhead = new int[][]{{1, 2}, {4, 5}, {3, 4}, {2, 5}, {0, 1}};
         char[] chars = {'d', 'c', 'e', 'a', 'f', 'g', 'b'};
         int[] brr = {1, 3, 5, 4, 9, 12, 5, 8, 4, 4};
-        solutionVmware.minSubArrayLen(10, brr);
-        for (char c : chars) {
-            System.out.println(c);
+        brr = solutionVmware.findOrder(6, goAhead);
+        for (int b : brr) {
+            System.out.println(b);
         }
     }
 }
