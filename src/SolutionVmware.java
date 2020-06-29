@@ -1381,6 +1381,16 @@ public class SolutionVmware {
         return nums[nums.length - k];
     }
 
+
+    /**
+     * 1227. 飞机座位分配概率
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
+     * 内存消耗：36.6 MB, 在所有 Java 提交中击败了25.00%的用户
+     */
+    public double nthPersonGetsNthSeat(int n) {
+        return n == 1 ? 1 : 0.5;
+    }
+
     public static void main(String[] args) {
         SolutionVmware solutionVmware = new SolutionVmware();
         String[] strings = {"flower", "flow", "flight"};
