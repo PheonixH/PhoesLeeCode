@@ -1391,6 +1391,26 @@ public class SolutionVmware {
         return n == 1 ? 1 : 0.5;
     }
 
+
+    /**
+     * 面试题 17.01. 不用加号的加法
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
+     * 内存消耗：36.4 MB, 在所有 Java 提交中击败了100.00%的用户
+     * @param a
+     * @param b
+     * @return
+     */
+    public int add(int a, int b) {
+        while (b != 0) {
+            int sum = (a ^ b);
+            int carry = (a & b) << 1;
+            a = sum;
+            b = carry;
+        }
+
+        return a;
+    }
+
     public static void main(String[] args) {
         SolutionVmware solutionVmware = new SolutionVmware();
         String[] strings = {"flower", "flow", "flight"};
