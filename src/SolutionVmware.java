@@ -1371,6 +1371,16 @@ public class SolutionVmware {
     }
 
 
+    /**
+     * 215. 数组中的第K个最大元素
+     * 执行用时：2 ms, 在所有 Java 提交中击败了92.63%的用户
+     * 内存消耗：39.8 MB, 在所有 Java 提交中击败了6.12%的用户
+     */
+    public int findKthLargest(int[] nums, int k) {
+        Arrays.sort(nums);
+        return nums[nums.length - k];
+    }
+
     public static void main(String[] args) {
         SolutionVmware solutionVmware = new SolutionVmware();
         String[] strings = {"flower", "flow", "flight"};
