@@ -1396,6 +1396,7 @@ public class SolutionVmware {
      * 面试题 17.01. 不用加号的加法
      * 执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
      * 内存消耗：36.4 MB, 在所有 Java 提交中击败了100.00%的用户
+     *
      * @param a
      * @param b
      * @return
@@ -1410,6 +1411,65 @@ public class SolutionVmware {
 
         return a;
     }
+
+    /**
+     * 923. 三数之和的多种可能
+     * 执行用时：22 ms, 在所有 Java 提交中击败了56.94%的用户
+     * 内存消耗：39.5 MB, 在所有 Java 提交中击败了100.00%的用户
+     * @param A
+     * @param target
+     * @return
+     */
+    public int threeSumMulti(int[] A, int target) {
+        Map<Integer, Integer> counts = new HashMap<>();
+        for (int num : A) {
+            counts.putIfAbsent(num, 0);
+            counts.put(num, counts.get(num) + 1);
+        }
+        long res = 0;
+        int[] nums = counts.keySet().stream().mapToInt(integer -> integer).toArray();
+        Arrays.sort(nums);
+        for (int i = 0; i < nums.length; i++) {
+            for (int j = i; j < nums.length; j++) {
+                int value = target - nums[i] - nums[j];
+                if (value < nums[j]) {
+                    break;
+                }
+                if (counts.get(value) == null) {
+                    continue;
+                }
+                long a = counts.get(nums[i]);
+                long b = counts.get(nums[j]);
+                long c = counts.get(value);
+                if (nums[i] == nums[j] && nums[j] == value) {
+                    res += getCni(a, 3);
+                } else if (nums[i] == nums[j]) {
+                    res += getCni(a, 2) * c;
+                } else if (nums[j] == value) {
+                    res += getCni(b, 2) * a;
+                } else {
+                    res += a * b * c;
+                }
+                res = res % 1000000007;
+            }
+        }
+        return (int) res;
+    }
+
+    // 排列组合计算NCi
+    private long getCni(long n, int i) {
+        if (i > n) {
+            return 0;
+        }
+        long left = n;
+        int right = 1;
+        long value = 1;
+        for (int j = 0; j < i; j++) {
+            value = value * (left--) / (right++);
+        }
+        return value;
+    }
+
 
     public static void main(String[] args) {
         SolutionVmware solutionVmware = new SolutionVmware();
