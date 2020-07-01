@@ -1476,6 +1476,7 @@ public class SolutionVmware {
      * 面试题 04.01. 节点间通路
      * 执行用时：59 ms, 在所有 Java 提交中击败了10.22%的用户
      * 内存消耗：85.5 MB, 在所有 Java 提交中击败了100.00%的用户
+     *
      * @param n
      * @param graph
      * @param start
@@ -1504,7 +1505,7 @@ public class SolutionVmware {
         stack.push(start);
         while (!stack.isEmpty()) {
             int tmp = stack.pop();
-            if(!map.containsKey(tmp)){
+            if (!map.containsKey(tmp)) {
                 continue;
             }
             for (int t : map.get(tmp)) {
@@ -1519,6 +1520,28 @@ public class SolutionVmware {
         return false;
     }
 
+
+    /**
+     * 面试题 04.02. 最小高度树
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
+     * 内存消耗：40 MB, 在所有 Java 提交中击败了100.00%的用户
+     * @param nums
+     * @return
+     */
+    public TreeNode sortedArrayToBST(int[] nums) {
+        return sortedArrayToBSTHelp(nums, 0, nums.length - 1);
+    }
+
+    public TreeNode sortedArrayToBSTHelp(int[] nums, int b, int e) {
+        if (b > e) {
+            return null;
+        }
+        int t = (b + e + 1) / 2;
+        TreeNode root = new TreeNode(nums[t]);
+        root.left = sortedArrayToBSTHelp(nums, b, t - 1);
+        root.right = sortedArrayToBSTHelp(nums, t + 1, e);
+        return root;
+    }
 
     public static void main(String[] args) {
         SolutionVmware solutionVmware = new SolutionVmware();
@@ -1538,8 +1561,8 @@ public class SolutionVmware {
                 {2, 9}, {2, 10}, {2, 4}, {2, 5}, {2, 10}, {3, 7}, {3, 7}, {4, 5}, {4, 11}, {4, 11}, {4, 10},
                 {5, 7}, {5, 10}, {6, 8}, {7, 11}, {8, 10}};
         char[] chars = {'d', 'c', 'e', 'a', 'f', 'g', 'b'};
-        int[] brr = {1, 3, 5, 4, 9, 12, 5, 8, 4, 4};
-        boolean f = solutionVmware.findWhetherExistsPath(12, goAhead, 2, 3);
+        int[] brr = {-10, -3, 0, 5, 9};
+        TreeNode f = solutionVmware.sortedArrayToBST(brr);
         System.out.println(f);
     }
 }
