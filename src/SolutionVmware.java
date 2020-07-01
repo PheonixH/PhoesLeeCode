@@ -1416,6 +1416,7 @@ public class SolutionVmware {
      * 923. 三数之和的多种可能
      * 执行用时：22 ms, 在所有 Java 提交中击败了56.94%的用户
      * 内存消耗：39.5 MB, 在所有 Java 提交中击败了100.00%的用户
+     *
      * @param A
      * @param target
      * @return
@@ -1471,6 +1472,54 @@ public class SolutionVmware {
     }
 
 
+    /**
+     * 面试题 04.01. 节点间通路
+     * 执行用时：59 ms, 在所有 Java 提交中击败了10.22%的用户
+     * 内存消耗：85.5 MB, 在所有 Java 提交中击败了100.00%的用户
+     * @param n
+     * @param graph
+     * @param start
+     * @param target
+     * @return
+     */
+    public boolean findWhetherExistsPath(int n, int[][] graph, int start, int target) {
+        Map<Integer, List<Integer>> map = new HashMap<>();
+        for (int[] g : graph) {
+            if (map.containsKey(g[0])) {
+                List<Integer> list = map.get(g[0]);
+                list.add(g[1]);
+                map.put(g[0], list);
+            } else {
+                List<Integer> list = new LinkedList<>();
+                list.add(g[1]);
+                map.put(g[0], list);
+            }
+        }
+        if (!map.containsKey(start)) {
+            return false;
+        }
+        Set<Integer> set = new HashSet<>();
+        set.add(start);
+        Stack<Integer> stack = new Stack<>();
+        stack.push(start);
+        while (!stack.isEmpty()) {
+            int tmp = stack.pop();
+            if(!map.containsKey(tmp)){
+                continue;
+            }
+            for (int t : map.get(tmp)) {
+                if (t == target) {
+                    return true;
+                } else if (!set.contains(t)) {
+                    set.add(t);
+                    stack.push(t);
+                }
+            }
+        }
+        return false;
+    }
+
+
     public static void main(String[] args) {
         SolutionVmware solutionVmware = new SolutionVmware();
         String[] strings = {"flower", "flow", "flight"};
@@ -1485,12 +1534,12 @@ public class SolutionVmware {
         t.right = t2;
         t1.right = t3;
         t2.right = t4;
-        int[][] goAhead = new int[][]{{1, 2}, {4, 5}, {3, 4}, {2, 5}, {0, 1}};
+        int[][] goAhead = new int[][]{{0, 1}, {1, 2}, {1, 3}, {1, 10}, {1, 11}, {1, 4}, {2, 4}, {2, 6},
+                {2, 9}, {2, 10}, {2, 4}, {2, 5}, {2, 10}, {3, 7}, {3, 7}, {4, 5}, {4, 11}, {4, 11}, {4, 10},
+                {5, 7}, {5, 10}, {6, 8}, {7, 11}, {8, 10}};
         char[] chars = {'d', 'c', 'e', 'a', 'f', 'g', 'b'};
         int[] brr = {1, 3, 5, 4, 9, 12, 5, 8, 4, 4};
-        brr = solutionVmware.findOrder(6, goAhead);
-        for (int b : brr) {
-            System.out.println(b);
-        }
+        boolean f = solutionVmware.findWhetherExistsPath(12, goAhead, 2, 3);
+        System.out.println(f);
     }
 }
