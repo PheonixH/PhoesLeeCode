@@ -1550,6 +1550,7 @@ public class SolutionVmware {
      * 面试题 04.03. 特定深度节点链表
      * 执行用时：1 ms, 在所有 Java 提交中击败了98.71%的用户
      * 内存消耗：38.3 MB, 在所有 Java 提交中击败了100.00%的用户
+     *
      * @param tree
      * @return
      */
@@ -1589,6 +1590,29 @@ public class SolutionVmware {
             res[j++] = p;
         }
         return res;
+    }
+
+    /**
+     * 剑指 Offer 10- II. 青蛙跳台阶问题
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
+     * 内存消耗：36.3 MB, 在所有 Java 提交中击败了100.00%的用户
+     * @param n
+     * @return
+     */
+    public int numWays(int n) {
+        if (n == 0) {
+            return 1;
+        }
+        if (n <= 2) {
+            return n;
+        }
+        int[] dp = new int[n];
+        dp[0] = 1;
+        dp[1] = 2;
+        for (int i = 2; i < n; i++) {
+            dp[i] = (dp[i - 1] + dp[i - 2]) % 1000000007;
+        }
+        return dp[n - 1];
     }
 
     public static void main(String[] args) {
