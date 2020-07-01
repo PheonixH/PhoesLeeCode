@@ -1,4 +1,6 @@
+import data.ListNode;
 import data.TreeNode;
+import sun.misc.Queue;
 
 import java.util.*;
 
@@ -1525,6 +1527,7 @@ public class SolutionVmware {
      * 面试题 04.02. 最小高度树
      * 执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
      * 内存消耗：40 MB, 在所有 Java 提交中击败了100.00%的用户
+     *
      * @param nums
      * @return
      */
@@ -1541,6 +1544,51 @@ public class SolutionVmware {
         root.left = sortedArrayToBSTHelp(nums, b, t - 1);
         root.right = sortedArrayToBSTHelp(nums, t + 1, e);
         return root;
+    }
+
+    /**
+     * 面试题 04.03. 特定深度节点链表
+     * 执行用时：1 ms, 在所有 Java 提交中击败了98.71%的用户
+     * 内存消耗：38.3 MB, 在所有 Java 提交中击败了100.00%的用户
+     * @param tree
+     * @return
+     */
+    public ListNode[] listOfDepth(TreeNode tree) {
+        if (tree == null) {
+            return new ListNode[]{};
+        }
+        List<List<Integer>> list = new ArrayList<>();
+        Deque<TreeNode> queue = new LinkedList<>();
+        queue.push(tree);
+        while (!queue.isEmpty()) {
+            Deque<TreeNode> q = new LinkedList<>();
+            List<Integer> li = new ArrayList<>();
+            while (!queue.isEmpty()) {
+                TreeNode t = queue.pollFirst();
+                if (t.left != null) {
+                    q.addLast(t.left);
+                }
+                if (t.right != null) {
+                    q.addLast(t.right);
+                }
+                li.add(t.val);
+            }
+            list.add(li);
+            queue = q;
+        }
+        ListNode[] res = new ListNode[list.size()];
+        int j = 0;
+        for (List<Integer> li : list) {
+            ListNode p = new ListNode(li.get(0));
+            ListNode t = p;
+            for (int i = 1; i < li.size(); i++) {
+                ListNode pp = new ListNode(li.get(i));
+                t.next = pp;
+                t = pp;
+            }
+            res[j++] = p;
+        }
+        return res;
     }
 
     public static void main(String[] args) {
@@ -1562,7 +1610,7 @@ public class SolutionVmware {
                 {5, 7}, {5, 10}, {6, 8}, {7, 11}, {8, 10}};
         char[] chars = {'d', 'c', 'e', 'a', 'f', 'g', 'b'};
         int[] brr = {-10, -3, 0, 5, 9};
-        TreeNode f = solutionVmware.sortedArrayToBST(brr);
+        ListNode[] f = solutionVmware.listOfDepth(t);
         System.out.println(f);
     }
 }
