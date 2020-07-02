@@ -1694,9 +1694,8 @@ public class SolutionVmware {
      * HashMap()
      * 执行用时：24 ms, 在所有 Java 提交中击败了7.43%的用户
      * 内存消耗：45.1 MB, 在所有 Java 提交中击败了100.00%的用户
-     *
-     * @param nums
-     * @return
+     * @param nums 原始数组
+     * @return 数组中的主要元素
      */
     public int majorityElement0(int[] nums) {
         Map<Integer, Integer> map = new HashMap<>();
@@ -1719,9 +1718,8 @@ public class SolutionVmware {
      * 摩尔投票
      * 执行用时：1 ms, 在所有 Java 提交中击败了100.00%的用户
      * 内存消耗：42.8 MB, 在所有 Java 提交中击败了100.00%的用户
-     *
-     * @param nums
-     * @return
+     * @param nums 原始数组
+     * @return 数组中的主要元素
      */
     public int majorityElement1(int[] nums) {
         int key = nums[0];
@@ -1753,8 +1751,8 @@ public class SolutionVmware {
      * 位运算
      * 执行用时：6 ms, 在所有 Java 提交中击败了30.46%的用户
      * 内存消耗：42.9 MB, 在所有 Java 提交中击败了100.00%的用户
-     * @param nums
-     * @return
+     * @param nums 原始数组
+     * @return 数组中的主要元素
      */
     public int majorityElement2(int[] nums) {
         int ans = 0;
@@ -1762,9 +1760,9 @@ public class SolutionVmware {
         //统计每位数字的第i位二进制
         for (int i = 0; i < 32; i++) {
             int cnt = 0;
-            for (int j = 0; j < n; j++) {
+            for (int num : nums) {
                 //如果第i位为1
-                if ((nums[j] & (1 << i)) != 0) {
+                if ((num & (1 << i)) != 0) {
                     cnt++;
                 }
             }
