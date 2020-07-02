@@ -1620,6 +1620,7 @@ public class SolutionVmware {
      * 378. 有序矩阵中第K小的元素
      * 执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
      * 内存消耗：45.5 MB, 在所有 Java 提交中击败了7.69%的用户
+     *
      * @param matrix
      * @param k
      * @return
@@ -1658,6 +1659,7 @@ public class SolutionVmware {
      * 378. 有序矩阵中第K小的元素
      * 执行用时：2 ms, 在所有 Java 提交中击败了62.67%的用户
      * 内存消耗：45.4 MB, 在所有 Java 提交中击败了7.69%的用户
+     *
      * @param matrix
      * @param k
      * @return
@@ -1686,6 +1688,103 @@ public class SolutionVmware {
         return min;
     }
 
+
+    /**
+     * 面试题 17.10. 主要元素
+     * HashMap()
+     * 执行用时：24 ms, 在所有 Java 提交中击败了7.43%的用户
+     * 内存消耗：45.1 MB, 在所有 Java 提交中击败了100.00%的用户
+     *
+     * @param nums
+     * @return
+     */
+    public int majorityElement0(int[] nums) {
+        Map<Integer, Integer> map = new HashMap<>();
+        int max = -1;
+        int maxKey = 0;
+        for (int n : nums) {
+            map.putIfAbsent(n, 1);
+            int tmp = map.get(n) + 1;
+            map.put(n, tmp);
+            if (max < tmp) {
+                max = tmp;
+                maxKey = n;
+            }
+        }
+        return max > nums.length / 2 ? maxKey : -1;
+    }
+
+    /**
+     * 面试题 17.10. 主要元素
+     * 摩尔投票
+     * 执行用时：1 ms, 在所有 Java 提交中击败了100.00%的用户
+     * 内存消耗：42.8 MB, 在所有 Java 提交中击败了100.00%的用户
+     *
+     * @param nums
+     * @return
+     */
+    public int majorityElement1(int[] nums) {
+        int key = nums[0];
+        int num = 1;
+        for (int i = 1; i < nums.length; i++) {
+            if (num == 0) {
+                key = nums[i];
+                num++;
+            } else if (key == nums[i]) {
+                num++;
+            } else {
+                num--;
+            }
+        }
+        if (num == 0) {
+            return -1;
+        }
+        num = 0;
+        for (int n : nums) {
+            if (n == key) {
+                num++;
+            }
+        }
+        return num > nums.length / 2 ? key : -1;
+    }
+
+    /**
+     * 面试题 17.10. 主要元素
+     * 位运算
+     * 执行用时：6 ms, 在所有 Java 提交中击败了30.46%的用户
+     * 内存消耗：42.9 MB, 在所有 Java 提交中击败了100.00%的用户
+     * @param nums
+     * @return
+     */
+    public int majorityElement2(int[] nums) {
+        int ans = 0;
+        int n = nums.length;
+        //统计每位数字的第i位二进制
+        for (int i = 0; i < 32; i++) {
+            int cnt = 0;
+            for (int j = 0; j < n; j++) {
+                //如果第i位为1
+                if ((nums[j] & (1 << i)) != 0) {
+                    cnt++;
+                }
+            }
+            //如果所有数字的二进制数中，第i位1比0多
+            if (cnt > n / 2) {
+                ans ^= (1 << i);
+            }
+        }
+        int c = 0;
+        for (int num : nums) {
+            if (num == ans) {
+                c++;
+            }
+        }
+        if (c <= n / 2) {
+            ans = -1;
+        }
+        return ans;
+    }
+
     public static void main(String[] args) {
         SolutionVmware solutionVmware = new SolutionVmware();
         String[] strings = {"flower", "flow", "flight"};
@@ -1702,8 +1801,8 @@ public class SolutionVmware {
         t2.right = t4;
         int[][] goAhead = new int[][]{{1, 5, 9}, {10, 11, 13}, {12, 13, 15}};
         char[] chars = {'d', 'c', 'e', 'a', 'f', 'g', 'b'};
-        int[] brr = {-10, -3, 0, 5, 9};
-        int f = solutionVmware.kthSmallest0(goAhead, 8);
+        int[] brr = {2, 2, 1, 1, 1, 2, 2};
+        int f = solutionVmware.majorityElement2(brr);
         System.out.println(f);
     }
 }
