@@ -1596,8 +1596,9 @@ public class SolutionVmware {
      * 剑指 Offer 10- II. 青蛙跳台阶问题
      * 执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
      * 内存消耗：36.3 MB, 在所有 Java 提交中击败了100.00%的用户
-     * @param n
-     * @return
+     *
+     * @param n 目标台阶数
+     * @return 几种跳法
      */
     public int numWays(int n) {
         if (n == 0) {
@@ -1615,6 +1616,76 @@ public class SolutionVmware {
         return dp[n - 1];
     }
 
+    /**
+     * 378. 有序矩阵中第K小的元素
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
+     * 内存消耗：45.5 MB, 在所有 Java 提交中击败了7.69%的用户
+     * @param matrix
+     * @param k
+     * @return
+     */
+    public int kthSmallest(int[][] matrix, int k) {
+        int n = matrix.length;
+        int left = matrix[0][0];
+        int right = matrix[n - 1][n - 1];
+        while (left < right) {
+            int mid = left + ((right - left) >> 1);
+            if (check(matrix, mid, k, n)) {
+                right = mid;
+            } else {
+                left = mid + 1;
+            }
+        }
+        return left;
+    }
+
+    public boolean check(int[][] matrix, int mid, int k, int n) {
+        int i = n - 1;
+        int j = 0;
+        int num = 0;
+        while (i >= 0 && j < n) {
+            if (matrix[i][j] <= mid) {
+                num += i + 1;
+                j++;
+            } else {
+                i--;
+            }
+        }
+        return num >= k;
+    }
+
+    /**
+     * 378. 有序矩阵中第K小的元素
+     * 执行用时：2 ms, 在所有 Java 提交中击败了62.67%的用户
+     * 内存消耗：45.4 MB, 在所有 Java 提交中击败了7.69%的用户
+     * @param matrix
+     * @param k
+     * @return
+     */
+    public int kthSmallest0(int[][] matrix, int k) {
+        int min = matrix[0][0];
+        int len = matrix.length;
+        int max = matrix[len - 1][len - 1];
+        while (min < max) {
+            int mid = min + ((max - min) >> 1);
+            int cout = 0;
+            for (int[] mat : matrix) {
+                for (int m : mat) {
+                    if (m > mid) {
+                        break;
+                    }
+                    cout++;
+                }
+            }
+            if (cout >= k) {
+                max = mid;
+            } else {
+                min = mid + 1;
+            }
+        }
+        return min;
+    }
+
     public static void main(String[] args) {
         SolutionVmware solutionVmware = new SolutionVmware();
         String[] strings = {"flower", "flow", "flight"};
@@ -1629,12 +1700,10 @@ public class SolutionVmware {
         t.right = t2;
         t1.right = t3;
         t2.right = t4;
-        int[][] goAhead = new int[][]{{0, 1}, {1, 2}, {1, 3}, {1, 10}, {1, 11}, {1, 4}, {2, 4}, {2, 6},
-                {2, 9}, {2, 10}, {2, 4}, {2, 5}, {2, 10}, {3, 7}, {3, 7}, {4, 5}, {4, 11}, {4, 11}, {4, 10},
-                {5, 7}, {5, 10}, {6, 8}, {7, 11}, {8, 10}};
+        int[][] goAhead = new int[][]{{1, 5, 9}, {10, 11, 13}, {12, 13, 15}};
         char[] chars = {'d', 'c', 'e', 'a', 'f', 'g', 'b'};
         int[] brr = {-10, -3, 0, 5, 9};
-        ListNode[] f = solutionVmware.listOfDepth(t);
+        int f = solutionVmware.kthSmallest0(goAhead, 8);
         System.out.println(f);
     }
 }
