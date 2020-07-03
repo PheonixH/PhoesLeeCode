@@ -54,14 +54,14 @@ public class SolutionVmware {
         char[] first = strs[0].toCharArray();
         char[] last = strs[strs.length - 1].toCharArray();
         int len = Math.min(first.length, last.length);
-        String res = "";
+        StringBuilder res = new StringBuilder();
         for (int i = 0; i < len; i++) {
             if (first[i] != last[i]) {
                 break;
             }
-            res = res + first[i];
+            res.append(first[i]);
         }
-        return res;
+        return res.toString();
     }
 
     /**
@@ -91,8 +91,8 @@ public class SolutionVmware {
 
     }
 
-    class Trie {
-        class Node {
+    static class Trie {
+        static class Node {
             int id;
             boolean flag;
             Node[] children;
@@ -120,8 +120,8 @@ public class SolutionVmware {
             Node p = root;
             char[] chars = word.toCharArray();
             int len = chars.length;
-            for (int i = 0; i < len; i++) {
-                int c = chars[i] - 97;
+            for (char aChar : chars) {
+                int c = aChar - 97;
                 if (p.children[c] == null) {
                     p.children[c] = new Node();
                 }
@@ -135,8 +135,8 @@ public class SolutionVmware {
             Node p = root;
             char[] chars = word.toCharArray();
             int len = chars.length;
-            for (int i = 0; i < len; i++) {
-                int c = chars[i] - 97;
+            for (char aChar : chars) {
+                int c = aChar - 97;
 
                 if (p.children[c] == null) {
                     return;
@@ -185,7 +185,7 @@ public class SolutionVmware {
         p.right = root;
         root.left = null;
         newRoot.right = root;
-        root.left = null;
+        root.right = null;
         return newRoot;
     }
 
@@ -256,7 +256,7 @@ public class SolutionVmware {
         int endI = obstacleGrid.length - 1;
         int endJ = obstacleGrid[0].length - 1;
         if (endI == 0 && endJ == 0) {
-            if (obstacleGrid[0][0] == 00) {
+            if (obstacleGrid[0][0] == 0) {
                 List<Integer> dfsPoint = new ArrayList<Integer>();
                 dfsPoint.add(0);
                 dfsPoint.add(0);
@@ -302,7 +302,6 @@ public class SolutionVmware {
                 }
                 String newKey = x + ":" + y;
                 if (visited.contains(newKey)) {
-                    continue;
                 } else if (obstacleGrid[x][y] == 1) {
                     visited.add(newKey);
                 } else {
@@ -310,10 +309,7 @@ public class SolutionVmware {
                     newp.add(x);
                     newp.add(y);
                     stack.push(newp);
-                    List<List<Integer>> newList = new ArrayList<>();
-                    for (List<Integer> li : preLoad) {
-                        newList.add(li);
-                    }
+                    List<List<Integer>> newList = new ArrayList<>(preLoad);
                     newList.add(newp);
                     load.put(newKey, newList);
                     visited.add(newKey);
@@ -394,8 +390,7 @@ public class SolutionVmware {
         for (int i = 1; i < chars.length; i++) {
             int k = i;
             for (; i < chars.length; i++) {
-                if ("".equals(chars[i])) {
-                } else {
+                if (!"".equals(chars[i])) {
                     break;
                 }
             }
@@ -559,7 +554,7 @@ public class SolutionVmware {
             return false;
         }
         for (int i = 0; i < s1.length(); i++) {
-            if (map1.get(s1.charAt(i)) != map2.get(s1.charAt(i))) {
+            if (!map1.get(s1.charAt(i)).equals(map2.get(s1.charAt(i)))) {
                 return false;
             }
         }
@@ -1017,8 +1012,7 @@ public class SolutionVmware {
             }
         }
         boolean[] visited = new boolean[routes.length];
-        Deque<Integer> queue = new ArrayDeque<>();
-        queue.addAll(posMap.get(S)); // 加入所有车信息
+        Deque<Integer> queue = new ArrayDeque<>(posMap.get(S)); // 加入所有车信息
         for (int k : posMap.get(S)) {
             visited[k] = true;
         }
@@ -1057,10 +1051,10 @@ public class SolutionVmware {
 
         // 用List构建图上的节点关系，用Set存放一个路线（一个节点）
         List<Set<Integer>> routeList = new LinkedList<>();
-        for (int i = 0; i < routes.length; i++) {
-            HashSet s = new HashSet<Integer>();
-            for (int j = 0; j < routes[i].length; j++) {
-                s.add(routes[i][j]);
+        for (int[] route : routes) {
+            HashSet<Integer> s = new HashSet<>();
+            for (int i : route) {
+                s.add(i);
             }
             if (s.contains(S)) {
                 if (s.contains(T)) {
@@ -1158,8 +1152,8 @@ public class SolutionVmware {
     private int getCount(int[] arr, int day, int k) {
         int re = 0;
         int count = 0;
-        for (int i = 0; i < arr.length; i++) {
-            if (arr[i] <= day) {
+        for (int value : arr) {
+            if (value <= day) {
                 count++;
             } else {
                 count = 0;
@@ -1205,6 +1199,7 @@ public class SolutionVmware {
         }
         while (k >= 0) {
             int[] tmp = queue.poll();
+            assert tmp != null;
             k = k - tmp[1];
         }
         return queue.size() + 1;
@@ -1399,9 +1394,9 @@ public class SolutionVmware {
      * 执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
      * 内存消耗：36.4 MB, 在所有 Java 提交中击败了100.00%的用户
      *
-     * @param a
-     * @param b
-     * @return
+     * @param a 加数 a
+     * @param b 加数 b
+     * @return 和
      */
     public int add(int a, int b) {
         while (b != 0) {
@@ -1419,9 +1414,9 @@ public class SolutionVmware {
      * 执行用时：22 ms, 在所有 Java 提交中击败了56.94%的用户
      * 内存消耗：39.5 MB, 在所有 Java 提交中击败了100.00%的用户
      *
-     * @param A
-     * @param target
-     * @return
+     * @param A 加数数组
+     * @param target 目标值
+     * @return 可能种类数目
      */
     public int threeSumMulti(int[] A, int target) {
         Map<Integer, Integer> counts = new HashMap<>();
@@ -1479,11 +1474,11 @@ public class SolutionVmware {
      * 执行用时：59 ms, 在所有 Java 提交中击败了10.22%的用户
      * 内存消耗：85.5 MB, 在所有 Java 提交中击败了100.00%的用户
      *
-     * @param n
-     * @param graph
-     * @param start
-     * @param target
-     * @return
+     * @param n 节点个数
+     * @param graph 地图数组
+     * @param start 起始点
+     * @param target 目标点
+     * @return 通路
      */
     public boolean findWhetherExistsPath(int n, int[][] graph, int start, int target) {
         Map<Integer, List<Integer>> map = new HashMap<>();
@@ -1528,8 +1523,8 @@ public class SolutionVmware {
      * 执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
      * 内存消耗：40 MB, 在所有 Java 提交中击败了100.00%的用户
      *
-     * @param nums
-     * @return
+     * @param nums 初始数组
+     * @return 最小高度树
      */
     public TreeNode sortedArrayToBST(int[] nums) {
         return sortedArrayToBSTHelp(nums, 0, nums.length - 1);
@@ -1551,8 +1546,8 @@ public class SolutionVmware {
      * 执行用时：1 ms, 在所有 Java 提交中击败了98.71%的用户
      * 内存消耗：38.3 MB, 在所有 Java 提交中击败了100.00%的用户
      *
-     * @param tree
-     * @return
+     * @param tree 初始树
+     * @return 特定深度节点链表
      */
     public ListNode[] listOfDepth(TreeNode tree) {
         if (tree == null) {
@@ -1621,9 +1616,9 @@ public class SolutionVmware {
      * 执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
      * 内存消耗：45.5 MB, 在所有 Java 提交中击败了7.69%的用户
      *
-     * @param matrix
-     * @param k
-     * @return
+     * @param matrix 有序矩阵
+     * @param k k
+     * @return 第k小的元素
      */
     public int kthSmallest(int[][] matrix, int k) {
         int n = matrix.length;
@@ -1660,9 +1655,9 @@ public class SolutionVmware {
      * 执行用时：2 ms, 在所有 Java 提交中击败了62.67%的用户
      * 内存消耗：45.4 MB, 在所有 Java 提交中击败了7.69%的用户
      *
-     * @param matrix
-     * @param k
-     * @return
+     * @param matrix 有序矩阵
+     * @param k k
+     * @return 第k小的元素
      */
     public int kthSmallest0(int[][] matrix, int k) {
         int min = matrix[0][0];
@@ -1800,6 +1795,97 @@ public class SolutionVmware {
             }
         }
         return -1;
+    }
+
+
+    /**
+     * 面试题 16.22. 兰顿蚂蚁
+     * 执行用时：29 ms, 在所有 Java 提交中击败了85.12%的用户
+     * 内存消耗：60.1 MB, 在所有 Java 提交中击败了100.00%的用户
+     */
+    private static class Position {
+
+        // 横坐标 x 纵坐标 y
+        int x, y;
+
+        public Position(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == this) {
+                return true;
+            }
+            if (!(obj instanceof Position)) {
+                return false;
+            }
+            Position o = (Position) obj;
+            return x == o.x && y == o.y;
+        }
+
+        // 改写哈希算法，使两个 Position 对象可以比较坐标而不是内存地址
+        @Override
+        public int hashCode() {
+            int result = x;
+            result = 31 * result + y;
+            return result;
+        }
+    }
+
+    public List<String> printKMoves(int K) {
+        char[] direction = {'L', 'U', 'R', 'D'};
+        // 用“向量”记录方向，顺序与上一行方向的字符顺序保持一致，每个元素的后一个元素都是可以90°向右变换得到的
+        int[][] offset = {{-1, 0}, {0, -1}, {1, 0}, {0, 1}};
+        // 蚂蚁的位置
+        Position antPos = new Position(0, 0);
+        // 蚂蚁方向的向量序号
+        int antDir = 2;
+        // 用集合存储所有黑块的坐标，一开始想再定义一个路径的坐标集合，发现可以直接用黑块+蚂蚁位置也能过
+        Set<Position> blackSet = new HashSet<>();
+        while (K > 0) {
+            // 新的坐标对象用于放入集合
+            Position t = new Position(antPos.x, antPos.y);
+            // 如果黑块集合能存入，说明脚下的块不在集合中，也就意味着是白色，方向序号循环自增1
+            if (blackSet.add(t)) {
+                antDir = (antDir + 1) % 4;
+            } else {
+                // 否则说明脚下的块已经在集合中，也就意味着是黑色，方向序号循环自增3，相当于自减1，但是Math.floorMod取模可能消耗大？用+3替代
+                antDir = (antDir + 3) % 4;
+                // 别忘了删除，即将黑块变白
+                blackSet.remove(t);
+            }
+            // 蚂蚁移动位置
+            antPos.x += offset[antDir][0];
+            antPos.y += offset[antDir][1];
+            K--;
+        }
+        // 计算边界，即输出网格的行数和列数
+        int left = antPos.x, top = antPos.y, right = antPos.x, bottom = antPos.y;
+        for (Position pos : blackSet) {
+            left = Math.min(pos.x, left);
+            top = Math.min(pos.y, top);
+            right = Math.max(pos.x, right);
+            bottom = Math.max(pos.y, bottom);
+        }
+        char[][] grid = new char[bottom - top + 1][right - left + 1];
+        // 填充白块
+        for (char[] row : grid) {
+            Arrays.fill(row, '_');
+        }
+        // 替换黑块
+        for (Position pos : blackSet) {
+            grid[pos.y - top][pos.x - left] = 'X';
+        }
+        // 替换蚂蚁
+        grid[antPos.y - top][antPos.x - left] = direction[antDir];
+        // 利用网格生成字符串列表
+        List<String> result = new ArrayList<>();
+        for (char[] row : grid) {
+            result.add(String.valueOf(row));
+        }
+        return result;
     }
 
     public static void main(String[] args) {
