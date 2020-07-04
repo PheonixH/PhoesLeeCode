@@ -1,4 +1,6 @@
+import data.ListNode;
 import data.TreeNode;
+import sun.misc.Queue;
 
 import java.util.*;
 
@@ -1208,6 +1210,597 @@ public class SolutionVmware {
         return queue.size() + 1;
     }
 
+    /**
+     * 209. 长度最小的子数组
+     * 时间复杂度O(n×log(n))
+     * 执行用时：4 ms, 在所有 Java 提交中击败了23.26%的用户
+     * 内存消耗：39.9 MB, 在所有 Java 提交中击败了6.67%的用户
+     */
+    public int minSubArrayLen(int s, int[] nums) {
+        int n = nums.length;
+        if (n == 0) {
+            return 0;
+        }
+        int ans = Integer.MAX_VALUE;
+        int[] sums = new int[n + 1];
+        // 为了方便计算，令 size = n + 1
+        // sums[0] = 0 意味着前 0 个元素的前缀和为 0
+        // sums[1] = A[0] 前 1 个元素的前缀和为 A[0]
+        // 以此类推
+        for (int i = 1; i <= n; i++) {
+            sums[i] = sums[i - 1] + nums[i - 1];
+        }
+        for (int i = 1; i <= n; i++) {
+            int target = s + sums[i - 1];
+            int bound = Arrays.binarySearch(sums, target);
+            if (bound < 0) {
+                bound = -bound - 1;
+            }
+            if (bound <= n) {
+                ans = Math.min(ans, bound - (i - 1));
+            }
+        }
+        return ans == Integer.MAX_VALUE ? 0 : ans;
+    }
+
+
+    /**
+     * 209. 长度最小的子数组
+     * 时间复杂度O(n)
+     * 执行用时：2 ms, 在所有 Java 提交中击败了83.23%的用户
+     * 内存消耗：40 MB, 在所有 Java 提交中击败了6.67%的用户
+     */
+    public int minSubArrayLen0(int s, int[] nums) {
+        int n = nums.length;
+        if (n == 0) {
+            return 0;
+        }
+        int ans = Integer.MAX_VALUE;
+        int start = 0, end = 0;
+        int sum = 0;
+        while (end < n) {
+            sum += nums[end];
+            while (sum >= s) {
+                ans = Math.min(ans, end - start + 1);
+                sum -= nums[start];
+                start++;
+            }
+            end++;
+        }
+        return ans == Integer.MAX_VALUE ? 0 : ans;
+    }
+
+    /**
+     * 210. 课程表 II
+     * 执行用时：9 ms, 在所有 Java 提交中击败了55.80%的用户
+     * 内存消耗：41.2 MB, 在所有 Java 提交中击败了93.33%的用户
+     */
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        Map<Integer, List<Integer>> map = new HashMap<>();
+        for (int[] course : prerequisites) {
+            int dest = course[1];
+            int src = course[0];
+            List<Integer> lst = map.getOrDefault(src, new ArrayList<>());
+            lst.add(dest);
+            map.put(src, lst);
+        }
+
+        int[] visited = new int[numCourses];
+        List<Integer> ans = new ArrayList<>();
+        for (int i = 0; i < numCourses; i++) {
+            if (!dfs(i, map, visited, ans)) {
+                return new int[0];
+            }
+        }
+        return ans.stream().mapToInt(Integer::intValue).toArray();
+    }
+
+    /**
+     * node: 当前节点
+     * map: 图
+     * visited: 0表示未访问, 1表示访问中, 2表示访问完成
+     * ans: 储存拓扑排序结果
+     * return: 是否无环
+     */
+    private boolean dfs(int node, Map<Integer, List<Integer>> map, int[] visited, List<Integer> ans) {
+        // 已访问
+        if (visited[node] == 2) {
+            return true;
+        }
+        // 发现环
+        if (visited[node] == 1) {
+            return false;
+        }
+        // 标记访问
+        visited[node] = 1;
+        // 无出节点, 加入答案，并标记访问完成
+        if (!map.containsKey(node)) {
+            ans.add(node);
+            visited[node] = 2;
+            return true;
+        }
+        // 遍历出节点
+        List<Integer> neighbour = map.get(node);
+        for (int nei : neighbour) {
+            if (!dfs(nei, map, visited, ans)) {
+                return false;
+            }
+        }
+        // 当前节点访问完成
+        visited[node] = 2;
+        ans.add(node);
+        return true;
+    }
+
+
+    public int[] findOrder0(int numCourses, int[][] prerequisites) {
+        //受课程影响的后续课程
+        int[] after = new int[numCourses];
+        //课程的前置课程
+        int[] before = new int[numCourses];
+        for (int[] pre : prerequisites) {
+            int a = pre[0];
+            int b = pre[1];
+            after[b] += 1 << a;
+            before[a] += 1 << b;
+        }
+        //已经上过的课程数量
+        int have = 0;
+        int[] res = new int[numCourses];
+        while (have != numCourses) {
+            boolean flag = false;
+            for (int i = 0; i < numCourses; i++) {
+                if (before[i] == 0) {
+                    flag = true;
+                    before[i] = -1;
+                    res[have++] = i;
+                    int tmp = after[i];
+                    int t = 0;
+                    while (tmp != 0) {
+                        if (tmp % 2 == 1) {
+                            before[t] = before[t] - (1 << i);
+                        }
+                        tmp = tmp >> 1;
+                        t++;
+                    }
+                }
+            }
+            if (!flag) {
+                return new int[]{};
+            }
+        }
+        return res;
+    }
+
+
+    /**
+     * 215. 数组中的第K个最大元素
+     * 执行用时：2 ms, 在所有 Java 提交中击败了92.63%的用户
+     * 内存消耗：39.8 MB, 在所有 Java 提交中击败了6.12%的用户
+     */
+    public int findKthLargest(int[] nums, int k) {
+        Arrays.sort(nums);
+        return nums[nums.length - k];
+    }
+
+
+    /**
+     * 1227. 飞机座位分配概率
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
+     * 内存消耗：36.6 MB, 在所有 Java 提交中击败了25.00%的用户
+     */
+    public double nthPersonGetsNthSeat(int n) {
+        return n == 1 ? 1 : 0.5;
+    }
+
+
+    /**
+     * 面试题 17.01. 不用加号的加法
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
+     * 内存消耗：36.4 MB, 在所有 Java 提交中击败了100.00%的用户
+     *
+     * @param a
+     * @param b
+     * @return
+     */
+    public int add(int a, int b) {
+        while (b != 0) {
+            int sum = (a ^ b);
+            int carry = (a & b) << 1;
+            a = sum;
+            b = carry;
+        }
+
+        return a;
+    }
+
+    /**
+     * 923. 三数之和的多种可能
+     * 执行用时：22 ms, 在所有 Java 提交中击败了56.94%的用户
+     * 内存消耗：39.5 MB, 在所有 Java 提交中击败了100.00%的用户
+     *
+     * @param A
+     * @param target
+     * @return
+     */
+    public int threeSumMulti(int[] A, int target) {
+        Map<Integer, Integer> counts = new HashMap<>();
+        for (int num : A) {
+            counts.putIfAbsent(num, 0);
+            counts.put(num, counts.get(num) + 1);
+        }
+        long res = 0;
+        int[] nums = counts.keySet().stream().mapToInt(integer -> integer).toArray();
+        Arrays.sort(nums);
+        for (int i = 0; i < nums.length; i++) {
+            for (int j = i; j < nums.length; j++) {
+                int value = target - nums[i] - nums[j];
+                if (value < nums[j]) {
+                    break;
+                }
+                if (counts.get(value) == null) {
+                    continue;
+                }
+                long a = counts.get(nums[i]);
+                long b = counts.get(nums[j]);
+                long c = counts.get(value);
+                if (nums[i] == nums[j] && nums[j] == value) {
+                    res += getCni(a, 3);
+                } else if (nums[i] == nums[j]) {
+                    res += getCni(a, 2) * c;
+                } else if (nums[j] == value) {
+                    res += getCni(b, 2) * a;
+                } else {
+                    res += a * b * c;
+                }
+                res = res % 1000000007;
+            }
+        }
+        return (int) res;
+    }
+
+    // 排列组合计算NCi
+    private long getCni(long n, int i) {
+        if (i > n) {
+            return 0;
+        }
+        long left = n;
+        int right = 1;
+        long value = 1;
+        for (int j = 0; j < i; j++) {
+            value = value * (left--) / (right++);
+        }
+        return value;
+    }
+
+
+    /**
+     * 面试题 04.01. 节点间通路
+     * 执行用时：59 ms, 在所有 Java 提交中击败了10.22%的用户
+     * 内存消耗：85.5 MB, 在所有 Java 提交中击败了100.00%的用户
+     *
+     * @param n
+     * @param graph
+     * @param start
+     * @param target
+     * @return
+     */
+    public boolean findWhetherExistsPath(int n, int[][] graph, int start, int target) {
+        Map<Integer, List<Integer>> map = new HashMap<>();
+        for (int[] g : graph) {
+            if (map.containsKey(g[0])) {
+                List<Integer> list = map.get(g[0]);
+                list.add(g[1]);
+                map.put(g[0], list);
+            } else {
+                List<Integer> list = new LinkedList<>();
+                list.add(g[1]);
+                map.put(g[0], list);
+            }
+        }
+        if (!map.containsKey(start)) {
+            return false;
+        }
+        Set<Integer> set = new HashSet<>();
+        set.add(start);
+        Stack<Integer> stack = new Stack<>();
+        stack.push(start);
+        while (!stack.isEmpty()) {
+            int tmp = stack.pop();
+            if (!map.containsKey(tmp)) {
+                continue;
+            }
+            for (int t : map.get(tmp)) {
+                if (t == target) {
+                    return true;
+                } else if (!set.contains(t)) {
+                    set.add(t);
+                    stack.push(t);
+                }
+            }
+        }
+        return false;
+    }
+
+
+    /**
+     * 面试题 04.02. 最小高度树
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
+     * 内存消耗：40 MB, 在所有 Java 提交中击败了100.00%的用户
+     *
+     * @param nums
+     * @return
+     */
+    public TreeNode sortedArrayToBST(int[] nums) {
+        return sortedArrayToBSTHelp(nums, 0, nums.length - 1);
+    }
+
+    public TreeNode sortedArrayToBSTHelp(int[] nums, int b, int e) {
+        if (b > e) {
+            return null;
+        }
+        int t = (b + e + 1) / 2;
+        TreeNode root = new TreeNode(nums[t]);
+        root.left = sortedArrayToBSTHelp(nums, b, t - 1);
+        root.right = sortedArrayToBSTHelp(nums, t + 1, e);
+        return root;
+    }
+
+    /**
+     * 面试题 04.03. 特定深度节点链表
+     * 执行用时：1 ms, 在所有 Java 提交中击败了98.71%的用户
+     * 内存消耗：38.3 MB, 在所有 Java 提交中击败了100.00%的用户
+     *
+     * @param tree
+     * @return
+     */
+    public ListNode[] listOfDepth(TreeNode tree) {
+        if (tree == null) {
+            return new ListNode[]{};
+        }
+        List<List<Integer>> list = new ArrayList<>();
+        Deque<TreeNode> queue = new LinkedList<>();
+        queue.push(tree);
+        while (!queue.isEmpty()) {
+            Deque<TreeNode> q = new LinkedList<>();
+            List<Integer> li = new ArrayList<>();
+            while (!queue.isEmpty()) {
+                TreeNode t = queue.pollFirst();
+                if (t.left != null) {
+                    q.addLast(t.left);
+                }
+                if (t.right != null) {
+                    q.addLast(t.right);
+                }
+                li.add(t.val);
+            }
+            list.add(li);
+            queue = q;
+        }
+        ListNode[] res = new ListNode[list.size()];
+        int j = 0;
+        for (List<Integer> li : list) {
+            ListNode p = new ListNode(li.get(0));
+            ListNode t = p;
+            for (int i = 1; i < li.size(); i++) {
+                ListNode pp = new ListNode(li.get(i));
+                t.next = pp;
+                t = pp;
+            }
+            res[j++] = p;
+        }
+        return res;
+    }
+
+    /**
+     * 剑指 Offer 10- II. 青蛙跳台阶问题
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
+     * 内存消耗：36.3 MB, 在所有 Java 提交中击败了100.00%的用户
+     *
+     * @param n 目标台阶数
+     * @return 几种跳法
+     */
+    public int numWays(int n) {
+        if (n == 0) {
+            return 1;
+        }
+        if (n <= 2) {
+            return n;
+        }
+        int[] dp = new int[n];
+        dp[0] = 1;
+        dp[1] = 2;
+        for (int i = 2; i < n; i++) {
+            dp[i] = (dp[i - 1] + dp[i - 2]) % 1000000007;
+        }
+        return dp[n - 1];
+    }
+
+    /**
+     * 378. 有序矩阵中第K小的元素
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
+     * 内存消耗：45.5 MB, 在所有 Java 提交中击败了7.69%的用户
+     *
+     * @param matrix
+     * @param k
+     * @return
+     */
+    public int kthSmallest(int[][] matrix, int k) {
+        int n = matrix.length;
+        int left = matrix[0][0];
+        int right = matrix[n - 1][n - 1];
+        while (left < right) {
+            int mid = left + ((right - left) >> 1);
+            if (check(matrix, mid, k, n)) {
+                right = mid;
+            } else {
+                left = mid + 1;
+            }
+        }
+        return left;
+    }
+
+    public boolean check(int[][] matrix, int mid, int k, int n) {
+        int i = n - 1;
+        int j = 0;
+        int num = 0;
+        while (i >= 0 && j < n) {
+            if (matrix[i][j] <= mid) {
+                num += i + 1;
+                j++;
+            } else {
+                i--;
+            }
+        }
+        return num >= k;
+    }
+
+    /**
+     * 378. 有序矩阵中第K小的元素
+     * 执行用时：2 ms, 在所有 Java 提交中击败了62.67%的用户
+     * 内存消耗：45.4 MB, 在所有 Java 提交中击败了7.69%的用户
+     *
+     * @param matrix
+     * @param k
+     * @return
+     */
+    public int kthSmallest0(int[][] matrix, int k) {
+        int min = matrix[0][0];
+        int len = matrix.length;
+        int max = matrix[len - 1][len - 1];
+        while (min < max) {
+            int mid = min + ((max - min) >> 1);
+            int cout = 0;
+            for (int[] mat : matrix) {
+                for (int m : mat) {
+                    if (m > mid) {
+                        break;
+                    }
+                    cout++;
+                }
+            }
+            if (cout >= k) {
+                max = mid;
+            } else {
+                min = mid + 1;
+            }
+        }
+        return min;
+    }
+
+
+    /**
+     * 面试题 17.10. 主要元素
+     * HashMap()
+     * 执行用时：24 ms, 在所有 Java 提交中击败了7.43%的用户
+     * 内存消耗：45.1 MB, 在所有 Java 提交中击败了100.00%的用户
+     *
+     * @param nums 原始数组
+     * @return 数组中的主要元素
+     */
+    public int majorityElement0(int[] nums) {
+        Map<Integer, Integer> map = new HashMap<>();
+        int max = -1;
+        int maxKey = 0;
+        for (int n : nums) {
+            map.putIfAbsent(n, 1);
+            int tmp = map.get(n) + 1;
+            map.put(n, tmp);
+            if (max < tmp) {
+                max = tmp;
+                maxKey = n;
+            }
+        }
+        return max > nums.length / 2 ? maxKey : -1;
+    }
+
+    /**
+     * 面试题 17.10. 主要元素
+     * 摩尔投票
+     * 执行用时：1 ms, 在所有 Java 提交中击败了100.00%的用户
+     * 内存消耗：42.8 MB, 在所有 Java 提交中击败了100.00%的用户
+     *
+     * @param nums 原始数组
+     * @return 数组中的主要元素
+     */
+    public int majorityElement1(int[] nums) {
+        int key = nums[0];
+        int num = 1;
+        for (int i = 1; i < nums.length; i++) {
+            if (num == 0) {
+                key = nums[i];
+                num++;
+            } else if (key == nums[i]) {
+                num++;
+            } else {
+                num--;
+            }
+        }
+        if (num == 0) {
+            return -1;
+        }
+        num = 0;
+        for (int n : nums) {
+            if (n == key) {
+                num++;
+            }
+        }
+        return num > nums.length / 2 ? key : -1;
+    }
+
+    /**
+     * 面试题 17.10. 主要元素
+     * 位运算
+     * 执行用时：6 ms, 在所有 Java 提交中击败了30.46%的用户
+     * 内存消耗：42.9 MB, 在所有 Java 提交中击败了100.00%的用户
+     *
+     * @param nums 原始数组
+     * @return 数组中的主要元素
+     */
+    public int majorityElement2(int[] nums) {
+        int ans = 0;
+        int n = nums.length;
+        //统计每位数字的第i位二进制
+        for (int i = 0; i < 32; i++) {
+            int cnt = 0;
+            for (int num : nums) {
+                //如果第i位为1
+                if ((num & (1 << i)) != 0) {
+                    cnt++;
+                }
+            }
+            //如果所有数字的二进制数中，第i位1比0多
+            if (cnt > n / 2) {
+                ans ^= (1 << i);
+            }
+        }
+        int c = 0;
+        for (int num : nums) {
+            if (num == ans) {
+                c++;
+            }
+        }
+        if (c <= n / 2) {
+            ans = -1;
+        }
+        return ans;
+    }
+
+    /**
+     * 面试题 08.03. 魔术索引
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
+     * 内存消耗：40.6 MB, 在所有 Java 提交中击败了100.00%的用户
+     * @param nums 原始数组
+     * @return 最小魔术索引
+     */
+    public int findMagicIndex(int[] nums) {
+        for (int i = 0; i < nums.length; i++) {
+            if (i == nums[i]) {
+                return i;
+            }
+        }
+        return -1;
+    }
 
     public static void main(String[] args) {
         SolutionVmware solutionVmware = new SolutionVmware();
@@ -1223,11 +1816,10 @@ public class SolutionVmware {
         t.right = t2;
         t1.right = t3;
         t2.right = t4;
-        int[][] goAhead = new int[][]{{1, 2, 7}, {4, 5, 8}, {3, 6, 4, 8, 9}, {2, 5}};
+        int[][] goAhead = new int[][]{{1, 5, 9}, {10, 11, 13}, {12, 13, 15}};
         char[] chars = {'d', 'c', 'e', 'a', 'f', 'g', 'b'};
-        solutionVmware.findLeastNumOfUniqueInts(arr, 1);
-        for (char c : chars) {
-            System.out.println(c);
-        }
+        int[] brr = {2, 2, 1, 1, 1, 2, 2};
+        int f = solutionVmware.majorityElement2(brr);
+        System.out.println(f);
     }
 }
