@@ -875,6 +875,178 @@ public class Games {
     }
 
 
+    public double average(int[] salary) {
+        int sum = 0;
+        int min = salary[0] > salary[1] ? salary[1] : salary[0];
+        int max = salary[0] > salary[1] ? salary[0] : salary[1];
+
+        for (int i = 2; i < salary.length; i++) {
+            if (salary[i] < min) {
+                sum += min;
+                min = salary[i];
+            } else if (salary[i] > max) {
+                sum += max;
+                max = salary[i];
+            } else {
+                sum += salary[i];
+            }
+        }
+
+        return (double) sum / (salary.length - 2);
+    }
+
+
+    public int kthFactor(int n, int k) {
+        int tmp = 1;
+        while (k > 0) {
+            while (n % tmp != 0) {
+                tmp++;
+            }
+            k--;
+            if (k == 0) {
+                return tmp;
+            }
+            tmp++;
+            if (tmp > n) {
+                return -1;
+            }
+        }
+        return tmp;
+    }
+
+    public int longestSubarray(int[] nums) {
+        List<int[]> list = new ArrayList<>();
+        for (int i = 0; i < nums.length; i++) {
+            int tmp = 0;
+            while (i + tmp < nums.length && nums[i + tmp] == 0) {
+                tmp++;
+            }
+            if (tmp != 0) {
+                list.add(new int[]{0, tmp});
+            }
+            i = i + tmp;
+            tmp = 0;
+            while (i + tmp < nums.length && nums[i + tmp] == 1) {
+                tmp++;
+            }
+            if (tmp != 0) {
+                list.add(new int[]{1, tmp});
+            }
+            i = i + tmp - 1;
+        }
+        int max = 0;
+        int[] pre = list.get(0);
+        if (pre[0] == 1) {
+            max = pre[1] - 1;
+        }
+        for (int i = 1; i < list.size(); i++) {
+            int[] arr = list.get(i);
+            if (arr[0] == 1) {
+                max = Math.max(max, arr[1] - 1);
+            } else if (arr[1] == 1) {
+                if (i + 1 < list.size()) {
+                    max = Math.max(max, pre[1] + list.get(i + 1)[1]);
+                } else {
+                    max = Math.max(max, pre[1]);
+                }
+            } else {
+                max = Math.max(max, pre[1]);
+            }
+            pre = arr;
+        }
+        if (list.size() >= 2) {
+            int[] arr = list.get(list.size() - 1);
+            if (arr[0] == 1) {
+                max = Math.max(max, arr[1]);
+            }
+        }
+        return max;
+    }
+
+    public int get(int x, int i) {
+        return (x >> i) & 1;
+    }
+
+
+    public int minNumberOfSemesters0(int n, int[][] dependencies, int k) {
+        int[] inDegree = new int[n + 1];
+        int[] outDegree = new int[n + 1];
+        Map<Integer, List<Integer>> outDegreeMap = new HashMap<>();
+        for (int[] dependency : dependencies) {
+            inDegree[dependency[1]]++;
+            outDegree[dependency[0]]++;
+            List<Integer> list = outDegreeMap.computeIfAbsent(dependency[0], integer -> new ArrayList<>());
+            list.add(dependency[1]);
+        }
+        LinkedList<Integer> queue = new LinkedList<>();
+        for (int i = 1; i <= n; i++) {
+            if (inDegree[i] == 0) {
+                queue.add(i);
+            }
+        }
+        int r = 0;
+        while (!queue.isEmpty()) {
+            r++;
+            int size = queue.size();
+            queue.sort(Comparator.comparingInt(o -> outDegree[(int) o]).reversed());
+            for (int i = 0; i < k && i < size; i++) {
+                int num = queue.poll();
+                List<Integer> list = outDegreeMap.getOrDefault(num, new ArrayList<>());
+                for (Integer e : list) {
+                    inDegree[e]--;
+                    if (inDegree[e] == 0) {
+                        queue.add(e);
+                    }
+                }
+            }
+        }
+        return r;
+    }
+
+    public int minNumberOfSemesters(int n, int[][] dependencies, int k) {
+        int[] pre = new int[n];
+        int[] post = new int[n];
+        for (int[] e : dependencies) {
+            int a = e[0] - 1;
+            int b = e[1] - 1;
+            pre[b] |= 1 << a;
+            post[a] |= 1 << b;
+        }
+
+        int[] dp = new int[1 << n];
+        dp[0] = 0;
+        int inf = (int) 1e8;
+
+        SubsetGenerator sg = new SubsetGenerator();
+        for (int i = 1; i < 1 << n; i++) {
+            boolean valid = true;
+            int set = 0;
+            dp[i] = inf;
+            for (int j = 0; j < n; j++) {
+                if (get(i, j) == 0) {
+                    continue;
+                }
+                if ((pre[j] & i) != pre[j]) {
+                    valid = false;
+                }
+                if ((post[j] & i) == 0) {
+                    set |= 1 << j;
+                }
+            }
+            if (!valid) {
+                continue;
+            }
+            sg.reset(set);
+            while (sg.hasNext()) {
+                int next = sg.next();
+                if (next != 0 && Integer.bitCount(next) <= k) {
+                    dp[i] = Math.min(dp[i - next] + 1, dp[i]);
+                }
+            }
+        }
+
+        return dp[dp.length - 1];
+    }
 
 
     public static void main(String[] args) {
@@ -907,10 +1079,28 @@ public class Games {
         or.add(or5);
         List<List<String>> q = games.displayTable(or);
         String[] s = {"kaido", "kaido(1)", "kaido", "kaido(1)", "kaido(2)"};
-        int[] us = {1, 0, 0, 0, 2, 2};
-        int[] p = games.avoidFlood(us);
+        int[] us = {1, 0, 0, 1, 0, 1, 1};
+        int[][] ppp = {{2, 1}, {3, 1}, {1, 4}};
+        int p = games.minNumberOfSemesters0(4, ppp, 2);
         System.out.println(p);
 
     }
 }
 
+class SubsetGenerator {
+    private int m;
+    private int x;
+
+    public void reset(int m) {
+        this.m = m;
+        this.x = m + 1;
+    }
+
+    public boolean hasNext() {
+        return x != 0;
+    }
+
+    public int next() {
+        return x = (x - 1) & m;
+    }
+}
