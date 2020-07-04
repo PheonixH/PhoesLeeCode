@@ -1003,7 +1003,7 @@ public class Games {
         return r;
     }
 
-    public int minNumberOfSemesters(int n, int[][] dependencies, int k) {
+    /*public int minNumberOfSemesters(int n, int[][] dependencies, int k) {
         int[] pre = new int[n];
         int[] post = new int[n];
         for (int[] e : dependencies) {
@@ -1047,7 +1047,7 @@ public class Games {
 
         return dp[dp.length - 1];
     }
-
+*/
 
     public boolean isPathCrossing(String path) {
         int x = 0, y = 0;
