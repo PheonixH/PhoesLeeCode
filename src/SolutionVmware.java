@@ -1958,6 +1958,40 @@ public class SolutionVmware {
         return dp[n - 1][m - 1];
     }
 
+
+    public int numSubmat(int[][] mat) {
+        int n = mat.length;
+        int m = mat[0].length;
+        int[][] prefixAnd = mat.clone();
+        for (int i = 0; i < n; i++) {
+            for (int j = 1; j < m; j++) {
+                prefixAnd[i][j] += prefixAnd[i][j - 1];
+            }
+        }
+        int num = 0;
+        for (int l = 0; l < m; l++) {
+            for (int r = l; r < m; r++) {
+                int tmp = 0;
+                for (int t = 0; t < n; t++) {
+                    int pre = prefixAnd[t][r];
+                    if (l > 0) {
+                        pre -= prefixAnd[t][l - 1];
+                    }
+                    if (pre == (r - l + 1)) {
+                        tmp++;
+                    } else {
+                        num += (tmp * (tmp + 1) / 2);
+                        tmp = 0;
+                    }
+                }
+                if (tmp != 0) {
+                    num += (tmp * (tmp + 1) / 2);
+                }
+            }
+        }
+        return num;
+    }
+
     public static void main(String[] args) {
         SolutionVmware solutionVmware = new SolutionVmware();
         String[] strings = {"flower", "flow", "flight"};
@@ -1972,10 +2006,10 @@ public class SolutionVmware {
         t.right = t2;
         t1.right = t3;
         t2.right = t4;
-        int[][] goAhead = new int[][]{{1, 2, 5}, {3, 2, 1}};
+        int[][] goAhead = new int[][]{{1, 0, 1}, {1, 1, 0}, {1, 1, 0}};
         char[] chars = {'d', 'c', 'e', 'a', 'f', 'g', 'b'};
         int[] brr = {2, 2, 1, 1, 1, 2, 2};
-        int f = solutionVmware.minPathSum(goAhead);
+        int f = solutionVmware.numSubmat0(goAhead);
         System.out.println(f);
     }
 }
