@@ -685,6 +685,109 @@ public class SolitionUbuntu {
         }
     }
 
+    public boolean isMatch(String s, String p) {
+        if (s == null || p == null) {
+            return false;
+        }
+        boolean[][] dp = new boolean[s.length() + 1][p.length() + 1];
+        //dp[i][j] 表示 s 的前 i 个是否能被 p 的前 j 个匹配
+        dp[0][0] = true;
+        // here's the p's length, not s's
+        for (int i = 0; i < p.length(); i++) {
+            if (p.charAt(i) == '*' && dp[0][i - 1]) {
+                // here's y axis should be i+1
+                dp[0][i + 1] = true;
+            }
+        }
+        for (int i = 0; i < s.length(); i++) {
+            for (int j = 0; j < p.length(); j++) {
+                //如果是任意元素 或者是对于元素匹配
+                if (p.charAt(j) == '.' || p.charAt(j) == s.charAt(i)) {
+                    dp[i + 1][j + 1] = dp[i][j];
+                }
+                if (p.charAt(j) == '*') {
+                    //如果前一个元素不匹配 且不为任意元素
+                    if (p.charAt(j - 1) != s.charAt(i) && p.charAt(j - 1) != '.') {
+                        dp[i + 1][j + 1] = dp[i + 1][j - 1];
+                    } else {
+                        dp[i + 1][j + 1] = (dp[i + 1][j] || dp[i][j + 1] || dp[i + 1][j - 1]);
+                            /*
+                            dp[i][j] = dp[i-1][j] // 多个字符匹配的情况
+                            or dp[i][j] = dp[i][j-1] // 单个字符匹配的情况
+                            or dp[i][j] = dp[i][j-2] // 没有匹配的情况
+                             */
+
+                    }
+                }
+            }
+        }
+        return dp[s.length()][p.length()];
+    }
+
+    /**
+     * 题目：42. 接雨水
+     * 执行用时：1 ms, 在所有 Java 提交中击败了99.98%的用户
+     * 内存消耗：39.8 MB, 在所有 Java 提交中击败了12.86%的用户
+     */
+    public int trap(int[] height) {
+        int len = height.length;
+        if (len <= 2) {
+            return 0;
+        }
+        int i = 0, j = len - 1;
+        int sum = 0;
+        int all = 0;
+        int max = 0;
+        while (i < j) {
+            if (height[i] < height[j]) {
+                sum = sum + height[i];
+                max = height[i] > max ? height[i] : max;
+                all = all + max;
+                i++;
+            } else {
+                sum = sum + height[j];
+                max = height[j] > max ? height[j] : max;
+                all = all + max;
+                j--;
+            }
+        }
+        return all - sum;
+    }
+
+
+    public void quickSort(int[] a, int l, int h) {
+        if (l > h) {
+            return;
+        }
+        int b = l, e = h;
+        int k = a[l];
+        while (b < e) {
+            while (b < e && a[e] <= k) {
+                e--;
+            }
+            if (b < e) {
+                a[b] = a[e];
+                b++;
+            }
+            while (a[b] >= k && b < e) {
+                b++;
+            }
+            if (b < e) {
+                a[e] = a[b];
+                e--;
+            }
+        }
+        /*此时i==j*/
+        a[b] = k;
+
+        /*递归调用，把key前面的完成排序*/
+        this.quickSort(a, l, b - 1);
+
+
+        /*递归调用，把key后面的完成排序*/
+        this.quickSort(a, e + 1, h);
+    }
+
     public static void main(String[] args) {
         TreeNode root = new TreeNode(1);
         TreeNode r1 = new TreeNode(2);
@@ -698,8 +801,8 @@ public class SolitionUbuntu {
         r3.left = r4;
         SolitionUbuntu solution = new SolitionUbuntu();
         String[] strings = {"9", "3", "4", "#", "#", "1", "#", "#,", "#", "6", "#", "#"};
-        int[] ints = {1, 13, 17, 59};
-        System.out.println(solution.isPalindrome(".."));
+        int[] ints = {0, 1, 0, 9};
+        System.out.println(solution.singleNumber(ints));
 //        int[] arr = solution.findFrequentTreeSum(root);
         //List l = solution.zigzagLevelOrder(root);
 //        System.out.print(solution.nthMagicalNumber(1,2,3));
