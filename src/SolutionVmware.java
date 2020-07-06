@@ -1395,9 +1395,9 @@ public class SolutionVmware {
      * 执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
      * 内存消耗：36.4 MB, 在所有 Java 提交中击败了100.00%的用户
      *
-     * @param a
-     * @param b
-     * @return
+     * @param a 加数a
+     * @param b 加数b
+     * @return 和
      */
     public int add(int a, int b) {
         while (b != 0) {
@@ -1415,9 +1415,9 @@ public class SolutionVmware {
      * 执行用时：22 ms, 在所有 Java 提交中击败了56.94%的用户
      * 内存消耗：39.5 MB, 在所有 Java 提交中击败了100.00%的用户
      *
-     * @param A
-     * @param target
-     * @return
+     * @param A 加数
+     * @param target 目标值
+     * @return 可能数量
      */
     public int threeSumMulti(int[] A, int target) {
         Map<Integer, Integer> counts = new HashMap<>();
@@ -1475,11 +1475,11 @@ public class SolutionVmware {
      * 执行用时：59 ms, 在所有 Java 提交中击败了10.22%的用户
      * 内存消耗：85.5 MB, 在所有 Java 提交中击败了100.00%的用户
      *
-     * @param n
-     * @param graph
-     * @param start
-     * @param target
-     * @return
+     * @param n 节点数
+     * @param graph 地图
+     * @param start 起始点
+     * @param target 目标点
+     * @return 通路数量
      */
     public boolean findWhetherExistsPath(int n, int[][] graph, int start, int target) {
         Map<Integer, List<Integer>> map = new HashMap<>();
@@ -1524,8 +1524,8 @@ public class SolutionVmware {
      * 执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
      * 内存消耗：40 MB, 在所有 Java 提交中击败了100.00%的用户
      *
-     * @param nums
-     * @return
+     * @param nums 原始数组
+     * @return 最小高度树
      */
     public TreeNode sortedArrayToBST(int[] nums) {
         return sortedArrayToBSTHelp(nums, 0, nums.length - 1);
@@ -1547,8 +1547,8 @@ public class SolutionVmware {
      * 执行用时：1 ms, 在所有 Java 提交中击败了98.71%的用户
      * 内存消耗：38.3 MB, 在所有 Java 提交中击败了100.00%的用户
      *
-     * @param tree
-     * @return
+     * @param tree 树
+     * @return 特定深度节点链表
      */
     public ListNode[] listOfDepth(TreeNode tree) {
         if (tree == null) {
@@ -1617,9 +1617,9 @@ public class SolutionVmware {
      * 执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
      * 内存消耗：45.5 MB, 在所有 Java 提交中击败了7.69%的用户
      *
-     * @param matrix
-     * @param k
-     * @return
+     * @param matrix 有序矩阵
+     * @param k 第k个
+     * @return 有序矩阵中第K小的元素
      */
     public int kthSmallest(int[][] matrix, int k) {
         int n = matrix.length;
@@ -1656,9 +1656,9 @@ public class SolutionVmware {
      * 执行用时：2 ms, 在所有 Java 提交中击败了62.67%的用户
      * 内存消耗：45.4 MB, 在所有 Java 提交中击败了7.69%的用户
      *
-     * @param matrix
-     * @param k
-     * @return
+     * @param matrix 有序矩阵
+     * @param k 第k个
+     * @return 有序矩阵中第K小的元素
      */
     public int kthSmallest0(int[][] matrix, int k) {
         int min = matrix[0][0];
@@ -1910,10 +1910,10 @@ public class SolutionVmware {
     public int findY(int[][] mat, int x, int y) {
         int res = 0;
         int p = 0;
-        for (int j = 0; j < mat.length; j++) {
+        for (int[] ints : mat) {
             boolean f = true;
             for (int i = x; i < y; i++) {
-                if (mat[j][i] == 0) {
+                if (ints[i] == 0) {
                     f = false;
                     break;
                 }
@@ -1950,8 +1950,8 @@ public class SolutionVmware {
                         minKey = data[i];
                     }
                 }
-                for (int i = minI; i > tmp; i--) {
-                    data[i] = data[i - 1];
+                if (minI - tmp >= 0) {
+                    System.arraycopy(data, tmp, data, tmp + 1, minI - tmp);
                 }
                 data[tmp] = minKey;
                 k = k - minI + tmp;
@@ -1965,19 +1965,17 @@ public class SolutionVmware {
                         minKey = data[i];
                     }
                 }
-                for (int i = minI; i > tmp; i--) {
-                    data[i] = data[i - 1];
-                }
+                if (minI - tmp >= 0) System.arraycopy(data, tmp, data, tmp + 1, minI - tmp);
                 data[tmp] = minKey;
                 k = k - minI + tmp;
                 tmp++;
             }
         }
-        String res = "";
+        StringBuilder res = new StringBuilder();
         for (int d : data) {
-            res = res + d;
+            res.append(d);
         }
-        return res;
+        return res.toString();
     }
 
 
