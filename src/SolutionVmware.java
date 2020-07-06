@@ -1963,6 +1963,7 @@ public class SolutionVmware {
      * 1504. 统计全 1 子矩形
      * 执行用时：32 ms, 在所有 Java 提交中击败了100.00%的用户
      * 内存消耗：40.8 MB, 在所有 Java 提交中击败了100.00%的用户
+     *
      * @param mat 原始0-1数组
      * @return 数组中全是1矩形个数
      */
@@ -1998,6 +1999,111 @@ public class SolutionVmware {
         }
         return num;
     }
+
+
+    /**
+     * 1505. 最多 K 次交换相邻数位后得到的最小整数
+     * 执行用时：41 ms, 在所有 Java 提交中击败了100.00%的用户
+     * 内存消耗：40.3 MB, 在所有 Java 提交中击败了100.00%的用户
+     * @param num 初始数
+     * @param k 交换k次
+     * @return 结果数
+     */
+    public String minInteger(String num, int k) {
+
+        class FenwichTree {
+
+            private int[] sums;
+            private int[] nums;
+
+            public FenwichTree(int[] nums) {
+                this.sums = new int[nums.length + 1];
+                this.nums = nums;
+                for (int i = 0; i < nums.length; i++) {
+                    updateBit(i + 1, nums[i]);
+                }
+            }
+
+            public void update(int i, int val) {
+                updateBit(i + 1, val - nums[i]);
+                nums[i] = val;
+            }
+
+            private void updateBit(int i, int diff) {
+                while (i < sums.length) {
+                    sums[i] += diff;
+                    i += lowBit(i);
+                }
+            }
+
+            public int sumRange(int i, int j) {
+                return preSum(j + 1) - preSum(i);
+            }
+
+            private int preSum(int i) {
+                int sum = 0;
+                while (i > 0) {
+                    sum += sums[i];
+                    i -= lowBit(i);
+                }
+                return sum;
+            }
+
+            private int lowBit(int i) {
+                return i & (-i);
+            }
+
+        }
+        // 统计0-9的所有位置
+        List<Integer>[] idLists = new List[10];
+        for (int i = 0; i < 10; i++) {
+            idLists[i] = new ArrayList<>();
+        }
+        int n = num.length();
+        for (int i = 0; i < n; i++) {
+            idLists[num.charAt(i) - '0'].add(i);
+        }
+        // 指向idLists的0-9的当前位置
+        int[] ids = new int[10];
+        boolean[] seen = new boolean[n];
+        StringBuilder res = new StringBuilder();
+        // 统计范围内已被使用的下标，计算需要转换的次数时需要去掉已被转换到前面的那些下标
+        FenwichTree fwt = new FenwichTree(new int[n]);
+        outer:
+        for (int i = 0; i < n; i++) {
+            if (seen[i]) { // 如果已经被置换过了，跳过
+                continue;
+            }
+            int cur = num.charAt(i) - '0';
+            // 查找比当前元素小且满足条件的最小值的下标
+            for (int j = 0; j < cur; j++) {
+                while (ids[j] < idLists[j].size() && idLists[j].get(ids[j]) < i) {
+                    ids[j]++;
+                }
+                if (ids[j] == idLists[j].size()) {
+                    continue;
+                }
+                int index = idLists[j].get(ids[j]);
+                int seenNum = fwt.sumRange(0, index - 1);
+                if (index - seenNum <= k) {
+                    // 找到了满足条件的值，更新状态
+                    k -= index - seenNum;
+                    ids[j]++;
+                    seen[index] = true;
+                    fwt.update(index, 1);
+                    i--;
+                    res.append(j);
+                    continue outer;
+                }
+            }
+            // 找不到满足条件且小于当前值的值，更新状态
+            seen[i] = true;
+            fwt.update(i, 1);
+            res.append(cur);
+        }
+        return res.toString();
+    }
+
 
     public static void main(String[] args) {
         SolutionVmware solutionVmware = new SolutionVmware();
