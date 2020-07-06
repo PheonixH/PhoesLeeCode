@@ -1414,7 +1414,7 @@ public class SolutionVmware {
      * 执行用时：22 ms, 在所有 Java 提交中击败了56.94%的用户
      * 内存消耗：39.5 MB, 在所有 Java 提交中击败了100.00%的用户
      *
-     * @param A 加数数组
+     * @param A      加数数组
      * @param target 目标值
      * @return 可能种类数目
      */
@@ -1474,9 +1474,9 @@ public class SolutionVmware {
      * 执行用时：59 ms, 在所有 Java 提交中击败了10.22%的用户
      * 内存消耗：85.5 MB, 在所有 Java 提交中击败了100.00%的用户
      *
-     * @param n 节点个数
-     * @param graph 地图数组
-     * @param start 起始点
+     * @param n      节点个数
+     * @param graph  地图数组
+     * @param start  起始点
      * @param target 目标点
      * @return 通路
      */
@@ -1617,7 +1617,7 @@ public class SolutionVmware {
      * 内存消耗：45.5 MB, 在所有 Java 提交中击败了7.69%的用户
      *
      * @param matrix 有序矩阵
-     * @param k k
+     * @param k      k
      * @return 第k小的元素
      */
     public int kthSmallest(int[][] matrix, int k) {
@@ -1656,7 +1656,7 @@ public class SolutionVmware {
      * 内存消耗：45.4 MB, 在所有 Java 提交中击败了7.69%的用户
      *
      * @param matrix 有序矩阵
-     * @param k k
+     * @param k      k
      * @return 第k小的元素
      */
     public int kthSmallest0(int[][] matrix, int k) {
@@ -1785,6 +1785,7 @@ public class SolutionVmware {
      * 面试题 08.03. 魔术索引
      * 执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
      * 内存消耗：40.6 MB, 在所有 Java 提交中击败了100.00%的用户
+     *
      * @param nums 原始数组
      * @return 最小魔术索引
      */
@@ -1888,6 +1889,41 @@ public class SolutionVmware {
         return result;
     }
 
+    /**
+     * 63. 不同路径 II
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
+     * 内存消耗：38.9 MB, 在所有 Java 提交中击败了48.15%的用户
+     * @param obstacleGrid
+     * @return
+     */
+    public int uniquePathsWithObstacles(int[][] obstacleGrid) {
+        int n = obstacleGrid.length;
+        int m = obstacleGrid[0].length;
+        int[][] dp = new int[n][m];
+        if (obstacleGrid[0][0] == 1 || obstacleGrid[n - 1][m - 1] == 1) {
+            return 0;
+        }
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (i == 0 && j == 0) {
+                    dp[i][j] = 1;
+                    continue;
+                }
+                if (obstacleGrid[i][j] == 1) {
+                    dp[i][j] = 0;
+                } else if (i == 0) {
+                    dp[i][j] = dp[i][j - 1];
+                } else if (j == 0) {
+                    dp[i][j] = dp[i - 1][j];
+                } else {
+                    dp[i][j] = dp[i - 1][j] + dp[i][j - 1];
+                }
+            }
+        }
+        return dp[n - 1][m - 1];
+    }
+
+
     public static void main(String[] args) {
         SolutionVmware solutionVmware = new SolutionVmware();
         String[] strings = {"flower", "flow", "flight"};
@@ -1902,10 +1938,10 @@ public class SolutionVmware {
         t.right = t2;
         t1.right = t3;
         t2.right = t4;
-        int[][] goAhead = new int[][]{{1, 5, 9}, {10, 11, 13}, {12, 13, 15}};
+        int[][] goAhead = new int[][]{{0, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 0}};
         char[] chars = {'d', 'c', 'e', 'a', 'f', 'g', 'b'};
         int[] brr = {2, 2, 1, 1, 1, 2, 2};
-        int f = solutionVmware.majorityElement2(brr);
+        int f = solutionVmware.uniquePathsWithObstacles(new int[][]{{1}});
         System.out.println(f);
     }
 }
