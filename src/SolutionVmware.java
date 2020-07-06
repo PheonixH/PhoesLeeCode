@@ -1,6 +1,6 @@
 import data.ListNode;
 import data.TreeNode;
-import sun.misc.Queue;
+//import sun.misc.Queue;
 
 import java.util.*;
 
@@ -1790,6 +1790,7 @@ public class SolutionVmware {
      * 面试题 08.03. 魔术索引
      * 执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
      * 内存消耗：40.6 MB, 在所有 Java 提交中击败了100.00%的用户
+     *
      * @param nums 原始数组
      * @return 最小魔术索引
      */
@@ -1801,6 +1802,189 @@ public class SolutionVmware {
         }
         return -1;
     }
+
+
+    /**
+     * 周赛2020.07.05
+     */
+    public boolean canMakeArithmeticProgression(int[] arr) {
+        Arrays.sort(arr);
+        int tmp = arr[1] - arr[0];
+        for (int i = 1; i < arr.length; i++) {
+            if (tmp != arr[i] - arr[i - 1]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public int getLastMoment(int n, int[] left, int[] right) {
+        int max = 0;
+        if (left.length > 0) {
+            Arrays.sort(left);
+            int leftMax = left[left.length - 1];
+            max = Math.max(max, leftMax);
+        }
+        if (right.length > 0) {
+            Arrays.sort(right);
+            int minRight = right[0];
+            max = Math.max(max, n - minRight);
+        }
+        return max;
+    }
+
+    public int numSubmat(int[][] mat) {
+//        Set<String> set = new HashSet<>();
+        int res = 0;
+        boolean isVisit = false;
+        for (int i = 0; i < mat.length; i++) {
+            for (int j = 0; j < mat[0].length; j++) {
+                if (mat[i][j] == 1&&!isVisit) {
+                    isVisit = true;
+                    int t = 1;
+                    for (int k = j; k < mat.length; k++) {
+                        if (mat[i][k] == 0) {
+                            break;
+                        }
+                        t++;
+                    }
+                    for (int k = 0; k < t; k++) {
+                        int y = k + 1;
+                        int x = 1;
+                        for (int o = i + 1; o < mat.length; o++) {
+                            boolean flag = true;
+                            for (int p = j; p < y + p; p++) {
+                                if (mat[o][p] == 0) {
+                                    flag = false;
+                                    break;
+                                }
+                            }
+                            if (flag) {
+                                x++;
+                            } else {
+                                break;
+                            }
+                        }
+                        res += sum2(x);
+                    }
+
+                }
+                else if(mat[i][j] == 0){
+                    isVisit = false;
+                }
+            }
+        }
+        return res;
+    }
+
+    public int sum(int length, int len) {
+        return length - len + 1;
+    }
+
+    public int sum2(int length) {
+        int res = 0;
+        for (int l = 1; l < length; l++) {
+            res += sum(length, l);
+        }
+        return res;
+    }
+
+    public int findX(int[][] mat, int x, int y) {
+        int res = 0;
+        int p = 0;
+        for (int j = 0; j < mat[0].length; j++) {
+            boolean f = true;
+            for (int i = x; i < y; i++) {
+                if (mat[i][j] == 0) {
+                    f = false;
+                    break;
+                }
+            }
+            if (f) {
+                p++;
+            } else {
+                if (p >= y - x + 1) {
+                    res += sum2(p);
+                }
+                p = 0;
+            }
+        }
+        return res;
+    }
+
+    public int findY(int[][] mat, int x, int y) {
+        int res = 0;
+        int p = 0;
+        for (int j = 0; j < mat.length; j++) {
+            boolean f = true;
+            for (int i = x; i < y; i++) {
+                if (mat[j][i] == 0) {
+                    f = false;
+                    break;
+                }
+            }
+            if (f) {
+                p++;
+            } else {
+                if (p < y - x + 1) {
+                    res += sum2(p);
+                }
+                p = 0;
+            }
+        }
+        return res;
+    }
+
+    public String minInteger(String num, int k) {
+        int[] data = new int[num.length()];
+        char[] chars = num.toCharArray();
+        for (int i = 0; i < chars.length; i++) {
+            data[i] = chars[i] - '0';
+        }
+        int tmp = 0;
+        while (k >= 0) {
+            if (tmp == data.length - 1) {
+                break;
+            }
+            if (k >= data.length) {
+                int minI = tmp;
+                int minKey = data[tmp];
+                for (int i = tmp; i < data.length; i++) {
+                    if (minKey > data[i]) {
+                        minI = i;
+                        minKey = data[i];
+                    }
+                }
+                for (int i = minI; i > tmp; i--) {
+                    data[i] = data[i - 1];
+                }
+                data[tmp] = minKey;
+                k = k - minI + tmp;
+                tmp++;
+            } else {
+                int minI = tmp;
+                int minKey = data[tmp];
+                for (int i = tmp; i <= k + tmp && i < data.length; i++) {
+                    if (minKey > data[i]) {
+                        minI = i;
+                        minKey = data[i];
+                    }
+                }
+                for (int i = minI; i > tmp; i--) {
+                    data[i] = data[i - 1];
+                }
+                data[tmp] = minKey;
+                k = k - minI + tmp;
+                tmp++;
+            }
+        }
+        String res = "";
+        for (int d : data) {
+            res = res + d;
+        }
+        return res;
+    }
+
 
     public static void main(String[] args) {
         SolutionVmware solutionVmware = new SolutionVmware();
@@ -1819,7 +2003,7 @@ public class SolutionVmware {
         int[][] goAhead = new int[][]{{1, 5, 9}, {10, 11, 13}, {12, 13, 15}};
         char[] chars = {'d', 'c', 'e', 'a', 'f', 'g', 'b'};
         int[] brr = {2, 2, 1, 1, 1, 2, 2};
-        int f = solutionVmware.majorityElement2(brr);
+        String f = solutionVmware.minInteger("9438957234785635408", 22);
         System.out.println(f);
     }
 }
