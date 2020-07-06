@@ -1959,6 +1959,13 @@ public class SolutionVmware {
     }
 
 
+    /**
+     * 1504. 统计全 1 子矩形
+     * 执行用时：32 ms, 在所有 Java 提交中击败了100.00%的用户
+     * 内存消耗：40.8 MB, 在所有 Java 提交中击败了100.00%的用户
+     * @param mat 原始0-1数组
+     * @return 数组中全是1矩形个数
+     */
     public int numSubmat(int[][] mat) {
         int n = mat.length;
         int m = mat[0].length;
@@ -2009,7 +2016,7 @@ public class SolutionVmware {
         int[][] goAhead = new int[][]{{1, 0, 1}, {1, 1, 0}, {1, 1, 0}};
         char[] chars = {'d', 'c', 'e', 'a', 'f', 'g', 'b'};
         int[] brr = {2, 2, 1, 1, 1, 2, 2};
-        int f = solutionVmware.numSubmat0(goAhead);
+        int f = solutionVmware.numSubmat(goAhead);
         System.out.println(f);
     }
 }
