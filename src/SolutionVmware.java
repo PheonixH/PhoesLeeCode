@@ -1,6 +1,6 @@
 import data.ListNode;
 import data.TreeNode;
-//import sun.misc.Queue;
+import sun.misc.Queue;
 
 import java.util.*;
 
@@ -1790,7 +1790,6 @@ public class SolutionVmware {
      * 面试题 08.03. 魔术索引
      * 执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
      * 内存消耗：40.6 MB, 在所有 Java 提交中击败了100.00%的用户
-     *
      * @param nums 原始数组
      * @return 最小魔术索引
      */
@@ -1986,6 +1985,314 @@ public class SolutionVmware {
     }
 
 
+
+    /**
+     * 面试题 16.22. 兰顿蚂蚁
+     * 执行用时：29 ms, 在所有 Java 提交中击败了85.12%的用户
+     * 内存消耗：60.1 MB, 在所有 Java 提交中击败了100.00%的用户
+     */
+    private static class Position {
+
+        // 横坐标 x 纵坐标 y
+        int x, y;
+
+        public Position(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == this) {
+                return true;
+            }
+            if (!(obj instanceof Position)) {
+                return false;
+            }
+            Position o = (Position) obj;
+            return x == o.x && y == o.y;
+        }
+
+        // 改写哈希算法，使两个 Position 对象可以比较坐标而不是内存地址
+        @Override
+        public int hashCode() {
+            int result = x;
+            result = 31 * result + y;
+            return result;
+        }
+    }
+
+    public List<String> printKMoves(int K) {
+        char[] direction = {'L', 'U', 'R', 'D'};
+        // 用“向量”记录方向，顺序与上一行方向的字符顺序保持一致，每个元素的后一个元素都是可以90°向右变换得到的
+        int[][] offset = {{-1, 0}, {0, -1}, {1, 0}, {0, 1}};
+        // 蚂蚁的位置
+        Position antPos = new Position(0, 0);
+        // 蚂蚁方向的向量序号
+        int antDir = 2;
+        // 用集合存储所有黑块的坐标，一开始想再定义一个路径的坐标集合，发现可以直接用黑块+蚂蚁位置也能过
+        Set<Position> blackSet = new HashSet<>();
+        while (K > 0) {
+            // 新的坐标对象用于放入集合
+            Position t = new Position(antPos.x, antPos.y);
+            // 如果黑块集合能存入，说明脚下的块不在集合中，也就意味着是白色，方向序号循环自增1
+            if (blackSet.add(t)) {
+                antDir = (antDir + 1) % 4;
+            } else {
+                // 否则说明脚下的块已经在集合中，也就意味着是黑色，方向序号循环自增3，相当于自减1，但是Math.floorMod取模可能消耗大？用+3替代
+                antDir = (antDir + 3) % 4;
+                // 别忘了删除，即将黑块变白
+                blackSet.remove(t);
+            }
+            // 蚂蚁移动位置
+            antPos.x += offset[antDir][0];
+            antPos.y += offset[antDir][1];
+            K--;
+        }
+        // 计算边界，即输出网格的行数和列数
+        int left = antPos.x, top = antPos.y, right = antPos.x, bottom = antPos.y;
+        for (Position pos : blackSet) {
+            left = Math.min(pos.x, left);
+            top = Math.min(pos.y, top);
+            right = Math.max(pos.x, right);
+            bottom = Math.max(pos.y, bottom);
+        }
+        char[][] grid = new char[bottom - top + 1][right - left + 1];
+        // 填充白块
+        for (char[] row : grid) {
+            Arrays.fill(row, '_');
+        }
+        // 替换黑块
+        for (Position pos : blackSet) {
+            grid[pos.y - top][pos.x - left] = 'X';
+        }
+        // 替换蚂蚁
+        grid[antPos.y - top][antPos.x - left] = direction[antDir];
+        // 利用网格生成字符串列表
+        List<String> result = new ArrayList<>();
+        for (char[] row : grid) {
+            result.add(String.valueOf(row));
+        }
+        return result;
+    }
+
+    /**
+     * 63. 不同路径 II
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
+     * 内存消耗：38.9 MB, 在所有 Java 提交中击败了48.15%的用户
+     *
+     * @param obstacleGrid 原地图
+     * @return 路径数量
+     */
+    public int uniquePathsWithObstacles(int[][] obstacleGrid) {
+        int n = obstacleGrid.length;
+        int m = obstacleGrid[0].length;
+        int[][] dp = new int[n][m];
+        if (obstacleGrid[0][0] == 1 || obstacleGrid[n - 1][m - 1] == 1) {
+            return 0;
+        }
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (i == 0 && j == 0) {
+                    dp[i][j] = 1;
+                    continue;
+                }
+                if (obstacleGrid[i][j] == 1) {
+                    dp[i][j] = 0;
+                } else if (i == 0) {
+                    dp[i][j] = dp[i][j - 1];
+                } else if (j == 0) {
+                    dp[i][j] = dp[i - 1][j];
+                } else {
+                    dp[i][j] = dp[i - 1][j] + dp[i][j - 1];
+                }
+            }
+        }
+        return dp[n - 1][m - 1];
+    }
+
+
+    /**
+     * 64. 最小路径和
+     * 执行用时：4 ms, 在所有 Java 提交中击败了30.96%的用户
+     * 内存消耗：42.5 MB, 在所有 Java 提交中击败了30.30%的用户
+     *
+     * @param grid 原地图
+     * @return 最小路径和
+     */
+    public int minPathSum(int[][] grid) {
+        int n = grid.length;
+        if (n == 0) {
+            return 1;
+        }
+        int m = grid[0].length;
+        int[][] dp = new int[n][m];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                dp[i][j] = grid[i][j];
+                if (i == 0 && j == 0) {
+                    dp[i][j] += 0;
+                } else if (i == 0) {
+                    dp[i][j] += dp[i][j - 1];
+                } else if (j == 0) {
+                    dp[i][j] += dp[i - 1][j];
+                } else {
+                    int t = Math.min(dp[i][j - 1], dp[i - 1][j]);
+                    dp[i][j] += t;
+                }
+            }
+        }
+        return dp[n - 1][m - 1];
+    }
+
+
+    /**
+     * 1504. 统计全 1 子矩形
+     * 执行用时：32 ms, 在所有 Java 提交中击败了100.00%的用户
+     * 内存消耗：40.8 MB, 在所有 Java 提交中击败了100.00%的用户
+     *
+     * @param mat 原始0-1数组
+     * @return 数组中全是1矩形个数
+     */
+    public int numSubmat(int[][] mat) {
+        int n = mat.length;
+        int m = mat[0].length;
+        int[][] prefixAnd = mat.clone();
+        for (int i = 0; i < n; i++) {
+            for (int j = 1; j < m; j++) {
+                prefixAnd[i][j] += prefixAnd[i][j - 1];
+            }
+        }
+        int num = 0;
+        for (int l = 0; l < m; l++) {
+            for (int r = l; r < m; r++) {
+                int tmp = 0;
+                for (int t = 0; t < n; t++) {
+                    int pre = prefixAnd[t][r];
+                    if (l > 0) {
+                        pre -= prefixAnd[t][l - 1];
+                    }
+                    if (pre == (r - l + 1)) {
+                        tmp++;
+                    } else {
+                        num += (tmp * (tmp + 1) / 2);
+                        tmp = 0;
+                    }
+                }
+                if (tmp != 0) {
+                    num += (tmp * (tmp + 1) / 2);
+                }
+            }
+        }
+        return num;
+    }
+
+
+    /**
+     * 1505. 最多 K 次交换相邻数位后得到的最小整数
+     * 执行用时：41 ms, 在所有 Java 提交中击败了100.00%的用户
+     * 内存消耗：40.3 MB, 在所有 Java 提交中击败了100.00%的用户
+     * @param num 初始数
+     * @param k 交换k次
+     * @return 结果数
+     */
+    public String minInteger(String num, int k) {
+
+        class FenwichTree {
+
+            private int[] sums;
+            private int[] nums;
+
+            public FenwichTree(int[] nums) {
+                this.sums = new int[nums.length + 1];
+                this.nums = nums;
+                for (int i = 0; i < nums.length; i++) {
+                    updateBit(i + 1, nums[i]);
+                }
+            }
+
+            public void update(int i, int val) {
+                updateBit(i + 1, val - nums[i]);
+                nums[i] = val;
+            }
+
+            private void updateBit(int i, int diff) {
+                while (i < sums.length) {
+                    sums[i] += diff;
+                    i += lowBit(i);
+                }
+            }
+
+            public int sumRange(int i, int j) {
+                return preSum(j + 1) - preSum(i);
+            }
+
+            private int preSum(int i) {
+                int sum = 0;
+                while (i > 0) {
+                    sum += sums[i];
+                    i -= lowBit(i);
+                }
+                return sum;
+            }
+
+            private int lowBit(int i) {
+                return i & (-i);
+            }
+
+        }
+        // 统计0-9的所有位置
+        List<Integer>[] idLists = new List[10];
+        for (int i = 0; i < 10; i++) {
+            idLists[i] = new ArrayList<>();
+        }
+        int n = num.length();
+        for (int i = 0; i < n; i++) {
+            idLists[num.charAt(i) - '0'].add(i);
+        }
+        // 指向idLists的0-9的当前位置
+        int[] ids = new int[10];
+        boolean[] seen = new boolean[n];
+        StringBuilder res = new StringBuilder();
+        // 统计范围内已被使用的下标，计算需要转换的次数时需要去掉已被转换到前面的那些下标
+        FenwichTree fwt = new FenwichTree(new int[n]);
+        outer:
+        for (int i = 0; i < n; i++) {
+            // 如果已经被置换过了，跳过
+            if (seen[i]) {
+                continue;
+            }
+            int cur = num.charAt(i) - '0';
+            // 查找比当前元素小且满足条件的最小值的下标
+            for (int j = 0; j < cur; j++) {
+                while (ids[j] < idLists[j].size() && idLists[j].get(ids[j]) < i) {
+                    ids[j]++;
+                }
+                if (ids[j] == idLists[j].size()) {
+                    continue;
+                }
+                int index = idLists[j].get(ids[j]);
+                int seenNum = fwt.sumRange(0, index - 1);
+                if (index - seenNum <= k) {
+                    // 找到了满足条件的值，更新状态
+                    k -= index - seenNum;
+                    ids[j]++;
+                    seen[index] = true;
+                    fwt.update(index, 1);
+                    i--;
+                    res.append(j);
+                    continue outer;
+                }
+            }
+            // 找不到满足条件且小于当前值的值，更新状态
+            seen[i] = true;
+            fwt.update(i, 1);
+            res.append(cur);
+        }
+        return res.toString();
+    }
+
+
     public static void main(String[] args) {
         SolutionVmware solutionVmware = new SolutionVmware();
         String[] strings = {"flower", "flow", "flight"};
@@ -2003,7 +2310,7 @@ public class SolutionVmware {
         int[][] goAhead = new int[][]{{1, 5, 9}, {10, 11, 13}, {12, 13, 15}};
         char[] chars = {'d', 'c', 'e', 'a', 'f', 'g', 'b'};
         int[] brr = {2, 2, 1, 1, 1, 2, 2};
-        String f = solutionVmware.minInteger("9438957234785635408", 22);
+        int f = solutionVmware.majorityElement2(brr);
         System.out.println(f);
     }
 }
