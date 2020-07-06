@@ -1893,8 +1893,9 @@ public class SolutionVmware {
      * 63. 不同路径 II
      * 执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
      * 内存消耗：38.9 MB, 在所有 Java 提交中击败了48.15%的用户
-     * @param obstacleGrid
-     * @return
+     *
+     * @param obstacleGrid 原地图
+     * @return 路径数量
      */
     public int uniquePathsWithObstacles(int[][] obstacleGrid) {
         int n = obstacleGrid.length;
@@ -1924,6 +1925,39 @@ public class SolutionVmware {
     }
 
 
+    /**
+     * 64. 最小路径和
+     * 执行用时：4 ms, 在所有 Java 提交中击败了30.96%的用户
+     * 内存消耗：42.5 MB, 在所有 Java 提交中击败了30.30%的用户
+     *
+     * @param grid 原地图
+     * @return 最小路径和
+     */
+    public int minPathSum(int[][] grid) {
+        int n = grid.length;
+        if (n == 0) {
+            return 1;
+        }
+        int m = grid[0].length;
+        int[][] dp = new int[n][m];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                dp[i][j] = grid[i][j];
+                if (i == 0 && j == 0) {
+                    dp[i][j] += 0;
+                } else if (i == 0) {
+                    dp[i][j] += dp[i][j - 1];
+                } else if (j == 0) {
+                    dp[i][j] += dp[i - 1][j];
+                } else {
+                    int t = Math.min(dp[i][j - 1], dp[i - 1][j]);
+                    dp[i][j] += t;
+                }
+            }
+        }
+        return dp[n - 1][m - 1];
+    }
+
     public static void main(String[] args) {
         SolutionVmware solutionVmware = new SolutionVmware();
         String[] strings = {"flower", "flow", "flight"};
@@ -1938,10 +1972,10 @@ public class SolutionVmware {
         t.right = t2;
         t1.right = t3;
         t2.right = t4;
-        int[][] goAhead = new int[][]{{0, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 0}};
+        int[][] goAhead = new int[][]{{1, 2, 5}, {3, 2, 1}};
         char[] chars = {'d', 'c', 'e', 'a', 'f', 'g', 'b'};
         int[] brr = {2, 2, 1, 1, 1, 2, 2};
-        int f = solutionVmware.uniquePathsWithObstacles(new int[][]{{1}});
+        int f = solutionVmware.minPathSum(goAhead);
         System.out.println(f);
     }
 }
