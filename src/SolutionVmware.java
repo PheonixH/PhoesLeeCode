@@ -1,6 +1,5 @@
 import data.ListNode;
 import data.TreeNode;
-import sun.misc.Queue;
 
 import java.util.*;
 
@@ -54,14 +53,14 @@ public class SolutionVmware {
         char[] first = strs[0].toCharArray();
         char[] last = strs[strs.length - 1].toCharArray();
         int len = Math.min(first.length, last.length);
-        String res = "";
+        StringBuilder res = new StringBuilder();
         for (int i = 0; i < len; i++) {
             if (first[i] != last[i]) {
                 break;
             }
-            res = res + first[i];
+            res.append(first[i]);
         }
-        return res;
+        return res.toString();
     }
 
     /**
@@ -91,7 +90,7 @@ public class SolutionVmware {
 
     }
 
-    class Trie {
+    static class Trie {
         class Node {
             int id;
             boolean flag;
@@ -120,8 +119,8 @@ public class SolutionVmware {
             Node p = root;
             char[] chars = word.toCharArray();
             int len = chars.length;
-            for (int i = 0; i < len; i++) {
-                int c = chars[i] - 97;
+            for (char aChar : chars) {
+                int c = aChar - 97;
                 if (p.children[c] == null) {
                     p.children[c] = new Node();
                 }
@@ -135,8 +134,8 @@ public class SolutionVmware {
             Node p = root;
             char[] chars = word.toCharArray();
             int len = chars.length;
-            for (int i = 0; i < len; i++) {
-                int c = chars[i] - 97;
+            for (char aChar : chars) {
+                int c = aChar - 97;
 
                 if (p.children[c] == null) {
                     return;
@@ -175,6 +174,7 @@ public class SolutionVmware {
     public TreeNode increasingBST(TreeNode root) {
         TreeNode p = root;
         Stack<TreeNode> stack = new Stack<>();
+        assert p != null;
         while (p.left == null) {
             p = p.left;
         }
@@ -185,7 +185,6 @@ public class SolutionVmware {
         p.right = root;
         root.left = null;
         newRoot.right = root;
-        root.left = null;
         return newRoot;
     }
 
@@ -195,15 +194,15 @@ public class SolutionVmware {
      * 执行用时 :9 ms, 在所有 Java 提交中击败了5.64%的用户
      * 内存消耗 :47.6 MB, 在所有 Java 提交中击败了100.00%的用户
      */
-    public int maxScoreSightseeingPair(int[] A) {
-        int len = A.length;
+    public int maxScoreSightseeingPair(int[] arr) {
+        int len = arr.length;
         int[] arrayI = new int[len], arrayJ = new int[len], arrayJmaxI = new int[len];
-        arrayI[0] = A[0];
+        arrayI[0] = arr[0];
         arrayJmaxI[0] = -1;
         int max = 0;
         for (int i = 1; i < len; i++) {
-            arrayI[i] = A[i] + i;
-            arrayJ[i] = A[i] - i;
+            arrayI[i] = arr[i] + i;
+            arrayJ[i] = arr[i] - i;
             arrayJmaxI[i] = Math.max(arrayI[i - 1], arrayJmaxI[i - 1]);
             max = Math.max(max, arrayJ[i] + arrayJmaxI[i]);
         }
@@ -214,14 +213,14 @@ public class SolutionVmware {
      * 执行用时 :4 ms, 在所有 Java 提交中击败了87.77%的用户
      * 内存消耗 :48.2 MB, 在所有 Java 提交中击败了100.00%的用户
      */
-    public int maxScoreSightseeingPair0(int[] A) {
-        int len = A.length;
-        int keyI = A[0], keyJ = 0, maxI = -1;
+    public int maxScoreSightseeingPair0(int[] arr) {
+        int len = arr.length;
+        int keyI = arr[0], keyJ = 0, maxI = -1;
         int max = 0;
         for (int i = 1; i < len; i++) {
             maxI = Math.max(keyI, maxI);
-            keyI = A[i] + i;
-            keyJ = A[i] - i;
+            keyI = arr[i] + i;
+            keyJ = arr[i] - i;
             max = Math.max(max, keyJ + maxI);
         }
         return max;
@@ -256,7 +255,7 @@ public class SolutionVmware {
         int endI = obstacleGrid.length - 1;
         int endJ = obstacleGrid[0].length - 1;
         if (endI == 0 && endJ == 0) {
-            if (obstacleGrid[0][0] == 00) {
+            if (obstacleGrid[0][0] == 0) {
                 List<Integer> dfsPoint = new ArrayList<Integer>();
                 dfsPoint.add(0);
                 dfsPoint.add(0);
@@ -294,27 +293,23 @@ public class SolutionVmware {
                 } else if (y == endJ + 1) {
                     continue;
                 } else if (x == endI && y == endJ) {
-                    List<Integer> newp = new ArrayList<>();
-                    newp.add(x);
-                    newp.add(y);
-                    preLoad.add(newp);
+                    List<Integer> newPoint = new ArrayList<>();
+                    newPoint.add(x);
+                    newPoint.add(y);
+                    preLoad.add(newPoint);
                     return preLoad;
                 }
                 String newKey = x + ":" + y;
                 if (visited.contains(newKey)) {
-                    continue;
                 } else if (obstacleGrid[x][y] == 1) {
                     visited.add(newKey);
                 } else {
-                    List<Integer> newp = new ArrayList<>();
-                    newp.add(x);
-                    newp.add(y);
-                    stack.push(newp);
-                    List<List<Integer>> newList = new ArrayList<>();
-                    for (List<Integer> li : preLoad) {
-                        newList.add(li);
-                    }
-                    newList.add(newp);
+                    List<Integer> newPoint = new ArrayList<>();
+                    newPoint.add(x);
+                    newPoint.add(y);
+                    stack.push(newPoint);
+                    List<List<Integer>> newList = new ArrayList<>(preLoad);
+                    newList.add(newPoint);
                     load.put(newKey, newList);
                     visited.add(newKey);
                 }
@@ -394,8 +389,7 @@ public class SolutionVmware {
         for (int i = 1; i < chars.length; i++) {
             int k = i;
             for (; i < chars.length; i++) {
-                if ("".equals(chars[i])) {
-                } else {
+                if (!"".equals(chars[i])) {
                     break;
                 }
             }
@@ -403,9 +397,9 @@ public class SolutionVmware {
                 break;
             }
             k = i - k;
+            TreeNode fatherTree = map.get(k);
+            TreeNode newTree = new TreeNode(Integer.parseInt(chars[i]));
             if (k > father) {
-                TreeNode fatherTree = map.get(k);
-                TreeNode newTree = new TreeNode(Integer.parseInt(chars[i]));
                 fatherTree.left = newTree;
                 father = k;
                 if (map.size() <= k + 1) {
@@ -414,8 +408,6 @@ public class SolutionVmware {
                     map.set(k + 1, newTree);
                 }
             } else {
-                TreeNode fatherTree = map.get(k);
-                TreeNode newTree = new TreeNode(Integer.parseInt(chars[i]));
                 fatherTree.right = newTree;
                 father = k;
                 map.set(k + 1, newTree);
@@ -433,22 +425,22 @@ public class SolutionVmware {
     public int[][] floodFill(int[][] image, int sr, int sc, int newColor) {
         int[][] maybeAround = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
         Set<String> isVisited = new HashSet<>();
-        Stack<int[]> isAround = new Stack();
+        Stack<int[]> isAround = new Stack<>();
         int oldColor = image[sr][sc];
         int[] point = {sr, sc};
         isAround.push(point);
         isVisited.add(point[0] + ":" + point[1]);
-        int maxr = image.length, maxc = image[0].length;
+        int maxRow = image.length, maxCol = image[0].length;
         while (!isAround.isEmpty()) {
             int[] tmpPoint = isAround.pop();
             image[tmpPoint[0]][tmpPoint[1]] = newColor;
             for (int[] m : maybeAround) {
-                if (m[0] + tmpPoint[0] >= 0 && m[0] + tmpPoint[0] < maxr && m[1] + tmpPoint[1] >= 0 && m[1] + tmpPoint[1] < maxc) {
+                if (m[0] + tmpPoint[0] >= 0 && m[0] + tmpPoint[0] < maxRow && m[1] + tmpPoint[1] >= 0 && m[1] + tmpPoint[1] < maxCol) {
                     if (image[m[0] + tmpPoint[0]][m[1] + tmpPoint[1]] == oldColor) {
-                        int[] newp = {m[0] + tmpPoint[0], m[1] + tmpPoint[1]};
-                        if (!isVisited.contains(newp[0] + ":" + newp[1])) {
-                            isAround.push(newp);
-                            isVisited.add(newp[0] + ":" + newp[1]);
+                        int[] newPoint = {m[0] + tmpPoint[0], m[1] + tmpPoint[1]};
+                        if (!isVisited.contains(newPoint[0] + ":" + newPoint[1])) {
+                            isAround.push(newPoint);
+                            isVisited.add(newPoint[0] + ":" + newPoint[1]);
                         }
                     }
                 }
@@ -465,7 +457,8 @@ public class SolutionVmware {
     public int[][] floodFill0(int[][] image, int sr, int sc, int newColor) {
         int x = image.length;
         int y = image[0].length;
-        if ((sr < 0 || sr >= x) || (sc < 0 || sc >= y)) {
+        boolean b = (sr < 0 || sr >= x) || (sc < 0 || sc >= y);
+        if (b) {
             return image;
         }
         int oldColor = image[sr][sc];
@@ -475,7 +468,8 @@ public class SolutionVmware {
     public int[][] floodFill(int[][] image, int sr, int sc, int oloColor, int newColor) {
         int x = image.length;
         int y = image[0].length;
-        if ((sr < 0 || sr >= x) || (sc < 0 || sc >= y)) {
+        boolean b = (sr < 0 || sr >= x) || (sc < 0 || sc >= y);
+        if (b) {
             return image;
         }
         if (image[sr][sc] == oloColor && image[sr][sc] != newColor) {
@@ -513,11 +507,11 @@ public class SolutionVmware {
      * 执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
      * 内存消耗：37.5 MB, 在所有 Java 提交中击败了100.00%的用户
      */
-    public boolean isUnique(String astr) {
-        for (int i = 0; i < astr.length(); i++) {
-            String s = astr;
+    public boolean isUnique(String str) {
+        for (int i = 0; i < str.length(); i++) {
+            String s = str;
             s = s.replace(String.valueOf(s.charAt(i)), "");
-            if (s.length() != astr.length() - 1) {
+            if (s.length() != str.length() - 1) {
                 return false;
             }
         }
@@ -530,9 +524,9 @@ public class SolutionVmware {
      * 执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
      * 内存消耗：37.2 MB, 在所有 Java 提交中击败了100.00%的用户
      */
-    public boolean isUnique0(String astr) {
-        for (char ch : astr.toCharArray()) {
-            if (astr.indexOf(ch) != astr.lastIndexOf(ch)) {
+    public boolean isUnique0(String str) {
+        for (char ch : str.toCharArray()) {
+            if (str.indexOf(ch) != str.lastIndexOf(ch)) {
                 return false;
             }
         }
@@ -559,7 +553,7 @@ public class SolutionVmware {
             return false;
         }
         for (int i = 0; i < s1.length(); i++) {
-            if (map1.get(s1.charAt(i)) != map2.get(s1.charAt(i))) {
+            if (!map1.get(s1.charAt(i)).equals(map2.get(s1.charAt(i)))) {
                 return false;
             }
         }
@@ -639,8 +633,8 @@ public class SolutionVmware {
      * 执行用时：22 ms, 在所有 Java 提交中击败了37.82%的用户
      * 内存消耗：47.7 MB, 在所有 Java 提交中击败了100.00%的用户
      */
-    public String replaceSpaces0(String S, int length) {
-        char[] chars = S.toCharArray();
+    public String replaceSpaces0(String str, int length) {
+        char[] chars = str.toCharArray();
         StringBuilder stringBuffer = new StringBuilder();
         for (int i = 0; i < length; i++) {
             char c = chars[i];
@@ -659,14 +653,14 @@ public class SolutionVmware {
      * 执行用时：22 ms, 在所有 Java 提交中击败了37.82%的用户
      * 内存消耗：47.7 MB, 在所有 Java 提交中击败了100.00%的用户
      */
-    public String replaceSpaces(String S, int length) {
+    public String replaceSpaces(String str, int length) {
         int num = 0;
         for (int i = 0; i < length; i++) {
-            if (' ' == S.charAt(i)) {
+            if (' ' == str.charAt(i)) {
                 num++;
             }
         }
-        String news = S.replace(" ", "%20");
+        String news = str.replace(" ", "%20");
         return news.substring(0, length + 2 * num);
     }
 
@@ -690,10 +684,13 @@ public class SolutionVmware {
                 }
                 if (l == 0) {
                     dp[i][j] = true;
-                } else if (l == 1) {
-                    dp[i][j] = (s.charAt(i) == s.charAt(j));
                 } else {
-                    dp[i][j] = (dp[i + 1][j - 1] && s.charAt(i) == s.charAt(j));
+                    boolean b = s.charAt(i) == s.charAt(j);
+                    if (l == 1) {
+                        dp[i][j] = b;
+                    } else {
+                        dp[i][j] = (dp[i + 1][j - 1] && b);
+                    }
                 }
                 if (dp[i][j] && l + 1 > ans.length()) {
                     ans = s.substring(i, j + 1);
@@ -1017,8 +1014,7 @@ public class SolutionVmware {
             }
         }
         boolean[] visited = new boolean[routes.length];
-        Deque<Integer> queue = new ArrayDeque<>();
-        queue.addAll(posMap.get(S)); // 加入所有车信息
+        Deque<Integer> queue = new ArrayDeque<>(posMap.get(S)); // 加入所有车信息
         for (int k : posMap.get(S)) {
             visited[k] = true;
         }
@@ -1057,10 +1053,10 @@ public class SolutionVmware {
 
         // 用List构建图上的节点关系，用Set存放一个路线（一个节点）
         List<Set<Integer>> routeList = new LinkedList<>();
-        for (int i = 0; i < routes.length; i++) {
-            HashSet s = new HashSet<Integer>();
-            for (int j = 0; j < routes[i].length; j++) {
-                s.add(routes[i][j]);
+        for (int[] route : routes) {
+            Set<Integer> s = new HashSet<>();
+            for (int i : route) {
+                s.add(i);
             }
             if (s.contains(S)) {
                 if (s.contains(T)) {
@@ -1790,6 +1786,7 @@ public class SolutionVmware {
      * 面试题 08.03. 魔术索引
      * 执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
      * 内存消耗：40.6 MB, 在所有 Java 提交中击败了100.00%的用户
+     *
      * @param nums 原始数组
      * @return 最小魔术索引
      */
@@ -1838,7 +1835,7 @@ public class SolutionVmware {
         boolean isVisit = false;
         for (int i = 0; i < mat.length; i++) {
             for (int j = 0; j < mat[0].length; j++) {
-                if (mat[i][j] == 1&&!isVisit) {
+                if (mat[i][j] == 1 && !isVisit) {
                     isVisit = true;
                     int t = 1;
                     for (int k = j; k < mat.length; k++) {
@@ -1867,8 +1864,7 @@ public class SolutionVmware {
                         res += sum2(x);
                     }
 
-                }
-                else if(mat[i][j] == 0){
+                } else if (mat[i][j] == 0) {
                     isVisit = false;
                 }
             }
@@ -1983,7 +1979,6 @@ public class SolutionVmware {
         }
         return res;
     }
-
 
 
     /**
@@ -2154,7 +2149,7 @@ public class SolutionVmware {
      * @param mat 原始0-1数组
      * @return 数组中全是1矩形个数
      */
-    public int numSubmat(int[][] mat) {
+    public int numSubmat0(int[][] mat) {
         int n = mat.length;
         int m = mat[0].length;
         int[][] prefixAnd = mat.clone();
@@ -2192,11 +2187,12 @@ public class SolutionVmware {
      * 1505. 最多 K 次交换相邻数位后得到的最小整数
      * 执行用时：41 ms, 在所有 Java 提交中击败了100.00%的用户
      * 内存消耗：40.3 MB, 在所有 Java 提交中击败了100.00%的用户
+     *
      * @param num 初始数
-     * @param k 交换k次
+     * @param k   交换k次
      * @return 结果数
      */
-    public String minInteger(String num, int k) {
+    public String minInteger0(String num, int k) {
 
         class FenwichTree {
 
