@@ -2071,7 +2071,8 @@ public class SolutionVmware {
         FenwichTree fwt = new FenwichTree(new int[n]);
         outer:
         for (int i = 0; i < n; i++) {
-            if (seen[i]) { // 如果已经被置换过了，跳过
+            // 如果已经被置换过了，跳过
+            if (seen[i]) {
                 continue;
             }
             int cur = num.charAt(i) - '0';
