@@ -1416,7 +1416,7 @@ public class SolutionVmware {
      * 执行用时：22 ms, 在所有 Java 提交中击败了56.94%的用户
      * 内存消耗：39.5 MB, 在所有 Java 提交中击败了100.00%的用户
      *
-     * @param A 加数
+     * @param A      加数
      * @param target 目标值
      * @return 可能数量
      */
@@ -1476,9 +1476,9 @@ public class SolutionVmware {
      * 执行用时：59 ms, 在所有 Java 提交中击败了10.22%的用户
      * 内存消耗：85.5 MB, 在所有 Java 提交中击败了100.00%的用户
      *
-     * @param n 节点数
-     * @param graph 地图
-     * @param start 起始点
+     * @param n      节点数
+     * @param graph  地图
+     * @param start  起始点
      * @param target 目标点
      * @return 通路数量
      */
@@ -1619,7 +1619,7 @@ public class SolutionVmware {
      * 内存消耗：45.5 MB, 在所有 Java 提交中击败了7.69%的用户
      *
      * @param matrix 有序矩阵
-     * @param k 第k个
+     * @param k      第k个
      * @return 有序矩阵中第K小的元素
      */
     public int kthSmallest(int[][] matrix, int k) {
@@ -1658,7 +1658,7 @@ public class SolutionVmware {
      * 内存消耗：45.4 MB, 在所有 Java 提交中击败了7.69%的用户
      *
      * @param matrix 有序矩阵
-     * @param k 第k个
+     * @param k      第k个
      * @return 有序矩阵中第K小的元素
      */
     public int kthSmallest0(int[][] matrix, int k) {
@@ -2293,8 +2293,9 @@ public class SolutionVmware {
      * 112. 路径总和
      * 执行用时：1 ms, 在所有 Java 提交中击败了14.22%的用户
      * 内存消耗：40.1 MB, 在所有 Java 提交中击败了6.52%的用户
+     *
      * @param root 树
-     * @param sum 和
+     * @param sum  和
      * @return 是否能达成路径和
      */
     public boolean hasPathSum(TreeNode root, int sum) {
@@ -2321,6 +2322,42 @@ public class SolutionVmware {
             }
         }
         return false;
+    }
+
+
+    /**
+     * 1498. 满足条件的子序列数目
+     * 执行用时：36 ms, 在所有 Java 提交中击败了85.96%的用户
+     * 内存消耗：48.6 MB, 在所有 Java 提交中击败了100.00%的用户
+     * @param nums 原始数组
+     * @param target 目标值
+     * @return 满足条件的子序列数目
+     */
+    public int numSubseq(int[] nums, int target) {
+        Arrays.sort(nums);
+        if (nums[0] * 2 > target) {
+            return 0;
+        }
+        int left = 0;
+        int right = nums.length - 1;
+        int res = 0;
+        int[] pow = new int[nums.length];
+        pow[0] = 1;
+        int mode = 1_0000_0000_7;
+        for (int i = 1; i < nums.length; i++) {
+            pow[i] = pow[i - 1] * 2;
+            pow[i] %= mode;
+        }
+        while (left <= right) {
+            if (nums[left] + nums[right] <= target) {
+                res += pow[right - left];
+                res %= mode;
+                left++;
+            } else {
+                right--;
+            }
+        }
+        return res;
     }
 
     public static void main(String[] args) {
