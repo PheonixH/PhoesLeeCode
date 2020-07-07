@@ -1965,7 +1965,9 @@ public class SolutionVmware {
                         minKey = data[i];
                     }
                 }
-                if (minI - tmp >= 0) System.arraycopy(data, tmp, data, tmp + 1, minI - tmp);
+                if (minI - tmp >= 0) {
+                    System.arraycopy(data, tmp, data, tmp + 1, minI - tmp);
+                }
                 data[tmp] = minKey;
                 k = k - minI + tmp;
                 tmp++;
