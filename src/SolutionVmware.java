@@ -2005,8 +2005,9 @@ public class SolutionVmware {
      * 1505. 最多 K 次交换相邻数位后得到的最小整数
      * 执行用时：41 ms, 在所有 Java 提交中击败了100.00%的用户
      * 内存消耗：40.3 MB, 在所有 Java 提交中击败了100.00%的用户
+     *
      * @param num 初始数
-     * @param k 交换k次
+     * @param k   交换k次
      * @return 结果数
      */
     public String minInteger(String num, int k) {
@@ -2105,6 +2106,39 @@ public class SolutionVmware {
         return res.toString();
     }
 
+    /**
+     * 112. 路径总和
+     * 执行用时：1 ms, 在所有 Java 提交中击败了14.22%的用户
+     * 内存消耗：40.1 MB, 在所有 Java 提交中击败了6.52%的用户
+     * @param root 树
+     * @param sum 和
+     * @return 是否能达成路径和
+     */
+    public boolean hasPathSum(TreeNode root, int sum) {
+        if (root == null) {
+            return false;
+        }
+        Stack<TreeNode> stack = new Stack<>();
+        stack.push(root);
+        while (!stack.isEmpty()) {
+            TreeNode tmp = stack.pop();
+            if (tmp.left == null && tmp.right == null) {
+                if (tmp.val == sum) {
+                    return true;
+                }
+                continue;
+            }
+            if (tmp.left != null) {
+                tmp.left.val += tmp.val;
+                stack.push(tmp.left);
+            }
+            if (tmp.right != null) {
+                tmp.right.val += tmp.val;
+                stack.push(tmp.right);
+            }
+        }
+        return false;
+    }
 
     public static void main(String[] args) {
         SolutionVmware solutionVmware = new SolutionVmware();
@@ -2123,7 +2157,7 @@ public class SolutionVmware {
         int[][] goAhead = new int[][]{{1, 0, 1}, {1, 1, 0}, {1, 1, 0}};
         char[] chars = {'d', 'c', 'e', 'a', 'f', 'g', 'b'};
         int[] brr = {2, 2, 1, 1, 1, 2, 2};
-        int f = solutionVmware.numSubmat(goAhead);
+        boolean f = solutionVmware.hasPathSum(t, 10);
         System.out.println(f);
     }
 }
