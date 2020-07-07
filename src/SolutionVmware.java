@@ -92,7 +92,7 @@ public class SolutionVmware {
     }
 
     static class Trie {
-        static class Node {
+        class Node {
             int id;
             boolean flag;
             Node[] children;
@@ -175,6 +175,7 @@ public class SolutionVmware {
     public TreeNode increasingBST(TreeNode root) {
         TreeNode p = root;
         Stack<TreeNode> stack = new Stack<>();
+        assert p != null;
         while (p.left == null) {
             p = p.left;
         }
@@ -185,7 +186,6 @@ public class SolutionVmware {
         p.right = root;
         root.left = null;
         newRoot.right = root;
-        root.right = null;
         return newRoot;
     }
 
@@ -195,15 +195,15 @@ public class SolutionVmware {
      * 执行用时 :9 ms, 在所有 Java 提交中击败了5.64%的用户
      * 内存消耗 :47.6 MB, 在所有 Java 提交中击败了100.00%的用户
      */
-    public int maxScoreSightseeingPair(int[] A) {
-        int len = A.length;
+    public int maxScoreSightseeingPair(int[] arr) {
+        int len = arr.length;
         int[] arrayI = new int[len], arrayJ = new int[len], arrayJmaxI = new int[len];
-        arrayI[0] = A[0];
+        arrayI[0] = arr[0];
         arrayJmaxI[0] = -1;
         int max = 0;
         for (int i = 1; i < len; i++) {
-            arrayI[i] = A[i] + i;
-            arrayJ[i] = A[i] - i;
+            arrayI[i] = arr[i] + i;
+            arrayJ[i] = arr[i] - i;
             arrayJmaxI[i] = Math.max(arrayI[i - 1], arrayJmaxI[i - 1]);
             max = Math.max(max, arrayJ[i] + arrayJmaxI[i]);
         }
@@ -214,14 +214,14 @@ public class SolutionVmware {
      * 执行用时 :4 ms, 在所有 Java 提交中击败了87.77%的用户
      * 内存消耗 :48.2 MB, 在所有 Java 提交中击败了100.00%的用户
      */
-    public int maxScoreSightseeingPair0(int[] A) {
-        int len = A.length;
-        int keyI = A[0], keyJ = 0, maxI = -1;
+    public int maxScoreSightseeingPair0(int[] arr) {
+        int len = arr.length;
+        int keyI = arr[0], keyJ = 0, maxI = -1;
         int max = 0;
         for (int i = 1; i < len; i++) {
             maxI = Math.max(keyI, maxI);
-            keyI = A[i] + i;
-            keyJ = A[i] - i;
+            keyI = arr[i] + i;
+            keyJ = arr[i] - i;
             max = Math.max(max, keyJ + maxI);
         }
         return max;
@@ -294,10 +294,10 @@ public class SolutionVmware {
                 } else if (y == endJ + 1) {
                     continue;
                 } else if (x == endI && y == endJ) {
-                    List<Integer> newp = new ArrayList<>();
-                    newp.add(x);
-                    newp.add(y);
-                    preLoad.add(newp);
+                    List<Integer> newPoint = new ArrayList<>();
+                    newPoint.add(x);
+                    newPoint.add(y);
+                    preLoad.add(newPoint);
                     return preLoad;
                 }
                 String newKey = x + ":" + y;
@@ -305,12 +305,12 @@ public class SolutionVmware {
                 } else if (obstacleGrid[x][y] == 1) {
                     visited.add(newKey);
                 } else {
-                    List<Integer> newp = new ArrayList<>();
-                    newp.add(x);
-                    newp.add(y);
-                    stack.push(newp);
+                    List<Integer> newPoint = new ArrayList<>();
+                    newPoint.add(x);
+                    newPoint.add(y);
+                    stack.push(newPoint);
                     List<List<Integer>> newList = new ArrayList<>(preLoad);
-                    newList.add(newp);
+                    newList.add(newPoint);
                     load.put(newKey, newList);
                     visited.add(newKey);
                 }
@@ -398,9 +398,9 @@ public class SolutionVmware {
                 break;
             }
             k = i - k;
+            TreeNode fatherTree = map.get(k);
+            TreeNode newTree = new TreeNode(Integer.parseInt(chars[i]));
             if (k > father) {
-                TreeNode fatherTree = map.get(k);
-                TreeNode newTree = new TreeNode(Integer.parseInt(chars[i]));
                 fatherTree.left = newTree;
                 father = k;
                 if (map.size() <= k + 1) {
@@ -409,8 +409,6 @@ public class SolutionVmware {
                     map.set(k + 1, newTree);
                 }
             } else {
-                TreeNode fatherTree = map.get(k);
-                TreeNode newTree = new TreeNode(Integer.parseInt(chars[i]));
                 fatherTree.right = newTree;
                 father = k;
                 map.set(k + 1, newTree);
@@ -428,22 +426,22 @@ public class SolutionVmware {
     public int[][] floodFill(int[][] image, int sr, int sc, int newColor) {
         int[][] maybeAround = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
         Set<String> isVisited = new HashSet<>();
-        Stack<int[]> isAround = new Stack();
+        Stack<int[]> isAround = new Stack<>();
         int oldColor = image[sr][sc];
         int[] point = {sr, sc};
         isAround.push(point);
         isVisited.add(point[0] + ":" + point[1]);
-        int maxr = image.length, maxc = image[0].length;
+        int maxRow = image.length, maxCol = image[0].length;
         while (!isAround.isEmpty()) {
             int[] tmpPoint = isAround.pop();
             image[tmpPoint[0]][tmpPoint[1]] = newColor;
             for (int[] m : maybeAround) {
-                if (m[0] + tmpPoint[0] >= 0 && m[0] + tmpPoint[0] < maxr && m[1] + tmpPoint[1] >= 0 && m[1] + tmpPoint[1] < maxc) {
+                if (m[0] + tmpPoint[0] >= 0 && m[0] + tmpPoint[0] < maxRow && m[1] + tmpPoint[1] >= 0 && m[1] + tmpPoint[1] < maxCol) {
                     if (image[m[0] + tmpPoint[0]][m[1] + tmpPoint[1]] == oldColor) {
-                        int[] newp = {m[0] + tmpPoint[0], m[1] + tmpPoint[1]};
-                        if (!isVisited.contains(newp[0] + ":" + newp[1])) {
-                            isAround.push(newp);
-                            isVisited.add(newp[0] + ":" + newp[1]);
+                        int[] newPoint = {m[0] + tmpPoint[0], m[1] + tmpPoint[1]};
+                        if (!isVisited.contains(newPoint[0] + ":" + newPoint[1])) {
+                            isAround.push(newPoint);
+                            isVisited.add(newPoint[0] + ":" + newPoint[1]);
                         }
                     }
                 }
@@ -460,7 +458,8 @@ public class SolutionVmware {
     public int[][] floodFill0(int[][] image, int sr, int sc, int newColor) {
         int x = image.length;
         int y = image[0].length;
-        if ((sr < 0 || sr >= x) || (sc < 0 || sc >= y)) {
+        boolean b = (sr < 0 || sr >= x) || (sc < 0 || sc >= y);
+        if (b) {
             return image;
         }
         int oldColor = image[sr][sc];
@@ -470,7 +469,8 @@ public class SolutionVmware {
     public int[][] floodFill(int[][] image, int sr, int sc, int oloColor, int newColor) {
         int x = image.length;
         int y = image[0].length;
-        if ((sr < 0 || sr >= x) || (sc < 0 || sc >= y)) {
+        boolean b = (sr < 0 || sr >= x) || (sc < 0 || sc >= y);
+        if (b) {
             return image;
         }
         if (image[sr][sc] == oloColor && image[sr][sc] != newColor) {
@@ -508,11 +508,11 @@ public class SolutionVmware {
      * 执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
      * 内存消耗：37.5 MB, 在所有 Java 提交中击败了100.00%的用户
      */
-    public boolean isUnique(String astr) {
-        for (int i = 0; i < astr.length(); i++) {
-            String s = astr;
+    public boolean isUnique(String str) {
+        for (int i = 0; i < str.length(); i++) {
+            String s = str;
             s = s.replace(String.valueOf(s.charAt(i)), "");
-            if (s.length() != astr.length() - 1) {
+            if (s.length() != str.length() - 1) {
                 return false;
             }
         }
@@ -525,9 +525,9 @@ public class SolutionVmware {
      * 执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
      * 内存消耗：37.2 MB, 在所有 Java 提交中击败了100.00%的用户
      */
-    public boolean isUnique0(String astr) {
-        for (char ch : astr.toCharArray()) {
-            if (astr.indexOf(ch) != astr.lastIndexOf(ch)) {
+    public boolean isUnique0(String str) {
+        for (char ch : str.toCharArray()) {
+            if (str.indexOf(ch) != str.lastIndexOf(ch)) {
                 return false;
             }
         }
@@ -634,8 +634,8 @@ public class SolutionVmware {
      * 执行用时：22 ms, 在所有 Java 提交中击败了37.82%的用户
      * 内存消耗：47.7 MB, 在所有 Java 提交中击败了100.00%的用户
      */
-    public String replaceSpaces0(String S, int length) {
-        char[] chars = S.toCharArray();
+    public String replaceSpaces0(String str, int length) {
+        char[] chars = str.toCharArray();
         StringBuilder stringBuffer = new StringBuilder();
         for (int i = 0; i < length; i++) {
             char c = chars[i];
@@ -654,14 +654,14 @@ public class SolutionVmware {
      * 执行用时：22 ms, 在所有 Java 提交中击败了37.82%的用户
      * 内存消耗：47.7 MB, 在所有 Java 提交中击败了100.00%的用户
      */
-    public String replaceSpaces(String S, int length) {
+    public String replaceSpaces(String str, int length) {
         int num = 0;
         for (int i = 0; i < length; i++) {
-            if (' ' == S.charAt(i)) {
+            if (' ' == str.charAt(i)) {
                 num++;
             }
         }
-        String news = S.replace(" ", "%20");
+        String news = str.replace(" ", "%20");
         return news.substring(0, length + 2 * num);
     }
 
@@ -685,10 +685,13 @@ public class SolutionVmware {
                 }
                 if (l == 0) {
                     dp[i][j] = true;
-                } else if (l == 1) {
-                    dp[i][j] = (s.charAt(i) == s.charAt(j));
                 } else {
-                    dp[i][j] = (dp[i + 1][j - 1] && s.charAt(i) == s.charAt(j));
+                    boolean b = s.charAt(i) == s.charAt(j);
+                    if (l == 1) {
+                        dp[i][j] = b;
+                    } else {
+                        dp[i][j] = (dp[i + 1][j - 1] && b);
+                    }
                 }
                 if (dp[i][j] && l + 1 > ans.length()) {
                     ans = s.substring(i, j + 1);
@@ -1052,7 +1055,7 @@ public class SolutionVmware {
         // 用List构建图上的节点关系，用Set存放一个路线（一个节点）
         List<Set<Integer>> routeList = new LinkedList<>();
         for (int[] route : routes) {
-            HashSet<Integer> s = new HashSet<>();
+            Set<Integer> s = new HashSet<>();
             for (int i : route) {
                 s.add(i);
             }
@@ -1152,8 +1155,8 @@ public class SolutionVmware {
     private int getCount(int[] arr, int day, int k) {
         int re = 0;
         int count = 0;
-        for (int value : arr) {
-            if (value <= day) {
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i] <= day) {
                 count++;
             } else {
                 count = 0;
@@ -1199,7 +1202,6 @@ public class SolutionVmware {
         }
         while (k >= 0) {
             int[] tmp = queue.poll();
-            assert tmp != null;
             k = k - tmp[1];
         }
         return queue.size() + 1;
@@ -1394,8 +1396,8 @@ public class SolutionVmware {
      * 执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
      * 内存消耗：36.4 MB, 在所有 Java 提交中击败了100.00%的用户
      *
-     * @param a 加数 a
-     * @param b 加数 b
+     * @param a 加数a
+     * @param b 加数b
      * @return 和
      */
     public int add(int a, int b) {
@@ -1414,9 +1416,9 @@ public class SolutionVmware {
      * 执行用时：22 ms, 在所有 Java 提交中击败了56.94%的用户
      * 内存消耗：39.5 MB, 在所有 Java 提交中击败了100.00%的用户
      *
-     * @param A      加数数组
+     * @param A 加数
      * @param target 目标值
-     * @return 可能种类数目
+     * @return 可能数量
      */
     public int threeSumMulti(int[] A, int target) {
         Map<Integer, Integer> counts = new HashMap<>();
@@ -1474,11 +1476,11 @@ public class SolutionVmware {
      * 执行用时：59 ms, 在所有 Java 提交中击败了10.22%的用户
      * 内存消耗：85.5 MB, 在所有 Java 提交中击败了100.00%的用户
      *
-     * @param n      节点个数
-     * @param graph  地图数组
-     * @param start  起始点
+     * @param n 节点数
+     * @param graph 地图
+     * @param start 起始点
      * @param target 目标点
-     * @return 通路
+     * @return 通路数量
      */
     public boolean findWhetherExistsPath(int n, int[][] graph, int start, int target) {
         Map<Integer, List<Integer>> map = new HashMap<>();
@@ -1523,7 +1525,7 @@ public class SolutionVmware {
      * 执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
      * 内存消耗：40 MB, 在所有 Java 提交中击败了100.00%的用户
      *
-     * @param nums 初始数组
+     * @param nums 原始数组
      * @return 最小高度树
      */
     public TreeNode sortedArrayToBST(int[] nums) {
@@ -1546,7 +1548,7 @@ public class SolutionVmware {
      * 执行用时：1 ms, 在所有 Java 提交中击败了98.71%的用户
      * 内存消耗：38.3 MB, 在所有 Java 提交中击败了100.00%的用户
      *
-     * @param tree 初始树
+     * @param tree 树
      * @return 特定深度节点链表
      */
     public ListNode[] listOfDepth(TreeNode tree) {
@@ -1617,8 +1619,8 @@ public class SolutionVmware {
      * 内存消耗：45.5 MB, 在所有 Java 提交中击败了7.69%的用户
      *
      * @param matrix 有序矩阵
-     * @param k      k
-     * @return 第k小的元素
+     * @param k 第k个
+     * @return 有序矩阵中第K小的元素
      */
     public int kthSmallest(int[][] matrix, int k) {
         int n = matrix.length;
@@ -1656,8 +1658,8 @@ public class SolutionVmware {
      * 内存消耗：45.4 MB, 在所有 Java 提交中击败了7.69%的用户
      *
      * @param matrix 有序矩阵
-     * @param k      k
-     * @return 第k小的元素
+     * @param k 第k个
+     * @return 有序矩阵中第K小的元素
      */
     public int kthSmallest0(int[][] matrix, int k) {
         int min = matrix[0][0];
@@ -1796,6 +1798,185 @@ public class SolutionVmware {
             }
         }
         return -1;
+    }
+
+
+    /**
+     * 周赛2020.07.05
+     */
+    public boolean canMakeArithmeticProgression(int[] arr) {
+        Arrays.sort(arr);
+        int tmp = arr[1] - arr[0];
+        for (int i = 1; i < arr.length; i++) {
+            if (tmp != arr[i] - arr[i - 1]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public int getLastMoment(int n, int[] left, int[] right) {
+        int max = 0;
+        if (left.length > 0) {
+            Arrays.sort(left);
+            int leftMax = left[left.length - 1];
+            max = Math.max(max, leftMax);
+        }
+        if (right.length > 0) {
+            Arrays.sort(right);
+            int minRight = right[0];
+            max = Math.max(max, n - minRight);
+        }
+        return max;
+    }
+
+    public int numSubmat(int[][] mat) {
+//        Set<String> set = new HashSet<>();
+        int res = 0;
+        boolean isVisit = false;
+        for (int i = 0; i < mat.length; i++) {
+            for (int j = 0; j < mat[0].length; j++) {
+                if (mat[i][j] == 1 && !isVisit) {
+                    isVisit = true;
+                    int t = 1;
+                    for (int k = j; k < mat.length; k++) {
+                        if (mat[i][k] == 0) {
+                            break;
+                        }
+                        t++;
+                    }
+                    for (int k = 0; k < t; k++) {
+                        int y = k + 1;
+                        int x = 1;
+                        for (int o = i + 1; o < mat.length; o++) {
+                            boolean flag = true;
+                            for (int p = j; p < y + p; p++) {
+                                if (mat[o][p] == 0) {
+                                    flag = false;
+                                    break;
+                                }
+                            }
+                            if (flag) {
+                                x++;
+                            } else {
+                                break;
+                            }
+                        }
+                        res += sum2(x);
+                    }
+
+                } else if (mat[i][j] == 0) {
+                    isVisit = false;
+                }
+            }
+        }
+        return res;
+    }
+
+    public int sum(int length, int len) {
+        return length - len + 1;
+    }
+
+    public int sum2(int length) {
+        int res = 0;
+        for (int l = 1; l < length; l++) {
+            res += sum(length, l);
+        }
+        return res;
+    }
+
+    public int findX(int[][] mat, int x, int y) {
+        int res = 0;
+        int p = 0;
+        for (int j = 0; j < mat[0].length; j++) {
+            boolean f = true;
+            for (int i = x; i < y; i++) {
+                if (mat[i][j] == 0) {
+                    f = false;
+                    break;
+                }
+            }
+            if (f) {
+                p++;
+            } else {
+                if (p >= y - x + 1) {
+                    res += sum2(p);
+                }
+                p = 0;
+            }
+        }
+        return res;
+    }
+
+    public int findY(int[][] mat, int x, int y) {
+        int res = 0;
+        int p = 0;
+        for (int[] ints : mat) {
+            boolean f = true;
+            for (int i = x; i < y; i++) {
+                if (ints[i] == 0) {
+                    f = false;
+                    break;
+                }
+            }
+            if (f) {
+                p++;
+            } else {
+                if (p < y - x + 1) {
+                    res += sum2(p);
+                }
+                p = 0;
+            }
+        }
+        return res;
+    }
+
+    public String minInteger(String num, int k) {
+        int[] data = new int[num.length()];
+        char[] chars = num.toCharArray();
+        for (int i = 0; i < chars.length; i++) {
+            data[i] = chars[i] - '0';
+        }
+        int tmp = 0;
+        while (k >= 0) {
+            if (tmp == data.length - 1) {
+                break;
+            }
+            if (k >= data.length) {
+                int minI = tmp;
+                int minKey = data[tmp];
+                for (int i = tmp; i < data.length; i++) {
+                    if (minKey > data[i]) {
+                        minI = i;
+                        minKey = data[i];
+                    }
+                }
+                if (minI - tmp >= 0) {
+                    System.arraycopy(data, tmp, data, tmp + 1, minI - tmp);
+                }
+                data[tmp] = minKey;
+                k = k - minI + tmp;
+                tmp++;
+            } else {
+                int minI = tmp;
+                int minKey = data[tmp];
+                for (int i = tmp; i <= k + tmp && i < data.length; i++) {
+                    if (minKey > data[i]) {
+                        minI = i;
+                        minKey = data[i];
+                    }
+                }
+                if (minI - tmp >= 0) System.arraycopy(data, tmp, data, tmp + 1, minI - tmp);
+                data[tmp] = minKey;
+                k = k - minI + tmp;
+                tmp++;
+            }
+        }
+        StringBuilder res = new StringBuilder();
+        for (int d : data) {
+            res.append(d);
+        }
+        return res.toString();
     }
 
 
@@ -2010,7 +2191,7 @@ public class SolutionVmware {
      * @param k   交换k次
      * @return 结果数
      */
-    public String minInteger(String num, int k) {
+    public String minInteger0(String num, int k) {
 
         class FenwichTree {
 
@@ -2154,10 +2335,11 @@ public class SolutionVmware {
         t.right = t2;
         t1.right = t3;
         t2.right = t4;
-        int[][] goAhead = new int[][]{{1, 0, 1}, {1, 1, 0}, {1, 1, 0}};
+        int[][] goAhead = new int[][]{{1, 5, 9}, {10, 11, 13}, {12, 13, 15}};
         char[] chars = {'d', 'c', 'e', 'a', 'f', 'g', 'b'};
         int[] brr = {2, 2, 1, 1, 1, 2, 2};
-        boolean f = solutionVmware.hasPathSum(t, 10);
+        int f = solutionVmware.majorityElement2(brr);
+        boolean ff = solutionVmware.hasPathSum(t, 10);
         System.out.println(f);
     }
 }
