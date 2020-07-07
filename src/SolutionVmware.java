@@ -1830,7 +1830,7 @@ public class SolutionVmware {
         return max;
     }
 
-    public int numSubmat(int[][] mat) {
+    public int numSubmat0(int[][] mat) {
 //        Set<String> set = new HashSet<>();
         int res = 0;
         boolean isVisit = false;
@@ -1966,7 +1966,9 @@ public class SolutionVmware {
                         minKey = data[i];
                     }
                 }
-                if (minI - tmp >= 0) System.arraycopy(data, tmp, data, tmp + 1, minI - tmp);
+                if (minI - tmp >= 0) {
+                    System.arraycopy(data, tmp, data, tmp + 1, minI - tmp);
+                }
                 data[tmp] = minKey;
                 k = k - minI + tmp;
                 tmp++;
