@@ -2397,8 +2397,9 @@ public class SolutionVmware {
      * 948. 令牌放置
      * 执行用时：3 ms, 在所有 Java 提交中击败了87.50%的用户
      * 内存消耗：39.7 MB, 在所有 Java 提交中击败了100.00%的用户
+     *
      * @param tokens tokens Array
-     * @param p point
+     * @param p      point
      * @return the best value you can got
      */
     public int bagOfTokensScore(int[] tokens, int p) {
@@ -2423,6 +2424,51 @@ public class SolutionVmware {
         return max;
     }
 
+    /**
+     * 1277. 统计全为 1 的正方形子矩阵
+     * 执行用时：117 ms, 在所有 Java 提交中击败了8.06%的用户
+     * 内存消耗：52.6 MB, 在所有 Java 提交中击败了100.00%的用户
+     * @param matrix
+     * @return
+     */
+    public int countSquares(int[][] matrix) {
+        int n = matrix.length;
+        int m = matrix[0].length;
+        int[][] prefixAnd = new int[n][m];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (j == 0) {
+                    prefixAnd[i][j] = matrix[i][j];
+                } else {
+                    prefixAnd[i][j] = prefixAnd[i][j - 1] + matrix[i][j];
+                }
+            }
+        }
+        int num = 0;
+        for (int l = 0; l < m; l++) {
+            for (int r = l; r < m; r++) {
+                int tmp = r - l + 1;
+                int now = 0;
+                for (int t = 0; t < n; t++) {
+                    int pre = prefixAnd[t][r];
+                    if (l > 0) {
+                        pre = prefixAnd[t][r] - prefixAnd[t][l - 1];
+                    }
+                    if (pre == tmp) {
+                        now++;
+                    } else {
+                        num += now >= tmp ? now - tmp + 1 : 0;
+                        now = 0;
+                    }
+                }
+                if (now > 0) {
+                    num += now >= tmp ? now - tmp + 1 : 0;
+                }
+            }
+        }
+        return num;
+    }
+
     public static void main(String[] args) {
         SolutionVmware solutionVmware = new SolutionVmware();
         String[] strings = {"flower", "flow", "flight"};
@@ -2437,10 +2483,10 @@ public class SolutionVmware {
         t.right = t2;
         t1.right = t3;
         t2.right = t4;
-        int[][] goAhead = new int[][]{{1, 5, 9}, {10, 11, 13}, {12, 13, 15}};
+        int[][] goAhead = new int[][]{{1, 0, 1}, {1, 1, 0}, {1, 1, 0}};
         char[] chars = {'d', 'c', 'e', 'a', 'f', 'g', 'b'};
         int[] brr = {26};
-        int f = solutionVmware.bagOfTokensScore(brr, 200);
+        int f = solutionVmware.countSquares(goAhead);
         System.out.println(f);
     }
 }
