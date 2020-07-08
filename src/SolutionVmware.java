@@ -4,6 +4,8 @@ import sun.misc.Queue;
 
 import java.util.*;
 
+import static java.lang.Math.min;
+
 
 /**
  * @program: PhoesLeeCode
@@ -53,7 +55,7 @@ public class SolutionVmware {
         Arrays.sort(strs);
         char[] first = strs[0].toCharArray();
         char[] last = strs[strs.length - 1].toCharArray();
-        int len = Math.min(first.length, last.length);
+        int len = min(first.length, last.length);
         StringBuilder res = new StringBuilder();
         for (int i = 0; i < len; i++) {
             if (first[i] != last[i]) {
@@ -977,12 +979,12 @@ public class SolutionVmware {
     public int computeArea(int A, int B, int C, int D, int E, int F, int G, int H) {
         //计算重叠面积
         int overArea = 0;
-        if (Math.min(C, G) > Math.max(A, E) && Math.min(D, H) > Math.max(B, F)) {
+        if (min(C, G) > Math.max(A, E) && min(D, H) > Math.max(B, F)) {
             //x轴（有可能是负数）：Math.min(C,G) - Math.max(A,E)
             //y轴（有可能是负数）：Math.min(D,H) - Math.max(B,F)
             //最后结果取绝对值
-            overArea = Math.abs((Math.min(C, G) - Math.max(A, E)) *
-                    (Math.min(D, H) - Math.max(B, F)));
+            overArea = Math.abs((min(C, G) - Math.max(A, E)) *
+                    (min(D, H) - Math.max(B, F)));
         }
         //第一个矩阵面积
         int firstRecArea = Math.abs((C - A) * (D - B));
@@ -1234,7 +1236,7 @@ public class SolutionVmware {
                 bound = -bound - 1;
             }
             if (bound <= n) {
-                ans = Math.min(ans, bound - (i - 1));
+                ans = min(ans, bound - (i - 1));
             }
         }
         return ans == Integer.MAX_VALUE ? 0 : ans;
@@ -1258,7 +1260,7 @@ public class SolutionVmware {
         while (end < n) {
             sum += nums[end];
             while (sum >= s) {
-                ans = Math.min(ans, end - start + 1);
+                ans = min(ans, end - start + 1);
                 sum -= nums[start];
                 start++;
             }
@@ -2048,8 +2050,8 @@ public class SolutionVmware {
         // 计算边界，即输出网格的行数和列数
         int left = antPos.x, top = antPos.y, right = antPos.x, bottom = antPos.y;
         for (Position pos : blackSet) {
-            left = Math.min(pos.x, left);
-            top = Math.min(pos.y, top);
+            left = min(pos.x, left);
+            top = min(pos.y, top);
             right = Math.max(pos.x, right);
             bottom = Math.max(pos.y, bottom);
         }
@@ -2133,7 +2135,7 @@ public class SolutionVmware {
                 } else if (j == 0) {
                     dp[i][j] += dp[i - 1][j];
                 } else {
-                    int t = Math.min(dp[i][j - 1], dp[i - 1][j]);
+                    int t = min(dp[i][j - 1], dp[i - 1][j]);
                     dp[i][j] += t;
                 }
             }
@@ -2428,6 +2430,7 @@ public class SolutionVmware {
      * 1277. 统计全为 1 的正方形子矩阵
      * 执行用时：117 ms, 在所有 Java 提交中击败了8.06%的用户
      * 内存消耗：52.6 MB, 在所有 Java 提交中击败了100.00%的用户
+     *
      * @param matrix
      * @return
      */
@@ -2467,6 +2470,94 @@ public class SolutionVmware {
             }
         }
         return num;
+    }
+
+
+    /**
+     * 1278. 分割回文串 III
+     * 执行用时：40 ms, 在所有 Java 提交中击败了20.14%的用户
+     * 内存消耗：37.5 MB, 在所有 Java 提交中击败了100.00%的用户
+     * @param s 原始字符串
+     * @param k 分割数量
+     * @return 最小变换次数
+     */
+    public int palindromePartition0(String s, int k) {
+        int len = s.length();
+        // dp[i][j] -> 0-i,划分为j段
+        int[][] dp = new int[len + 1][len + 1];
+        for (int i = 1; i <= len; i++) {
+            for (int j = 1; j <= k; j++) {
+                if (i == j) {
+                    dp[i][j] = 0;
+                } else if (i < j) {
+                    break;
+                } else if (j == 1) {
+                    dp[i][j] = cost(s, 0, i - 1);
+                } else {
+                    // i 大于 j
+                    dp[i][j] = Integer.MAX_VALUE;
+                    for (int t = j - 1; t <= i - 1; t++) {
+                        dp[i][j] = min(dp[i][j], dp[t][j - 1] + cost(s, t, i - 1));
+                    }
+                }
+            }
+        }
+        return dp[len][k];
+    }
+
+    private int cost(String s, int i, int j) {
+        int res = 0;
+        while (i < j) {
+            if (s.charAt(i) != s.charAt(j)) {
+                res++;
+            }
+            i++;
+            j--;
+        }
+        return res;
+    }
+
+
+    /**
+     * 1278. 分割回文串 III
+     * 执行用时：7 ms, 在所有 Java 提交中击败了52.52%的用户
+     * 内存消耗：37.5 MB, 在所有 Java 提交中击败了100.00%的用户
+     * @param s 原始字符串
+     * @param k 分割数量
+     * @return 最小变换次数
+     */
+    public int palindromePartition(String s, int k) {
+        int[][] pali= new int[s.length() + 1][s.length() + 1];
+        for(int i = s.length(); i >= 1; i--)
+        {
+            for(int j = i; j <= s.length(); j++)
+            {
+                if(j - i >= 2) {
+                    pali[i][j] = pali[i + 1][j - 1];
+                }
+                if(s.charAt(i - 1) != s.charAt(j - 1)) {
+                    pali[i][j]++;
+                }
+            }
+        }
+
+        int[][] dp = new int[k + 1][s.length() + 1];
+        for(int i = 1; i <= k; i++)
+        {
+            for(int j = i; j <= s.length(); j++)
+            {
+                if(i == 1) {
+                    dp[i][j] = pali[i][j];
+                } else
+                {
+                    dp[i][j] = dp[i - 1][i - 1] + pali[i][j];
+                    for(int x = i; x < j; x++) {
+                        dp[i][j] = Math.min(dp[i][j], dp[i - 1][x] + pali[x + 1][j]);
+                    }
+                }
+            }
+        }
+        return dp[k][s.length()];
     }
 
     public static void main(String[] args) {
