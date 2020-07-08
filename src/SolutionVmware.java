@@ -2329,7 +2329,8 @@ public class SolutionVmware {
      * 1498. 满足条件的子序列数目
      * 执行用时：36 ms, 在所有 Java 提交中击败了85.96%的用户
      * 内存消耗：48.6 MB, 在所有 Java 提交中击败了100.00%的用户
-     * @param nums 原始数组
+     *
+     * @param nums   原始数组
      * @param target 目标值
      * @return 满足条件的子序列数目
      */
@@ -2360,10 +2361,41 @@ public class SolutionVmware {
         return res;
     }
 
+
+    /**
+     * 870. 优势洗牌
+     * 执行用时：35 ms, 在所有 Java 提交中击败了91.54%的用户
+     * 内存消耗：43.6 MB, 在所有 Java 提交中击败了11.11%的用户
+     * @param arr 待洗的牌数组
+     * @param brr 用于对比的牌数组
+     * @return 优势牌数组
+     */
+    public int[] advantageCount(int[] arr, int[] brr) {
+        Arrays.sort(arr);
+        int[] crr = brr.clone();
+        Arrays.sort(brr);
+        HashMap<Integer, List<Integer>> map = new HashMap<>();
+        int max = arr.length - 1, min = 0;
+        for (int i = brr.length - 1; i >= 0; i--) {
+            map.putIfAbsent(brr[i], new LinkedList<>());
+            List list = map.get(brr[i]);
+            if (arr[max] > brr[i]) {
+                list.add(arr[max--]);
+            } else {
+                list.add(arr[min++]);
+            }
+        }
+        for (int i = brr.length - 1; i >= 0; i--) {
+            List<Integer> tmp = map.get(crr[i]);
+            crr[i] = tmp.remove(0);
+        }
+        return crr;
+    }
+
     public static void main(String[] args) {
         SolutionVmware solutionVmware = new SolutionVmware();
         String[] strings = {"flower", "flow", "flight"};
-        int[] arr = {3, 3, 1};
+        int[] arr = {3, 3, 12, 8};
         TreeNode t = new TreeNode(3);
         TreeNode t1 = new TreeNode(2);
         TreeNode t2 = new TreeNode(3);
@@ -2376,9 +2408,8 @@ public class SolutionVmware {
         t2.right = t4;
         int[][] goAhead = new int[][]{{1, 5, 9}, {10, 11, 13}, {12, 13, 15}};
         char[] chars = {'d', 'c', 'e', 'a', 'f', 'g', 'b'};
-        int[] brr = {2, 2, 1, 1, 1, 2, 2};
-        int f = solutionVmware.majorityElement2(brr);
-        boolean ff = solutionVmware.hasPathSum(t, 10);
+        int[] brr = {2, 5, 5, 11};
+        int[] f = solutionVmware.advantageCount(arr, brr);
         System.out.println(f);
     }
 }

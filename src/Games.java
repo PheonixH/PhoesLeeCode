@@ -240,7 +240,7 @@ public class Games {
     /**
      * 2018.Dec.30 - 第117周赛 - 年终巅峰对决
      * 965
-     * */
+     */
     public boolean isUnivalTree(TreeNode root) {
         if (root == null) {
             return false;
@@ -396,7 +396,7 @@ public class Games {
      * 373
      * 执行用时 :21 ms, 在所有 Java 提交中击败了57.51%的用户
      * 内存消耗 :40.2 MB, 在所有 Java 提交中击败了75.00%的用户
-    */
+     */
     public List<List<Integer>> kSmallestPairs(int[] nums1, int[] nums2, int k) {
         List<List<Integer>> res = new ArrayList<>();
         k = Math.min(k, nums1.length * nums2.length); //注意k的取值
@@ -1166,6 +1166,89 @@ public class Games {
         return max;
     }
 
+    public String freqAlphabets(String s) {
+        char[] chars = s.toCharArray();
+        int len = chars.length - 1;
+        String res = "";
+        int n = 0;
+        while (len >= 0) {
+            int tmp = 'a' - 1;
+            if (chars[len] == '#') {
+                tmp += (chars[len - 2] - '0') * 10 + chars[len - 1] - '0';
+                len -= 2;
+            } else {
+                tmp += chars[len] - '0';
+            }
+            res = (char) (tmp) + res;
+            len--;
+        }
+        return res;
+    }
+
+    public int[] xorQueries(int[] arr, int[][] queries) {
+        int n = arr.length;
+        int[] dp = new int[n + 1];
+        dp[0] = arr[0];
+        for (int i = 1; i <= n; i++) {
+            dp[i] = dp[i - 1] ^ arr[i - 1];
+        }
+        int len = queries.length;
+        int[] res = new int[len];
+        for (int i = 0; i < len; i++) {
+            int l = queries[i][0];
+            int r = queries[i][1];
+            res[i] = dp[r + 1] ^ dp[l];
+        }
+        return res;
+    }
+
+    public List<String> watchedVideosByFriends(List<List<String>> watchedVideos, int[][] friends, int id, int level) {
+        List<String> ans = new ArrayList<> ();
+        Deque<Integer> friendDeque = new LinkedList<> ();  // 用来进行BFS的队列
+        level --;  // 开始放入了id，所以要--
+        Map<String, Integer> watched = new HashMap<>();   // key是最终要排列的电影，value是观看的次数，这两个是优先队列需要的排序参数
+        Map<Integer, Boolean> map = new HashMap<> ();  // 去除重复出现的朋友
+        map.put(id, true);
+        for (int i = 0; i < friends[id].length; ++ i){
+            map.put(friends[id][i], true);
+            friendDeque.offerLast(friends[id][i]);
+        }
+
+        while (level -- > -1){
+            int size = friendDeque.size();
+            while ( size -- > 0) {  // 保证每次BFS都只操作本level层级的朋友
+                int friend = friendDeque.pollFirst();  // 注意poll和offer的顺序要在两端，否则刚放进去就会取出来两个不同level层级的朋友
+                for (int j = 0; j < friends[friend].length; ++ j) {
+                    if(!map.containsKey(friends[friend][j])){  // 只有新出现的朋友才进行BFS遍历
+                        friendDeque.offerLast(friends[friend][j]);
+                        map.put(friends[friend][j], true);
+                    }
+                }
+                if(level == -1){  // 只有最后一次level才添加进观看电影的map
+                    List<String> watchedListTemp = watchedVideos.get(friend);
+                    for (String c : watchedListTemp) {
+                        watched.put(c, watched.getOrDefault(c, 0) + 1);
+                    }
+                }
+            }
+
+        }
+
+        PriorityQueue<String> pq = new PriorityQueue<>( (t1, t2) ->
+                (watched.get(t1) == watched.get(t2) ? t1.compareTo(t2) : watched.get(t1) - watched.get(t2)));
+
+        Set<String> keySet = watched.keySet();
+        Iterator it = keySet.iterator();
+        while (it.hasNext()){
+            pq.add((String) it.next());
+        }
+        while (!pq.isEmpty()){
+            ans.add(pq.poll());
+        }
+        return ans;
+    }
+
+
     public static void main(String[] args) {
         Games games = new Games();
         List<List<String>> or = new ArrayList<>();
@@ -1194,9 +1277,22 @@ public class Games {
         or5.add("11");
         or5.add("Canadian Waffles");
         or.add(or5);
-        List<List<String>> q = games.displayTable(or);
-        String p = games.reformat("12hhhhh34");
-        System.out.println(p + q.size());
-
+        List<List<String>> q = new LinkedList<>();
+        List<String> q1 = new LinkedList<>();
+        q1.add("A");
+        q1.add("B");
+        List<String> q2 = new LinkedList<>();
+        q1.add("C");
+        List<String> q3 = new LinkedList<>();
+        q1.add("C");
+        q1.add("B");
+        List<String> q4 = new LinkedList<>();
+        q1.add("D");
+        q.add(q1);
+        q.add(q2);
+        q.add(q3);
+        q.add(q4);
+        int[][] arrays = new int[][]{{1, 2}, {0, 3}, {0, 3}, {1, 2}};
+        List<String> p = games.watchedVideosByFriends(q, arrays, 0, 1);
     }
 }
