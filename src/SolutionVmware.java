@@ -2366,6 +2366,7 @@ public class SolutionVmware {
      * 870. 优势洗牌
      * 执行用时：35 ms, 在所有 Java 提交中击败了91.54%的用户
      * 内存消耗：43.6 MB, 在所有 Java 提交中击败了11.11%的用户
+     *
      * @param arr 待洗的牌数组
      * @param brr 用于对比的牌数组
      * @return 优势牌数组
@@ -2392,6 +2393,36 @@ public class SolutionVmware {
         return crr;
     }
 
+    /**
+     * 948. 令牌放置
+     * 执行用时：3 ms, 在所有 Java 提交中击败了87.50%的用户
+     * 内存消耗：39.7 MB, 在所有 Java 提交中击败了100.00%的用户
+     * @param tokens tokens Array
+     * @param p point
+     * @return the best value you can got
+     */
+    public int bagOfTokensScore(int[] tokens, int p) {
+        int value = 0;
+        Arrays.sort(tokens);
+        int l = 0, r = tokens.length - 1;
+        int max = 0;
+        while (l <= r) {
+            while (l <= r && tokens[l] <= p) {
+                value++;
+                p -= tokens[l++];
+                max = Math.max(max, value);
+            }
+            if (value == 0) {
+                return 0;
+            }
+            if (l <= r) {
+                value--;
+                p += tokens[r--];
+            }
+        }
+        return max;
+    }
+
     public static void main(String[] args) {
         SolutionVmware solutionVmware = new SolutionVmware();
         String[] strings = {"flower", "flow", "flight"};
@@ -2408,8 +2439,8 @@ public class SolutionVmware {
         t2.right = t4;
         int[][] goAhead = new int[][]{{1, 5, 9}, {10, 11, 13}, {12, 13, 15}};
         char[] chars = {'d', 'c', 'e', 'a', 'f', 'g', 'b'};
-        int[] brr = {2, 5, 5, 11};
-        int[] f = solutionVmware.advantageCount(arr, brr);
+        int[] brr = {26};
+        int f = solutionVmware.bagOfTokensScore(brr, 200);
         System.out.println(f);
     }
 }
