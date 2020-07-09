@@ -1,3 +1,4 @@
+import Template.Trie;
 import data.ListNode;
 import data.TreeNode;
 import sun.misc.Queue;
@@ -71,7 +72,7 @@ public class SolutionVmware {
      * 内存消耗 :65.2 MB, 在所有 Java 提交中击败了100.00%的用户
      */
     public int[][] multiSearch(String big, String[] smalls) {
-        Trie tree = new Trie(smalls);
+        Trie0 tree = new Trie0(smalls);
         for (int i = 0; i < smalls.length; i++) {
             tree.insert(smalls[i], i);
         }
@@ -93,7 +94,7 @@ public class SolutionVmware {
 
     }
 
-    static class Trie {
+    static class Trie0 {
         class Node {
             int id;
             boolean flag;
@@ -109,7 +110,7 @@ public class SolutionVmware {
         Node root;
         List<Integer>[] lists;
 
-        public Trie(String[] strings) {
+        public Trie0(String[] strings) {
             root = new Node();
             int len = strings.length;
             lists = new List[len];
@@ -2477,6 +2478,7 @@ public class SolutionVmware {
      * 1278. 分割回文串 III
      * 执行用时：40 ms, 在所有 Java 提交中击败了20.14%的用户
      * 内存消耗：37.5 MB, 在所有 Java 提交中击败了100.00%的用户
+     *
      * @param s 原始字符串
      * @param k 分割数量
      * @return 最小变换次数
@@ -2522,36 +2524,32 @@ public class SolutionVmware {
      * 1278. 分割回文串 III
      * 执行用时：7 ms, 在所有 Java 提交中击败了52.52%的用户
      * 内存消耗：37.5 MB, 在所有 Java 提交中击败了100.00%的用户
+     *
      * @param s 原始字符串
      * @param k 分割数量
      * @return 最小变换次数
      */
     public int palindromePartition(String s, int k) {
-        int[][] pali= new int[s.length() + 1][s.length() + 1];
-        for(int i = s.length(); i >= 1; i--)
-        {
-            for(int j = i; j <= s.length(); j++)
-            {
-                if(j - i >= 2) {
+        int[][] pali = new int[s.length() + 1][s.length() + 1];
+        for (int i = s.length(); i >= 1; i--) {
+            for (int j = i; j <= s.length(); j++) {
+                if (j - i >= 2) {
                     pali[i][j] = pali[i + 1][j - 1];
                 }
-                if(s.charAt(i - 1) != s.charAt(j - 1)) {
+                if (s.charAt(i - 1) != s.charAt(j - 1)) {
                     pali[i][j]++;
                 }
             }
         }
 
         int[][] dp = new int[k + 1][s.length() + 1];
-        for(int i = 1; i <= k; i++)
-        {
-            for(int j = i; j <= s.length(); j++)
-            {
-                if(i == 1) {
+        for (int i = 1; i <= k; i++) {
+            for (int j = i; j <= s.length(); j++) {
+                if (i == 1) {
                     dp[i][j] = pali[i][j];
-                } else
-                {
+                } else {
                     dp[i][j] = dp[i - 1][i - 1] + pali[i][j];
-                    for(int x = i; x < j; x++) {
+                    for (int x = i; x < j; x++) {
                         dp[i][j] = Math.min(dp[i][j], dp[i - 1][x] + pali[x + 1][j]);
                     }
                 }
@@ -2559,6 +2557,58 @@ public class SolutionVmware {
         }
         return dp[k][s.length()];
     }
+
+
+    /**
+     * 面试题 17.13. 恢复空格
+     * 执行用时：87 ms, 在所有 Java 提交中击败了58.77%的用户
+     * 内存消耗：40.1 MB, 在所有 Java 提交中击败了100.00%的用户
+     * @param dictionary
+     * @param sentence
+     * @return
+     */
+    public int respace0(String[] dictionary, String sentence) {
+        int n = sentence.length();
+
+        Trie root = new Trie();
+        for (String word : dictionary) {
+            root.insert(word);
+        }
+
+        int[] dp = new int[n + 1];
+        Arrays.fill(dp, Integer.MAX_VALUE);
+        dp[0] = 0;
+        for (int i = 1; i <= n; ++i) {
+            dp[i] = dp[i - 1] + 1;
+
+            Trie curPos = root;
+            for (int j = i; j >= 1; --j) {
+                int t = sentence.charAt(j - 1) - 'a';
+                if (curPos.next[t] == null) {
+                    break;
+                } else if (curPos.next[t].isEnd) {
+                    dp[i] = Math.min(dp[i], dp[j - 1]);
+                }
+                if (dp[i] == 0) {
+                    break;
+                }
+                curPos = curPos.next[t];
+            }
+        }
+        return dp[n];
+    }
+
+//    public int respace(String[] dictionary, String sentence) {
+//        int len = sentence.length();
+//        int num = dictionary.length;
+//        int[] dp = new int[num + 1];
+//        for (int i = 0; i < len; i++) {
+//            for (int j = 0; j < num; j++) {
+//                if ()
+//            }
+//        }
+//    }
+
 
     public static void main(String[] args) {
         SolutionVmware solutionVmware = new SolutionVmware();
