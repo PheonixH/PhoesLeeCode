@@ -2563,6 +2563,7 @@ public class SolutionVmware {
      * 面试题 17.13. 恢复空格
      * 执行用时：87 ms, 在所有 Java 提交中击败了58.77%的用户
      * 内存消耗：40.1 MB, 在所有 Java 提交中击败了100.00%的用户
+     *
      * @param dictionary
      * @param sentence
      * @return
@@ -2608,6 +2609,31 @@ public class SolutionVmware {
 //            }
 //        }
 //    }
+
+    /**
+     * 122. 买卖股票的最佳时机 II
+     * @param prices 股票价格数组
+     * @return 最大收益
+     */
+    public int maxProfit2(int[] prices) {
+        int len = prices.length;
+        //待买入，待卖出，冷冻期
+        int[][] dp = new int[len][2];
+        dp[0][0] = -prices[0];
+        dp[0][1] = 0;
+
+        for (int i = 1; i < len; i++) {
+            dp[i][0] = Math.max(dp[i - 1][1] - prices[i], dp[i - 1][0]);
+            dp[i][1] = Math.max(dp[i - 1][0] + prices[i], dp[i - 1][1]);
+        }
+        return dp[len-1][1];
+    }
+
+
+    public int maxProfit(int[] prices) {
+
+    }
+
 
 
     public static void main(String[] args) {
