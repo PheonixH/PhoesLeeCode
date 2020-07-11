@@ -1203,28 +1203,28 @@ public class Games {
     }
 
     public List<String> watchedVideosByFriends(List<List<String>> watchedVideos, int[][] friends, int id, int level) {
-        List<String> ans = new ArrayList<> ();
-        Deque<Integer> friendDeque = new LinkedList<> ();  // 用来进行BFS的队列
-        level --;  // 开始放入了id，所以要--
+        List<String> ans = new ArrayList<>();
+        Deque<Integer> friendDeque = new LinkedList<>();  // 用来进行BFS的队列
+        level--;  // 开始放入了id，所以要--
         Map<String, Integer> watched = new HashMap<>();   // key是最终要排列的电影，value是观看的次数，这两个是优先队列需要的排序参数
-        Map<Integer, Boolean> map = new HashMap<> ();  // 去除重复出现的朋友
+        Map<Integer, Boolean> map = new HashMap<>();  // 去除重复出现的朋友
         map.put(id, true);
-        for (int i = 0; i < friends[id].length; ++ i){
+        for (int i = 0; i < friends[id].length; ++i) {
             map.put(friends[id][i], true);
             friendDeque.offerLast(friends[id][i]);
         }
 
-        while (level -- > -1){
+        while (level-- > -1) {
             int size = friendDeque.size();
-            while ( size -- > 0) {  // 保证每次BFS都只操作本level层级的朋友
+            while (size-- > 0) {  // 保证每次BFS都只操作本level层级的朋友
                 int friend = friendDeque.pollFirst();  // 注意poll和offer的顺序要在两端，否则刚放进去就会取出来两个不同level层级的朋友
-                for (int j = 0; j < friends[friend].length; ++ j) {
-                    if(!map.containsKey(friends[friend][j])){  // 只有新出现的朋友才进行BFS遍历
+                for (int j = 0; j < friends[friend].length; ++j) {
+                    if (!map.containsKey(friends[friend][j])) {  // 只有新出现的朋友才进行BFS遍历
                         friendDeque.offerLast(friends[friend][j]);
                         map.put(friends[friend][j], true);
                     }
                 }
-                if(level == -1){  // 只有最后一次level才添加进观看电影的map
+                if (level == -1) {  // 只有最后一次level才添加进观看电影的map
                     List<String> watchedListTemp = watchedVideos.get(friend);
                     for (String c : watchedListTemp) {
                         watched.put(c, watched.getOrDefault(c, 0) + 1);
@@ -1234,19 +1234,103 @@ public class Games {
 
         }
 
-        PriorityQueue<String> pq = new PriorityQueue<>( (t1, t2) ->
+        PriorityQueue<String> pq = new PriorityQueue<>((t1, t2) ->
                 (watched.get(t1) == watched.get(t2) ? t1.compareTo(t2) : watched.get(t1) - watched.get(t2)));
 
         Set<String> keySet = watched.keySet();
         Iterator it = keySet.iterator();
-        while (it.hasNext()){
+        while (it.hasNext()) {
             pq.add((String) it.next());
         }
-        while (!pq.isEmpty()){
+        while (!pq.isEmpty()) {
             ans.add(pq.poll());
         }
         return ans;
     }
+
+
+    public int[][] kClosest(int[][] points, int k) {
+        Comparator<int[]> comparator = new Comparator<int[]>() {
+            @Override
+            public int compare(int[] t1, int[] t2) {
+                int o1 = t1[0] * t1[0] + t1[1] * t1[1];
+                int o2 = t2[0] * t2[0] + t2[1] * t2[1];
+                return o1 - o2;
+            }
+        };
+        PriorityQueue<int[]> queue = new PriorityQueue<>(comparator);
+        for (int[] point : points) {
+            queue.add(point);
+        }
+        int[][] res = new int[k][2];
+        for (int i = 0; i < k; i++) {
+            res[i] = queue.poll();
+        }
+        return res;
+    }
+
+    public int largestPerimeter(int[] arr) {
+        Arrays.sort(arr);
+        int len = arr.length;
+        for (int l = len - 1; l >= 2; l--) {
+            int a = arr[l];
+            int b = arr[l - 1];
+            int c = arr[l - 2];
+            if (a < b + c) {
+                return a + b + c;
+            }
+        }
+        return 0;
+    }
+
+    public int subarraysDivByK(int[] arr, int k) {
+        int len = arr.length;
+        int num = 0;
+        int[] prefix = new int[len];
+        prefix[0] = arr[0];
+        for (int i = 1; i < len; i++) {
+            prefix[i] = prefix[i - 1] + arr[i];
+        }
+        int now = 0;
+        for (int i = 0; i < len; i++) {
+            if (prefix[i] % k == 0) {
+                now++;
+            } else {
+                num += now * (now + 1) / 2;
+                now = 0;
+            }
+        }
+        if (now > 0) {
+            num += now * (now + 1) / 2;
+        }
+        return num;
+    }
+
+
+    public int oddEvenJumps(int[] arr) {
+        int len = arr.length;
+        int[][] dp = new int[len][2];
+        for (int i = 0; i < len; i++) {
+            boolean max = false;
+            boolean min = false;
+            dp[i][0] += 1;
+            for (int j = i + 1; j < len; j++) {
+                if (arr[j] >= arr[i] && !max) {
+                    dp[j][1] += dp[i][0];
+                    max = true;
+                }
+                if (arr[j] <= arr[i] && !min) {
+                    dp[j][0] += dp[i][1];
+                    min = true;
+                }
+                if (max && min) {
+                    break;
+                }
+            }
+        }
+        return dp[len - 1][0] + dp[len - 1][1];
+    }
+
 
 
     public static void main(String[] args) {
@@ -1293,6 +1377,8 @@ public class Games {
         q.add(q3);
         q.add(q4);
         int[][] arrays = new int[][]{{1, 2}, {0, 3}, {0, 3}, {1, 2}};
-        List<String> p = games.watchedVideosByFriends(q, arrays, 0, 1);
+        int[] brr = new int[]{1, 2, 3, 2, 1, 4, 4, 5};
+        int p = games.oddEvenJumps(brr);
+        System.out.println(p);
     }
 }
