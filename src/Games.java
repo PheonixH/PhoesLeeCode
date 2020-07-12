@@ -1332,6 +1332,93 @@ public class Games {
     }
 
 
+    public String reformatDate(String date) {
+        String[] mouth = new String[]{"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+        String[] dat = date.split(" ");
+        int dayL = dat[0].length();
+        String day = dat[0].substring(0, dayL - 2);
+        String mou = "";
+        for (int i = 0; i < 12; i++) {
+            if (mouth[i].equals(dat[1])) {
+                mou = String.valueOf(i + 1);
+            }
+        }
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(dat[2]);
+        stringBuilder.append("-");
+        if (mou.length() < 2) {
+            stringBuilder.append("0");
+        }
+        stringBuilder.append(mou);
+        stringBuilder.append("-");
+        if (day.length() < 2) {
+            stringBuilder.append("0");
+        }
+        stringBuilder.append(day);
+        return stringBuilder.toString();
+    }
+
+    public int minDifference(int[] nums) {
+        int len = nums.length;
+        if (len <= 4) {
+            return 0;
+        }
+        Arrays.sort(nums);
+        int min = nums[len - 1] - nums[0];
+        for (int i = 0; i < 4; i++) {
+            int tmp = nums[len - i - 1] - nums[3 - i];
+            min = Math.min(tmp, min);
+        }
+        return min;
+    }
+
+
+    public int rangeSum(int[] nums, int n, int left, int right) {
+        int len = nums.length;
+        int[] arr = new int[n * (n + 1) / 2];
+        int a = 0;
+        for (int i = 0; i < len; i++) {
+            int tmp = 0;
+            for (int j = i; j < len; j++) {
+                tmp += nums[j];
+                arr[a++] = tmp;
+            }
+        }
+        Arrays.sort(arr);
+        int sub = 0;
+        for (int i = left - 1; i <= right - 1 && i < arr.length; i++) {
+            sub += (int) arr[i] % 1000000007;
+        }
+        return sub;
+    }
+
+    public boolean winnerSquareGame(int n) {
+        boolean[] dp = new boolean[n];
+        int t = 1;
+        List<Integer> list = new ArrayList<>();
+        while (t * t <= n) {
+            dp[t * t - 1] = true;
+            list.add(t * t);
+            t++;
+        }
+        for (int i = 1; i < n; i++) {
+            if (dp[i]) {
+                continue;
+            }
+            boolean tmp = false;
+            int k = i;
+            for (int j : list) {
+                if (k - j < 0) {
+                    break;
+                }
+                if (dp[k - j] == false) {
+                    tmp = true;
+                }
+            }
+            dp[k] = tmp;
+        }
+        return dp[n - 1];
+    }
 
     public static void main(String[] args) {
         Games games = new Games();
@@ -1377,8 +1464,8 @@ public class Games {
         q.add(q3);
         q.add(q4);
         int[][] arrays = new int[][]{{1, 2}, {0, 3}, {0, 3}, {1, 2}};
-        int[] brr = new int[]{1, 2, 3, 2, 1, 4, 4, 5};
-        int p = games.oddEvenJumps(brr);
+        int[] brr = new int[]{1, 2, 3, 4};
+        int p = games.rangeSum(brr, 4, 2, 3);
         System.out.println(p);
     }
 }
