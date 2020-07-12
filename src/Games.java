@@ -1420,6 +1420,85 @@ public class Games {
         return dp[n - 1];
     }
 
+    public int numIdenticalPairs(int[] nums) {
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int n : nums) {
+            map.putIfAbsent(n, 0);
+            map.put(n, map.get(n) + 1);
+        }
+        int res = 0;
+        for (int key : map.keySet()) {
+            int value = map.get(key);
+            if (value > 1) {
+                res += value * (value - 1) / 2;
+            }
+        }
+        return res;
+    }
+
+    public int numSub(String s) {
+        char[] chars = s.toUpperCase().toCharArray();
+        int len = chars.length;
+        int res = 0;
+        int tmp = 0;
+        for (char c : chars) {
+            if (c == '1') {
+                tmp++;
+                res += tmp;
+                res %= 1000000007;
+            } else {
+                tmp = 0;
+            }
+        }
+        return res;
+    }
+
+
+    public double maxProbability(int n, int[][] edges, double[] succProb, int start, int end) {
+        double[][] dp = new double[n][n];
+        Map<Integer, List<Integer>> map = new HashMap<>();
+        Queue<double[]> queue = new LinkedList<>();
+        for (int i = 0; i < edges.length; i++) {
+            int[] edge = edges[i];
+            map.putIfAbsent(edge[0], new ArrayList<>());
+            List<Integer> list = map.get(edge[0]);
+            list.add(edge[1]);
+            map.put(edge[0], list);
+
+            map.putIfAbsent(edge[1], new ArrayList<>());
+            List<Integer> list2 = map.get(edge[1]);
+            list2.add(edge[0]);
+            map.put(edge[1], list2);
+            dp[edge[0]][edge[1]] = succProb[i];
+            dp[edge[1]][edge[0]] = succProb[i];
+            if(edge[0] == start){
+                queue.add(new double[]{edge[1], succProb[i]});
+            }
+
+            if(edge[1] == start){
+                queue.add(new double[]{edge[0], succProb[i]});
+            }
+        }
+
+        while (!queue.isEmpty()) {
+            double[] q = queue.poll();
+            List<Integer> tmp = map.get((int)q[0]);
+            if(tmp == null){
+                continue;
+            }
+            for (int t : tmp) {
+                if (dp[(int) q[0]][t] != 0) {
+                    double newp = q[1] * dp[(int) q[0]][t];
+                    if (dp[start][t] < newp) {
+                        queue.add(new double[]{t, newp});
+                        dp[start][t] = newp;
+                    }
+                }
+            }
+        }
+        return dp[start][end];
+    }
+
     public static void main(String[] args) {
         Games games = new Games();
         List<List<String>> or = new ArrayList<>();
@@ -1463,9 +1542,10 @@ public class Games {
         q.add(q2);
         q.add(q3);
         q.add(q4);
-        int[][] arrays = new int[][]{{1, 2}, {0, 3}, {0, 3}, {1, 2}};
-        int[] brr = new int[]{1, 2, 3, 4};
-        int p = games.rangeSum(brr, 4, 2, 3);
+        int[][] arrays = new int[][]{{0, 1}, {1, 2}, {0, 2}};
+        int[] brr = new int[]{1, 2, 3, 1, 1, 3};
+        double[] crr = new double[]{0.5, 0.5, 0.2};
+        double p = games.maxProbability(3,arrays, crr, 0, 2);
         System.out.println(p);
     }
 }
