@@ -2882,6 +2882,7 @@ public class SolutionVmware {
      * 剑指 Offer 58 - II. 左旋转字符串
      * 执行用时：3 ms, 在所有 Java 提交中击败了29.06%的用户
      * 内存消耗：39.6 MB, 在所有 Java 提交中击败了100.00%的用户
+     *
      * @param s 初始字符串
      * @param n 第几位
      * @return 结果
@@ -2891,6 +2892,26 @@ public class SolutionVmware {
         int len = s.length();
         String s2 = new StringBuffer(s.substring(n, len)).reverse().toString();
         return new StringBuffer(s1 + s2).reverse().toString();
+    }
+
+    /**
+     * 1108. IP 地址无效化
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
+     * 内存消耗：37.6 MB, 在所有 Java 提交中击败了13.04%的用户
+     * @param address IP 地址
+     * @return IP 地址的无效化版本
+     */
+    public String defangIPaddr(String address) {
+        String[] str = address.split("\\.");
+        StringBuilder stringBuilder = new StringBuilder();
+        int len = str.length;
+        for (int i = 0; i < len - 1; i++) {
+            stringBuilder.append(str[i]).append("[.]");
+        }
+        if (len >= 1) {
+            stringBuilder.append(str[len - 1]);
+        }
+        return stringBuilder.toString();
     }
 
     public static void main(String[] args) {
@@ -2911,7 +2932,7 @@ public class SolutionVmware {
         int[][] goAhead = new int[][]{{1, 0, 1}, {1, 1, 0}, {1, 1, 0}};
         char[] chars = {'d', 'c', 'e', 'a', 'f', 'g', 'b'};
         int[] brr = {3, 4, 2, 3};
-        String f = solutionVmware.reverseLeftWords("ssdsd",2);
+        String f = solutionVmware.defangIPaddr("1.2.3");
         System.out.println(f);
     }
 }
