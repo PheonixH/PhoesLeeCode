@@ -2667,6 +2667,7 @@ public class SolutionVmware {
      * 309. 最佳买卖股票时机含冷冻期
      * 执行用时：2 ms, 在所有 Java 提交中击败了22.40%的用户
      * 内存消耗：39.4 MB, 在所有 Java 提交中击败了11.11%的用户
+     *
      * @param prices 股票价格数组
      * @return 最大收益
      */
@@ -2689,6 +2690,39 @@ public class SolutionVmware {
             dp[i][2] = Math.max(dp[i - 2][0] + prices[i - 1], dp[i - 1][2]);
         }
         return Math.max(dp[len - 1][1], dp[len - 1][2]);
+    }
+
+    /**
+     * 350. 两个数组的交集 II
+     * 执行用时：3 ms, 在所有 Java 提交中击败了87.23%的用户
+     * 内存消耗：39.9 MB, 在所有 Java 提交中击败了5.13%的用户
+     * @param nums1 数组1
+     * @param nums2 数组2
+     * @return 两个数组的交集
+     */
+    public int[] intersect(int[] nums1, int[] nums2) {
+        Arrays.sort(nums1);
+        Arrays.sort(nums2);
+        List<Integer> resList = new ArrayList<>();
+        int a = 0, b = 0;
+        int n = nums1.length, m = nums2.length;
+        while (a < n && b < m) {
+            if (nums1[a] == nums2[b]) {
+                resList.add(nums1[a]);
+                a++;
+                b++;
+            } else if (nums1[a] < nums2[b]) {
+                a++;
+            } else {
+                b++;
+            }
+        }
+        int[] res = new int[resList.size()];
+        int i = 0;
+        for (int j : resList) {
+            res[i++] = j;
+        }
+        return res;
     }
 
 
