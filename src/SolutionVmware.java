@@ -2895,9 +2895,30 @@ public class SolutionVmware {
     }
 
     /**
+     * 1281. 整数的各位积和之差
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
+     * 内存消耗：36.1 MB, 在所有 Java 提交中击败了6.06%的用户
+     * @param n 整数 n
+     * @return 整数的各位积和之差
+     */
+    public int subtractProductAndSum(int n) {
+        int sum = 0;
+        int product = 1;
+        int tmp = n % 10;
+        while (n > 0) {
+            sum += tmp;
+            product *= tmp;
+            n = n / 10;
+            tmp = n % 10;
+        }
+        return product - sum;
+    }
+
+    /**
      * 1108. IP 地址无效化
      * 执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
      * 内存消耗：37.6 MB, 在所有 Java 提交中击败了13.04%的用户
+     *
      * @param address IP 地址
      * @return IP 地址的无效化版本
      */
@@ -2932,7 +2953,7 @@ public class SolutionVmware {
         int[][] goAhead = new int[][]{{1, 0, 1}, {1, 1, 0}, {1, 1, 0}};
         char[] chars = {'d', 'c', 'e', 'a', 'f', 'g', 'b'};
         int[] brr = {3, 4, 2, 3};
-        String f = solutionVmware.defangIPaddr("1.2.3");
+        int f = solutionVmware.subtractProductAndSum(123);
         System.out.println(f);
     }
 }
