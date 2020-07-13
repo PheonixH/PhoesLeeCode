@@ -5,6 +5,7 @@ import sun.misc.Queue;
 
 import java.util.*;
 
+import static java.lang.Math.PI;
 import static java.lang.Math.min;
 
 
@@ -2696,6 +2697,7 @@ public class SolutionVmware {
      * 350. 两个数组的交集 II
      * 执行用时：3 ms, 在所有 Java 提交中击败了87.23%的用户
      * 内存消耗：39.9 MB, 在所有 Java 提交中击败了5.13%的用户
+     *
      * @param nums1 数组1
      * @param nums2 数组2
      * @return 两个数组的交集
@@ -2726,24 +2728,71 @@ public class SolutionVmware {
     }
 
 
+    /**
+     * 1022. 从根到叶的二进制数之和
+     * 执行用时：16 ms, 在所有 Java 提交中击败了6.05%的用户
+     * 内存消耗：40.1 MB, 在所有 Java 提交中击败了16.67%的用户
+     * @param root 原始树
+     * @return 和
+     */
+    public int sumRootToLeaf(TreeNode root) {
+        preVisitNode(root, "");
+        return sum;
+    }
+    private int sum = 0;
+
+    public void preVisitNode(TreeNode root, String pre) {
+        if (root.left == null && root.right == null) {
+            pre = pre + root.val;
+            sum += Biannary2Decimal(pre);
+            return;
+        }
+        pre = pre + root.val;
+        if (root.left != null) {
+            preVisitNode(root.left, pre);
+        }
+        if (root.right != null) {
+            preVisitNode(root.right, pre);
+        }
+        return;
+    }
+
+    /**
+     * 将二进制转换为10进制
+     *
+     * @param binStr ：待转换的二进制
+     * @return 十进制
+     */
+    public int Biannary2Decimal(String binStr) {
+        int sum = 0;
+        int len = binStr.length();
+        for (int i = 1; i <= len; i++) {
+            //第i位 的数字为：
+            int dt = Integer.parseInt(binStr.substring(i - 1, i));
+            sum += (int) Math.pow(2, len - i) * dt;
+        }
+        return sum;
+    }
+
     public static void main(String[] args) {
         SolutionVmware solutionVmware = new SolutionVmware();
         String[] strings = {"flower", "flow", "flight"};
         int[] arr = {3, 3, 12, 8};
-        TreeNode t = new TreeNode(3);
-        TreeNode t1 = new TreeNode(2);
-        TreeNode t2 = new TreeNode(3);
-        TreeNode t3 = new TreeNode(3);
+        TreeNode t = new TreeNode(1);
+        TreeNode t1 = new TreeNode(0);
+        TreeNode t2 = new TreeNode(1);
+        TreeNode t3 = new TreeNode(1);
         TreeNode t4 = new TreeNode(1);
-        TreeNode t5 = new TreeNode(3);
+        TreeNode t5 = new TreeNode(0);
         t.left = t1;
         t.right = t2;
-        t1.right = t3;
-        t2.right = t4;
+        t1.left = t3;
+        t1.right = t4;
+        t2.left = t5;
         int[][] goAhead = new int[][]{{1, 0, 1}, {1, 1, 0}, {1, 1, 0}};
         char[] chars = {'d', 'c', 'e', 'a', 'f', 'g', 'b'};
         int[] brr = {1, 2, 3, 4, 5};
-        int f = solutionVmware.maxProfit(brr);
+        int f = solutionVmware.sumRootToLeaf(t);
         System.out.println(f);
     }
 }
