@@ -2840,6 +2840,24 @@ public class SolutionVmware {
         return min;
     }
 
+    /**
+     * LCP 06. 拿硬币
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
+     * 内存消耗：37.1 MB, 在所有 Java 提交中击败了100.00%的用户
+     * @param coins 数组 coins
+     * @return 拿完所有力扣币的最少次数
+     */
+    public int minCount(int[] coins) {
+        int res = 0;
+        for(int coin:coins){
+            res+=coin/2;
+            if(coin%2 == 1){
+                res++;
+            }
+        }
+        return res;
+    }
+
     public static void main(String[] args) {
         SolutionVmware solutionVmware = new SolutionVmware();
         String[] strings = {"flower", "flow", "flight"};
