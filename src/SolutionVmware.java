@@ -1,4 +1,5 @@
 import Template.Trie;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import data.ListNode;
 import data.TreeNode;
 import sun.misc.Queue;
@@ -2732,6 +2733,7 @@ public class SolutionVmware {
      * 1022. 从根到叶的二进制数之和
      * 执行用时：16 ms, 在所有 Java 提交中击败了6.05%的用户
      * 内存消耗：40.1 MB, 在所有 Java 提交中击败了16.67%的用户
+     *
      * @param root 原始树
      * @return 和
      */
@@ -2739,6 +2741,7 @@ public class SolutionVmware {
         preVisitNode(root, "");
         return sum;
     }
+
     private int sum = 0;
 
     public void preVisitNode(TreeNode root, String pre) {
@@ -2772,6 +2775,38 @@ public class SolutionVmware {
             sum += (int) Math.pow(2, len - i) * dt;
         }
         return sum;
+    }
+
+    /**
+     * 1431. 拥有最多糖果的孩子
+     * 执行用时：1 ms, 在所有 Java 提交中击败了99.92%的用户
+     * 内存消耗：40 MB, 在所有 Java 提交中击败了100.00%的用户
+     * @param candies candies[i] 代表第 i 个孩子拥有的糖果数目
+     * @param extraCandies 额外的 extraCandies 个糖果
+     * @return 是否是拥有最多糖果的孩子
+     */
+    public List<Boolean> kidsWithCandies(int[] candies, int extraCandies) {
+        int len = candies.length;
+        List<Boolean> res = new ArrayList<>();
+        if (len == 0) {
+            return res;
+        }
+        if (len == 1) {
+            res.add(true);
+            return res;
+        }
+        int max = Integer.MIN_VALUE;
+        for (int c : candies) {
+            max = Math.max(c, max);
+        }
+        for (int candy : candies) {
+            if (candy + extraCandies >= max) {
+                res.add(true);
+            } else {
+                res.add(false);
+            }
+        }
+        return res;
     }
 
     public static void main(String[] args) {
