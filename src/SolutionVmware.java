@@ -2864,8 +2864,9 @@ public class SolutionVmware {
      * 1470. 重新排列数组
      * 执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
      * 内存消耗：39.9 MB, 在所有 Java 提交中击败了100.00%的用户
+     *
      * @param nums 数组
-     * @param n 数组中有 2n 个元素
+     * @param n    数组中有 2n 个元素
      * @return 重排后的数组
      */
     public int[] shuffle(int[] nums, int n) {
@@ -2875,6 +2876,21 @@ public class SolutionVmware {
             array[2 * i + 1] = nums[n + i];
         }
         return array;
+    }
+
+    /**
+     * 剑指 Offer 58 - II. 左旋转字符串
+     * 执行用时：3 ms, 在所有 Java 提交中击败了29.06%的用户
+     * 内存消耗：39.6 MB, 在所有 Java 提交中击败了100.00%的用户
+     * @param s 初始字符串
+     * @param n 第几位
+     * @return 结果
+     */
+    public String reverseLeftWords(String s, int n) {
+        String s1 = new StringBuffer(s.substring(0, n)).reverse().toString();
+        int len = s.length();
+        String s2 = new StringBuffer(s.substring(n, len)).reverse().toString();
+        return new StringBuffer(s1 + s2).reverse().toString();
     }
 
     public static void main(String[] args) {
@@ -2895,7 +2911,7 @@ public class SolutionVmware {
         int[][] goAhead = new int[][]{{1, 0, 1}, {1, 1, 0}, {1, 1, 0}};
         char[] chars = {'d', 'c', 'e', 'a', 'f', 'g', 'b'};
         int[] brr = {3, 4, 2, 3};
-        boolean f = solutionVmware.checkPossibility(brr);
+        String f = solutionVmware.reverseLeftWords("ssdsd",2);
         System.out.println(f);
     }
 }
