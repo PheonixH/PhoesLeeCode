@@ -2781,7 +2781,8 @@ public class SolutionVmware {
      * 1431. 拥有最多糖果的孩子
      * 执行用时：1 ms, 在所有 Java 提交中击败了99.92%的用户
      * 内存消耗：40 MB, 在所有 Java 提交中击败了100.00%的用户
-     * @param candies candies[i] 代表第 i 个孩子拥有的糖果数目
+     *
+     * @param candies      candies[i] 代表第 i 个孩子拥有的糖果数目
      * @param extraCandies 额外的 extraCandies 个糖果
      * @return 是否是拥有最多糖果的孩子
      */
@@ -2807,6 +2808,36 @@ public class SolutionVmware {
             }
         }
         return res;
+    }
+
+    /**
+     * 1189. “气球” 的最大数量
+     * 执行用时：3 ms, 在所有 Java 提交中击败了58.65%的用户
+     * 内存消耗：39.5 MB, 在所有 Java 提交中击败了16.67%的用户
+     * @param text 原始字符串
+     * @return 最多气球个数
+     */
+    public int maxNumberOfBalloons(String text) {
+        int a = 0, b = 0, n = 0, o = 0, l = 0;
+        char[] chars = text.toCharArray();
+        for (char c : chars) {
+            if ('a' == c) {
+                a++;
+            } else if ('b' == c) {
+                b++;
+            } else if ('n' == c) {
+                n++;
+            } else if ('o' == c) {
+                o++;
+            } else if ('l' == c) {
+                l++;
+            }
+        }
+        int min = Math.min(a, b);
+        min = Math.min(min, n);
+        min = Math.min(o / 2, min);
+        min = Math.min(l / 2, min);
+        return min;
     }
 
     public static void main(String[] args) {
