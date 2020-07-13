@@ -2612,6 +2612,7 @@ public class SolutionVmware {
 
     /**
      * 122. 买卖股票的最佳时机 II
+     *
      * @param prices 股票价格数组
      * @return 最大收益
      */
@@ -2626,14 +2627,69 @@ public class SolutionVmware {
             dp[i][0] = Math.max(dp[i - 1][1] - prices[i], dp[i - 1][0]);
             dp[i][1] = Math.max(dp[i - 1][0] + prices[i], dp[i - 1][1]);
         }
-        return dp[len-1][1];
+        return dp[len - 1][1];
     }
 
 
+    /**
+     * 123. 买卖股票的最佳时机 III
+     * 执行用时：7 ms, 在所有 Java 提交中击败了34.84%的用户
+     * 内存消耗：39.6 MB, 在所有 Java 提交中击败了57.14%的用户
+     *
+     * @param prices 股票价格数组
+     * @return 最大收益
+     */
+    public int maxProfit3(int[] prices) {
+        int len = prices.length;
+        if (len == 0) {
+            return 0;
+        }
+        //0:第一次购入,1:第一次出售,2:第二次购入,3:第二次出售
+        int[][] dp = new int[len][4];
+        dp[0][0] = -prices[0];
+        for (int i = 0; i < len; i++) {
+            dp[i][2] = Integer.MIN_VALUE;
+        }
+        for (int i = 1; i < len; i++) {
+            dp[i][0] = Math.max(dp[i - 1][0], -prices[i]);
+            dp[i][1] = Math.max(dp[i - 1][0] + prices[i], dp[i - 1][1]);
+            dp[i][2] = Math.max(dp[i - 1][1] - prices[i], dp[i - 1][2]);
+            dp[i][3] = Math.max(dp[i - 1][2] + prices[i], dp[i - 1][3]);
+        }
+        int res = 0;
+        for (int i : dp[len - 1]) {
+            res = Math.max(i, res);
+        }
+        return res;
+    }
+
+    /**
+     * 309. 最佳买卖股票时机含冷冻期
+     * 执行用时：2 ms, 在所有 Java 提交中击败了22.40%的用户
+     * 内存消耗：39.4 MB, 在所有 Java 提交中击败了11.11%的用户
+     * @param prices 股票价格数组
+     * @return 最大收益
+     */
     public int maxProfit(int[] prices) {
-
+        int len = prices.length;
+        if (len <= 0) {
+            return 0;
+        }
+        //0:购入,1:出售,2:冷冻期
+        int[][] dp = new int[len][3];
+        dp[0][0] = -prices[0];
+        dp[0][2] = Integer.MIN_VALUE / 3;
+        dp[1][2] = Integer.MIN_VALUE / 3;
+        for (int i = 1; i < len; i++) {
+            dp[i][0] = Math.max(Math.max(dp[i - 1][0], -prices[i]), dp[i - 1][2] - prices[i]);
+            dp[i][1] = Math.max(dp[i - 1][0] + prices[i], dp[i - 1][1]);
+            if (i < 2) {
+                continue;
+            }
+            dp[i][2] = Math.max(dp[i - 2][0] + prices[i - 1], dp[i - 1][2]);
+        }
+        return Math.max(dp[len - 1][1], dp[len - 1][2]);
     }
-
 
 
     public static void main(String[] args) {
@@ -2652,8 +2708,8 @@ public class SolutionVmware {
         t2.right = t4;
         int[][] goAhead = new int[][]{{1, 0, 1}, {1, 1, 0}, {1, 1, 0}};
         char[] chars = {'d', 'c', 'e', 'a', 'f', 'g', 'b'};
-        int[] brr = {26};
-        int f = solutionVmware.countSquares(goAhead);
+        int[] brr = {1, 2, 3, 4, 5};
+        int f = solutionVmware.maxProfit(brr);
         System.out.println(f);
     }
 }
