@@ -2814,6 +2814,7 @@ public class SolutionVmware {
      * 1189. “气球” 的最大数量
      * 执行用时：3 ms, 在所有 Java 提交中击败了58.65%的用户
      * 内存消耗：39.5 MB, 在所有 Java 提交中击败了16.67%的用户
+     *
      * @param text 原始字符串
      * @return 最多气球个数
      */
@@ -2844,18 +2845,36 @@ public class SolutionVmware {
      * LCP 06. 拿硬币
      * 执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
      * 内存消耗：37.1 MB, 在所有 Java 提交中击败了100.00%的用户
+     *
      * @param coins 数组 coins
      * @return 拿完所有力扣币的最少次数
      */
     public int minCount(int[] coins) {
         int res = 0;
-        for(int coin:coins){
-            res+=coin/2;
-            if(coin%2 == 1){
+        for (int coin : coins) {
+            res += coin / 2;
+            if (coin % 2 == 1) {
                 res++;
             }
         }
         return res;
+    }
+
+    /**
+     * 1470. 重新排列数组
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
+     * 内存消耗：39.9 MB, 在所有 Java 提交中击败了100.00%的用户
+     * @param nums 数组
+     * @param n 数组中有 2n 个元素
+     * @return 重排后的数组
+     */
+    public int[] shuffle(int[] nums, int n) {
+        int[] array = new int[2 * n];
+        for (int i = 0; i < n; i++) {
+            array[2 * i] = nums[i];
+            array[2 * i + 1] = nums[n + i];
+        }
+        return array;
     }
 
     public static void main(String[] args) {
@@ -2875,8 +2894,8 @@ public class SolutionVmware {
         t2.left = t5;
         int[][] goAhead = new int[][]{{1, 0, 1}, {1, 1, 0}, {1, 1, 0}};
         char[] chars = {'d', 'c', 'e', 'a', 'f', 'g', 'b'};
-        int[] brr = {1, 2, 3, 4, 5};
-        int f = solutionVmware.sumRootToLeaf(t);
+        int[] brr = {3, 4, 2, 3};
+        boolean f = solutionVmware.checkPossibility(brr);
         System.out.println(f);
     }
 }
