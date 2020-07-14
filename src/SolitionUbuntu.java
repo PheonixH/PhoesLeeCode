@@ -788,13 +788,40 @@ public class SolitionUbuntu {
         this.quickSort(a, e + 1, h);
     }
 
+    /**
+     * 剑指 Offer 24. 反转链表
+     * 执行用时：1 ms, 在所有 Java 提交中击败了6.37%的用户
+     * 内存消耗：39.9 MB, 在所有 Java 提交中击败了100.00%的用户
+     * @param head 初始链表
+     * @return 反转链表
+     */
+    public ListNode reverseList(ListNode head) {
+        Stack<ListNode> stack = new Stack<>();
+        while (head != null) {
+            stack.push(head);
+            head = head.next;
+        }
+        if(stack.isEmpty()){
+            return null;
+        }
+        ListNode newHead = stack.pop();
+        ListNode p = newHead;
+        while (!stack.isEmpty()) {
+            ListNode tmp = stack.pop();
+            p.next = tmp;
+            p = tmp;
+
+        }
+        p.next = null;
+        return newHead;
+    }
+
     public static void main(String[] args) {
         TreeNode root = new TreeNode(1);
         TreeNode r1 = new TreeNode(2);
         TreeNode r2 = new TreeNode(3);
         TreeNode r3 = new TreeNode(4);
         TreeNode r4 = new TreeNode(5);
-//        data.TreeNode r5 = new data.TreeNode(15);
         root.left = r1;
         r1.left = r2;
         r2.left = r3;
@@ -802,9 +829,6 @@ public class SolitionUbuntu {
         SolitionUbuntu solution = new SolitionUbuntu();
         String[] strings = {"9", "3", "4", "#", "#", "1", "#", "#,", "#", "6", "#", "#"};
         int[] ints = {0, 1, 0, 9};
-        System.out.println(solution.singleNumber(ints));
-//        int[] arr = solution.findFrequentTreeSum(root);
-        //List l = solution.zigzagLevelOrder(root);
-//        System.out.print(solution.nthMagicalNumber(1,2,3));
+        System.out.println(Arrays.toString(solution.singleNumber(ints)));
     }
 }
