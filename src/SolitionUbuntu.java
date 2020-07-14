@@ -792,6 +792,7 @@ public class SolitionUbuntu {
      * 剑指 Offer 24. 反转链表
      * 执行用时：1 ms, 在所有 Java 提交中击败了6.37%的用户
      * 内存消耗：39.9 MB, 在所有 Java 提交中击败了100.00%的用户
+     *
      * @param head 初始链表
      * @return 反转链表
      */
@@ -801,7 +802,7 @@ public class SolitionUbuntu {
             stack.push(head);
             head = head.next;
         }
-        if(stack.isEmpty()){
+        if (stack.isEmpty()) {
             return null;
         }
         ListNode newHead = stack.pop();
@@ -816,6 +817,47 @@ public class SolitionUbuntu {
         return newHead;
     }
 
+    /**
+     * 剑指 Offer 25. 合并两个排序的链表
+     * 执行用时：1 ms, 在所有 Java 提交中击败了99.36%的用户
+     * 内存消耗：39.9 MB, 在所有 Java 提交中击败了100.00%的用户
+     * @param l1 链表1
+     * @param l2 链表2
+     * @return 合并两个排序的链表
+     */
+    public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+        ListNode head = new ListNode(0);
+        ListNode p = head;
+        while (l1 != null && l2 != null) {
+                    if (l1.val <= l2.val) {
+                p.next = l1;
+                p = p.next;
+                l1 = l1.next;
+            } else {
+                p.next = l2;
+                p = p.next;
+                l2 = l2.next;
+            }
+        }
+        if (l1 != null) {
+            p.next = l1;
+        } else if (l2 != null) {
+            p.next = l2;
+        }
+        return head.next;
+    }
+
+    public static ListNode createListNode(int[] array) {
+        ListNode list = new ListNode(array[0]);
+        ListNode p = list;
+        for (int i = 1; i < array.length; i++) {
+            ListNode tmp = new ListNode(array[i]);
+            p.next = tmp;
+            p = p.next;
+        }
+        return list;
+    }
+
     public static void main(String[] args) {
         TreeNode root = new TreeNode(1);
         TreeNode r1 = new TreeNode(2);
@@ -828,7 +870,10 @@ public class SolitionUbuntu {
         r3.left = r4;
         SolitionUbuntu solution = new SolitionUbuntu();
         String[] strings = {"9", "3", "4", "#", "#", "1", "#", "#,", "#", "6", "#", "#"};
-        int[] ints = {0, 1, 0, 9};
-        System.out.println(Arrays.toString(solution.singleNumber(ints)));
+        int[] array0 = {1, 3, 4, 6};
+        int[] array1 = {1, 2, 4, 5};
+        ListNode listNode1 = createListNode(array0);
+        ListNode listNode2 = createListNode(array1);
+        System.out.println(solution.mergeTwoLists(listNode1, listNode2));
     }
 }
