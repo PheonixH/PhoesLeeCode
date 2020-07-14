@@ -2898,6 +2898,7 @@ public class SolutionVmware {
      * 1281. 整数的各位积和之差
      * 执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
      * 内存消耗：36.1 MB, 在所有 Java 提交中击败了6.06%的用户
+     *
      * @param n 整数 n
      * @return 整数的各位积和之差
      */
@@ -2935,6 +2936,61 @@ public class SolutionVmware {
         return stringBuilder.toString();
     }
 
+    /**
+     * 120. 三角形最小路径和
+     * 执行用时：2 ms, 在所有 Java 提交中击败了96.02%的用户
+     * 内存消耗：39.7 MB, 在所有 Java 提交中击败了8.70%的用户
+     * @param triangle 三角形数组
+     * @return 三角形最小路径和
+     */
+    public int minimumTotal(List<List<Integer>> triangle) {
+        int n = triangle.size();
+        int[][] dp = new int[n][];
+        for (int i = 0; i < n; i++) {
+            dp[i] = new int[i + 1];
+        }
+        dp[0][0] = triangle.get(0).get(0);
+        int min = dp[0][0];
+        for (int i = 1; i < n; i++) {
+            List<Integer> list = triangle.get(i);
+            int m = list.size();
+            if (i != n - 1) {
+                dp[i][0] = dp[i - 1][0] + list.get(0);
+                dp[i][m - 1] = dp[i - 1][m - 2] + list.get(m - 1);
+                for (int j = 1; j < m - 1; j++) {
+                    dp[i][j] = Math.min(dp[i - 1][j - 1], dp[i - 1][j]) + list.get(j);
+                }
+            } else {
+                dp[i][0] = dp[i - 1][0] + list.get(0);
+                dp[i][m - 1] = dp[i - 1][m - 2] + list.get(m - 1);
+                min = Math.min(dp[i][0], dp[i][m - 1]);
+                for (int j = 1; j < m - 1; j++) {
+                    dp[i][j] = Math.min(dp[i - 1][j - 1], dp[i - 1][j]) + list.get(j);
+                    min = Math.min(min, dp[i][j]);
+                }
+            }
+        }
+        return min;
+    }
+
+    /**
+     * 创建测试用的数据类型
+     *
+     * @param array 数组
+     * @return 结果： List<List<Integer>>
+     */
+    public static List<List<Integer>> createList(int[][] array) {
+        List<List<Integer>> res = new ArrayList<>();
+        for (int[] arr : array) {
+            List<Integer> tmp = new ArrayList<>();
+            for (int a : arr) {
+                tmp.add(a);
+            }
+            res.add(tmp);
+        }
+        return res;
+    }
+
     public static void main(String[] args) {
         SolutionVmware solutionVmware = new SolutionVmware();
         String[] strings = {"flower", "flow", "flight"};
@@ -2950,10 +3006,11 @@ public class SolutionVmware {
         t1.left = t3;
         t1.right = t4;
         t2.left = t5;
-        int[][] goAhead = new int[][]{{1, 0, 1}, {1, 1, 0}, {1, 1, 0}};
+        int[][] goAhead = new int[][]{{-1}, {2, 3}, {1, -1, 0}};
         char[] chars = {'d', 'c', 'e', 'a', 'f', 'g', 'b'};
         int[] brr = {3, 4, 2, 3};
-        int f = solutionVmware.subtractProductAndSum(123);
+        List<List<Integer>> listList = createList(goAhead);
+        int f = solutionVmware.minimumTotal(listList);
         System.out.println(f);
     }
 }
