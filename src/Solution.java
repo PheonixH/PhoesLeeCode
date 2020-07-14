@@ -1794,20 +1794,28 @@ public class Solution {
 
     public float judgePoint24Ass(float x, float y, int which) {
         switch (which) {
-            case 0:
+            case 0 -> {
                 return x + y;
-            case 1:
+            }
+            case 1 -> {
                 return x - y;
-            case 2:
+            }
+            case 2 -> {
                 return x * y;
-            case 3:
+            }
+            case 3 -> {
                 return x / y;
-            case 4:
+            }
+            case 4 -> {
                 return y / x;
-            case 5:
+            }
+            case 5 -> {
                 return y - x;
+            }
+            default -> {
+                return 0;
+            }
         }
-        return 0;
     }
 
     //464
@@ -2102,13 +2110,13 @@ public class Solution {
         }
         return p.val;
     }
- 
+
 
     /**
      * 面试题 02.03. 删除中间节点
      * 执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
      * 内存消耗：39.3 MB, 在所有 Java 提交中击败了100.00%的用户
-     * */
+     */
     public void deleteNode(ListNode node) {
         node.val = node.next.val;
         node.next = node.next.next;
