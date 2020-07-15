@@ -177,16 +177,15 @@ public class Games {
         return maxl;
     }
 
-    /**
-     * 964(wrong)
-     */
+    //964(wrong)
     public int leastOpsExpressTarget(int x, int target) {
         char[] ops = {'+', '-', '*', '/'};
         int res = 0;
         if (x == target) {
             return res;
         }
-        res = leastOpsExpressTargetAss(x, target, res, x, 1);
+        int ns = x;
+        res = leastOpsExpressTargetAss(x, target, res, ns, 1);
         return res;
     }
 
@@ -237,10 +236,8 @@ public class Games {
         return res;
     }
 
-    /**
-     * 2018.Dec.30 - 第117周赛 - 年终巅峰对决
-     * 965
-     */
+    //2018.Dec.30 - 第117周赛 - 年终巅峰对决
+    //965
     public boolean isUnivalTree(TreeNode root) {
         if (root == null) {
             return false;
@@ -265,7 +262,8 @@ public class Games {
     //967
     public int[] numsSameConsecDiff(int N, int K) {
         if (K > 9) {
-            return new int[0];
+            int[] ints = new int[0];
+            return ints;
         }
         if (N == 1) {
             int[] ints = new int[10];
@@ -352,7 +350,9 @@ public class Games {
             numsSameConsecDiff(list, N - 1, ints, r, ints[i][0], is, key);
             r = r - ints[i][0] + ints[i][1];
             numsSameConsecDiff(list, N - 1, ints, r, ints[i][1], is, key);
+            return;
         }
+        return;
     }
 
     //968
@@ -1266,8 +1266,46 @@ public class Games {
         for (int i = 0; i < k; i++) {
             res[i] = queue.poll();
         }
+        return null;
+    }
+
+    //2019.Feb.3 - 第117周赛
+    //985
+    public int[] sumEvenAfterQueries(int[] A, int[][] queries) {
+        int[] res = new int[queries.length];
+        int re = 0;
+        for (int i : A) {
+            if (i % 2 == 0) {
+                re += i;
+            }
+        }
+        for (int i = 0; i < queries.length; i++) {
+            if (A[queries[i][1]] % 2 == 0) {
+                if (queries[i][0] % 2 == 0) {
+                    re = re + queries[i][0];
+                    A[queries[i][1]] += queries[i][0];
+                    res[i] = re;
+                } else {
+                    re = re - A[queries[i][1]];
+                    A[queries[i][1]] += queries[i][0];
+                    res[i] = re;
+                    continue;
+                }
+            } else {
+                if (queries[i][0] % 2 == 0) {
+                    A[queries[i][1]] += queries[i][0];
+                    res[i] = re;
+                    continue;
+                } else {
+                    re = re + queries[i][0] + A[queries[i][1]];
+                    A[queries[i][1]] += queries[i][0];
+                    res[i] = re;
+                }
+            }
+        }
         return res;
     }
+
 
     public int largestPerimeter(int[] arr) {
         Arrays.sort(arr);
@@ -1433,6 +1471,207 @@ public class Games {
                 res += value * (value - 1) / 2;
             }
         }
+        return 0;
+    }
+
+    //988
+    public String smallestFromLeaf(TreeNode root) {
+        if (root == null) {
+            return "";
+        }
+        int zero = Integer.valueOf('a');
+        if (root.right == null && root.left == null) {
+            char r = (char) (root.val + zero);
+            return String.valueOf(r);
+        }
+        Map<TreeNode, List<Integer>> map = new HashMap<>();
+        List<Integer> li = new LinkedList<>();
+        li.add(root.val);
+        map.put(root, li);
+        Stack<TreeNode> stack = new Stack<>();
+        stack.add(root);
+        boolean b = false;
+        int[] re = new int[1000];
+        int k = 0;
+        while (!stack.isEmpty()) {
+            TreeNode r = stack.pop();
+            List<Integer> lis = map.get(r);
+            if (r.left != null) {
+                List<Integer> l = new LinkedList<>();
+                l.add(r.left.val);
+                lis.forEach((i) -> {
+                    l.add(i);
+                });
+                map.put(r.left, l);
+                stack.add(r.left);
+            }
+            if (r.right != null) {
+                List<Integer> l = new LinkedList<>();
+                l.add(r.right.val);
+                lis.forEach((i) -> {
+                    l.add(i);
+                });
+                map.put(r.right, l);
+                stack.add(r.right);
+            }
+            if (r.right == null && r.left == null) {
+                if (b) {
+                    boolean bb = false;
+                    int kk = 0;
+                    for (int i : lis) {
+                        if (kk < k && re[kk] > i) {
+                            bb = true;
+                            break;
+                        } else if (kk < k && re[kk] < i) {
+                            break;
+                        }
+                        kk++;
+                    }
+                    kk = 0;
+                    if (bb) {
+                        for (int i : lis) {
+                            re[kk++] = i;
+                        }
+                        k = kk;
+                    }
+                } else {
+                    for (int i : lis) {
+                        re[k++] = i;
+                    }
+                    b = true;
+                }
+            }
+        }
+        StringBuffer s = new StringBuffer();
+        for (int i = 0; i < k; i++) {
+            s.append((char) (zero + re[i]));
+        }
+        return s.toString();
+    }
+
+    //2019.Feb.4 - 第83周赛（虚拟）
+    //830
+    public List<List<Integer>> largeGroupPositions(String S) {
+        char[] cs = S.toCharArray();
+        char c = cs[0];
+        List<List<Integer>> res = new LinkedList<>();
+        int len = 0;
+        boolean flag = false;
+        for (int i = 0; i < cs.length; i++) {
+            if (c == cs[i]) {
+                len++;
+                if (len >= 3) {
+                    flag = true;
+                }
+            } else if (flag) {
+                List<Integer> li = new LinkedList<>();
+                li.add(i - len);
+                li.add(i - 1);
+                res.add(li);
+                c = cs[i];
+                len = 1;
+                flag = false;
+            } else {
+                c = cs[i];
+                len = 1;
+                flag = false;
+            }
+        }
+        if (flag) {
+            List<Integer> li = new LinkedList<>();
+            li.add(cs.length - len);
+            li.add(cs.length - 1);
+            res.add(li);
+        }
+        return res;
+    }
+
+    //831
+    public String maskPII(String S) {
+        char e = S.charAt(S.length() - 1);
+        boolean isEmail = false;
+        if (S.contains("@")) {
+            isEmail = true;
+        }
+        if (isEmail) {
+            char[] cs = S.toCharArray();
+            int len = 0;
+            StringBuffer res = new StringBuffer();
+            if (cs[0] >= 'A' && cs[0] <= 'Z') {
+                cs[0] = (char) (cs[0] + 'a' - 'A');
+            }
+            res.append(cs[0]);
+            char c = cs[0];
+            while (len < cs.length) {
+                if (cs[len] == '@') {
+                    for (int i = 0; i < 5; i++) {
+                        res.append('*');
+                    }
+                    if (c >= 'A' && c <= 'Z') {
+                        c = (char) (c + 'a' - 'A');
+                    }
+                    res.append(c);
+                    res.append(cs[len]);
+                    len++;
+                    break;
+                }
+                c = cs[len];
+                len++;
+            }
+            while (len < cs.length) {
+                if (cs[len] >= 'A' && cs[len] <= 'Z') {
+                    cs[len] = (char) (cs[len] + 'a' - 'A');
+                }
+                res.append(cs[len]);
+                len++;
+            }
+            return res.toString();
+        }
+        String res = "";
+        char[] cs = S.toCharArray();
+        int len = 0;
+        for (int i = cs.length - 1; i >= 0; i--) {
+            if (cs[i] >= '0' && cs[i] <= '9') {
+                if (len < 3) {
+                    res = cs[i] + res;
+                    len++;
+                } else if (len == 3) {
+                    res = "-" + cs[i] + res;
+                    len++;
+                } else if (len == 6 || len == 9) {
+                    res = "-*" + res;
+                    len++;
+                } else {
+                    res = "*" + res;
+                    len++;
+                }
+            }
+        }
+        if (res.charAt(0) == '-') {
+            res = res.substring(1);
+        }
+        if (len > 10) {
+            res = "+" + res;
+        }
+        return res;
+    }
+
+    //829
+    public int consecutiveNumbersSum(int N) {
+        if (N == 1) {
+            return 1;
+        }
+        int n = 1;
+        int res = 0;
+        while (n < N / 2) {
+            if (N % n == 0) {
+                res++;
+            }
+            n = n + 2;
+        }
+        if (N > 2 && N % 2 == 1) {
+            res++;
+        }
         return res;
     }
 
@@ -1471,19 +1710,19 @@ public class Games {
             map.put(edge[1], list2);
             dp[edge[0]][edge[1]] = succProb[i];
             dp[edge[1]][edge[0]] = succProb[i];
-            if(edge[0] == start){
+            if (edge[0] == start) {
                 queue.add(new double[]{edge[1], succProb[i]});
             }
 
-            if(edge[1] == start){
+            if (edge[1] == start) {
                 queue.add(new double[]{edge[0], succProb[i]});
             }
         }
 
         while (!queue.isEmpty()) {
             double[] q = queue.poll();
-            List<Integer> tmp = map.get((int)q[0]);
-            if(tmp == null){
+            List<Integer> tmp = map.get((int) q[0]);
+            if (tmp == null) {
                 continue;
             }
             for (int t : tmp) {
@@ -1497,6 +1736,111 @@ public class Games {
             }
         }
         return dp[start][end];
+    }
+
+    //2019.2.10 - 第123周赛
+    //989
+    public List<Integer> addToArrayForm(int[] A, int K) {
+        List res = new LinkedList();
+        int isEnough = 0;
+        int j = 10;
+        for (int i = A.length - 1; i >= 0; i--) {
+            int n = A[i] + K % j / (j / 10) + isEnough;
+            if (n >= 10) {
+                isEnough = 1;
+                n = n % 10;
+            } else {
+                isEnough = 0;
+            }
+            res.add(0, n);
+            if (K >= j / 10) {
+                j = j * 10;
+            }
+        }
+        if (K >= j / 10) {
+            while (j <= K * 10) {
+                int n = K % j / (j / 10) + isEnough;
+                if (n >= 10) {
+                    isEnough = 1;
+                    n = n % 10;
+                } else {
+                    isEnough = 0;
+                }
+                res.add(0, n);
+                j = j * 10;
+            }
+        }
+        if (isEnough == 1) {
+            res.add(0, 1);
+        }
+        return res;
+    }
+
+    //990
+    public boolean equationsPossible(String[] equations) {
+        Map<Character, Integer> map = new HashMap<>();
+        for (String equation : equations) {
+            char c1 = equation.charAt(0);
+            char c2 = equation.charAt(3);
+            char c3 = equation.charAt(1);
+            if (c3 == '!') {
+                if (map.containsKey(c1) && map.containsKey(c2)) {
+                    if ((int) map.get(c1) == map.get(c2)) {
+                        return false;
+                    }
+                    continue;
+                }
+                if (map.containsKey(c1) && !map.containsKey(c2)) {
+                    int k = map.get(c1);
+                    map.put(c2, k + (int) c2);
+                    continue;
+                }
+                if (!map.containsKey(c1) && map.containsKey(c2)) {
+                    int k = map.get(c2);
+                    map.put(c1, k + (int) c1);
+                    continue;
+                }
+                if (!map.containsKey(c1) && !map.containsKey(c2)) {
+                    map.put(c1, (int) c1);
+                    map.put(c2, (int) c2);
+                }
+            } else {
+                continue;
+            }
+        }
+        if (map.isEmpty()) {
+            return true;
+        }
+        for (String equation : equations) {
+            char c1 = equation.charAt(0);
+            char c2 = equation.charAt(3);
+            char c3 = equation.charAt(1);
+            if (c3 == '!') {
+                continue;
+            }
+            if (map.containsKey(c1) && map.containsKey(c2)) {
+                int k1 = map.get(c1);
+                int k2 = map.get(c2);
+                if (k1 != k2) {
+                    return false;
+                }
+                continue;
+            }
+            if (map.containsKey(c1) && !map.containsKey(c2)) {
+                int k = map.get(c1);
+                map.put(c2, k);
+                continue;
+            }
+            if (!map.containsKey(c1) && map.containsKey(c2)) {
+                int k = map.get(c2);
+                map.put(c1, k);
+            }
+//            if (!map.containsKey(c1) && !map.containsKey(c2)){
+//                map.put(c1, (int)c1);
+//                map.put(c2, (int)c1);
+//            }
+        }
+        return true;
     }
 
     public static void main(String[] args) {
@@ -1545,7 +1889,7 @@ public class Games {
         int[][] arrays = new int[][]{{0, 1}, {1, 2}, {0, 2}};
         int[] brr = new int[]{1, 2, 3, 1, 1, 3};
         double[] crr = new double[]{0.5, 0.5, 0.2};
-        double p = games.maxProbability(3,arrays, crr, 0, 2);
+        double p = games.maxProbability(3, arrays, crr, 0, 2);
         System.out.println(p);
     }
 }

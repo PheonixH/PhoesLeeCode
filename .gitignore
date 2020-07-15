@@ -1,2 +1,4 @@
 *.class
 out/production/PhoesLeeCode/
+.idea/*
+*.iml

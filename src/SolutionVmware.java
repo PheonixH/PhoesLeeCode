@@ -1,10 +1,10 @@
 import Template.Trie;
 import data.ListNode;
 import data.TreeNode;
-import sun.misc.Queue;
 
 import java.util.*;
 
+import static java.lang.Math.PI;
 import static java.lang.Math.min;
 
 
@@ -2612,6 +2612,7 @@ public class SolutionVmware {
 
     /**
      * 122. 买卖股票的最佳时机 II
+     *
      * @param prices 股票价格数组
      * @return 最大收益
      */
@@ -2626,34 +2627,388 @@ public class SolutionVmware {
             dp[i][0] = Math.max(dp[i - 1][1] - prices[i], dp[i - 1][0]);
             dp[i][1] = Math.max(dp[i - 1][0] + prices[i], dp[i - 1][1]);
         }
-        return dp[len-1][1];
+        return dp[len - 1][1];
     }
 
 
+    /**
+     * 123. 买卖股票的最佳时机 III
+     * 执行用时：7 ms, 在所有 Java 提交中击败了34.84%的用户
+     * 内存消耗：39.6 MB, 在所有 Java 提交中击败了57.14%的用户
+     *
+     * @param prices 股票价格数组
+     * @return 最大收益
+     */
+    public int maxProfit3(int[] prices) {
+        int len = prices.length;
+        if (len == 0) {
+            return 0;
+        }
+        //0:第一次购入,1:第一次出售,2:第二次购入,3:第二次出售
+        int[][] dp = new int[len][4];
+        dp[0][0] = -prices[0];
+        for (int i = 0; i < len; i++) {
+            dp[i][2] = Integer.MIN_VALUE;
+        }
+        for (int i = 1; i < len; i++) {
+            dp[i][0] = Math.max(dp[i - 1][0], -prices[i]);
+            dp[i][1] = Math.max(dp[i - 1][0] + prices[i], dp[i - 1][1]);
+            dp[i][2] = Math.max(dp[i - 1][1] - prices[i], dp[i - 1][2]);
+            dp[i][3] = Math.max(dp[i - 1][2] + prices[i], dp[i - 1][3]);
+        }
+        int res = 0;
+        for (int i : dp[len - 1]) {
+            res = Math.max(i, res);
+        }
+        return res;
+    }
+
+    /**
+     * 309. 最佳买卖股票时机含冷冻期
+     * 执行用时：2 ms, 在所有 Java 提交中击败了22.40%的用户
+     * 内存消耗：39.4 MB, 在所有 Java 提交中击败了11.11%的用户
+     *
+     * @param prices 股票价格数组
+     * @return 最大收益
+     */
     public int maxProfit(int[] prices) {
+        int len = prices.length;
+        if (len <= 0) {
+            return 0;
+        }
+        //0:购入,1:出售,2:冷冻期
+        int[][] dp = new int[len][3];
+        dp[0][0] = -prices[0];
+        dp[0][2] = Integer.MIN_VALUE / 3;
+        dp[1][2] = Integer.MIN_VALUE / 3;
+        for (int i = 1; i < len; i++) {
+            dp[i][0] = Math.max(Math.max(dp[i - 1][0], -prices[i]), dp[i - 1][2] - prices[i]);
+            dp[i][1] = Math.max(dp[i - 1][0] + prices[i], dp[i - 1][1]);
+            if (i < 2) {
+                continue;
+            }
+            dp[i][2] = Math.max(dp[i - 2][0] + prices[i - 1], dp[i - 1][2]);
+        }
+        return Math.max(dp[len - 1][1], dp[len - 1][2]);
+    }
 
+    /**
+     * 350. 两个数组的交集 II
+     * 执行用时：3 ms, 在所有 Java 提交中击败了87.23%的用户
+     * 内存消耗：39.9 MB, 在所有 Java 提交中击败了5.13%的用户
+     *
+     * @param nums1 数组1
+     * @param nums2 数组2
+     * @return 两个数组的交集
+     */
+    public int[] intersect(int[] nums1, int[] nums2) {
+        Arrays.sort(nums1);
+        Arrays.sort(nums2);
+        List<Integer> resList = new ArrayList<>();
+        int a = 0, b = 0;
+        int n = nums1.length, m = nums2.length;
+        while (a < n && b < m) {
+            if (nums1[a] == nums2[b]) {
+                resList.add(nums1[a]);
+                a++;
+                b++;
+            } else if (nums1[a] < nums2[b]) {
+                a++;
+            } else {
+                b++;
+            }
+        }
+        int[] res = new int[resList.size()];
+        int i = 0;
+        for (int j : resList) {
+            res[i++] = j;
+        }
+        return res;
     }
 
 
+    /**
+     * 1022. 从根到叶的二进制数之和
+     * 执行用时：16 ms, 在所有 Java 提交中击败了6.05%的用户
+     * 内存消耗：40.1 MB, 在所有 Java 提交中击败了16.67%的用户
+     *
+     * @param root 原始树
+     * @return 和
+     */
+    public int sumRootToLeaf(TreeNode root) {
+        preVisitNode(root, "");
+        return sum;
+    }
+
+    private int sum = 0;
+
+    public void preVisitNode(TreeNode root, String pre) {
+        if (root.left == null && root.right == null) {
+            pre = pre + root.val;
+            sum += Biannary2Decimal(pre);
+            return;
+        }
+        pre = pre + root.val;
+        if (root.left != null) {
+            preVisitNode(root.left, pre);
+        }
+        if (root.right != null) {
+            preVisitNode(root.right, pre);
+        }
+        return;
+    }
+
+    /**
+     * 将二进制转换为10进制
+     *
+     * @param binStr ：待转换的二进制
+     * @return 十进制
+     */
+    public int Biannary2Decimal(String binStr) {
+        int sum = 0;
+        int len = binStr.length();
+        for (int i = 1; i <= len; i++) {
+            //第i位 的数字为：
+            int dt = Integer.parseInt(binStr.substring(i - 1, i));
+            sum += (int) Math.pow(2, len - i) * dt;
+        }
+        return sum;
+    }
+
+    /**
+     * 1431. 拥有最多糖果的孩子
+     * 执行用时：1 ms, 在所有 Java 提交中击败了99.92%的用户
+     * 内存消耗：40 MB, 在所有 Java 提交中击败了100.00%的用户
+     *
+     * @param candies      candies[i] 代表第 i 个孩子拥有的糖果数目
+     * @param extraCandies 额外的 extraCandies 个糖果
+     * @return 是否是拥有最多糖果的孩子
+     */
+    public List<Boolean> kidsWithCandies(int[] candies, int extraCandies) {
+        int len = candies.length;
+        List<Boolean> res = new ArrayList<>();
+        if (len == 0) {
+            return res;
+        }
+        if (len == 1) {
+            res.add(true);
+            return res;
+        }
+        int max = Integer.MIN_VALUE;
+        for (int c : candies) {
+            max = Math.max(c, max);
+        }
+        for (int candy : candies) {
+            if (candy + extraCandies >= max) {
+                res.add(true);
+            } else {
+                res.add(false);
+            }
+        }
+        return res;
+    }
+
+    /**
+     * 1189. “气球” 的最大数量
+     * 执行用时：3 ms, 在所有 Java 提交中击败了58.65%的用户
+     * 内存消耗：39.5 MB, 在所有 Java 提交中击败了16.67%的用户
+     *
+     * @param text 原始字符串
+     * @return 最多气球个数
+     */
+    public int maxNumberOfBalloons(String text) {
+        int a = 0, b = 0, n = 0, o = 0, l = 0;
+        char[] chars = text.toCharArray();
+        for (char c : chars) {
+            if ('a' == c) {
+                a++;
+            } else if ('b' == c) {
+                b++;
+            } else if ('n' == c) {
+                n++;
+            } else if ('o' == c) {
+                o++;
+            } else if ('l' == c) {
+                l++;
+            }
+        }
+        int min = Math.min(a, b);
+        min = Math.min(min, n);
+        min = Math.min(o / 2, min);
+        min = Math.min(l / 2, min);
+        return min;
+    }
+
+    /**
+     * LCP 06. 拿硬币
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
+     * 内存消耗：37.1 MB, 在所有 Java 提交中击败了100.00%的用户
+     *
+     * @param coins 数组 coins
+     * @return 拿完所有力扣币的最少次数
+     */
+    public int minCount(int[] coins) {
+        int res = 0;
+        for (int coin : coins) {
+            res += coin / 2;
+            if (coin % 2 == 1) {
+                res++;
+            }
+        }
+        return res;
+    }
+
+    /**
+     * 1470. 重新排列数组
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
+     * 内存消耗：39.9 MB, 在所有 Java 提交中击败了100.00%的用户
+     *
+     * @param nums 数组
+     * @param n    数组中有 2n 个元素
+     * @return 重排后的数组
+     */
+    public int[] shuffle(int[] nums, int n) {
+        int[] array = new int[2 * n];
+        for (int i = 0; i < n; i++) {
+            array[2 * i] = nums[i];
+            array[2 * i + 1] = nums[n + i];
+        }
+        return array;
+    }
+
+    /**
+     * 剑指 Offer 58 - II. 左旋转字符串
+     * 执行用时：3 ms, 在所有 Java 提交中击败了29.06%的用户
+     * 内存消耗：39.6 MB, 在所有 Java 提交中击败了100.00%的用户
+     *
+     * @param s 初始字符串
+     * @param n 第几位
+     * @return 结果
+     */
+    public String reverseLeftWords(String s, int n) {
+        String s1 = new StringBuffer(s.substring(0, n)).reverse().toString();
+        int len = s.length();
+        String s2 = new StringBuffer(s.substring(n, len)).reverse().toString();
+        return new StringBuffer(s1 + s2).reverse().toString();
+    }
+
+    /**
+     * 1281. 整数的各位积和之差
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
+     * 内存消耗：36.1 MB, 在所有 Java 提交中击败了6.06%的用户
+     *
+     * @param n 整数 n
+     * @return 整数的各位积和之差
+     */
+    public int subtractProductAndSum(int n) {
+        int sum = 0;
+        int product = 1;
+        int tmp = n % 10;
+        while (n > 0) {
+            sum += tmp;
+            product *= tmp;
+            n = n / 10;
+            tmp = n % 10;
+        }
+        return product - sum;
+    }
+
+    /**
+     * 1108. IP 地址无效化
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
+     * 内存消耗：37.6 MB, 在所有 Java 提交中击败了13.04%的用户
+     *
+     * @param address IP 地址
+     * @return IP 地址的无效化版本
+     */
+    public String defangIPaddr(String address) {
+        String[] str = address.split("\\.");
+        StringBuilder stringBuilder = new StringBuilder();
+        int len = str.length;
+        for (int i = 0; i < len - 1; i++) {
+            stringBuilder.append(str[i]).append("[.]");
+        }
+        if (len >= 1) {
+            stringBuilder.append(str[len - 1]);
+        }
+        return stringBuilder.toString();
+    }
+
+    /**
+     * 120. 三角形最小路径和
+     * 执行用时：2 ms, 在所有 Java 提交中击败了96.02%的用户
+     * 内存消耗：39.7 MB, 在所有 Java 提交中击败了8.70%的用户
+     * @param triangle 三角形数组
+     * @return 三角形最小路径和
+     */
+    public int minimumTotal(List<List<Integer>> triangle) {
+        int n = triangle.size();
+        int[][] dp = new int[n][];
+        for (int i = 0; i < n; i++) {
+            dp[i] = new int[i + 1];
+        }
+        dp[0][0] = triangle.get(0).get(0);
+        int min = dp[0][0];
+        for (int i = 1; i < n; i++) {
+            List<Integer> list = triangle.get(i);
+            int m = list.size();
+            if (i != n - 1) {
+                dp[i][0] = dp[i - 1][0] + list.get(0);
+                dp[i][m - 1] = dp[i - 1][m - 2] + list.get(m - 1);
+                for (int j = 1; j < m - 1; j++) {
+                    dp[i][j] = Math.min(dp[i - 1][j - 1], dp[i - 1][j]) + list.get(j);
+                }
+            } else {
+                dp[i][0] = dp[i - 1][0] + list.get(0);
+                dp[i][m - 1] = dp[i - 1][m - 2] + list.get(m - 1);
+                min = Math.min(dp[i][0], dp[i][m - 1]);
+                for (int j = 1; j < m - 1; j++) {
+                    dp[i][j] = Math.min(dp[i - 1][j - 1], dp[i - 1][j]) + list.get(j);
+                    min = Math.min(min, dp[i][j]);
+                }
+            }
+        }
+        return min;
+    }
+
+    /**
+     * 创建测试用的数据类型
+     *
+     * @param array 数组
+     * @return 结果： List<List<Integer>>
+     */
+    public static List<List<Integer>> createList(int[][] array) {
+        List<List<Integer>> res = new ArrayList<>();
+        for (int[] arr : array) {
+            List<Integer> tmp = new ArrayList<>();
+            for (int a : arr) {
+                tmp.add(a);
+            }
+            res.add(tmp);
+        }
+        return res;
+    }
 
     public static void main(String[] args) {
         SolutionVmware solutionVmware = new SolutionVmware();
         String[] strings = {"flower", "flow", "flight"};
         int[] arr = {3, 3, 12, 8};
-        TreeNode t = new TreeNode(3);
-        TreeNode t1 = new TreeNode(2);
-        TreeNode t2 = new TreeNode(3);
-        TreeNode t3 = new TreeNode(3);
+        TreeNode t = new TreeNode(1);
+        TreeNode t1 = new TreeNode(0);
+        TreeNode t2 = new TreeNode(1);
+        TreeNode t3 = new TreeNode(1);
         TreeNode t4 = new TreeNode(1);
-        TreeNode t5 = new TreeNode(3);
+        TreeNode t5 = new TreeNode(0);
         t.left = t1;
         t.right = t2;
-        t1.right = t3;
-        t2.right = t4;
-        int[][] goAhead = new int[][]{{1, 0, 1}, {1, 1, 0}, {1, 1, 0}};
+        t1.left = t3;
+        t1.right = t4;
+        t2.left = t5;
+        int[][] goAhead = new int[][]{{-1}, {2, 3}, {1, -1, 0}};
         char[] chars = {'d', 'c', 'e', 'a', 'f', 'g', 'b'};
-        int[] brr = {26};
-        int f = solutionVmware.countSquares(goAhead);
+        int[] brr = {3, 4, 2, 3};
+        List<List<Integer>> listList = createList(goAhead);
+        int f = solutionVmware.minimumTotal(listList);
         System.out.println(f);
     }
 }
