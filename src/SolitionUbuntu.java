@@ -885,6 +885,37 @@ public class SolitionUbuntu {
         return dp[n];
     }
 
+    /**
+     * 97. 交错字符串
+     * 执行用时：5 ms, 在所有 Java 提交中击败了58.20%的用户
+     * 内存消耗：38.2 MB, 在所有 Java 提交中击败了14.29%的用户
+     * @param s1 字符串1
+     * @param s2 字符串2
+     * @param s3 字符串3
+     * @return 字符串3是否由字符串1和字符串2交错而成
+     */
+    public boolean isInterleave(String s1, String s2, String s3) {
+        if (s3.length() != s1.length() + s2.length()) {
+            return false;
+        }
+        boolean dp[][] = new boolean[s1.length() + 1][s2.length() + 1];
+        for (int i = 0; i <= s1.length(); i++) {
+            for (int j = 0; j <= s2.length(); j++) {
+                if (i == 0 && j == 0) {
+                    dp[i][j] = true;
+                } else if (i == 0) {
+                    dp[i][j] = dp[i][j - 1] && s2.charAt(j - 1) == s3.charAt(i + j - 1);
+                } else if (j == 0) {
+                    dp[i][j] = dp[i - 1][j] && s1.charAt(i - 1) == s3.charAt(i + j - 1);
+                } else {
+                    dp[i][j] = (dp[i - 1][j] && s1.charAt(i - 1) == s3.charAt(i + j - 1)) || (dp[i][j - 1] && s2.charAt(j - 1) == s3.charAt(i + j - 1));
+                }
+            }
+        }
+        return dp[s1.length()][s2.length()];
+    }
+
+
     public static void main(String[] args) {
         TreeNode root = new TreeNode(1);
         TreeNode r1 = new TreeNode(2);
