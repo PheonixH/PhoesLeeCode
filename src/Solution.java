@@ -6946,26 +6946,28 @@ public class Solution {
 //        nums.add(l3);
 //        System.out.print(solution.swimInWater(brr));
     }
+
+    class Pair implements Comparable<Pair> {
+        public int x, y, val;
+
+        public Pair(int x, int y, int val) {
+            this.x = x;
+            this.y = y;
+            this.val = val;
+        }
+
+        @Override
+        public int compareTo(Pair o) {
+            if (this.val > o.val) {
+                return -1;
+            }
+            if (this.val < o.val) {
+                return 1;
+            }
+            return 0;
+        }
+    }
 }
 
-class Pair implements Comparable<Pair> {
-    public int x, y, val;
 
-    public Pair(int x, int y, int val) {
-        this.x = x;
-        this.y = y;
-        this.val = val;
-    }
-
-    @Override
-    public int compareTo(Pair o) {
-        if (this.val > o.val) {
-            return -1;
-        }
-        if (this.val < o.val) {
-            return 1;
-        }
-        return 0;
-    }
-}
 
