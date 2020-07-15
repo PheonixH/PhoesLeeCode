@@ -863,6 +863,7 @@ public class SolitionUbuntu {
      * 96. 不同的二叉搜索树
      * 执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
      * 内存消耗：36.2 MB, 在所有 Java 提交中击败了7.69%的用户
+     *
      * @param n n个结点
      * @return 几种不同的二叉搜索树
      */
@@ -889,6 +890,7 @@ public class SolitionUbuntu {
      * 97. 交错字符串
      * 执行用时：5 ms, 在所有 Java 提交中击败了58.20%的用户
      * 内存消耗：38.2 MB, 在所有 Java 提交中击败了14.29%的用户
+     *
      * @param s1 字符串1
      * @param s2 字符串2
      * @param s3 字符串3
@@ -913,6 +915,27 @@ public class SolitionUbuntu {
             }
         }
         return dp[s1.length()][s2.length()];
+    }
+
+    /**
+     * 1374. 生成每种字符都是奇数个的字符串
+     * 执行用时：1 ms, 在所有 Java 提交中击败了99.12%的用户
+     * 内存消耗：37.1 MB, 在所有 Java 提交中击败了100.00%的用户
+     * @param n int n
+     * @return String
+     */
+    public String generateTheString(int n) {
+        String res = "";
+        if (n % 2 == 1) {
+            char[] chars = new char[n];
+            Arrays.fill(chars, 'a');
+            res = new String(chars);
+        } else {
+            char[] chars = new char[n - 1];
+            Arrays.fill(chars, 'a');
+            res = new String(chars) + 'b';
+        }
+        return res;
     }
 
 
