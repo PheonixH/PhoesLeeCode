@@ -821,6 +821,7 @@ public class SolitionUbuntu {
      * 剑指 Offer 25. 合并两个排序的链表
      * 执行用时：1 ms, 在所有 Java 提交中击败了99.36%的用户
      * 内存消耗：39.9 MB, 在所有 Java 提交中击败了100.00%的用户
+     *
      * @param l1 链表1
      * @param l2 链表2
      * @return 合并两个排序的链表
@@ -829,7 +830,7 @@ public class SolitionUbuntu {
         ListNode head = new ListNode(0);
         ListNode p = head;
         while (l1 != null && l2 != null) {
-                    if (l1.val <= l2.val) {
+            if (l1.val <= l2.val) {
                 p.next = l1;
                 p = p.next;
                 l1 = l1.next;
@@ -858,6 +859,32 @@ public class SolitionUbuntu {
         return list;
     }
 
+    /**
+     * 96. 不同的二叉搜索树
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
+     * 内存消耗：36.2 MB, 在所有 Java 提交中击败了7.69%的用户
+     * @param n n个结点
+     * @return 几种不同的二叉搜索树
+     */
+    public int numTrees(int n) {
+        if (n == 0) {
+            return 1;
+        }
+        if (n <= 2) {
+            return n;
+        }
+        int[] dp = new int[n + 1];
+        dp[0] = 1;
+        dp[1] = 1;
+        dp[2] = 2;
+        for (int i = 3; i <= n; i++) {
+            for (int j = 0; j < i; j++) {
+                dp[i] += dp[j] * dp[i - j - 1];
+            }
+        }
+        return dp[n];
+    }
+
     public static void main(String[] args) {
         TreeNode root = new TreeNode(1);
         TreeNode r1 = new TreeNode(2);
@@ -874,6 +901,6 @@ public class SolitionUbuntu {
         int[] array1 = {1, 2, 4, 5};
         ListNode listNode1 = createListNode(array0);
         ListNode listNode2 = createListNode(array1);
-        System.out.println(solution.mergeTwoLists(listNode1, listNode2));
+        System.out.println(solution.numTrees(3));
     }
 }
