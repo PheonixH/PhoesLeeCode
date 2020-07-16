@@ -1235,7 +1235,7 @@ public class Games {
         }
 
         PriorityQueue<String> pq = new PriorityQueue<>((t1, t2) ->
-                (watched.get(t1) == watched.get(t2) ? t1.compareTo(t2) : watched.get(t1) - watched.get(t2)));
+                (watched.get(t1).equals(watched.get(t2)) ? t1.compareTo(t2) : watched.get(t1) - watched.get(t2)));
 
         Set<String> keySet = watched.keySet();
         Iterator it = keySet.iterator();

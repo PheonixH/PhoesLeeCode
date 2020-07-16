@@ -117,6 +117,7 @@ public class Solution {
     }
 
     //15: --- 11145ms --- 0.99%
+    @SuppressWarnings("AlibabaUndefineMagicConstant")
     public List<List<Integer>> threeSum(int[] nums) {
         List<Integer> positive = new LinkedList<>();
         List<Integer> negative = new LinkedList<>();
@@ -338,6 +339,7 @@ public class Solution {
     }
 
     //621
+    @SuppressWarnings("AlibabaUndefineMagicConstant")
     public int leastInterval(char[] tasks, int n) {
 //        int result = 0;
 //        int[] wait = new int [26];
@@ -446,6 +448,7 @@ public class Solution {
     }
 
     //719 超时。。。
+    @SuppressWarnings("AlibabaUndefineMagicConstant")
     public int smallestDistancePair(int[] nums, int k) {
         if (nums.length == 2) {
             return (nums[1] - nums[0]) > 0 ? nums[1] - nums[0] : nums[0] - nums[1];
@@ -562,6 +565,7 @@ public class Solution {
 
     //887:Failed
     //定义组合函数 C(m,n)
+    @SuppressWarnings("AlibabaUndefineMagicConstant")
     public int C(int m, int n) {
         if (n > m / 2) {
             n = m - n;
@@ -608,16 +612,16 @@ public class Solution {
         int sum = 0;
         //1）.
         while (i < ops.length) {
-            if (ops[i].equals("C")) {
+            if ("C".equals(ops[i])) {
                 if (!stack.empty()) {
                     sum = sum - stack.pop();
                 }
-            } else if (ops[i].equals("D")) {
+            } else if ("D".equals(ops[i])) {
                 if (!stack.empty()) {
                     sum = sum + stack.peek() * 2;
                     stack.push(stack.peek() * 2);
                 }
-            } else if (ops[i].equals("+")) {
+            } else if ("+".equals(ops[i])) {
                 if (!stack.empty()) {
                     int a = stack.pop();
                     sum = sum + stack.peek() + a;
@@ -1004,7 +1008,9 @@ public class Solution {
         int start = 0, n = nums.length;
         for (int i = 0; i < n; i++) {
             SortedSet<Long> sub = binSet.subSet((long) nums[i] - t, (long) nums[i] + t + 1);
-            if (!sub.isEmpty()) return true;
+            if (!sub.isEmpty()) {
+                return true;
+            }
             if (i - start >= k) {
                 binSet.remove((long) nums[start++]);
             }
@@ -1216,6 +1222,7 @@ public class Solution {
     }
 
     //414
+    @SuppressWarnings("AlibabaUndefineMagicConstant")
     public int thirdMax(int[] nums) {
         if (0 == nums.length) {
             return 0;
@@ -1486,7 +1493,7 @@ public class Solution {
 
     //79
     public boolean exist(char[][] board, String word) {
-        if (word.equals("")) {
+        if ("".equals(word)) {
             return true;
         }
         if (board == null) {
@@ -1668,6 +1675,7 @@ public class Solution {
     }
 
     //859
+    @SuppressWarnings("AlibabaUndefineMagicConstant")
     public boolean buddyStrings(String A, String B) {
         if (A == null && B != null) {
             return false;
@@ -1788,6 +1796,7 @@ public class Solution {
     }
 
     //失败
+    @SuppressWarnings("AlibabaUndefineMagicConstant")
     public int rob1(TreeNode root) {
         if (root == null) {
             return 0;
@@ -1943,6 +1952,7 @@ public class Solution {
         return res;
     }
 
+    @SuppressWarnings("AlibabaUndefineMagicConstant")
     public boolean judgePoint24Ass(List<Float> list) {
         if (list.size() == 2) {
             for (int i = 0; i < 6; i++) {
@@ -1999,6 +2009,7 @@ public class Solution {
     }
 
     //464
+    @SuppressWarnings("AlibabaUndefineMagicConstant")
     public boolean canIWin(int maxChoosableInteger, int desiredTotal) {
         //如果目标数<=选择数,一次就赢,返回true
         if (desiredTotal <= maxChoosableInteger) {
@@ -2090,6 +2101,7 @@ public class Solution {
         return tallestBillboardAss(rods, 0, 0, 0, total, 0);
     }
 
+    @SuppressWarnings("AlibabaUndefineMagicConstant")
     public int tallestBillboardAss(int[] rods, int left, int right, int i, int total, int re) {
         if (i == rods.length && left == right) {
             return left;
@@ -2134,6 +2146,7 @@ public class Solution {
     }
 
     //605
+    @SuppressWarnings("AlibabaUndefineMagicConstant")
     public boolean canPlaceFlowers(int[] flowerbed, int n) {
         if (n > flowerbed.length / 2 + 1) {
             return false;
@@ -2172,7 +2185,7 @@ public class Solution {
 
     //389 - map:低效
     public char findTheDifference1(String s, String t) {
-        if (s.equals("")) {
+        if ("".equals(s)) {
             return t.charAt(0);
         }
         Map<Character, Integer> map = new HashMap<>();
@@ -2355,8 +2368,9 @@ public class Solution {
     }
 
     //316
+    @SuppressWarnings("AlibabaUndefineMagicConstant")
     public String removeDuplicateLetters0(String s) {
-        if (s.equals("")) {
+        if ("".equals(s)) {
             return "";
         }
         int[] ints = new int[26];
@@ -2498,6 +2512,7 @@ public class Solution {
     }
 
     //from 0:起点, 1:左, 2:右, 3:上,4:下
+    @SuppressWarnings("AlibabaUndefineMagicConstant")
     public int shortestPathAllKeysDFS(char[][] chars, int x, int y, boolean[] keys, int[] have, int walks, int from) {
         if (have[0] == have[1]) {
             return walks;
@@ -2522,6 +2537,7 @@ public class Solution {
         }
     }
 
+    @SuppressWarnings("AlibabaUndefineMagicConstant")
     public int shortestPathAllKeysDFSAss(char[][] chars, int x, int y, boolean[] keys, int[] have, int walks, int from) {
         if (chars[x][y] != '.') {
             if (chars[x][y] >= 'a') {
@@ -2540,6 +2556,7 @@ public class Solution {
     }
 
     //864:BFS
+    @SuppressWarnings("AlibabaUndefineMagicConstant")
     public int shortestPathAllKeys(String[] grid) {
         int m = grid.length;
         int n = grid[0].length();
@@ -2678,6 +2695,7 @@ public class Solution {
     }
 
     //733
+    @SuppressWarnings("AlibabaUndefineMagicConstant")
     public int[][] floodFill(int[][] image, int sr, int sc, int newColor) {
         if (sr < 0 || sc < 0 || sr >= image.length || sc >= image[0].length) {
             return image;
@@ -2810,6 +2828,7 @@ public class Solution {
     }
 
     //818 -- BFS + Set -- 2053ms -- 0.00%
+    @SuppressWarnings("AlibabaUndefineMagicConstant")
     public int racecar0(int target) {
         if (0 == target) {
             return 0;
@@ -3138,6 +3157,7 @@ public class Solution {
     }
 
     //407 -- 115ms -- 13.95% -- not me
+    @SuppressWarnings("AlibabaUndefineMagicConstant")
     public int trapRainWater(int[][] heightMap) {
         //一个单元格用一个Cell来表示
         class Cell {
@@ -3275,6 +3295,7 @@ public class Solution {
     }
 
     //773 -- 13ms -- 80.00%
+    @SuppressWarnings("AlibabaUndefineMagicConstant")
     public int slidingPuzzle(int[][] board) {
         int r1 = 123450;
         int r2 = 123540;
@@ -3738,6 +3759,7 @@ public class Solution {
     }
 
     //299 -- 4ms -- 79.55%
+    @SuppressWarnings("AlibabaUndefineMagicConstant")
     public String getHint(String secret, String guess) {
         int[] se = new int[10];
         int[] gu = new int[10];
@@ -4106,6 +4128,7 @@ public class Solution {
     }
 
     //767 -- 14ms -- 54.14% -- 26.7MB -- 36.36%
+    @SuppressWarnings("AlibabaUndefineMagicConstant")
     public String reorganizeString(String S) {
         char[] chars = S.toCharArray();
         int[] res = new int[26];
@@ -4700,6 +4723,7 @@ public class Solution {
     }
 
     //1000
+    @SuppressWarnings("AlibabaUndefineMagicConstant")
     public int mergeStones(int[] stones, int K) {
         int len = stones.length;
         //本来就是一堆的话,没有合并成本
@@ -5042,6 +5066,7 @@ public class Solution {
     }
 
     //996
+    @SuppressWarnings("AlibabaUndefineMagicConstant")
     public int numSquarefulPerms(int[] A) {
         int[][] status = new int[A.length][A.length + 1];
         for (int i = 0; i < A.length; i++) {
@@ -5925,6 +5950,7 @@ public class Solution {
     //23 -- 分治
     // 执行用时 : 6 ms, 在Merge k Sorted Lists的Java提交中击败了98.10% 的用户
     // 内存消耗 : 42.2 MB, 在Merge k Sorted Lists的Java提交中击败了75.71% 的用户
+    @SuppressWarnings("AlibabaUndefineMagicConstant")
     public ListNode mergeKLists(ListNode[] lists) {
         if (lists.length == 0) {
             return null;
@@ -5990,6 +6016,7 @@ public class Solution {
     //4
     //执行用时 : 15 ms, 在Median of Two Sorted Arrays的Java提交中击败了90.45% 的用户
     //内存消耗 : 49.4 MB, 在Median of Two Sorted Arrays的Java提交中击败了83.49% 的用户
+    @SuppressWarnings("AlibabaUndefineMagicConstant")
     public double findMedianSortedArrays(int[] nums1, int[] nums2) {
         int[] arrays = new int[nums1.length + nums2.length];
         for (int i = 0; i < nums1.length; i++) {
@@ -6013,6 +6040,7 @@ public class Solution {
     //4 -- 归并
     //执行用时 : 14 ms, 在Median of Two Sorted Arrays的Java提交中击败了92.15% 的用户
     //内存消耗 : 51 MB, 在Median of Two Sorted Arrays的Java提交中击败了76.36% 的用户
+    @SuppressWarnings("AlibabaUndefineMagicConstant")
     public double findMedianSortedArrays0(int[] nums1, int[] nums2) {
         int[] array = merge(nums1, nums2);
         int length = array.length;
@@ -6726,6 +6754,7 @@ public class Solution {
     private int[] dx = {1, 0, -1, 0};
     private int[] dy = {0, 1, 0, -1};
 
+    @SuppressWarnings("AlibabaUndefineMagicConstant")
     public int swimInWater(int[][] grid) {
         int n = grid.length;
         int res = grid[0][0];

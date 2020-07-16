@@ -523,11 +523,11 @@ public class SolitionUbuntu {
         if (preorder == null) {
             return false;
         }
-        if (preorder.equals("#")) {
+        if ("#".equals(preorder)) {
             return true;
         }
         String[] strings = preorder.split(",");
-        if (strings[0].equals("#")) {
+        if ("#".equals(strings[0])) {
             return false;
         }
         TreeNode root = new TreeNode(Integer.valueOf(strings[0]));
@@ -537,7 +537,7 @@ public class SolitionUbuntu {
         while (!stack.empty() && i < strings.length) {
             TreeNode tt = stack.pop();
             if (tt == null) {
-                if (!strings[i].equals("#")) {
+                if (!"#".equals(strings[i])) {
                     tt = new TreeNode(Integer.valueOf(strings[i]));
                     stack.push(tt.right);
                     stack.push(tt.left);
@@ -1640,8 +1640,9 @@ x = (a[7]b[7]) (a[6]b[6]) ... (a[1]b[1]) (a[0]b[0])
     //执行用时 : 3 ms, 在Maximum Depth of N-ary Tree的Java提交中击败了85.59% 的用户
     //内存消耗 : 54.8 MB, 在Maximum Depth of N-ary Tree的Java提交中击败了37.78% 的用户
     public int maxDepth(Nodes root) {
-        if (root == null)
+        if (root == null) {
             return 0;
+        }
         return dfs(root, 0, 0);
     }
 
