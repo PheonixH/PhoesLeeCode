@@ -6713,10 +6713,10 @@ public class Solution {
             }
         }
         while (min < max) {
-            if(min == max -1){
+            if (min == max - 1) {
                 boolean[][] visit = new boolean[xlen][ylen];
                 dps(grid, 0, 0, visit, min);
-                if(!visit[xlen - 1][ylen - 1]){
+                if (!visit[xlen - 1][ylen - 1]) {
                     min = max;
                 }
                 break;
@@ -6800,7 +6800,6 @@ public class Solution {
     }
 
 
-
     /**
      * 面试题 02.01. 移除重复节点
      * 执行用时：5 ms, 在所有 Java 提交中击败了91.68%的用户
@@ -6857,6 +6856,53 @@ public class Solution {
         node.next = node.next.next;
     }
 
+    /**
+     * 785. 判断二分图
+     * 7.16每日一题
+     * 执行用时：2 ms, 在所有 Java 提交中击败了49.70%的用户
+     * 内存消耗：40.3 MB, 在所有 Java 提交中击败了75.00%的用户
+     * @param graph 无向图
+     * @return 是否为二分图
+     */
+    public boolean isBipartite(int[][] graph) {
+        int len = graph.length;
+        //0:未分配 1:分配1图 2:分配2图
+        int[] div = new int[len];
+        Stack<Integer> gs1 = new Stack<>();
+        Stack<Integer> gs2 = new Stack<>();
+        for (int i = 0; i < len; i++) {
+            if (div[i] == 0) {
+                gs1.add(i);
+                div[i] = 1;
+                while (!gs1.empty() || !gs2.empty()) {
+                    while (!gs1.empty()) {
+                        int t = gs1.pop();
+                        for (int j : graph[t]) {
+                            if (div[j] == 0) {
+                                gs2.add(j);
+                                div[j] = 2;
+                            } else if (div[j] == 1) {
+                                return false;
+                            }
+                        }
+                    }
+                    while ((!gs2.empty())) {
+                        int t = gs2.pop();
+                        for (int j : graph[t]) {
+                            if (div[j] == 0) {
+                                gs1.add(j);
+                                div[j] = 1;
+                            } else if (div[j] == 2) {
+                                return false;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
     public static void main(String[] args) {
         Solution solution = new Solution();
         ListNode p = new ListNode(1);
@@ -6890,7 +6936,7 @@ public class Solution {
         String[] strings = {"5", "2", "C", "D", "+"};
         int[] arr = {1, 2, 3, 6};
         int[] brr = {5, 2, 2, 5, 3, 5};
-        int[][] crr = {{3, 1}, {1, 1}, {0, 1}, {2, 1}, {3, 3}, {3, 2}, {0, 2}, {2, 3}};
+        int[][] crr = {{1, 3,}, {0, 2}, {1, 3}, {0, 2}};
 //        System.out.print(solution.rotate(arr,9));
         int[][] ins = {
                 {1, 1, 0, 0, 0},
@@ -6973,7 +7019,7 @@ public class Solution {
 //        nums.add(l1);
 //        nums.add(l2);
 //        nums.add(l3);
-//        System.out.print(solution.swimInWater(brr));
+        System.out.print(solution.isBipartite(crr));
     }
 
     class Pair implements Comparable<Pair> {
