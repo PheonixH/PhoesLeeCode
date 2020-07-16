@@ -6861,6 +6861,7 @@ public class Solution {
      * 7.16每日一题
      * 执行用时：2 ms, 在所有 Java 提交中击败了49.70%的用户
      * 内存消耗：40.3 MB, 在所有 Java 提交中击败了75.00%的用户
+     *
      * @param graph 无向图
      * @return 是否为二分图
      */
@@ -6901,6 +6902,71 @@ public class Solution {
             }
         }
         return true;
+    }
+
+    public List<String> findItinerary(List<List<String>> tickets) {
+        int len = 0;
+        Comparator<String> comparator = new Comparator<String>() {
+            @Override
+            public int compare(String o1, String o2) {
+                return o1.compareTo(o2);
+            }
+        };
+        Set<String> num = new HashSet<>();
+        Map<String, PriorityQueue<String>> plan = new HashMap<>();
+        tickets.forEach((x) -> {
+            String from = x.get(0);
+            String to = x.get(1);
+            plan.putIfAbsent(from, new PriorityQueue<String>());
+            PriorityQueue<String> queue = plan.get(from);
+            queue.add(to);
+            plan.put(from, queue);
+            num.add(from);
+            num.add(to);
+        });
+        Set<String> visited = new HashSet<>();
+        String now = "JFK";
+        visited.add(now);
+        int n = 1;
+        Stack<Queue<String>> back = new Stack<>();
+        List<String> res = new LinkedList<>();
+        res.add("JFK");
+        boolean isBack = false;
+        len = num.size();
+        while (n < len) {
+            if (!isBack) {
+                PriorityQueue<String> tmp = plan.get(now);
+                Queue<String> queue = new LinkedList<>();
+                tmp.forEach(x -> {
+                    if (!visited.contains(x)) {
+                        queue.add(x);
+                    }
+                });
+                if (queue.isEmpty()) {
+                    isBack = true;
+                    continue;
+                }
+                now = queue.peek();
+                res.add(now);
+                visited.add(now);
+                back.add(queue);
+            } else {
+                Queue<String> queue = back.pop();
+                now = queue.poll();
+                visited.remove(now);
+                res.remove(now);
+                n--;
+                if (queue.isEmpty()) {
+                    continue;
+                }
+                now = queue.peek();
+                res.add(now);
+                visited.add(now);
+                isBack = false;
+            }
+            n++;
+        }
+        return res;
     }
 
     public static void main(String[] args) {
@@ -7019,7 +7085,23 @@ public class Solution {
 //        nums.add(l1);
 //        nums.add(l2);
 //        nums.add(l3);
-        System.out.print(solution.isBipartite(crr));
+        String[] liArray = {"JFK", "SFO"};
+        List<String> li = new LinkedList<>(Arrays.asList(liArray));
+        String[] liArray1 = {"JFK", "ATL"};
+        List<String> li1 = new LinkedList<>(Arrays.asList(liArray1));
+        String[] liArray2 = {"SFO", "ATL"};
+        List<String> li2 = new LinkedList<>(Arrays.asList(liArray2));
+        String[] liArray3 = {"ATL", "JFK"};
+        List<String> li3 = new LinkedList<>(Arrays.asList(liArray3));
+        String[] liArray4 = {"ATL", "SFO"};
+        List<String> li4 = new LinkedList<>(Arrays.asList(liArray4));
+        List<List<String>> lists = new ArrayList<>();
+        lists.add(li);
+        lists.add(li1);
+        lists.add(li2);
+        lists.add(li3);
+        lists.add(li4);
+        System.out.print(solution.findItinerary(lists));
     }
 
     class Pair implements Comparable<Pair> {
