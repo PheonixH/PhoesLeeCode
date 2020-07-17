@@ -6973,18 +6973,43 @@ public class Solution {
      * 35. 搜索插入位置
      * 执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
      * 内存消耗：38.9 MB, 在所有 Java 提交中击败了33.33%的用户
-     * @param nums array
+     *
+     * @param nums   array
      * @param target int
      * @return int
      */
     public int searchInsert1(int[] nums, int target) {
         for (int i = 0; i < nums.length; i++) {
-            if(nums[i] >= target){
+            if (nums[i] >= target) {
                 return i;
             }
         }
         return nums.length;
     }
+
+    /**
+     * 1342. 将数字变成 0 的操作次数
+     * 执行用时：471 ms, 在所有 Java 提交中击败了20.36%的用户
+     * 内存消耗：45.9 MB, 在所有 Java 提交中击败了100.00%的用户
+     * @param num array
+     * @return times
+     */
+    public int numberOfSteps(int num) {
+        if(num == 0){
+            return 0;
+        }
+        int[] dp = new int[num];
+        dp[0] = 1;
+        for (int i = 1; i < num; i++) {
+            if (i % 2 != 0) {
+                dp[i] = dp[i / 2] + 1;
+            } else {
+                dp[i] = dp[i - 1] + 1;
+            }
+        }
+        return dp[num - 1];
+    }
+
 
     public static void main(String[] args) {
         Solution solution = new Solution();
@@ -7118,7 +7143,7 @@ public class Solution {
         lists.add(li2);
         lists.add(li3);
         lists.add(li4);
-        System.out.print(solution.findItinerary(lists));
+        System.out.print(solution.numberOfSteps(14));
     }
 
     class Pair implements Comparable<Pair> {
