@@ -6991,11 +6991,12 @@ public class Solution {
      * 1342. 将数字变成 0 的操作次数
      * 执行用时：471 ms, 在所有 Java 提交中击败了20.36%的用户
      * 内存消耗：45.9 MB, 在所有 Java 提交中击败了100.00%的用户
+     *
      * @param num array
      * @return times
      */
     public int numberOfSteps(int num) {
-        if(num == 0){
+        if (num == 0) {
             return 0;
         }
         int[] dp = new int[num];
@@ -7008,6 +7009,23 @@ public class Solution {
             }
         }
         return dp[num - 1];
+    }
+
+    /**
+     * 执行用时：4 ms, 在所有 Java 提交中击败了7.67%的用户
+     * 内存消耗：38.7 MB, 在所有 Java 提交中击败了100.00%的用户
+     * @param nums array value
+     * @param index array index
+     * @return new array
+     */
+    public int[] createTargetArray(int[] nums, int[] index) {
+        List<Integer> target = new LinkedList<>();
+        int len = index.length;
+        for (int i = 0; i < len; i++) {
+            target.add(index[i], nums[i]);
+        }
+        Integer[] arr = target.toArray(new Integer[target.size()]);
+        return Arrays.stream(arr).mapToInt(Integer::valueOf).toArray();
     }
 
 
