@@ -6969,6 +6969,23 @@ public class Solution {
         return res;
     }
 
+    /**
+     * 35. 搜索插入位置
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
+     * 内存消耗：38.9 MB, 在所有 Java 提交中击败了33.33%的用户
+     * @param nums array
+     * @param target int
+     * @return int
+     */
+    public int searchInsert1(int[] nums, int target) {
+        for (int i = 0; i < nums.length; i++) {
+            if(nums[i] >= target){
+                return i;
+            }
+        }
+        return nums.length;
+    }
+
     public static void main(String[] args) {
         Solution solution = new Solution();
         ListNode p = new ListNode(1);
