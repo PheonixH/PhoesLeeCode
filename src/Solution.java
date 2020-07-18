@@ -6969,6 +6969,40 @@ public class Solution {
         return res;
     }
 
+
+    /** 97. 交错字符串
+     * 执行用时：3 ms, 在所有 Java 提交中击败了90.96%的用户
+     * 内存消耗：38.2 MB, 在所有 Java 提交中击败了14.29%的用户
+     * @param s1 字符串1
+     * @param s2 字符串2
+     * @param s3 字符串3
+     * @return 验证 s3 是否是由 s1 和 s2 交错组成的。
+     */
+    public boolean isInterleave(String s1, String s2, String s3) {
+        int n = s1.length();
+        int m = s2.length();
+        int len = s3.length();
+        if (len != n + m) {
+            return false;
+        }
+        boolean[][] dp = new boolean[n + 1][m + 1];
+        dp[0][0] = true;
+        for (int i = 1; i <= n; i++) {
+            dp[i][0] = dp[i - 1][0] && (s1.charAt(i - 1) == s3.charAt(i - 1));
+        }
+        for (int j = 1; j <= m; j++) {
+            dp[0][j] = dp[0][j - 1] && (s2.charAt(j - 1) == s3.charAt(j - 1));
+        }
+        for (int i = 1; i <= n; i++) {
+            for (int j = 1; j <= m; j++) {
+                boolean tmpI = dp[i - 1][j] && (s1.charAt(i - 1) == s3.charAt(i + j - 1));
+                boolean tmpJ = dp[i][j - 1] && (s2.charAt(j - 1) == s3.charAt(i + j - 1));
+                dp[i][j] = tmpI || tmpJ;
+            }
+        }
+        return dp[n][m];
+    }
+
     public static void main(String[] args) {
         Solution solution = new Solution();
         ListNode p = new ListNode(1);
@@ -7101,7 +7135,7 @@ public class Solution {
         lists.add(li2);
         lists.add(li3);
         lists.add(li4);
-        System.out.print(solution.findItinerary(lists));
+        System.out.print(solution.isInterleave("aabcc", "dbbca", "aadbbcbcac"));
     }
 
     class Pair implements Comparable<Pair> {
