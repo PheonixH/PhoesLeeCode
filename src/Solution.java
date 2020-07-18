@@ -7063,6 +7063,7 @@ public class Solution {
      * 给出一个区间的集合，请合并所有重叠的区间。
      * 执行用时：6 ms, 在所有 Java 提交中击败了91.67%的用户
      * 内存消耗：42.3 MB, 在所有 Java 提交中击败了39.72%的用户
+     *
      * @param intervals 区间的集合数组
      * @return 合并后区间的集合数组
      */
@@ -7078,7 +7079,7 @@ public class Solution {
             queue.add(interval);
         }
         List<int[]> res = new ArrayList<>();
-        if(queue.isEmpty()){
+        if (queue.isEmpty()) {
             return new int[][]{};
         }
         int[] t = queue.poll();
@@ -7097,6 +7098,40 @@ public class Solution {
         int[][] resArray = res.toArray(new int[res.size()][]);
         return resArray;
     }
+
+    /**
+     * 60. 第k个排列
+     * 给出集合 [1,2,3,…,n]，其所有元素共有 n! 种排列,按大小顺序列出所有排列情况,给定 n 和 k，返回第 k 个排列。
+     * 执行用时：2 ms, 在所有 Java 提交中击败了85.50%的用户
+     * 内存消耗：37.4 MB, 在所有 Java 提交中击败了9.68%的用户
+     * @param n n个元素
+     * @param k 第k个数
+     * @return 第k个排列
+     */
+    public String getPermutation(int n, int k) {
+        List<Integer> array = new ArrayList<>();
+        int[] factorial = new int[n + 1];
+        factorial[0] = 1;
+        for (int i = 1; i <= n; i++) {
+            array.add(i);
+            factorial[i] = i * factorial[i - 1];
+        }
+        int now = 1;
+        StringBuilder str = new StringBuilder();
+        while (!array.isEmpty()) {
+            int tmp = k / factorial[n - now];
+            k = k % factorial[n - now];
+            if (k == 0) {
+                tmp--;
+                k = factorial[n - now];
+            }
+            int key = array.remove(tmp);
+            str.append(key);
+            now++;
+        }
+        return str.toString();
+    }
+
 
     public static void main(String[] args) {
         Solution solution = new Solution();
@@ -7230,7 +7265,7 @@ public class Solution {
         lists.add(li2);
         lists.add(li3);
         lists.add(li4);
-        System.out.print(solution.spiralOrder(crr));
+        System.out.print(solution.getPermutation(3, 2));
     }
 
     class Pair implements Comparable<Pair> {
