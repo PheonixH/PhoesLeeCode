@@ -6970,9 +6970,11 @@ public class Solution {
     }
 
 
-    /** 97. 交错字符串
+    /**
+     * 97. 交错字符串
      * 执行用时：3 ms, 在所有 Java 提交中击败了90.96%的用户
      * 内存消耗：38.2 MB, 在所有 Java 提交中击败了14.29%的用户
+     *
      * @param s1 字符串1
      * @param s2 字符串2
      * @param s3 字符串3
@@ -7001,6 +7003,58 @@ public class Solution {
             }
         }
         return dp[n][m];
+    }
+
+
+    /**
+     * 54. 螺旋矩阵
+     * 给定一个包含 m x n 个元素的矩阵（m 行, n 列），请按照顺时针螺旋顺序，返回矩阵中的所有元素。
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
+     * 内存消耗：37.9 MB, 在所有 Java 提交中击败了5.72%的用户
+     * @param matrix 一个包含 m x n 个元素的矩阵
+     * @return 顺时针螺旋顺序，矩阵所有元素
+     */
+    public List<Integer> spiralOrder(int[][] matrix) {
+        int n = matrix.length;
+        if (n == 0) {
+            return new LinkedList<>();
+        }
+        int m = matrix[0].length;
+        int left = 0, right = m - 1, up = 0, down = n - 1;
+        List<Integer> res = new ArrayList<>();
+        // 0 : 向右， 2：向左，1： 向下， 3：向上
+        int dir = 0;
+        while (left < right || up < down) {
+            switch (dir % 4) {
+                case 0 -> {
+                    for (int i = left; i <= right; i++) {
+                        res.add(matrix[up][i]);
+                    }
+                    up++;
+                }
+                case 1 -> {
+                    for (int i = up; i <= down; i++) {
+                        res.add(matrix[i][right]);
+                    }
+                    right--;
+                }
+                case 2 -> {
+                    for (int i = right; i >= left; i--) {
+                        res.add(matrix[down][i]);
+                    }
+                    down--;
+                }
+
+                case 3 -> {
+                    for (int i = down; i >= up; i--) {
+                        res.add(matrix[i][left]);
+                    }
+                    left++;
+                }
+            }
+            dir++;
+        }
+        return res;
     }
 
     public static void main(String[] args) {
@@ -7036,7 +7090,7 @@ public class Solution {
         String[] strings = {"5", "2", "C", "D", "+"};
         int[] arr = {1, 2, 3, 6};
         int[] brr = {5, 2, 2, 5, 3, 5};
-        int[][] crr = {{1, 3,}, {0, 2}, {1, 3}, {0, 2}};
+        int[][] crr = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
 //        System.out.print(solution.rotate(arr,9));
         int[][] ins = {
                 {1, 1, 0, 0, 0},
@@ -7135,7 +7189,7 @@ public class Solution {
         lists.add(li2);
         lists.add(li3);
         lists.add(li4);
-        System.out.print(solution.isInterleave("aabcc", "dbbca", "aadbbcbcac"));
+        System.out.print(solution.spiralOrder(crr));
     }
 
     class Pair implements Comparable<Pair> {
