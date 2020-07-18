@@ -7011,6 +7011,7 @@ public class Solution {
      * 给定一个包含 m x n 个元素的矩阵（m 行, n 列），请按照顺时针螺旋顺序，返回矩阵中的所有元素。
      * 执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
      * 内存消耗：37.9 MB, 在所有 Java 提交中击败了5.72%的用户
+     *
      * @param matrix 一个包含 m x n 个元素的矩阵
      * @return 顺时针螺旋顺序，矩阵所有元素
      */
@@ -7055,6 +7056,46 @@ public class Solution {
             dir++;
         }
         return res;
+    }
+
+    /**
+     * 56. 合并区间
+     * 给出一个区间的集合，请合并所有重叠的区间。
+     * 执行用时：6 ms, 在所有 Java 提交中击败了91.67%的用户
+     * 内存消耗：42.3 MB, 在所有 Java 提交中击败了39.72%的用户
+     * @param intervals 区间的集合数组
+     * @return 合并后区间的集合数组
+     */
+    public int[][] merge(int[][] intervals) {
+        Comparator<int[]> comparator = new Comparator<int[]>() {
+            @Override
+            public int compare(int[] o1, int[] o2) {
+                return o1[0] - o2[0];
+            }
+        };
+        PriorityQueue<int[]> queue = new PriorityQueue<int[]>(comparator);
+        for (int[] interval : intervals) {
+            queue.add(interval);
+        }
+        List<int[]> res = new ArrayList<>();
+        if(queue.isEmpty()){
+            return new int[][]{};
+        }
+        int[] t = queue.poll();
+        int left = t[0], right = t[1];
+        while (!queue.isEmpty()) {
+            int[] tmp = queue.poll();
+            if (tmp[0] > right) {
+                res.add(new int[]{left, right});
+                left = tmp[0];
+                right = tmp[1];
+            } else {
+                right = Math.max(right, tmp[1]);
+            }
+        }
+        res.add(new int[]{left, right});
+        int[][] resArray = res.toArray(new int[res.size()][]);
+        return resArray;
     }
 
     public static void main(String[] args) {
