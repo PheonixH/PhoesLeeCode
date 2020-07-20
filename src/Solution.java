@@ -7094,6 +7094,36 @@ public class Solution {
         return vec;
     }
 
+    /**
+     * 1365. 有多少小于当前数字的数字
+     * 执行用时：1 ms, 在所有 Java 提交中击败了100.00%的用户
+     * 内存消耗：40.1 MB, 在所有 Java 提交中击败了100.00%的用户
+     * @param nums 数组
+     * @return 统计数组中比它小的所有数字的数目
+     */
+    public int[] smallerNumbersThanCurrent0(int[] nums) {
+        // 统计出现频率 frequency
+        int[] freq = new int[101]; // 索引即数值
+        for (int num : nums) {
+            freq[num]++;
+        }
+
+        // 对频率(而非对原数组nums)从前到后累加
+        for (int i = 1; i < freq.length; i++) {
+            freq[i] = freq[i] + freq[i - 1];
+        }
+
+        // 输出结果
+        int[] res = new int[nums.length];
+        for (int i = 0; i < res.length; i++) {
+            if (nums[i] > 0) {
+                res[i] = freq[nums[i] - 1];
+            }
+        }
+        return res;
+    }
+
+
     public static void main(String[] args) {
         Solution solution = new Solution();
 
@@ -7195,7 +7225,7 @@ public class Solution {
         lists.add(li2);
         lists.add(li3);
         lists.add(li4);
-        System.out.print(solution.smallerNumbersThanCurrent(arr));
+        System.out.print(solution.smallerNumbersThanCurrent0(arr));
     }
 
     class Pair implements Comparable<Pair> {
