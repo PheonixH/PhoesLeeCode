@@ -832,39 +832,115 @@ public class Solution2 {
                 || helper(nums, idx + 1, sum, target);
     }
 
+    /*初级算法*/
+
+    //从排序数组中删除重复项
+    public int removeDuplicates(int[] nums) {
+        if (nums.length <= 1) {
+            return nums.length;
+        }
+        int n = 0;
+        for (int i = 1; i < nums.length; i++) {
+            if (nums[i] == nums[n]) {
+                continue;
+            } else {
+                nums[++n] = nums[i];
+            }
+        }
+        return n + 1;
+    }
+
+    /*
+     * 题目：1291. 顺次数
+     * 执行用时 :0 ms, 在所有 Java 提交中击败了100.00%的用户
+     * 内存消耗 :33.4 MB, 在所有 Java 提交中击败了100.00%的用户
+     * */
+    public List<Integer> sequentialDigits(int low, int high) {
+        List<Integer> resList = new LinkedList<Integer>();
+        char[] lowArr = String.valueOf(low).toCharArray();
+        int lowA = lowArr[0] - '0';
+        final int len = lowArr.length;
+        int minNum = lowA;
+        int key = 1;
+        boolean b = false;
+        int pre = 12;
+        int p = 2;
+        for (int i = 1; i < len; i++) {
+            lowA++;
+            p++;
+            key = key * 10 + 1;
+            pre = pre * 10 + p;
+            minNum = minNum * 10 + lowA;
+            if (lowA > 9) {
+                b = true;
+            }
+            if (p > 9) {
+                return resList;
+            }
+        }
+        if (!b) {
+            if (minNum < low) {
+                minNum += key;
+                if (minNum%10 == 0){
+                    minNum = pre;
+                    p++;
+                    pre = pre * 10 + p;
+                    key = key * 10 + 1;
+                }
+            }
+        } else {
+            minNum = pre;
+            key = key * 10 + 1;
+        }
+        while (minNum < high) {
+            resList.add(minNum);
+            minNum += key;
+            if (minNum % 10 == 0) {
+                p++;
+                minNum = pre > minNum ? pre : pre * 10 + p;
+                pre = pre * 10 + p;
+                key = key * 10 + 1;
+                if (minNum % 10 == 0) {
+                    return resList;
+                }
+            }
+        }
+        return resList;
+    }
+
 
 
     public static void main(String[] argc) {
         Solution2 solution = new Solution2();
-        List<Integer> p1 = new ArrayList<>();
-        int[] brr = {10, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23};
-        for (int i : brr) {
-            p1.add(i);
-        }
-        List<Integer> p3 = new ArrayList<>();
-        int[] drr = {3, 2};
-        for (int i : drr) {
-            p3.add(i);
-        }
-        List<List<Integer>> p2 = new ArrayList<>();
-        int[][] crr = {{3, 0, 5}, {1, 2, 10}};
-        for (int i = 0; i < crr.length; i++) {
-            List<Integer> pp = new ArrayList<>();
-            for (int ii : crr[i]) {
-                pp.add(ii);
-            }
-            p2.add(pp);
-        }
-        char[][] map = {
-                {'1', '0', '1', '0', '0'},
-                {'1', '0', '1', '1', '1'},
-                {'1', '1', '1', '1', '1'},
-                {'1', '0', '0', '1', '0'}
-        };
+//        List<Integer> p1 = new ArrayList<>();
+//        int[] brr = {10, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23};
+//        for (int i : brr) {
+//            p1.add(i);
+//        }
+//        List<Integer> p3 = new ArrayList<>();
+//        int[] drr = {3, 2};
+//        for (int i : drr) {
+//            p3.add(i);
+//        }
+//        List<List<Integer>> p2 = new ArrayList<>();
+//        int[][] crr = {{3, 0, 5}, {1, 2, 10}};
+//        for (int i = 0; i < crr.length; i++) {
+//            List<Integer> pp = new ArrayList<>();
+//            for (int ii : crr[i]) {
+//                pp.add(ii);
+//            }
+//            p2.add(pp);
+//        }
+//        char[][] map = {
+//                {'1', '0', '1', '0', '0'},
+//                {'1', '0', '1', '1', '1'},
+//                {'1', '1', '1', '1', '1'},
+//                {'1', '0', '0', '1', '0'}
+//        };
 //        System.out.print(solution.canCross(brr));
-        int[] nums1 = {1, 2, 3, 7, 4, 4};
-        int[] nums2 = {2, 5, 6};
-        int[][] frr = {{0, 0}, {9, 9}, {2, 10}, {0, 3}, {0, 5}, {3, 4}, {6, 10}, {1, 2}, {4, 7}, {5, 6}};
+//        int[] nums1 = {1, 3, 3, 7, 8, 8};
+//        int[] nums2 = {2, 5, 6};
+//        int[][] frr = {{0, 0}, {9, 9}, {2, 10}, {0, 3}, {0, 5}, {3, 4}, {6, 10}, {1, 2}, {4, 7}, {5, 6}};
 //        ListNode p1 = new ListNode(-7);
 //        ListNode p2 = new ListNode(-1);
 //        ListNode p3 = new ListNode(-10);
@@ -881,6 +957,11 @@ public class Solution2 {
 //        q3.next = q4;
 //        q4.next = q5;
 //        solution.sortList(p1);
+        List<Integer> r = solution.sequentialDigits(28932835,
+                733240848);
+        for (int k : r) {
+            System.out.println(k);
+        }
 //        System.out.print(solution.lastStoneWeightII(nums1));
     }
 }
