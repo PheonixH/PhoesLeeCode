@@ -7034,8 +7034,9 @@ public class Solution {
      * 给定一个已按照升序排列 的有序数组，找到两个数使得它们相加之和等于目标数。
      * 执行用时：1 ms, 在所有 Java 提交中击败了95.52%的用户
      * 内存消耗：40 MB, 在所有 Java 提交中击败了6.67%的用户
+     *
      * @param numbers 按照升序排列 的有序数组
-     * @param target 目标数
+     * @param target  目标数
      * @return 两个数的下标
      */
     public int[] twoSum1(int[] numbers, int target) {
@@ -7051,6 +7052,46 @@ public class Solution {
             }
         }
         return new int[]{};
+    }
+
+    /**
+     * 1365. 有多少小于当前数字的数字
+     * 给你一个数组 nums，对于其中每个元素 nums[i]，请你统计数组中比它小的所有数字的数目。
+     * 执行用时：9 ms, 在所有 Java 提交中击败了61.53%的用户
+     * 内存消耗：40.2 MB, 在所有 Java 提交中击败了100.00%的用户
+     * @param nums 数组
+     * @return 统计数组中比它小的所有数字的数目
+     */
+    public int[] smallerNumbersThanCurrent(int[] nums) {
+        int n = nums.length;
+        List<int[]> tmp = new ArrayList<>();
+        int[] vec = new int[n];
+        for (int i = 0; i < n; ++i) {
+            tmp.add(new int[]{nums[i], i});
+        }
+        Comparator<int[]> c = new Comparator<int[]>() {
+            @Override
+            public int compare(int[] o1, int[] o2) {
+                return o1[0] - o2[0];
+            }
+        };
+        tmp.sort(c);
+        int preKey = tmp.get(0)[0];
+        int preNum = 0;
+        int sameNum = 1;
+        for (int i = 1; i < n; i++) {
+            int[] ints = tmp.get(i);
+            if (preKey != ints[0]) {
+                preKey = ints[0];
+                preNum += sameNum;
+                sameNum = 1;
+                vec[ints[1]] = preNum;
+            } else {
+                vec[ints[1]] = preNum;
+                sameNum++;
+            }
+        }
+        return vec;
     }
 
     public static void main(String[] args) {
@@ -7088,7 +7129,7 @@ public class Solution {
 
         //Arrays
         String[] strings = {"5", "2", "C", "D", "+"};
-        int[] arr = {1, 2, 3, 6};
+        int[] arr = {11, 2, 13, 6, 4, 5, 2, 11, 11};
         int[] brr = {5, 2, 2, 5, 3, 5};
         int[][] crr = {{1, 3,}, {0, 2}, {1, 3}, {0, 2}};
         int[][] ins = {
@@ -7154,7 +7195,7 @@ public class Solution {
         lists.add(li2);
         lists.add(li3);
         lists.add(li4);
-        System.out.print(solution.numberOfSteps(14));
+        System.out.print(solution.smallerNumbersThanCurrent(arr));
     }
 
     class Pair implements Comparable<Pair> {
