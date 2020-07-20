@@ -1,11 +1,7 @@
-import data.ListNode;
-import data.Node;
-import data.TreeNode;
-
 import datestruct.Worker;
 
-import java.lang.reflect.Array;
 import java.util.*;
+import datestruct.*;
 
 import static java.lang.Math.log10;
 

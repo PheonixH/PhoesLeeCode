@@ -1,7 +1,5 @@
 //import jdk.nashorn.api.tree.Tree;
 
-import data.ListNode;
-import data.TreeNode;
 import datestruct.Nodes;
 
 import java.util.ArrayList;
@@ -9,6 +7,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Stack;
 import java.util.*;
+
+import datestruct.TreeNode;
+import datestruct.ListNode;
 
 /**
  * @author ：Pheonix

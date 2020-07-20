@@ -1,7 +1,5 @@
-import data.TreeNode;
-
 import java.util.*;
-
+import datestruct.TreeNode;
 
 /**
  * PhoesLeeCode
