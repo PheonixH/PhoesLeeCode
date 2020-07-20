@@ -7154,6 +7154,75 @@ public class Solution {
         return max;
     }
 
+    /**
+     * 1363. 形成三的最大倍数
+     * 给你一个整数数组 digits，你可以通过按任意顺序连接其中某些数字来形成 3 的倍数，请你返回所能得到的最大的 3 的倍数。
+     * 执行用时：30 ms, 在所有 Java 提交中击败了25.21% 的用户
+     * 内存消耗：41.1 MB, 在所有 Java 提交中击败了100.00% 的用户
+     *
+     * @param digits 一个整数数组
+     * @return 所能得到的最大的 3 的倍数
+     */
+    public String largestMultipleOfThree(int[] digits) {
+        List<Integer> zero = new LinkedList<>();
+        List<Integer> one = new LinkedList<>();
+        List<Integer> two = new LinkedList<>();
+        for (int i : digits) {
+            if (i % 3 == 0) {
+                zero.add(i);
+            } else if (i % 3 == 1) {
+                one.add(i);
+            } else {
+                two.add(i);
+            }
+        }
+        Comparator<Integer> c = new Comparator<Integer>() {
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                return o2 - o1;
+            }
+        };
+        one.sort(Comparator.comparingInt(Integer::intValue));
+        two.sort(Comparator.comparingInt(Integer::intValue));
+        int tmp = one.size() - two.size();
+        if (Math.abs(tmp) <= 1) {
+            if (tmp == -1) {
+                two.remove(0);
+            } else if (tmp == 1) {
+                one.remove(0);
+            }
+            zero.addAll(one);
+            zero.addAll(two);
+        } else {
+            int o = one.size() % 3;
+            int t = two.size() % 3;
+            int i = 0;
+            if (t < o) {
+                while (i < o - t) {
+                    one.remove(0);
+                    i++;
+                }
+            } else {
+                while (i < t - o) {
+                    two.remove(0);
+                    i++;
+                }
+            }
+            zero.addAll(one);
+            zero.addAll(two);
+        }
+        if (zero.size() == 0) {
+            return "";
+        }
+        zero.sort(c);
+        if (zero.get(0) == 0) {
+            return "0";
+        }
+        StringBuilder res = new StringBuilder();
+        zero.forEach(res::append);
+        return res.toString();
+    }
+
     public static void main(String[] args) {
         Solution solution = new Solution();
 
