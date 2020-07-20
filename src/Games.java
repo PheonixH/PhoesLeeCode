@@ -1,4 +1,7 @@
 import java.util.*;
+import java.util.stream.Collectors;
+
+import datestruct.ListNode;
 import datestruct.TreeNode;
 
 /**
@@ -1842,52 +1845,86 @@ public class Games {
     }
 
     public static void main(String[] args) {
+
+        //ListNode
+        int[] listNodeValue = {1, 2, 2, 4, 5, 3, 2, 1};
+        int listNodeLen = listNodeValue.length;
+        ListNode head = new ListNode(listNodeValue[0]);
+        ListNode listNodeTmp = head;
+        for (int i = 1; i < listNodeLen; i++) {
+            listNodeTmp.next = new ListNode(listNodeValue[i]);
+            listNodeTmp = listNodeTmp.next;
+        }
+
+        //TreeNode -1 is null TreeNode;
+        int[] treeNodeValue = {3, 2, -1, 3, 1, 3, -1, 2};
+        int treeNodeLen = treeNodeValue.length;
+        Stack<TreeNode> createTreeNodeStack = new Stack<>();
+        TreeNode root = new TreeNode(treeNodeValue[0]);
+        createTreeNodeStack.add(root);
+        for (int i = 1; i < listNodeLen; i++) {
+            TreeNode tmp = createTreeNodeStack.pop();
+            if (tmp == null) {
+                i++;
+                continue;
+            }
+            if (treeNodeValue[i] == -1) {
+                tmp.left = null;
+            } else {
+                tmp.left = new TreeNode(treeNodeValue[i]);
+            }
+            createTreeNodeStack.add(tmp.left);
+            i++;
+            if (treeNodeValue[i] == -1) {
+                tmp.right = null;
+            } else {
+                tmp.right = new TreeNode(treeNodeValue[i]);
+            }
+            createTreeNodeStack.add(tmp.right);
+        }
+
+
+        //Arrays
+        String[] oneDimensionalStringArray = {"5", "2", "C", "D", "+"};
+        int[] oneDimensionalArrayA = {11, 2, 13, 6, 4, 5, 2, 11, 11};
+        int[] oneDimensionalArrayB = {5, 2, 2, 5, 3, 5};
+        int[][] twoDimensionalArrayA = {{1, 3,}, {0, 2}, {1, 3}, {0, 2}};
+        int[][] twoDimensionalArrayB = {
+                {0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0},
+                {0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0},
+                {0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0},
+                {0, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0},
+                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0},
+                {0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0},
+                {0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0}
+        };
+        char[] oneDimensionalCharArray = {'A', 'B'};
+        char[][] twoDimensionalCharArray = {
+                {'A', 'B', 'C', 'E'},
+                {'S', 'F', 'C', 'S'},
+                {'A', 'D', 'E', 'E'}
+        };
+
+        //List<List<Integer>>
+        int[][] listListIntegerArray = {{4, 14, 24, 34, 40}, {12, 14, 25, 38, 41}, {9, 19, 20, 26, 50}};
+        List<List<Integer>> integerListList = new LinkedList();
+        for (int[] listIntegerArray : listListIntegerArray) {
+            List<Integer> collect = Arrays.stream(listIntegerArray).boxed().collect(Collectors.toList());
+            integerListList.add(collect);
+        }
+
+        //List<List<String>>
+        String[][] listListStringArray = {{"JFK", "SFO"}, {"JFK", "ATL"}, {"SFO", "ATL"}, {"ATL", "JFK"}, {"ATL", "SFO"}};
+        List<List<String>> stringListList = new LinkedList();
+        for (String[] listStringArray : listListStringArray) {
+            List<String> collect = Arrays.stream(listStringArray).collect(Collectors.toList());
+            stringListList.add(collect);
+        }
+
+
         Games games = new Games();
-        List<List<String>> or = new ArrayList<>();
-        List<String> or1 = new ArrayList<>();
-        or1.add("James");
-        or1.add("12");
-        or1.add("Fried Chicken");
-        or.add(or1);
-        List<String> or2 = new ArrayList<>();
-        or2.add("Ratesh");
-        or2.add("1");
-        or2.add("Fried Chicken");
-        or.add(or2);
-        List<String> or3 = new ArrayList<>();
-        or3.add("Amadeus");
-        or3.add("12");
-        or3.add("Fried Chicken");
-        or.add(or3);
-        List<String> or4 = new ArrayList<>();
-        or4.add("Adam");
-        or4.add("1");
-        or4.add("Canadian Waffles");
-        or.add(or4);
-        List<String> or5 = new ArrayList<>();
-        or5.add("Brianna");
-        or5.add("11");
-        or5.add("Canadian Waffles");
-        or.add(or5);
-        List<List<String>> q = new LinkedList<>();
-        List<String> q1 = new LinkedList<>();
-        q1.add("A");
-        q1.add("B");
-        List<String> q2 = new LinkedList<>();
-        q1.add("C");
-        List<String> q3 = new LinkedList<>();
-        q1.add("C");
-        q1.add("B");
-        List<String> q4 = new LinkedList<>();
-        q1.add("D");
-        q.add(q1);
-        q.add(q2);
-        q.add(q3);
-        q.add(q4);
-        int[][] arrays = new int[][]{{0, 1}, {1, 2}, {0, 2}};
-        int[] brr = new int[]{1, 2, 3, 1, 1, 3};
-        double[] crr = new double[]{0.5, 0.5, 0.2};
-        double p = games.maxProbability(3, arrays, crr, 0, 2);
+        double p = games.consecutiveNumbersSum(3);
         System.out.println(p);
     }
 }

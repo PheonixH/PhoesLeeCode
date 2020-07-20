@@ -1,6 +1,8 @@
 import datestruct.Worker;
 
 import java.util.*;
+import java.util.stream.Collectors;
+
 import datestruct.*;
 
 import static java.lang.Math.log10;
@@ -7055,6 +7057,7 @@ public class Solution {
      * 给你一个数组 nums，对于其中每个元素 nums[i]，请你统计数组中比它小的所有数字的数目。
      * 执行用时：9 ms, 在所有 Java 提交中击败了61.53%的用户
      * 内存消耗：40.2 MB, 在所有 Java 提交中击败了100.00%的用户
+     *
      * @param nums 数组
      * @return 统计数组中比它小的所有数字的数目
      */
@@ -7094,6 +7097,7 @@ public class Solution {
      * 1365. 有多少小于当前数字的数字
      * 执行用时：1 ms, 在所有 Java 提交中击败了100.00%的用户
      * 内存消耗：40.1 MB, 在所有 Java 提交中击败了100.00%的用户
+     *
      * @param nums 数组
      * @return 统计数组中比它小的所有数字的数目
      */
@@ -7124,47 +7128,49 @@ public class Solution {
         Solution solution = new Solution();
 
         //ListNode
-        ListNode p = new ListNode(1);
-        ListNode p1 = new ListNode(2);
-        ListNode p2 = new ListNode(2);
-        ListNode p3 = new ListNode(4);
-        ListNode p4 = new ListNode(5);
-        ListNode p5 = new ListNode(3);
-        ListNode p6 = new ListNode(2);
-        ListNode p7 = new ListNode(1);
-        p.next = p1;
-        p1.next = p2;
-        p2.next = p3;
-        p3.next = p4;
-        p4.next = p5;
-        p5.next = p6;
-        p6.next = p7;
+        int[] listNodeValue = {1, 2, 2, 4, 5, 3, 2, 1};
+        int listNodeLen = listNodeValue.length;
+        ListNode head = new ListNode(listNodeValue[0]);
+        ListNode listNodeTmp = head;
+        for (int i = 1; i < listNodeLen; i++) {
+            listNodeTmp.next = new ListNode(listNodeValue[i]);
+            listNodeTmp = listNodeTmp.next;
+        }
 
-        //TreeNode
-        TreeNode t = new TreeNode(3);
-        TreeNode t1 = new TreeNode(2);
-        TreeNode t2 = new TreeNode(3);
-        TreeNode t3 = new TreeNode(3);
-        TreeNode t4 = new TreeNode(1);
-        TreeNode t5 = new TreeNode(3);
-        t.left = t1;
-        t.right = t2;
-        t1.right = t3;
-        t2.right = t4;
-        t3.right = t5;
+        //TreeNode -1 is null TreeNode;
+        int[] treeNodeValue = {3, 2, -1, 3, 1, 3, -1, 2};
+        int treeNodeLen = treeNodeValue.length;
+        Stack<TreeNode> createTreeNodeStack = new Stack<>();
+        TreeNode root = new TreeNode(treeNodeValue[0]);
+        createTreeNodeStack.add(root);
+        for (int i = 1; i < listNodeLen; i++) {
+            TreeNode tmp = createTreeNodeStack.pop();
+            if (tmp == null) {
+                i++;
+                continue;
+            }
+            if (treeNodeValue[i] == -1) {
+                tmp.left = null;
+            } else {
+                tmp.left = new TreeNode(treeNodeValue[i]);
+            }
+            createTreeNodeStack.add(tmp.left);
+            i++;
+            if (treeNodeValue[i] == -1) {
+                tmp.right = null;
+            } else {
+                tmp.right = new TreeNode(treeNodeValue[i]);
+            }
+            createTreeNodeStack.add(tmp.right);
+        }
+
 
         //Arrays
-        String[] strings = {"5", "2", "C", "D", "+"};
-        int[] arr = {11, 2, 13, 6, 4, 5, 2, 11, 11};
-        int[] brr = {5, 2, 2, 5, 3, 5};
-        int[][] crr = {{1, 3,}, {0, 2}, {1, 3}, {0, 2}};
-        int[][] ins = {
-                {1, 1, 0, 0, 0},
-                {1, 1, 0, 0, 0},
-                {0, 0, 0, 1, 1},
-                {0, 0, 0, 1, 1}
-        };
-        int[][] ints = {
+        String[] oneDimensionalStringArray = {"5", "2", "C", "D", "+"};
+        int[] oneDimensionalArrayA = {11, 2, 13, 6, 4, 5, 2, 11, 11};
+        int[] oneDimensionalArrayB = {5, 2, 2, 5, 3, 5};
+        int[][] twoDimensionalArrayA = {{1, 3,}, {0, 2}, {1, 3}, {0, 2}};
+        int[][] twoDimensionalArrayB = {
                 {0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0},
                 {0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0},
                 {0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -7172,56 +7178,32 @@ public class Solution {
                 {0, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0},
                 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0},
                 {0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0},
-                {0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0}};
-        char[][] board = {
+                {0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0}
+        };
+        char[] oneDimensionalCharArray = {'A', 'B'};
+        char[][] twoDimensionalCharArray = {
                 {'A', 'B', 'C', 'E'},
                 {'S', 'F', 'C', 'S'},
                 {'A', 'D', 'E', 'E'}
         };
-        char[][] boards = {};
 
         //List<List<Integer>>
-        List<List<Integer>> nums = new LinkedList();
-        List<Integer> l1 = new ArrayList<>();
-        l1.add(4);
-        l1.add(14);
-        l1.add(24);
-        l1.add(34);
-        l1.add(40);
-        List<Integer> l2 = new ArrayList<>();
-        l2.add(12);
-        l2.add(14);
-        l2.add(25);
-        l2.add(38);
-        l2.add(41);
-        List<Integer> l3 = new ArrayList<>();
-        l3.add(9);
-        l3.add(19);
-        l3.add(20);
-        l3.add(26);
-        l3.add(50);
-        nums.add(l1);
-        nums.add(l2);
-        nums.add(l3);
+        int[][] listListIntegerArray = {{4, 14, 24, 34, 40}, {12, 14, 25, 38, 41}, {9, 19, 20, 26, 50}};
+        List<List<Integer>> integerListList = new LinkedList();
+        for (int[] listIntegerArray : listListIntegerArray) {
+            List<Integer> collect = Arrays.stream(listIntegerArray).boxed().collect(Collectors.toList());
+            integerListList.add(collect);
+        }
 
         //List<List<String>>
-        String[] liArray = {"JFK", "SFO"};
-        List<String> li = new LinkedList<>(Arrays.asList(liArray));
-        String[] liArray1 = {"JFK", "ATL"};
-        List<String> li1 = new LinkedList<>(Arrays.asList(liArray1));
-        String[] liArray2 = {"SFO", "ATL"};
-        List<String> li2 = new LinkedList<>(Arrays.asList(liArray2));
-        String[] liArray3 = {"ATL", "JFK"};
-        List<String> li3 = new LinkedList<>(Arrays.asList(liArray3));
-        String[] liArray4 = {"ATL", "SFO"};
-        List<String> li4 = new LinkedList<>(Arrays.asList(liArray4));
-        List<List<String>> lists = new ArrayList<>();
-        lists.add(li);
-        lists.add(li1);
-        lists.add(li2);
-        lists.add(li3);
-        lists.add(li4);
-        System.out.print(solution.smallerNumbersThanCurrent0(arr));
+        String[][] listListStringArray = {{"JFK", "SFO"}, {"JFK", "ATL"}, {"SFO", "ATL"}, {"ATL", "JFK"}, {"ATL", "SFO"}};
+        List<List<String>> stringListList = new LinkedList();
+        for (String[] listStringArray : listListStringArray) {
+            List<String> collect = Arrays.stream(listStringArray).collect(Collectors.toList());
+            stringListList.add(collect);
+        }
+
+        System.out.print(solution.smallerNumbersThanCurrent0(oneDimensionalArrayA));
     }
 
     class Pair implements Comparable<Pair> {
