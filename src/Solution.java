@@ -4640,7 +4640,7 @@ public class Solution {
     //3
     //执行用时 : 33 ms, 在Longest Substring Without Repeating Characters的Java提交中击败了92.27% 的用户
     //内存消耗 : 37.3 MB, 在Longest Substring Without Repeating Characters的Java提交中击败了24.05% 的用户
-    public int lengthOfLongestSubstring(String s) {
+    public int lengthOfLongestSubstring0(String s) {
         char[] chars = s.toCharArray();
         int maxl = 0;
         Map<Character, Integer> map = new HashMap<>();
@@ -4651,13 +4651,13 @@ public class Solution {
                 map.put(chars[i], i);
                 l++;
             } else {
-                maxl = l > maxl ? l : maxl;
+                maxl = Math.max(l, maxl);
                 least = map.get(chars[i]) > least ? map.get(chars[i]) : least;
                 l = i - least;
                 map.put(chars[i], i);
             }
         }
-        maxl = l > maxl ? l : maxl;
+        maxl = Math.max(l, maxl);
         return maxl;
     }
 
@@ -7023,6 +7023,7 @@ public class Solution {
         for (int i = 0; i < len; i++) {
             target.add(index[i], nums[i]);
         }
+
         Integer[] arr = target.toArray(new Integer[target.size()]);
         return Arrays.stream(arr).mapToInt(Integer::valueOf).toArray();
     }
@@ -7123,6 +7124,35 @@ public class Solution {
         return res;
     }
 
+    /**
+     * 3. 无重复字符的最长子串
+     * 给定一个字符串，请你找出其中不含有重复字符的 最长子串 的长度。
+     * 执行用时：6 ms, 在所有 Java 提交中击败了85.57% 的用户
+     * 内存消耗：39.7 MB, 在所有 Java 提交中击败了5.20% 的用户
+     *
+     * @param s 1个字符串
+     * @return 不含有重复字符的 最长子串 的长度
+     */
+    public int lengthOfLongestSubstring(String s) {
+        int len = s.length();
+        if (len == 0) {
+            return 0;
+        }
+        char[] chars = s.toCharArray();
+        int max = 1;
+        int[] dp = new int[len];
+        for (int i = 1; i < len; i++) {
+            int l = dp[i - 1];
+            for (int j = i - 1; j >= l; j--) {
+                if (chars[j] == chars[i]) {
+                    l = j + 1;
+                }
+            }
+            dp[i] = l;
+            max = Math.max(max, i - l + 1);
+        }
+        return max;
+    }
 
     public static void main(String[] args) {
         Solution solution = new Solution();
