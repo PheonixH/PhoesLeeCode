@@ -29,7 +29,7 @@ public class Trie {
 
     public void insertChar(String word, int n, Trie trie) {
         if (n == word.length()) {
-            this.isLeaf = true;
+            trie.isLeaf = true;
             return;
         }
         char input = word.charAt(n);
@@ -69,6 +69,30 @@ public class Trie {
             tmp = tmp.children[c - 'a'];
         }
         return true;
+    }
+
+    public static void main(String[] args) {
+        Trie trie = new Trie();
+        String[] key = {"insert", "search", "search", "startsWith", "insert", "search"};
+        String[] value = {"apple", "apple", "app", "app", "app", "app"};
+        int len = key.length;
+        for (int i = 0; i < len; i++) {
+            switch (key[i]) {
+                case "insert" -> {
+                    trie.insert(value[i]);
+                    System.out.println("insert");
+                }
+                case "search" -> {
+                    System.out.println(trie.search(value[i]));
+                }
+                case "startsWith" -> {
+                    System.out.println(trie.startsWith(value[i]));
+                }
+                default -> {
+                    System.out.println("");
+                }
+            }
+        }
     }
 }
 
