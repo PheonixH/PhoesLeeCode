@@ -7014,7 +7014,8 @@ public class Solution {
     /**
      * 执行用时：4 ms, 在所有 Java 提交中击败了7.67%的用户
      * 内存消耗：38.7 MB, 在所有 Java 提交中击败了100.00%的用户
-     * @param nums array value
+     *
+     * @param nums  array value
      * @param index array index
      * @return new array
      */
@@ -7028,9 +7029,34 @@ public class Solution {
         return Arrays.stream(arr).mapToInt(Integer::valueOf).toArray();
     }
 
+    /**
+     * 167. 两数之和 II - 输入有序数组
+     * 给定一个已按照升序排列 的有序数组，找到两个数使得它们相加之和等于目标数。
+     * 执行用时：1 ms, 在所有 Java 提交中击败了95.52%的用户
+     * 内存消耗：40 MB, 在所有 Java 提交中击败了6.67%的用户
+     * @param numbers 按照升序排列 的有序数组
+     * @param target 目标数
+     * @return 两个数的下标
+     */
+    public int[] twoSum1(int[] numbers, int target) {
+        int len = numbers.length;
+        int l = 0, r = len - 1;
+        while (l < r) {
+            if (numbers[l] + numbers[r] == target) {
+                return new int[]{l + 1, r + 1};
+            } else if (numbers[l] + numbers[r] > target) {
+                r--;
+            } else {
+                l++;
+            }
+        }
+        return new int[]{};
+    }
 
     public static void main(String[] args) {
         Solution solution = new Solution();
+
+        //ListNode
         ListNode p = new ListNode(1);
         ListNode p1 = new ListNode(2);
         ListNode p2 = new ListNode(2);
@@ -7047,6 +7073,7 @@ public class Solution {
         p5.next = p6;
         p6.next = p7;
 
+        //TreeNode
         TreeNode t = new TreeNode(3);
         TreeNode t1 = new TreeNode(2);
         TreeNode t2 = new TreeNode(3);
@@ -7057,13 +7084,13 @@ public class Solution {
         t.right = t2;
         t1.right = t3;
         t2.right = t4;
-//        t3.right = t5;
-//        solution.postorderTraversal(t1);
+        t3.right = t5;
+
+        //Arrays
         String[] strings = {"5", "2", "C", "D", "+"};
         int[] arr = {1, 2, 3, 6};
         int[] brr = {5, 2, 2, 5, 3, 5};
         int[][] crr = {{1, 3,}, {0, 2}, {1, 3}, {0, 2}};
-//        System.out.print(solution.rotate(arr,9));
         int[][] ins = {
                 {1, 1, 0, 0, 0},
                 {1, 1, 0, 0, 0},
@@ -7084,67 +7111,33 @@ public class Solution {
                 {'S', 'F', 'C', 'S'},
                 {'A', 'D', 'E', 'E'}
         };
-//        int[][] crr = {{68, 97}, {34, -84}, {60, 100}, {2, 31}, {-27, -38}, {-73, -74}, {-55, -39}, {62, 91}, {62, 92}, {-57, -67}};//{2, 2}, {3, 3}, {6, 1},{7, 2}, {1, 7}, {9, 5}, {1, 8}, {3, 4}};
-//        int[][] ins = {
-//                {1, 2, 3}, {4, 5, 6}, {7, 8, 9}
-//        };
-//        int[][] ints = {
-//                {5, 4, 2, 9, 6, 0, 3, 5, 1, 4, 9, 8, 4, 9, 7, 5, 1},
-//                {3, 4, 9, 2, 9, 9, 0, 9, 7, 9, 4, 7, 8, 4, 4, 5, 8},
-//                {6, 1, 8, 9, 8, 0, 3, 7, 0, 9, 8, 7, 4, 9, 2, 0, 1},
-//                {4, 0, 0, 5, 1, 7, 4, 7, 6, 4, 1, 0, 1, 0, 6, 2, 8},
-//                {7, 2, 0, 2, 9, 3, 4, 7, 0, 8, 9, 5, 9, 0, 1, 1, 0},
-//                {8, 2, 9, 4, 9, 7, 9, 3, 7, 0, 3, 6, 5, 3, 5, 9, 6},
-//                {8, 9, 9, 2, 6, 1, 2, 5, 8, 3, 7, 0, 4, 9, 8, 8, 8},
-//                {5, 8, 5, 4, 1, 5, 6, 6, 3, 3, 1, 8, 3, 9, 6, 4, 8},
-//                {0, 2, 2, 3, 0, 2, 6, 7, 2, 3, 7, 3, 1, 5, 8, 1, 3},
-//                {4, 4, 0, 2, 0, 3, 8, 4, 1, 3, 3, 0, 7, 4, 2, 9, 8},
-//                {5, 9, 0, 4, 7, 5, 7, 6, 0, 8, 3, 0, 0, 6, 6, 6, 8},
-//                {0, 7, 1, 8, 3, 5, 1, 8, 7, 0, 2, 9, 2, 2, 7, 1, 5},
-//                {1, 0, 0, 0, 6, 2, 0, 0, 2, 2, 8, 0, 9, 7, 0, 8, 0},
-//                {1, 1, 7, 2, 9, 6, 5, 4, 8, 7, 8, 5, 0, 3, 8, 1, 5},
-//                {8, 9, 7, 8, 1, 1, 3, 0, 1, 2, 9, 4, 0, 1, 5, 3, 1},
-//                {9, 2, 7, 4, 8, 7, 3, 9, 2, 4, 2, 2, 7, 8, 2, 6, 7},
-//                {3, 8, 1, 6, 0, 4, 8, 9, 8, 0, 2, 5, 3, 5, 5, 7, 5},
-//                {1, 8, 2, 5, 7, 7, 1, 9, 9, 8, 9, 2, 4, 9, 5, 4, 0},
-//                {3, 4, 4, 1, 5, 3, 3, 8, 8, 6, 3, 5, 3, 8, 7, 1, 3}};
-//        char[][] board = {
-//                {'A', 'B', 'C', 'E'},
-//                {'S', 'F', 'C', 'S'},
-//                {'A', 'D', 'E', 'E'}
-//        };
-//        int[][] is = {
-//                {1, 1, 1, 1, 0, 0, 0},
-//                {0, 0, 0, 1, 0, 0, 0},
-//                {0, 0, 0, 1, 0, 0, 1},
-//                {1, 0, 0, 1, 0, 0, 0},
-//                {0, 0, 0, 1, 0, 0, 0},
-//                {0, 0, 0, 1, 0, 0, 0},
-//                {0, 0, 0, 1, 1, 1, 1}
-//        };
-//        char[][] boards = {};
-//        List<List<Integer>> nums = new LinkedList();
-//        List<Integer> l1 = new ArrayList<>();
-//        l1.add(4);
-//        l1.add(14);
-//        l1.add(24);
-//        l1.add(34);
-//        l1.add(40);
-//        List<Integer> l2 = new ArrayList<>();
-//        l2.add(12);
-//        l2.add(14);
-//        l2.add(25);
-//        l2.add(38);
-//        l2.add(41);
-//        List<Integer> l3 = new ArrayList<>();
-//        l3.add(9);
-//        l3.add(19);
-//        l3.add(20);
-//        l3.add(26);
-//        l3.add(50);
-//        nums.add(l1);
-//        nums.add(l2);
-//        nums.add(l3);
+        char[][] boards = {};
+
+        //List<List<Integer>>
+        List<List<Integer>> nums = new LinkedList();
+        List<Integer> l1 = new ArrayList<>();
+        l1.add(4);
+        l1.add(14);
+        l1.add(24);
+        l1.add(34);
+        l1.add(40);
+        List<Integer> l2 = new ArrayList<>();
+        l2.add(12);
+        l2.add(14);
+        l2.add(25);
+        l2.add(38);
+        l2.add(41);
+        List<Integer> l3 = new ArrayList<>();
+        l3.add(9);
+        l3.add(19);
+        l3.add(20);
+        l3.add(26);
+        l3.add(50);
+        nums.add(l1);
+        nums.add(l2);
+        nums.add(l3);
+
+        //List<List<String>>
         String[] liArray = {"JFK", "SFO"};
         List<String> li = new LinkedList<>(Arrays.asList(liArray));
         String[] liArray1 = {"JFK", "ATL"};
