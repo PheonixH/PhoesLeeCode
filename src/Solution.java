@@ -7343,8 +7343,9 @@ public class Solution {
      * 由于返回类型是整数，结果只保留整数的部分，小数部分将被舍去。
      * 执行用时：2 ms, 在所有 Java 提交中击败了57.41% 的用户
      * 内存消耗：36.9 MB, 在所有 Java 提交中击败了5.55% 的用户
+     *
      * @param x 非负整数
-     * @return  x 的平方根
+     * @return x 的平方根
      */
     public int mySqrt(int x) {
         // 注意：针对特殊测试用例，例如 2147395599
@@ -7359,7 +7360,7 @@ public class Solution {
                 r = tmp;
             }
         }
-        return (int)(l * l == x ? l : l - 1);
+        return (int) (l * l == x ? l : l - 1);
         // 注意：针对特殊测试用例，例如 2147395599
         // 要把搜索的范围设置成长整型
         // 为了照顾到 0 把左边界设置为 0
@@ -7380,6 +7381,25 @@ public class Solution {
         // 因为一定存在，因此无需后处理
         return (int) left;*/
     }
+
+    /**
+     * 面试题 17.14. 最小K个数
+     * 设计一个算法，找出数组中最小的k个数。以任意顺序返回这k个数均可。
+     * 执行用时：7 ms, 在所有 Java 提交中击败了73.60% 的用户
+     * 内存消耗：49.7 MB, 在所有 Java 提交中击败了100.00% 的用户
+     * @param arr 数组
+     * @param k k个数字
+     * @return 以任意顺序返回这k个数
+     */
+    public int[] smallestK(int[] arr, int k) {
+        Arrays.sort(arr);
+        int[] res = new int[k];
+        for (int i = 0; i < k; i++) {
+            res[i] = arr[i];
+        }
+        return res;
+    }
+
 
     public static void main(String[] args) {
         Solution solution = new Solution();
