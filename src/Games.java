@@ -1844,6 +1844,122 @@ public class Games {
         return true;
     }
 
+    //120周赛
+
+    public int[] sortedSquares(int[] arr) {
+        int[] res = new int[arr.length];
+        for (int i = 0; i < arr.length; i++) {
+            res[i] = arr[i] * arr[i];
+        }
+        Arrays.sort(res);
+        return res;
+    }
+
+    public int maxTurbulenceSize(int[] arr) {
+        int len = arr.length;
+        if (len <= 1) {
+            return len;
+        }
+        int[] dp = new int[len];
+        dp[0] = 1;
+        dp[1] = arr[1] == arr[0] ? 1 : 2;
+        int max = dp[1];
+        for (int i = 2; i < len; i++) {
+            if (arr[i - 1] < arr[i - 2] && arr[i] > arr[i - 1]) {
+                dp[i] = dp[i - 1] + 1;
+            } else if (arr[i - 1] > arr[i - 2] && arr[i] < arr[i - 1]) {
+                dp[i] = dp[i - 1] + 1;
+            } else {
+                dp[i] = arr[i] == arr[i - 1] ? 1 : 2;
+            }
+            max = Math.max(max, dp[i]);
+        }
+        return max;
+    }
+
+    public int distributeCoins(TreeNode root) {
+        distributeCoinsHelp(root);
+        return move;
+    }
+
+    int move = 0;
+
+    public int distributeCoinsHelp(TreeNode root) {
+        if (root.right == null && root.left == null) {
+            return root.val - 1;
+        }
+        int lef = 0;
+        if (root.left != null) {
+            lef = distributeCoinsHelp(root.left);
+        }
+        int rig = 0;
+        if (root.right != null) {
+            rig = distributeCoinsHelp(root.right);
+        }
+        move += Math.abs(lef) + Math.abs(rig);
+        return lef + rig + root.val - 1;
+    }
+
+
+    int ans;
+    int[][] grid;
+    int R, C;
+    int tr, tc, target;
+    int[] dr = new int[]{0, -1, 0, 1};
+    int[] dc = new int[]{1, 0, -1, 0};
+    Integer[][][] memo;
+
+    public int uniquePathsIII(int[][] grid) {
+        this.grid = grid;
+        R = grid.length;
+        C = grid[0].length;
+        target = 0;
+
+        int sr = 0, sc = 0;
+        for (int r = 0; r < R; ++r)
+            for (int c = 0; c < C; ++c) {
+                if (grid[r][c] % 2 == 0)
+                    target |= code(r, c);
+
+                if (grid[r][c] == 1) {
+                    sr = r;
+                    sc = c;
+                } else if (grid[r][c] == 2) {
+                    tr = r;
+                    tc = c;
+                }
+            }
+
+        memo = new Integer[R][C][1 << R * C];
+        return dp(sr, sc, target);
+    }
+
+    public int code(int r, int c) {
+        return 1 << (r * C + c);
+    }
+
+    public Integer dp(int r, int c, int todo) {
+        if (memo[r][c][todo] != null)
+            return memo[r][c][todo];
+
+        if (r == tr && c == tc) {
+            return todo == 0 ? 1 : 0;
+        }
+
+        int ans = 0;
+        for (int k = 0; k < 4; ++k) {
+            int nr = r + dr[k];
+            int nc = c + dc[k];
+            if (0 <= nr && nr < R && 0 <= nc && nc < C) {
+                if ((todo & code(nr, nc)) != 0)
+                    ans += dp(nr, nc, todo ^ code(nr, nc));
+            }
+        }
+        memo[r][c][todo] = ans;
+        return ans;
+    }
+
+
     public static void main(String[] args) {
 
         //ListNode
@@ -1857,12 +1973,12 @@ public class Games {
         }
 
         //TreeNode -1 is null TreeNode;
-        int[] treeNodeValue = {3, 2, -1, 3, 1, 3, -1, 2};
+        int[] treeNodeValue = {0, 3, 0};
         int treeNodeLen = treeNodeValue.length;
         Stack<TreeNode> createTreeNodeStack = new Stack<>();
         TreeNode root = new TreeNode(treeNodeValue[0]);
         createTreeNodeStack.add(root);
-        for (int i = 1; i < listNodeLen; i++) {
+        for (int i = 1; i < treeNodeLen; i++) {
             TreeNode tmp = createTreeNodeStack.pop();
             if (tmp == null) {
                 i++;
@@ -1886,7 +2002,7 @@ public class Games {
 
         //Arrays
         String[] oneDimensionalStringArray = {"5", "2", "C", "D", "+"};
-        int[] oneDimensionalArrayA = {11, 2, 13, 6, 4, 5, 2, 11, 11};
+        int[] oneDimensionalArrayA = {9, 4, 2, 10, 7, 8, 8, 1, 9};
         int[] oneDimensionalArrayB = {5, 2, 2, 5, 3, 5};
         int[][] twoDimensionalArrayA = {{1, 3,}, {0, 2}, {1, 3}, {0, 2}};
         int[][] twoDimensionalArrayB = {
@@ -1924,7 +2040,7 @@ public class Games {
 
 
         Games games = new Games();
-        double p = games.consecutiveNumbersSum(3);
+        double p = games.distributeCoins(root);
         System.out.println(p);
     }
 }
