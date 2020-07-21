@@ -1901,62 +1901,44 @@ public class Games {
     }
 
 
-    int ans;
-    int[][] grid;
-    int R, C;
-    int tr, tc, target;
-    int[] dr = new int[]{0, -1, 0, 1};
-    int[] dc = new int[]{1, 0, -1, 0};
-    Integer[][][] memo;
-
     public int uniquePathsIII(int[][] grid) {
-        this.grid = grid;
-        R = grid.length;
-        C = grid[0].length;
-        target = 0;
-
-        int sr = 0, sc = 0;
-        for (int r = 0; r < R; ++r)
-            for (int c = 0; c < C; ++c) {
-                if (grid[r][c] % 2 == 0)
-                    target |= code(r, c);
-
-                if (grid[r][c] == 1) {
-                    sr = r;
-                    sc = c;
-                } else if (grid[r][c] == 2) {
-                    tr = r;
-                    tc = c;
+        int startX = 0, startY = 0, stepNum = 1;  //当grid[i][j] == 2, stepNum++, 这里直接初始化为1
+        //遍历获取起始位置和统计总步数
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[0].length; j++) {
+                if (grid[i][j] == 1) {
+                    startY = i;
+                    startX = j;
+                    continue;
+                }
+                if (grid[i][j] == 0) {
+                    stepNum++;
                 }
             }
-
-        memo = new Integer[R][C][1 << R * C];
-        return dp(sr, sc, target);
-    }
-
-    public int code(int r, int c) {
-        return 1 << (r * C + c);
-    }
-
-    public Integer dp(int r, int c, int todo) {
-        if (memo[r][c][todo] != null)
-            return memo[r][c][todo];
-
-        if (r == tr && c == tc) {
-            return todo == 0 ? 1 : 0;
         }
 
-        int ans = 0;
-        for (int k = 0; k < 4; ++k) {
-            int nr = r + dr[k];
-            int nc = c + dc[k];
-            if (0 <= nr && nr < R && 0 <= nc && nc < C) {
-                if ((todo & code(nr, nc)) != 0)
-                    ans += dp(nr, nc, todo ^ code(nr, nc));
-            }
+        return dfs(startX, startY, stepNum, grid);
+    }
+
+
+    public int dfs(int x, int y, int stepSur, int[][] grid) {
+        //排除越界的情况和遇到障碍的情况
+        if (x < 0 || x >= grid[0].length || y < 0 || y >= grid.length || grid[y][x] == -1) {
+            return 0;
         }
-        memo[r][c][todo] = ans;
-        return ans;
+        if (grid[y][x] == 2) {
+            return stepSur == 0 ? 1 : 0;
+        }
+        //已走过的标记为障碍
+        grid[y][x] = -1;
+        int res = 0;
+        res += dfs(x - 1, y, stepSur - 1, grid);
+        res += dfs(x + 1, y, stepSur - 1, grid);
+        res += dfs(x, y - 1, stepSur - 1, grid);
+        res += dfs(x, y + 1, stepSur - 1, grid);
+        //dfs遍历完该位置为起始位置的情况后，置零，以不影响后面的dfs
+        grid[y][x] = 0;
+        return res;
     }
 
 
