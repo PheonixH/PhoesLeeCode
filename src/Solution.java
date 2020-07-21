@@ -7387,8 +7387,9 @@ public class Solution {
      * 设计一个算法，找出数组中最小的k个数。以任意顺序返回这k个数均可。
      * 执行用时：7 ms, 在所有 Java 提交中击败了73.60% 的用户
      * 内存消耗：49.7 MB, 在所有 Java 提交中击败了100.00% 的用户
+     *
      * @param arr 数组
-     * @param k k个数字
+     * @param k   k个数字
      * @return 以任意顺序返回这k个数
      */
     public int[] smallestK(int[] arr, int k) {
@@ -7398,6 +7399,38 @@ public class Solution {
             res[i] = arr[i];
         }
         return res;
+    }
+
+    /**
+     * 面试题 02.04. 分割链表
+     * 编写程序以 x 为基准分割链表，使得所有小于 x 的节点排在大于或等于 x 的节点之前。如果链表中包含 x，x 只需出现在小于 x 的元素之后(如下所示)。分割元素 x 只需处于“右半部分”即可，其不需要被置于左右两部分之间。
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：39.1 MB, 在所有 Java 提交中击败了100.00% 的用户
+     * @param head 链表
+     * @param x 基准
+     * @return 分割链表
+     */
+    public ListNode partition(ListNode head, int x) {
+        if(head == null){
+            return head;
+        }
+        ListNode res = new ListNode(0);
+        ListNode max = head.next;
+        ListNode pre = head;
+        ListNode min = res;
+        while (max != null) {
+            if (max.val < x) {
+                min.next = max;
+                pre.next = max.next;
+                max = max.next;
+                min = min.next;
+            } else {
+                pre = pre.next;
+                max = max.next;
+            }
+        }
+        min.next = head;
+        return res.next;
     }
 
 
