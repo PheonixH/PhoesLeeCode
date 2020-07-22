@@ -3,12 +3,14 @@ import java.lang.reflect.Array;
 import java.util.*;
 
 import datestruct.ListNode;
+import datestruct.TreeNode;
 
 import javax.swing.text.MutableAttributeSet;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @ProjectName: PhoesLeeCode
@@ -881,7 +883,7 @@ public class Solution2 {
         if (!b) {
             if (minNum < low) {
                 minNum += key;
-                if (minNum%10 == 0){
+                if (minNum % 10 == 0) {
                     minNum = pre;
                     p++;
                     pre = pre * 10 + p;
@@ -909,59 +911,86 @@ public class Solution2 {
     }
 
 
-
-    public static void main(String[] argc) {
+    public static void main(String[] args) {
         Solution2 solution = new Solution2();
-//        List<Integer> p1 = new ArrayList<>();
-//        int[] brr = {10, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23};
-//        for (int i : brr) {
-//            p1.add(i);
-//        }
-//        List<Integer> p3 = new ArrayList<>();
-//        int[] drr = {3, 2};
-//        for (int i : drr) {
-//            p3.add(i);
-//        }
-//        List<List<Integer>> p2 = new ArrayList<>();
-//        int[][] crr = {{3, 0, 5}, {1, 2, 10}};
-//        for (int i = 0; i < crr.length; i++) {
-//            List<Integer> pp = new ArrayList<>();
-//            for (int ii : crr[i]) {
-//                pp.add(ii);
-//            }
-//            p2.add(pp);
-//        }
-//        char[][] map = {
-//                {'1', '0', '1', '0', '0'},
-//                {'1', '0', '1', '1', '1'},
-//                {'1', '1', '1', '1', '1'},
-//                {'1', '0', '0', '1', '0'}
-//        };
-//        System.out.print(solution.canCross(brr));
-//        int[] nums1 = {1, 3, 3, 7, 8, 8};
-//        int[] nums2 = {2, 5, 6};
-//        int[][] frr = {{0, 0}, {9, 9}, {2, 10}, {0, 3}, {0, 5}, {3, 4}, {6, 10}, {1, 2}, {4, 7}, {5, 6}};
-//        ListNode p1 = new ListNode(-7);
-//        ListNode p2 = new ListNode(-1);
-//        ListNode p3 = new ListNode(-10);
-//        ListNode q1 = new ListNode(9);
-//        ListNode q2 = new ListNode(-4);
-//        ListNode q3 = new ListNode(1);
-//        ListNode q4 = new ListNode(6);
-//        ListNode q5 = new ListNode(2);
-//        p1.next = p2;
-//        p2.next = p3;
-//        p3.next = q1;
-//        q1.next = q2;
-//        q2.next = q3;
-//        q3.next = q4;
-//        q4.next = q5;
-//        solution.sortList(p1);
-        List<Integer> r = solution.sequentialDigits(28932835,
-                733240848);
-        for (int k : r) {
-            System.out.println(k);
+
+        //ListNode
+        int[] listNodeValue = {1, 2, 2, 4, 5, 3, 2, 1};
+        int listNodeLen = listNodeValue.length;
+        ListNode head = new ListNode(listNodeValue[0]);
+        ListNode listNodeTmp = head;
+        for (int i = 1; i < listNodeLen; i++) {
+            listNodeTmp.next = new ListNode(listNodeValue[i]);
+            listNodeTmp = listNodeTmp.next;
         }
-//        System.out.print(solution.lastStoneWeightII(nums1));
+
+        //TreeNode -1 is null TreeNode;
+        int[] treeNodeValue = {3, 2, -1, 3, 1, 3, -1, 2};
+        int treeNodeLen = treeNodeValue.length;
+        Stack<TreeNode> createTreeNodeStack = new Stack<>();
+        TreeNode root = new TreeNode(treeNodeValue[0]);
+        createTreeNodeStack.add(root);
+        for (int i = 1; i < listNodeLen; i++) {
+            TreeNode tmp = createTreeNodeStack.pop();
+            if (tmp == null) {
+                i++;
+                continue;
+            }
+            if (treeNodeValue[i] == -1) {
+                tmp.left = null;
+            } else {
+                tmp.left = new TreeNode(treeNodeValue[i]);
+            }
+            createTreeNodeStack.add(tmp.left);
+            i++;
+            if (treeNodeValue[i] == -1) {
+                tmp.right = null;
+            } else {
+                tmp.right = new TreeNode(treeNodeValue[i]);
+            }
+            createTreeNodeStack.add(tmp.right);
+        }
+
+
+        //Arrays
+        String[] oneDimensionalStringArray = {"5", "2", "C", "D", "+"};
+        int[] oneDimensionalArrayA = {1, 2, 3, 3};
+        int[] oneDimensionalArrayB = {5, 2, 2, 5, 3, 5};
+        int[][] twoDimensionalArrayA = {{1, 3,}, {0, 2}, {1, 3}, {0, 2}};
+        int[][] twoDimensionalArrayB = {
+                {0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0},
+                {0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0},
+                {0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0},
+                {0, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0},
+                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0},
+                {0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0},
+                {0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0}
+        };
+        char[] oneDimensionalCharArray = {'A', 'B'};
+        char[][] twoDimensionalCharArray = {
+                {'A', 'B', 'C', 'E'},
+                {'S', 'F', 'C', 'S'},
+                {'A', 'D', 'E', 'E'}
+        };
+
+        //List<List<Integer>>
+        int[][] listListIntegerArray = {{4, 14, 24, 34, 40}, {12, 14, 25, 38, 41}, {9, 19, 20, 26, 50}};
+        List<List<Integer>> integerListList = new LinkedList();
+        for (int[] listIntegerArray : listListIntegerArray) {
+            List<Integer> collect = Arrays.stream(listIntegerArray).boxed().collect(Collectors.toList());
+            integerListList.add(collect);
+        }
+
+        //List<List<String>>
+        String[][] listListStringArray = {{"JFK", "SFO"}, {"JFK", "ATL"}, {"SFO", "ATL"}, {"ATL", "JFK"}, {"ATL", "SFO"}};
+        List<List<String>> stringListList = new LinkedList();
+        for (String[] listStringArray : listListStringArray) {
+            List<String> collect = Arrays.stream(listStringArray).collect(Collectors.toList());
+            stringListList.add(collect);
+        }
+
+        System.out.print(solution.removeDuplicates(oneDimensionalArrayA));
     }
+
 }
