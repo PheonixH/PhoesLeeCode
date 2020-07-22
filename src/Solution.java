@@ -7556,7 +7556,7 @@ public class Solution {
      * 内存消耗 :65.2 MB, 在所有 Java 提交中击败了100.00%的用户
      */
     public int[][] multiSearch(String big, String[] smalls) {
-        SolutionVmware.Trie0 tree = new SolutionVmware.Trie0(smalls);
+        Trie0 tree = new Trie0(smalls);
         for (int i = 0; i < smalls.length; i++) {
             tree.insert(smalls[i], i);
         }
