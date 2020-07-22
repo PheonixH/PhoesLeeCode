@@ -7406,12 +7406,13 @@ public class Solution {
      * 编写程序以 x 为基准分割链表，使得所有小于 x 的节点排在大于或等于 x 的节点之前。如果链表中包含 x，x 只需出现在小于 x 的元素之后(如下所示)。分割元素 x 只需处于“右半部分”即可，其不需要被置于左右两部分之间。
      * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
      * 内存消耗：39.1 MB, 在所有 Java 提交中击败了100.00% 的用户
+     *
      * @param head 链表
-     * @param x 基准
+     * @param x    基准
      * @return 分割链表
      */
     public ListNode partition(ListNode head, int x) {
-        if(head == null){
+        if (head == null) {
             return head;
         }
         ListNode res = new ListNode(0);
@@ -7434,21 +7435,67 @@ public class Solution {
     }
 
     /**
-    * 剑指 Offer 11. 旋转数组的最小数字
+     * 剑指 Offer 11. 旋转数组的最小数字
      * 把一个数组最开始的若干个元素搬到数组的末尾，我们称之为数组的旋转。输入一个递增排序的数组的一个旋转，输出旋转数组的最小元素。
      * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
      * 内存消耗：39.9 MB, 在所有 Java 提交中击败了100.00% 的用户
+     *
      * @param numbers 递增排序的数组
      * @return
      */
     public int minArray(int[] numbers) {
         int len = numbers.length;
-        for(int i = 1;i<len;i++){
-            if(numbers[i] < numbers[i-1]){
+        for (int i = 1; i < len; i++) {
+            if (numbers[i] < numbers[i - 1]) {
                 return numbers[i];
             }
         }
         return numbers[0];
+    }
+
+    /**
+     * LCP 12. 小张刷题计划
+     * 为了提高自己的代码能力，小张制定了 LeetCode 刷题计划，他选中了 LeetCode 题库中的 n 道题，编号从 0 到 n-1，并计划在 m 天内按照题目编号顺序刷完所有的题目（注意，小张不能用多天完成同一题）。
+     * 在小张刷题计划中，小张需要用 time[i] 的时间完成编号 i 的题目。此外，小张还可以使用场外求助功能，通过询问他的好朋友小杨题目的解法，可以省去该题的做题时间。为了防止“小张刷题计划”变成“小杨刷题计划”，小张每天最多使用一次求助。
+     * 我们定义 m 天中做题时间最多的一天耗时为 T（小杨完成的题目不计入做题总时间）。请你帮小张求出最小的 T是多少。
+     * 执行用时：9 ms, 在所有 Java 提交中击败了87.01% 的用户
+     * 内存消耗：47.6 MB, 在所有 Java 提交中击败了100.00% 的用户
+     * @param time time[i] 的时间完成编号 i 的题目
+     * @param m  m 天
+     * @return 最小的 T是多少
+     */
+    public int minTime(int[] time, int m) {
+        int len = time.length;
+        if (len <= m) {
+            return 0;
+        }
+        int l = 0, r = Integer.MAX_VALUE;
+        while (l < r) {
+            int mid = (l + r) >> 1;
+            if (isOk(time, mid, m)) {
+                r = mid;
+            } else {
+                l = mid + 1;
+            }
+        }
+        return l;
+    }
+
+    public boolean isOk(int[] time, int mid, int m) {
+        int n = 0;
+        int max = time[0];
+        int tmp = max;
+        int realMax = 0;
+        for (int i = 1; i < time.length; i++) {
+            tmp += time[i];
+            max = Math.max(max, time[i]);
+            if (max + mid < tmp) {
+                n++;
+                max = time[i];
+                tmp = max;
+            }
+        }
+        return n < m;
     }
 
     public static void main(String[] args) {
@@ -7494,7 +7541,7 @@ public class Solution {
 
         //Arrays
         String[] oneDimensionalStringArray = {"5", "2", "C", "D", "+"};
-        int[] oneDimensionalArrayA = {11, 2, 13, 6, 4, 5, 2, 11, 11};
+        int[] oneDimensionalArrayA = {1, 2, 3, 3};
         int[] oneDimensionalArrayB = {5, 2, 2, 5, 3, 5};
         int[][] twoDimensionalArrayA = {{1, 3,}, {0, 2}, {1, 3}, {0, 2}};
         int[][] twoDimensionalArrayB = {
@@ -7530,7 +7577,7 @@ public class Solution {
             stringListList.add(collect);
         }
 
-        System.out.print(solution.smallerNumbersThanCurrent0(oneDimensionalArrayA));
+        System.out.print(solution.minTime(oneDimensionalArrayA, 2));
     }
 
     class Pair implements Comparable<Pair> {
