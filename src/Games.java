@@ -1941,6 +1941,36 @@ public class Games {
         return res;
     }
 
+    /**
+     * 1521. 找到最接近目标值的函数值
+     * 执行用时：31 ms, 在所有 Java 提交中击败了75.26% 的用户
+     * 内存消耗：55 MB, 在所有 Java 提交中击败了100.00% 的用户
+     * @param a array
+     * @param target target
+     * @return r
+     */
+    public int closestToTarget(int[] a, int target) {
+        Arrays.sort(a);
+        int n = a.length;
+        int min = 1000000000;
+        int[] as = new int[0];
+        for (int i = 0; i < n; i++) {
+            int v = a[i];
+            int[] nas = new int[as.length + 1];
+            int p = 0;
+            for (int j = 0; j < as.length; j++) {
+                int vv = v & as[j];
+                if (p == 0 || nas[p - 1] != vv) nas[p++] = vv;
+            }
+            if (p == 0 || nas[p - 1] != v) nas[p++] = v;
+            for (int j = 0; j < p; j++) {
+                min = Math.min(min, Math.abs(target - nas[j]));
+            }
+            as = Arrays.copyOf(nas, p);
+        }
+        return min;
+    }
+
 
     public static void main(String[] args) {
 
