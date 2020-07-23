@@ -1943,26 +1943,28 @@ public class Games {
 
     /**
      * 1521. 找到最接近目标值的函数值
-     * 执行用时：31 ms, 在所有 Java 提交中击败了75.26% 的用户
+     * 执行用时：29 ms, 在所有 Java 提交中击败了75.79% 的用户
      * 内存消耗：55 MB, 在所有 Java 提交中击败了100.00% 的用户
-     * @param a array
+     * @param a      array
      * @param target target
      * @return r
      */
     public int closestToTarget(int[] a, int target) {
         Arrays.sort(a);
-        int n = a.length;
         int min = 1000000000;
         int[] as = new int[0];
-        for (int i = 0; i < n; i++) {
-            int v = a[i];
+        for (int v : a) {
             int[] nas = new int[as.length + 1];
             int p = 0;
-            for (int j = 0; j < as.length; j++) {
-                int vv = v & as[j];
-                if (p == 0 || nas[p - 1] != vv) nas[p++] = vv;
+            for (int i : as) {
+                int vv = v & i;
+                if (p == 0 || nas[p - 1] != vv) {
+                    nas[p++] = vv;
+                }
             }
-            if (p == 0 || nas[p - 1] != v) nas[p++] = v;
+            if (p == 0 || nas[p - 1] != v) {
+                nas[p++] = v;
+            }
             for (int j = 0; j < p; j++) {
                 min = Math.min(min, Math.abs(target - nas[j]));
             }
@@ -2014,7 +2016,7 @@ public class Games {
 
         //Arrays
         String[] oneDimensionalStringArray = {"5", "2", "C", "D", "+"};
-        int[] oneDimensionalArrayA = {9, 4, 2, 10, 7, 8, 8, 1, 9};
+        int[] oneDimensionalArrayA = {9, 12, 3, 7, 15};
         int[] oneDimensionalArrayB = {5, 2, 2, 5, 3, 5};
         int[][] twoDimensionalArrayA = {{1, 3,}, {0, 2}, {1, 3}, {0, 2}};
         int[][] twoDimensionalArrayB = {
@@ -2052,7 +2054,7 @@ public class Games {
 
 
         Games games = new Games();
-        double p = games.distributeCoins(root);
+        double p = games.closestToTarget(oneDimensionalArrayA, 5);
         System.out.println(p);
     }
 }
