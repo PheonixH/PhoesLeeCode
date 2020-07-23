@@ -971,8 +971,9 @@ public class Solution2 {
      * 输入整数数组 arr ，找出其中最小的 k 个数。例如，输入4、5、1、6、2、7、3、8这8个数字，则最小的4个数字是1、2、3、4。
      * 执行用时：7 ms, 在所有 Java 提交中击败了69.45% 的用户
      * 内存消耗：41.1 MB, 在所有 Java 提交中击败了100.00% 的用户
+     *
      * @param arr 整数数组 arr
-     * @param k 最小的 k 个数
+     * @param k   最小的 k 个数
      * @return 最小的 k 个数
      */
     public int[] getLeastNumbers(int[] arr, int k) {
@@ -990,8 +991,9 @@ public class Solution2 {
      * 输入整数数组 arr ，找出其中最小的 k 个数。例如，输入4、5、1、6、2、7、3、8这8个数字，则最小的4个数字是1、2、3、4。
      * 执行用时：2 ms, 在所有 Java 提交中击败了99.49% 的用户
      * 内存消耗：41 MB, 在所有 Java 提交中击败了100.00% 的用户
+     *
      * @param arr 整数数组 arr
-     * @param k 最小的 k 个数
+     * @param k   最小的 k 个数
      * @return 最小的 k 个数
      */
     public int[] getLeastNumbers1(int[] arr, int k) {
@@ -1000,7 +1002,7 @@ public class Solution2 {
         }
         // 统计每个数字出现的次数
         int[] counter = new int[10001];
-        for (int num: arr) {
+        for (int num : arr) {
             counter[num]++;
         }
         // 根据counter数组从头找出k个数作为返回结果
@@ -1017,6 +1019,33 @@ public class Solution2 {
         return res;
     }
 
+    /**
+     * 206. 反转链表
+     * 反转一个单链表。
+     * 执行用时：3 ms, 在所有 Java 提交中击败了5.06% 的用户
+     * 内存消耗：39.9 MB, 在所有 Java 提交中击败了5.06% 的用户
+     * @param head 链表
+     * @return 反转链表
+     */
+    public ListNode reverseList(ListNode head) {
+        if (head == null) {
+            return head;
+        }
+        Stack<ListNode> stack = new Stack<>();
+        while (head != null) {
+            stack.add(head);
+            head = head.next;
+        }
+        head = stack.pop();
+        ListNode tmp = head;
+        while (!stack.empty()) {
+            ListNode l = stack.pop();
+            tmp.next = l;
+            tmp = tmp.next;
+        }
+        tmp.next = null;
+        return head;
+    }
 
 
     public static void main(String[] args) {
