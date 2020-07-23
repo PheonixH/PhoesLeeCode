@@ -1048,10 +1048,12 @@ public class Solution2 {
         return head;
     }
 
-    /** 9. 回文数
+    /**
+     * 9. 回文数
      * 判断一个整数是否是回文数。回文数是指正序（从左向右）和倒序（从右向左）读都是一样的整数。
      * 执行用时：10 ms, 在所有 Java 提交中击败了63.19% 的用户
      * 内存消耗：38.4 MB, 在所有 Java 提交中击败了5.14% 的用户
+     *
      * @param x 整数
      * @return 回文数
      */
@@ -1064,6 +1066,67 @@ public class Solution2 {
             }
         }
         return true;
+    }
+
+    /**
+     * 994. 腐烂的橘子
+     * 在给定的网格中，每个单元格可以有以下三个值之一：
+     *     值 0 代表空单元格；
+     *     值 1 代表新鲜橘子；
+     *     值 2 代表腐烂的橘子。
+     * 每分钟，任何与腐烂的橘子（在 4 个正方向上）相邻的新鲜橘子都会腐烂。
+     * 返回直到单元格中没有新鲜橘子为止所必须经过的最小分钟数。如果不可能，返回 -1。
+     * 执行用时：3 ms, 在所有 Java 提交中击败了89.32% 的用户
+     * 内存消耗：39.3 MB, 在所有 Java 提交中击败了33.33% 的用户
+     * @param grid 网格
+     * @return 最小分钟数
+     */
+    public int orangesRotting(int[][] grid) {
+        int now = 0;
+        int pre = -1;
+        int n = grid.length;
+        int m = grid[0].length;
+        if (n == 1 && m == 1) {
+            return grid[0][0] == 1 ? -1 : 0;
+        }
+        boolean isFresh = false;
+        int time = 0;
+        while (now != pre) {
+            pre = now;
+            int[][] tmp = new int[n][m];
+            isFresh = false;
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < m; j++) {
+                    if (grid[i][j] == 1) {
+                        if (i > 0 && grid[i - 1][j] == 2) {
+                            tmp[i][j] = 2;
+                            now++;
+                        } else if (i < n - 1 && grid[i + 1][j] == 2) {
+                            tmp[i][j] = 2;
+                            now++;
+                        } else if (j > 0 && grid[i][j - 1] == 2) {
+                            tmp[i][j] = 2;
+                            now++;
+                        } else if (j < m - 1 && grid[i][j + 1] == 2) {
+                            tmp[i][j] = 2;
+                            now++;
+                        } else {
+                            tmp[i][j] = 1;
+                        }
+                        isFresh = isFresh || tmp[i][j] == 1;
+                    } else {
+                        tmp[i][j] = grid[i][j];
+                    }
+                }
+            }
+            grid = tmp.clone();
+            time++;
+        }
+        if (isFresh) {
+            return -1;
+        } else {
+            return time - 1;
+        }
     }
 
 
@@ -1112,7 +1175,7 @@ public class Solution2 {
         String[] oneDimensionalStringArray = {"5", "2", "C", "D", "+"};
         int[] oneDimensionalArrayA = {2, 3, 3};
         int[] oneDimensionalArrayB = {5, 2, 2, 5, 3, 5};
-        int[][] twoDimensionalArrayA = {{1, 3,}, {0, 2}, {1, 3}, {0, 2}};
+        int[][] twoDimensionalArrayA = {{0, 1}};
         int[][] twoDimensionalArrayB = {
                 {0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0},
                 {0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0},
@@ -1146,7 +1209,7 @@ public class Solution2 {
             stringListList.add(collect);
         }
 
-        System.out.print(solution.majorityElement(oneDimensionalArrayA));
+        System.out.print(solution.orangesRotting(twoDimensionalArrayA));
     }
 
 }
