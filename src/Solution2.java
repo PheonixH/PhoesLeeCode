@@ -1024,6 +1024,7 @@ public class Solution2 {
      * 反转一个单链表。
      * 执行用时：3 ms, 在所有 Java 提交中击败了5.06% 的用户
      * 内存消耗：39.9 MB, 在所有 Java 提交中击败了5.06% 的用户
+     *
      * @param head 链表
      * @return 反转链表
      */
@@ -1045,6 +1046,24 @@ public class Solution2 {
         }
         tmp.next = null;
         return head;
+    }
+
+    /** 9. 回文数
+     * 判断一个整数是否是回文数。回文数是指正序（从左向右）和倒序（从右向左）读都是一样的整数。
+     * 执行用时：10 ms, 在所有 Java 提交中击败了63.19% 的用户
+     * 内存消耗：38.4 MB, 在所有 Java 提交中击败了5.14% 的用户
+     * @param x 整数
+     * @return 回文数
+     */
+    public boolean isPalindrome(int x) {
+        char[] chars = String.valueOf(x).toCharArray();
+        int len = chars.length;
+        for (int i = 0; 2 * i < len - 1; i++) {
+            if (chars[i] != chars[len - i - 1]) {
+                return false;
+            }
+        }
+        return true;
     }
 
 
