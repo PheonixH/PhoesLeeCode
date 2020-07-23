@@ -984,6 +984,40 @@ public class Solution2 {
         return res;
     }
 
+    /**
+     * 剑指 Offer 40. 最小的k个数
+     * 计数排序
+     * 输入整数数组 arr ，找出其中最小的 k 个数。例如，输入4、5、1、6、2、7、3、8这8个数字，则最小的4个数字是1、2、3、4。
+     * 执行用时：2 ms, 在所有 Java 提交中击败了99.49% 的用户
+     * 内存消耗：41 MB, 在所有 Java 提交中击败了100.00% 的用户
+     * @param arr 整数数组 arr
+     * @param k 最小的 k 个数
+     * @return 最小的 k 个数
+     */
+    public int[] getLeastNumbers1(int[] arr, int k) {
+        if (k == 0 || arr.length == 0) {
+            return new int[0];
+        }
+        // 统计每个数字出现的次数
+        int[] counter = new int[10001];
+        for (int num: arr) {
+            counter[num]++;
+        }
+        // 根据counter数组从头找出k个数作为返回结果
+        int[] res = new int[k];
+        int idx = 0;
+        for (int num = 0; num < counter.length; num++) {
+            while (counter[num]-- > 0 && idx < k) {
+                res[idx++] = num;
+            }
+            if (idx == k) {
+                break;
+            }
+        }
+        return res;
+    }
+
+
 
     public static void main(String[] args) {
         Solution2 solution = new Solution2();
