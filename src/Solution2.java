@@ -916,6 +916,7 @@ public class Solution2 {
      * 说明：每次只能向下或者向右移动一步。
      * 执行用时：2 ms, 在所有 Java 提交中击败了98.20% 的用户
      * 内存消耗：42.4 MB, 在所有 Java 提交中击败了30.30% 的用户
+     *
      * @param grid 包含非负整数的 m x n 网格
      * @return 最小路径和
      */
@@ -938,6 +939,34 @@ public class Solution2 {
         }
         return dp[m - 1];
     }
+
+
+    /**
+     * 剑指 Offer 39. 数组中出现次数超过一半的数字
+     * 数组中有一个数字出现的次数超过数组长度的一半，请找出这个数字。
+     * 你可以假设数组是非空的，并且给定的数组总是存在多数元素。
+     * 执行用时：1 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：42.7 MB, 在所有 Java 提交中击败了100.00% 的用户
+     *
+     * @param nums 数组
+     * @return 数组中出现次数超过一半的数字
+     */
+    public int majorityElement(int[] nums) {
+        int key = nums[0], value = 1;
+        for (int i = 1; i < nums.length; i++) {
+            if (value == 0) {
+                key = nums[i];
+                value++;
+            } else if (key == nums[i]) {
+                value++;
+            } else {
+                value--;
+            }
+        }
+        return key;
+    }
+
+
 
 
     public static void main(String[] args) {
@@ -983,7 +1012,7 @@ public class Solution2 {
 
         //Arrays
         String[] oneDimensionalStringArray = {"5", "2", "C", "D", "+"};
-        int[] oneDimensionalArrayA = {1, 2, 3, 3};
+        int[] oneDimensionalArrayA = {2, 3, 3};
         int[] oneDimensionalArrayB = {5, 2, 2, 5, 3, 5};
         int[][] twoDimensionalArrayA = {{1, 3,}, {0, 2}, {1, 3}, {0, 2}};
         int[][] twoDimensionalArrayB = {
@@ -1019,7 +1048,7 @@ public class Solution2 {
             stringListList.add(collect);
         }
 
-        System.out.print(solution.removeDuplicates(oneDimensionalArrayA));
+        System.out.print(solution.majorityElement(oneDimensionalArrayA));
     }
 
 }
