@@ -1974,6 +1974,132 @@ public class Games {
     }
 
 
+    public int numWaterBottles(int numBottles, int numExchange) {
+        int num = numBottles;
+        while (numBottles >= numExchange) {
+            num += numBottles / numExchange;
+            numBottles = numBottles / numExchange + numBottles % numExchange;
+        }
+        return num;
+    }
+
+    public int[] countSubTrees(int n, int[][] edges, String labels) {
+        class SubTrees {
+            List<SubTrees> children;
+            char val;
+
+            public SubTrees(char val) {
+                this.val = val;
+                this.children = new ArrayList<>();
+            }
+
+            public int visit(SubTrees root, char val, int num) {
+                num = val == root.val ? num + 1 : num;
+                if (!root.children.isEmpty()) {
+                    for (SubTrees sub : root.children) {
+                        num = visit(sub, val, num);
+                    }
+                }
+                return num;
+            }
+
+        }
+        char[] chars = labels.toCharArray();
+        Map<Integer, SubTrees> map = new HashMap<>();
+        boolean isFirst = true;
+        SubTrees firstTree = new SubTrees(chars[0]);
+        map.put(0, firstTree);
+        boolean[] isVisit = new boolean[n];
+        isVisit[0] = true;
+        while (isFirst || map.size() == n) {
+            for (int i = 0; i < n - 1; i++) {
+                if (isVisit[i]) {
+                    continue;
+                }
+                int[] edge = edges[i];
+                if (!map.containsKey(edge[0])) {
+                    continue;
+                }
+                SubTrees child = new SubTrees(chars[edge[1]]);
+                SubTrees parent = map.get(edge[0]);
+                parent.children.add(child);
+                map.put(edge[1], child);
+                isVisit[i] = true;
+            }
+        }
+
+
+        int[] res = new int[n];
+        for (int i = 0; i < n; i++) {
+            SubTrees tmp = map.get(i);
+            res[i] = tmp.visit(tmp, tmp.val, 0);
+        }
+        return res;
+    }
+
+
+    public int fun(int[] arr, int l, int r) {
+        if (r < l) {
+            return -1000000000;
+        }
+        int ans = arr[l];
+        for (int i = l + 1; i < r; i++) {
+            ans = ans & arr[i];
+        }
+        return ans;
+    }
+
+    public int closestToTarget0(int[] arr, int target) {
+        int len = arr.length;
+        int[] pre = new int[len];
+        int[] after = new int[len];
+        pre[0] = arr[0];
+        int min = Integer.MAX_VALUE;
+        for (int i = 1; i < len; i++) {
+            pre[i] = pre[i - 1] & arr[i];
+            min = Math.min(Math.abs(pre[i] - target), min);
+            min = Math.min(Math.abs(arr[i] - target), min);
+        }
+        for (int i = 1; i < len; i++) {
+            for (int j = i + 1; j < len; j++) {
+                if (arr[j] == arr[i - 1]) {
+                    after[j] = pre[j];
+                    continue;
+                }
+                after[j] = pre[j] | (~arr[i - 1]);
+                min = Math.min(Math.abs(after[j] - target), min);
+            }
+            pre = Arrays.copyOf(after, len);
+        }
+        return min;
+    }
+
+    public int closestToTarget00(int[] arr, int target) {
+        int len = arr.length;
+        int[] brr = new int[len];
+        int min = Integer.MAX_VALUE;
+        for (int i = 1; i < len; i++) {
+            brr[i] = arr[i - 1] & arr[i];
+            min = Math.min(Math.abs(brr[i] - target), min);
+        }
+        int[] crr = new int[len];
+        int right = len - 1;
+        int tmp = len - 2;
+        while (tmp > 0) {
+            for (int i = right; i >= 0; i--) {
+                if (brr[i] < target) {
+                    right = i - 1;
+                    break;
+                }
+                crr[i] = brr[i] & arr[tmp];
+                min = Math.min(Math.abs(crr[i] - target), min);
+            }
+            brr = Arrays.copyOf(crr, len);
+            tmp--;
+        }
+        return min;
+    }
+
     public static void main(String[] args) {
 
         //ListNode
@@ -2054,7 +2180,7 @@ public class Games {
 
 
         Games games = new Games();
-        double p = games.closestToTarget(oneDimensionalArrayA, 5);
+        double p = games.closestToTarget(oneDimensionalArrayA, 1);
         System.out.println(p);
     }
 }
