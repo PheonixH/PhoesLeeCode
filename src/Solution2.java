@@ -1071,13 +1071,14 @@ public class Solution2 {
     /**
      * 994. 腐烂的橘子
      * 在给定的网格中，每个单元格可以有以下三个值之一：
-     *     值 0 代表空单元格；
-     *     值 1 代表新鲜橘子；
-     *     值 2 代表腐烂的橘子。
+     * 值 0 代表空单元格；
+     * 值 1 代表新鲜橘子；
+     * 值 2 代表腐烂的橘子。
      * 每分钟，任何与腐烂的橘子（在 4 个正方向上）相邻的新鲜橘子都会腐烂。
      * 返回直到单元格中没有新鲜橘子为止所必须经过的最小分钟数。如果不可能，返回 -1。
      * 执行用时：3 ms, 在所有 Java 提交中击败了89.32% 的用户
      * 内存消耗：39.3 MB, 在所有 Java 提交中击败了33.33% 的用户
+     *
      * @param grid 网格
      * @return 最小分钟数
      */
@@ -1127,6 +1128,34 @@ public class Solution2 {
         } else {
             return time - 1;
         }
+    }
+
+    /** 1025. 除数博弈
+     * 爱丽丝和鲍勃一起玩游戏，他们轮流行动。爱丽丝先手开局。
+     * 最初，黑板上有一个数字 N 。在每个玩家的回合，玩家需要执行以下操作:
+     *     选出任一 x，满足 0 < x < N 且 N % x == 0 。
+     *     用 N - x 替换黑板上的数字 N 。
+     * 如果玩家无法执行这些操作，就会输掉游戏。
+     * 只有在爱丽丝在游戏中取得胜利时才返回 True，否则返回 false。假设两个玩家都以最佳状态参与游戏。
+     * 执行用时：8 ms, 在所有 Java 提交中击败了8.72% 的用户
+     * 内存消耗：36.6 MB, 在所有 Java 提交中击败了10.00% 的用户
+     * @param n 数字N
+     * @return 爱丽丝是否在游戏中取得胜利
+     */
+    public boolean divisorGame00(int n) {
+        if (n <= 1) {
+            return false;
+        }
+        boolean[] dp = new boolean[n + 1];
+        for (int i = 1; i <= n; i++) {
+            for (int j = 1; j < i; j++) {
+                if (i % j == 0 && !dp[i - j]) {
+                    dp[i] = true;
+                    break;
+                }
+            }
+        }
+        return dp[n];
     }
 
 
@@ -1209,7 +1238,7 @@ public class Solution2 {
             stringListList.add(collect);
         }
 
-        System.out.print(solution.orangesRotting(twoDimensionalArrayA));
+        System.out.print(solution.divisorGame00(5));
     }
 
 }
