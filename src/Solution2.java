@@ -1130,15 +1130,17 @@ public class Solution2 {
         }
     }
 
-    /** 1025. 除数博弈
+    /**
+     * 1025. 除数博弈
      * 爱丽丝和鲍勃一起玩游戏，他们轮流行动。爱丽丝先手开局。
      * 最初，黑板上有一个数字 N 。在每个玩家的回合，玩家需要执行以下操作:
-     *     选出任一 x，满足 0 < x < N 且 N % x == 0 。
-     *     用 N - x 替换黑板上的数字 N 。
+     * 选出任一 x，满足 0 < x < N 且 N % x == 0 。
+     * 用 N - x 替换黑板上的数字 N 。
      * 如果玩家无法执行这些操作，就会输掉游戏。
      * 只有在爱丽丝在游戏中取得胜利时才返回 True，否则返回 false。假设两个玩家都以最佳状态参与游戏。
      * 执行用时：8 ms, 在所有 Java 提交中击败了8.72% 的用户
      * 内存消耗：36.6 MB, 在所有 Java 提交中击败了10.00% 的用户
+     *
      * @param n 数字N
      * @return 爱丽丝是否在游戏中取得胜利
      */
@@ -1156,6 +1158,43 @@ public class Solution2 {
             }
         }
         return dp[n];
+    }
+
+    /**
+     * 1103. 分糖果 II
+     * 我们买了一些糖果 candies，打算把它们分给排好队的 n = num_people 个小朋友。
+     * 给第一个小朋友 1 颗糖果，第二个小朋友 2 颗，依此类推，直到给最后一个小朋友 n 颗糖果。
+     * 然后，我们再回到队伍的起点，给第一个小朋友 n + 1 颗糖果，第二个小朋友 n + 2 颗，依此类推，直到给最后一个小朋友 2 * n 颗糖果。
+     * 重复上述过程（每次都比上一次多给出一颗糖果，当到达队伍终点后再次从队伍起点开始），直到我们分完所有的糖果。注意，就算我们手中的剩下糖果数不够（不比前一次发出的糖果多），这些糖果也会全部发给当前的小朋友。
+     * 返回一个长度为 num_people、元素之和为 candies 的数组，以表示糖果的最终分发情况（即 ans[i] 表示第 i 个小朋友分到的糖果数）。
+     * <p>
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：37 MB, 在所有 Java 提交中击败了33.33% 的用户
+     *
+     * @param candies    一些糖果
+     * @param num_people n个小朋友
+     * @return 糖果的最终分发情况
+     */
+    public int[] distributeCandies(int candies, int num_people) {
+        int last = (1 + num_people) * num_people / 2;
+        int m = 0;
+        int p = num_people * num_people;
+        while (candies > m * p + last) {
+            candies -= m * p + last;
+            m++;
+        }
+        int[] res = new int[num_people];
+        for (int i = 0; i < num_people; i++) {
+            res[i] = (m - 1) * m / 2 * num_people + m * (i + 1);
+            if (candies > m * num_people + i + 1) {
+                res[i] += m * num_people + i + 1;
+                candies -= m * num_people + i + 1;
+            } else if (candies > 0) {
+                res[i] += candies;
+                candies = 0;
+            }
+        }
+        return res;
     }
 
 
@@ -1238,7 +1277,7 @@ public class Solution2 {
             stringListList.add(collect);
         }
 
-        System.out.print(solution.divisorGame00(5));
+        System.out.print(solution.distributeCandies(26, 4));
     }
 
 }
