@@ -1945,6 +1945,7 @@ public class Games {
      * 1521. 找到最接近目标值的函数值
      * 执行用时：29 ms, 在所有 Java 提交中击败了75.79% 的用户
      * 内存消耗：55 MB, 在所有 Java 提交中击败了100.00% 的用户
+     *
      * @param a      array
      * @param target target
      * @return r
@@ -2100,6 +2101,107 @@ public class Games {
         return min;
     }
 
+    /*7-25 第31场双周赛*/
+
+    /**
+     * 5456. 在区间范围内统计奇数数目
+     * 给你两个非负整数 low 和 high 。请你返回 low 和 high 之间（包括二者）奇数的数目。
+     *
+     * @param low
+     * @param high
+     * @return
+     */
+    public int countOdds(int low, int high) {
+        int res = high - low + 1;
+        res = res / 2;
+        if (low % 2 == 1 && high % 2 == 1) {
+            res += 1;
+        }
+        return res;
+    }
+
+    /**
+     * 5457. 和为奇数的子数组数目
+     * 给你一个整数数组 arr 。请你返回和为 奇数 的子数组数目。
+     * 由于答案可能会很大，请你将结果对 10^9 + 7 取余后返回。
+     *
+     * @param arr
+     * @return
+     */
+    public int numOfSubarrays(int[] arr) {
+        int len = arr.length;
+        int[] preArr = new int[len];
+        preArr[0] = arr[0];
+        for (int i = 1; i < len; i++) {
+            preArr[i] = preArr[i - 1] + arr[i];
+        }
+        int ji = 0, ou = 0;
+        int num = 0;
+        for (int i = 0; i < len; i++) {
+            if (preArr[i] % 2 == 0) {
+                num += ji;
+                ou++;
+            } else {
+                num += ou + 1;
+                ji++;
+            }
+            num = num % 1000000007;
+        }
+        return num;
+    }
+
+    /**
+     * 5458. 字符串的好分割数目
+     * 给你一个字符串 s ，一个分割被称为 「好分割」 当它满足：将 s 分割成 2 个字符串 p 和 q ，它们连接起来等于 s 且 p 和 q 中不同字符的数目相同。
+     * 请你返回 s 中好分割的数目。
+     *
+     * @param s
+     * @return
+     */
+    public int numSplits(String s) {
+        char[] chars = s.toUpperCase().toCharArray();
+        int len = chars.length;
+        int[] pre = new int[len];
+        int[] after = new int[len];
+        Set<Character> preSet = new HashSet<>();
+        Set<Character> afterSet = new HashSet<>();
+        for (int i = 0; i < len; i++) {
+            preSet.add(chars[i]);
+            afterSet.add(chars[len - i - 1]);
+            pre[i] = preSet.size();
+            after[len - i - 1] = afterSet.size();
+        }
+        int num = 0;
+        for (int i = 1; i < len; i++) {
+            if (pre[i - 1] == after[i]) {
+                num++;
+            }
+        }
+        return num;
+    }
+
+    /**
+     * 5459. 形成目标数组的子数组最少增加次数
+     * 给你一个整数数组 target 和一个数组 initial ，initial 数组与 target  数组有同样的维度，且一开始全部为 0 。
+     * 请你返回从 initial 得到  target 的最少操作次数，每次操作需遵循以下规则：
+     * 在 initial 中选择 任意 子数组，并将子数组中每个元素增加 1 。
+     * 答案保证在 32 位有符号整数以内。
+     *
+     * @param target
+     * @return
+     */
+    public int minNumberOperations(int[] target) {
+        int num = target[0];
+        int len = target.length;
+        for (int i = 1; i < len; i++) {
+            if (target[i] > target[i - 1]) {
+                num += target[i] - target[i - 1];
+            }
+        }
+        return num;
+    }
+
+
     public static void main(String[] args) {
 
         //ListNode
@@ -2142,7 +2244,7 @@ public class Games {
 
         //Arrays
         String[] oneDimensionalStringArray = {"5", "2", "C", "D", "+"};
-        int[] oneDimensionalArrayA = {9, 12, 3, 7, 15};
+        int[] oneDimensionalArrayA = {1, 3, 5};
         int[] oneDimensionalArrayB = {5, 2, 2, 5, 3, 5};
         int[][] twoDimensionalArrayA = {{1, 3,}, {0, 2}, {1, 3}, {0, 2}};
         int[][] twoDimensionalArrayB = {
@@ -2180,7 +2282,7 @@ public class Games {
 
 
         Games games = new Games();
-        double p = games.closestToTarget(oneDimensionalArrayA, 1);
+        double p = games.numSplits("aacaba");
         System.out.println(p);
     }
 }
