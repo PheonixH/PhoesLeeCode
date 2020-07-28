@@ -1228,6 +1228,49 @@ public class Solution2 {
         return res;
     }
 
+    /**
+     * 返回可以被压缩为长度为 N 的不同消息的数量
+     * @param N int整型 数据包的总字节数
+     * @return int整型
+     */
+    public int messageCount (int N) {
+        // write code here
+        int[] dp = new int[N];
+        if(N<5){
+            return 0;
+        }
+        dp[5] = 1;
+        int tmp = 0;
+        for(int i = 6;i<N;i++){
+            dp[i] = dp[i-1] + dp[i-5];
+        }
+        return dp[N-1];
+    }
+
+    /**
+     * 104. 二叉树的最大深度
+     * 给定一个二叉树，找出其最大深度。
+     * 二叉树的深度为根节点到最远叶子节点的最长路径上的节点数。
+     * 说明: 叶子节点是指没有子节点的节点。
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：39.2 MB, 在所有 Java 提交中击败了22.99% 的用户
+     * @param root 原始二叉树
+     * @return 最大深度
+     */
+    public int maxDepth(TreeNode root) {
+        return root == null?0:maxDepth(root, 1);
+    }
+
+    public int maxDepth(TreeNode root, int deep) {
+        int max = deep;
+        if(root.left != null){
+            max = Math.max(max, maxDepth(root.left, deep+1));
+        }
+        if(root.right != null){
+            max = Math.max(max, maxDepth(root.right, deep+1));
+        }
+        return max;
+    }
 
     public static void main(String[] args) {
         Solution2 solution = new Solution2();
@@ -1308,7 +1351,7 @@ public class Solution2 {
             stringListList.add(collect);
         }
 
-        System.out.print(solution.distributeCandies(26, 4));
+        System.out.print(solution.messageCount( 15));
     }
 
 }
