@@ -1269,6 +1269,31 @@ public class Solution2 {
         return n < m;
     }
 
+    /**
+     * 343. 整数拆分
+     * 给定一个正整数 n，将其拆分为至少两个正整数的和，并使这些整数的乘积最大化。 返回你可以获得的最大乘积。
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
+     * 内存消耗：36.3 MB, 在所有 Java 提交中击败了57.14%的用户
+     *
+     * @param n 正整数
+     * @return 拆分之后最大乘积
+     */
+    public int integerBreak0(int n) {
+        if (n == 2) {
+            return 1;
+        } else if (n == 3) {
+            return 2;
+        } else if (n == 4) {
+            return 4;
+        }
+        int res = 1;
+        while (n > 4) {
+            res *= 3;
+            n -= 3;
+        }
+        res *= n;
+        return res;
+    }
 
     public static void main(String[] args) {
         Solution2 solution = new Solution2();
@@ -1349,7 +1374,7 @@ public class Solution2 {
             stringListList.add(collect);
         }
 
-        System.out.print(solution.splitArray(oneDimensionalArrayA, 2));
+        System.out.print(solution.integerBreak0(57));
     }
 
 }
