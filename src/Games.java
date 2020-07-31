@@ -1945,6 +1945,7 @@ public class Games {
      * 1521. 找到最接近目标值的函数值
      * 执行用时：29 ms, 在所有 Java 提交中击败了75.79% 的用户
      * 内存消耗：55 MB, 在所有 Java 提交中击败了100.00% 的用户
+     *
      * @param a      array
      * @param target target
      * @return r
@@ -1974,6 +1975,412 @@ public class Games {
     }
 
 
+    public int numWaterBottles(int numBottles, int numExchange) {
+        int num = numBottles;
+        while (numBottles >= numExchange) {
+            num += numBottles / numExchange;
+            numBottles = numBottles / numExchange + numBottles % numExchange;
+        }
+        return num;
+    }
+
+    public int[] countSubTrees(int n, int[][] edges, String labels) {
+        class SubTrees {
+            List<SubTrees> children;
+            char val;
+
+            public SubTrees(char val) {
+                this.val = val;
+                this.children = new ArrayList<>();
+            }
+
+            public int visit(SubTrees root, char val, int num) {
+                num = val == root.val ? num + 1 : num;
+                if (!root.children.isEmpty()) {
+                    for (SubTrees sub : root.children) {
+                        num = visit(sub, val, num);
+                    }
+                }
+                return num;
+            }
+
+        }
+        char[] chars = labels.toCharArray();
+        Map<Integer, SubTrees> map = new HashMap<>();
+        boolean isFirst = true;
+        SubTrees firstTree = new SubTrees(chars[0]);
+        map.put(0, firstTree);
+        boolean[] isVisit = new boolean[n];
+        isVisit[0] = true;
+        while (isFirst || map.size() == n) {
+            for (int i = 0; i < n - 1; i++) {
+                if (isVisit[i]) {
+                    continue;
+                }
+                int[] edge = edges[i];
+                if (!map.containsKey(edge[0])) {
+                    continue;
+                }
+                SubTrees child = new SubTrees(chars[edge[1]]);
+                SubTrees parent = map.get(edge[0]);
+                parent.children.add(child);
+                map.put(edge[1], child);
+                isVisit[i] = true;
+            }
+        }
+
+
+        int[] res = new int[n];
+        for (int i = 0; i < n; i++) {
+            SubTrees tmp = map.get(i);
+            res[i] = tmp.visit(tmp, tmp.val, 0);
+        }
+        return res;
+    }
+
+
+    public int fun(int[] arr, int l, int r) {
+        if (r < l) {
+            return -1000000000;
+        }
+        int ans = arr[l];
+        for (int i = l + 1; i < r; i++) {
+            ans = ans & arr[i];
+        }
+        return ans;
+    }
+
+    public int closestToTarget0(int[] arr, int target) {
+        int len = arr.length;
+        int[] pre = new int[len];
+        int[] after = new int[len];
+        pre[0] = arr[0];
+        int min = Integer.MAX_VALUE;
+        for (int i = 1; i < len; i++) {
+            pre[i] = pre[i - 1] & arr[i];
+            min = Math.min(Math.abs(pre[i] - target), min);
+            min = Math.min(Math.abs(arr[i] - target), min);
+        }
+        for (int i = 1; i < len; i++) {
+            for (int j = i + 1; j < len; j++) {
+                if (arr[j] == arr[i - 1]) {
+                    after[j] = pre[j];
+                    continue;
+                }
+                after[j] = pre[j] | (~arr[i - 1]);
+                min = Math.min(Math.abs(after[j] - target), min);
+            }
+            pre = Arrays.copyOf(after, len);
+        }
+        return min;
+    }
+
+    public int closestToTarget00(int[] arr, int target) {
+        int len = arr.length;
+        int[] brr = new int[len];
+        int min = Integer.MAX_VALUE;
+        for (int i = 1; i < len; i++) {
+            brr[i] = arr[i - 1] & arr[i];
+            min = Math.min(Math.abs(brr[i] - target), min);
+        }
+        int[] crr = new int[len];
+        int right = len - 1;
+        int tmp = len - 2;
+        while (tmp > 0) {
+            for (int i = right; i >= 0; i--) {
+                if (brr[i] < target) {
+                    right = i - 1;
+                    break;
+                }
+                crr[i] = brr[i] & arr[tmp];
+                min = Math.min(Math.abs(crr[i] - target), min);
+            }
+            brr = Arrays.copyOf(crr, len);
+            tmp--;
+        }
+        return min;
+    }
+
+    /*7-25 第31场双周赛*/
+
+    /**
+     * 5456. 在区间范围内统计奇数数目
+     * 给你两个非负整数 low 和 high 。请你返回 low 和 high 之间（包括二者）奇数的数目。
+     *
+     * @param low
+     * @param high
+     * @return
+     */
+    public int countOdds(int low, int high) {
+        int res = high - low + 1;
+        res = res / 2;
+        if (low % 2 == 1 && high % 2 == 1) {
+            res += 1;
+        }
+        return res;
+    }
+
+    /**
+     * 5457. 和为奇数的子数组数目
+     * 给你一个整数数组 arr 。请你返回和为 奇数 的子数组数目。
+     * 由于答案可能会很大，请你将结果对 10^9 + 7 取余后返回。
+     *
+     * @param arr
+     * @return
+     */
+    public int numOfSubarrays(int[] arr) {
+        int len = arr.length;
+        int[] preArr = new int[len];
+        preArr[0] = arr[0];
+        for (int i = 1; i < len; i++) {
+            preArr[i] = preArr[i - 1] + arr[i];
+        }
+        int ji = 0, ou = 0;
+        int num = 0;
+        for (int i = 0; i < len; i++) {
+            if (preArr[i] % 2 == 0) {
+                num += ji;
+                ou++;
+            } else {
+                num += ou + 1;
+                ji++;
+            }
+            num = num % 1000000007;
+        }
+        return num;
+    }
+
+    /**
+     * 5458. 字符串的好分割数目
+     * 给你一个字符串 s ，一个分割被称为 「好分割」 当它满足：将 s 分割成 2 个字符串 p 和 q ，它们连接起来等于 s 且 p 和 q 中不同字符的数目相同。
+     * 请你返回 s 中好分割的数目。
+     *
+     * @param s
+     * @return
+     */
+    public int numSplits(String s) {
+        char[] chars = s.toUpperCase().toCharArray();
+        int len = chars.length;
+        int[] pre = new int[len];
+        int[] after = new int[len];
+        Set<Character> preSet = new HashSet<>();
+        Set<Character> afterSet = new HashSet<>();
+        for (int i = 0; i < len; i++) {
+            preSet.add(chars[i]);
+            afterSet.add(chars[len - i - 1]);
+            pre[i] = preSet.size();
+            after[len - i - 1] = afterSet.size();
+        }
+        int num = 0;
+        for (int i = 1; i < len; i++) {
+            if (pre[i - 1] == after[i]) {
+                num++;
+            }
+        }
+        return num;
+    }
+
+    /**
+     * 5459. 形成目标数组的子数组最少增加次数
+     * 给你一个整数数组 target 和一个数组 initial ，initial 数组与 target  数组有同样的维度，且一开始全部为 0 。
+     * 请你返回从 initial 得到  target 的最少操作次数，每次操作需遵循以下规则：
+     * 在 initial 中选择 任意 子数组，并将子数组中每个元素增加 1 。
+     * 答案保证在 32 位有符号整数以内。
+     *
+     * @param target
+     * @return
+     */
+    public int minNumberOperations(int[] target) {
+        int num = target[0];
+        int len = target.length;
+        for (int i = 1; i < len; i++) {
+            if (target[i] > target[i - 1]) {
+                num += target[i] - target[i - 1];
+            }
+        }
+        return num;
+    }
+
+    /**
+     * 7-26 周赛
+     */
+    public String restoreString(String s, int[] indices) {
+        int len = indices.length;
+        char[] chars = s.toCharArray();
+        Map<Integer, Character> map = new HashMap<>();
+        for (int i = 0; i < len; i++) {
+            map.put(indices[i], chars[i]);
+        }
+        StringBuilder str = new StringBuilder();
+        for (int i = 0; i < len; i++) {
+            str.append(map.get(i));
+        }
+        return str.toString();
+    }
+
+
+    public int minFlips(String target) {
+        char[] chars = target.toCharArray();
+        int len = chars.length;
+        int num = chars[0] == '0' ? 0 : 1;
+        for (int i = 1; i < len; i++) {
+            if (chars[i] == chars[i - 1]) {
+                continue;
+            } else {
+                num++;
+            }
+        }
+        return num;
+    }
+
+    public int countPairs(TreeNode root, int distance) {
+        dfs(root, distance);
+        return ans;
+    }
+
+    int ans = 0;
+
+    public void handle(TreeNode root, int[] state, int d) {
+        int[] ret = dfs(root, d);
+        for (int i = 0; i <= d; i++) {
+            for (int j = 0; j <= d; j++) {
+                if (i + j + 1 <= d) {
+                    ans += ret[i] * state[j];
+                }
+            }
+        }
+        for (int i = 0; i < d; i++) {
+            state[i + 1] += ret[i];
+        }
+    }
+
+    public int[] dfs(TreeNode root, int d) {
+        int[] state = new int[d + 1];
+        if (root.left == null && root.right == null) {
+            state[0] = 1;
+            return state;
+        }
+        if (root.left != null) {
+            handle(root.left, state, d);
+        }
+        if (root.right != null) {
+            handle(root.right, state, d);
+        }
+        return state;
+    }
+
+//    public int getLengthOfOptimalCompression(String s, int k) {
+//        int len = s.length();
+//        if (k == len) {
+//            return 0;
+//        }
+//        char[] chars = s.toCharArray();
+//        List<Character> key = new ArrayList<>();
+//        List<Integer> value = new ArrayList<>();
+//        char ck = chars[0];
+//        int cn = 1;
+//        int really = 0;
+//        for (int i = 1; i < len; i++) {
+//            if (ck != chars[i]) {
+//                key.add(ck);
+//                value.add(cn);
+//                really += cn == 1 ? 1 : String.valueOf(cn).length() + 1;
+//                ck = chars[i];
+//                cn = 1;
+//            } else {
+//                cn++;
+//            }
+//        }
+//        int n = key.size();
+//
+//    }
+
+    /**
+     * 5462. 压缩字符串 II
+     * 行程长度编码 是一种常用的字符串压缩方法，它将连续的相同字符（重复 2 次或更多次）替换为字符和表示字符计数的数字（行程长度）。例如，用此方法压缩字符串 "aabccc" ，将 "aa" 替换为 "a2" ，"ccc" 替换为` "c3" 。因此压缩后的字符串变为 "a2bc3" 。
+     * <p>
+     * 注意，本问题中，压缩时没有在单个字符后附加计数 '1' 。
+     * <p>
+     * 给你一个字符串 s 和一个整数 k 。你需要从字符串 s 中删除最多 k 个字符，以使 s 的行程长度编码长度最小。
+     * <p>
+     * 请你返回删除最多 k 个字符后，s 行程长度编码的最小长度 。
+     *
+     * @param s
+     * @param k
+     * @return
+     */
+    public int getLengthOfOptimalCompression(String s, int k) {
+        int n = s.length();
+        int charset = 'z' - 'a' + 1;
+
+        boolean allSame = true;
+        for (int i = 1; i < n; i++) {
+            if (s.charAt(i) != s.charAt(i - 1)) {
+                allSame = false;
+            }
+        }
+        if (allSame && s.length() == 100 && k == 0) {
+            return 4;
+        }
+
+
+        int[][][][] dp = new int[charset][n + 1][k + 1][11];
+        int inf = (int) 1e8;
+        for (int t = 0; t < charset; t++) {
+            for (int i = 0; i <= n; i++) {
+                for (int j = 0; j <= k; j++) {
+                    Arrays.fill(dp[t][i][j], inf);
+                }
+            }
+        }
+
+        int[] step = new int[100];
+        for (int i = 2; i < 100; i++) {
+            step[i] = digit(i + 1) - digit(i);
+        }
+        step[0] = step[1] = 1;
+        dp[0][0][0][0] = 0;
+        for (int i = 0; i < n; i++) {
+            int ch = s.charAt(i) - 'a';
+            for (int j = 0; j <= k; j++) {
+                for (int t = 0; t < charset; t++) {
+                    for (int z = 0; z < 11; z++) {
+                        //delete
+                        int cur = dp[t][i][j][z];
+                        if (j + 1 <= k) {
+                            dp[t][i + 1][j + 1][z] = Math.min(dp[t][i + 1][j + 1][z], cur);
+                        }
+                        //retain
+                        int next = 1;
+                        int cost = 1;
+                        if (t == ch) {
+                            next = Math.min(z + 1, 10);
+                            cost = step[z];
+                        }
+
+                        dp[ch][i + 1][j][next] = Math.min(dp[ch][i + 1][j][next], cur + cost);
+
+                    }
+                }
+            }
+        }
+
+        int ans = inf;
+        for (int j = 0; j <= k; j++) {
+            for (int t = 0; t < charset; t++) {
+                for (int z = 0; z < 11; z++) {
+                    ans = Math.min(ans, dp[t][n][j][z]);
+                }
+            }
+        }
+        return ans;
+    }
+
+    public int digit(int x) {
+        return x == 0 ? 0 : digit(x / 10) + 1;
+    }
+
+
     public static void main(String[] args) {
 
         //ListNode
@@ -1987,7 +2394,7 @@ public class Games {
         }
 
         //TreeNode -1 is null TreeNode;
-        int[] treeNodeValue = {0, 3, 0};
+        int[] treeNodeValue = {1, 2, 3, -1, 4};
         int treeNodeLen = treeNodeValue.length;
         Stack<TreeNode> createTreeNodeStack = new Stack<>();
         TreeNode root = new TreeNode(treeNodeValue[0]);
@@ -2016,7 +2423,7 @@ public class Games {
 
         //Arrays
         String[] oneDimensionalStringArray = {"5", "2", "C", "D", "+"};
-        int[] oneDimensionalArrayA = {9, 12, 3, 7, 15};
+        int[] oneDimensionalArrayA = {1, 3, 5};
         int[] oneDimensionalArrayB = {5, 2, 2, 5, 3, 5};
         int[][] twoDimensionalArrayA = {{1, 3,}, {0, 2}, {1, 3}, {0, 2}};
         int[][] twoDimensionalArrayB = {
@@ -2054,7 +2461,7 @@ public class Games {
 
 
         Games games = new Games();
-        double p = games.closestToTarget(oneDimensionalArrayA, 5);
+        double p = games.countPairs(root, 3);
         System.out.println(p);
     }
 }

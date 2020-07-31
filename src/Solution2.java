@@ -1203,11 +1203,12 @@ public class Solution2 {
      * 如下图所示，在奇数行（即，第一行、第三行、第五行……）中，按从左到右的顺序进行标记；
      * 而偶数行（即，第二行、第四行、第六行……）中，按从右到左的顺序进行标记。
      * 给你树上某一个节点的标号 label，请你返回从根节点到该标号为 label 节点的路径，该路径是由途经的节点标号所组成的。
-     *
+     * <p>
      * 执行用时：1 ms, 在所有 Java 提交中击败了51.00% 的用户
      * 内存消耗：36.6 MB, 在所有 Java 提交中击败了33.33% 的用户
+     *
      * @param l 点的标号 label
-     * @return  路径
+     * @return 路径
      */
     public List<Integer> pathInZigZagTree(int l) {
         if (l == 1) {
@@ -1270,6 +1271,71 @@ public class Solution2 {
             max = Math.max(max, maxDepth(root.right, deep+1));
         }
         return max;
+    }
+
+    /**
+     * 410. 分割数组的最大值
+     * 给定一个非负整数数组和一个整数 m，你需要将这个数组分成 m 个非空的连续子数组。设计一个算法使得这 m 个子数组各自和的最大值最小。
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
+     * 内存消耗：37.3 MB, 在所有 Java 提交中击败了33.33%的用户
+     *
+     * @param nums
+     * @param m
+     * @return
+     */
+    public int splitArray(int[] nums, int m) {
+        long l = 0, r = Integer.MAX_VALUE;
+        while (l < r) {
+            long mid = l + (r - l) / 2;
+            if (splitArrayCheck(nums, m, mid)) {
+                r = mid;
+            } else {
+                l = mid + 1;
+            }
+        }
+        return (int) l;
+    }
+
+    public boolean splitArrayCheck(int[] nums, int m, long max) {
+        int n = 0;
+        long now = 0;
+        for (int i = 0; i < nums.length; i++) {
+            now += nums[i];
+            if (now > max) {
+                now = nums[i];
+                n++;
+                if (nums[i] > max) {
+                    return false;
+                }
+            }
+        }
+        return n < m;
+    }
+
+    /**
+     * 343. 整数拆分
+     * 给定一个正整数 n，将其拆分为至少两个正整数的和，并使这些整数的乘积最大化。 返回你可以获得的最大乘积。
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
+     * 内存消耗：36.3 MB, 在所有 Java 提交中击败了57.14%的用户
+     *
+     * @param n 正整数
+     * @return 拆分之后最大乘积
+     */
+    public int integerBreak0(int n) {
+        if (n == 2) {
+            return 1;
+        } else if (n == 3) {
+            return 2;
+        } else if (n == 4) {
+            return 4;
+        }
+        int res = 1;
+        while (n > 4) {
+            res *= 3;
+            n -= 3;
+        }
+        res *= n;
+        return res;
     }
 
     public static void main(String[] args) {
@@ -1351,7 +1417,7 @@ public class Solution2 {
             stringListList.add(collect);
         }
 
-        System.out.print(solution.messageCount( 15));
+        System.out.print(solution.distributeCandies(26, 4));
     }
 
 }
