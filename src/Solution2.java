@@ -1231,21 +1231,22 @@ public class Solution2 {
 
     /**
      * 返回可以被压缩为长度为 N 的不同消息的数量
+     *
      * @param N int整型 数据包的总字节数
      * @return int整型
      */
-    public int messageCount (int N) {
+    public int messageCount(int N) {
         // write code here
         int[] dp = new int[N];
-        if(N<5){
+        if (N < 5) {
             return 0;
         }
         dp[5] = 1;
         int tmp = 0;
-        for(int i = 6;i<N;i++){
-            dp[i] = dp[i-1] + dp[i-5];
+        for (int i = 6; i < N; i++) {
+            dp[i] = dp[i - 1] + dp[i - 5];
         }
-        return dp[N-1];
+        return dp[N - 1];
     }
 
     /**
@@ -1255,20 +1256,21 @@ public class Solution2 {
      * 说明: 叶子节点是指没有子节点的节点。
      * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
      * 内存消耗：39.2 MB, 在所有 Java 提交中击败了22.99% 的用户
+     *
      * @param root 原始二叉树
      * @return 最大深度
      */
     public int maxDepth(TreeNode root) {
-        return root == null?0:maxDepth(root, 1);
+        return root == null ? 0 : maxDepth(root, 1);
     }
 
     public int maxDepth(TreeNode root, int deep) {
         int max = deep;
-        if(root.left != null){
-            max = Math.max(max, maxDepth(root.left, deep+1));
+        if (root.left != null) {
+            max = Math.max(max, maxDepth(root.left, deep + 1));
         }
-        if(root.right != null){
-            max = Math.max(max, maxDepth(root.right, deep+1));
+        if (root.right != null) {
+            max = Math.max(max, maxDepth(root.right, deep + 1));
         }
         return max;
     }
@@ -1336,6 +1338,52 @@ public class Solution2 {
         }
         res *= n;
         return res;
+    }
+
+    /**
+     * 851. 喧闹和富有
+     * 在一组 N 个人（编号为 0, 1, 2, ..., N-1）中，每个人都有不同数目的钱，以及不同程度的安静（quietness）。
+     * 为了方便起见，我们将编号为 x 的人简称为 "person x "。
+     * 如果能够肯定 person x 比 person y 更有钱的话，我们会说 richer[i] = [x, y] 。注意 richer 可能只是有效观察的一个子集。
+     * 另外，如果 person x 的安静程度为 q ，我们会说 quiet[x] = q 。
+     * 现在，返回答案 answer ，其中 answer[x] = y 的前提是，在所有拥有的钱不少于 person x 的人中，person y 是最安静的人（也就是安静值 quiet[y] 最小的人）。
+     *
+     * 执行用时：7 ms, 在所有 Java 提交中击败了97.22% 的用户
+     * 内存消耗：48 MB, 在所有 Java 提交中击败了100.00% 的用户
+     */
+    ArrayList<Integer>[] graph;
+    int[] answer;
+    int[] quiet;
+
+    public int[] loudAndRich(int[][] richer, int[] quiet) {
+        int N = quiet.length;
+        graph = new ArrayList[N];
+        answer = new int[N];
+        this.quiet = quiet;
+
+        for (int node = 0; node < N; ++node)
+            graph[node] = new ArrayList<Integer>();
+
+        for (int[] edge: richer)
+            graph[edge[1]].add(edge[0]);
+
+        Arrays.fill(answer, -1);
+
+        for (int node = 0; node < N; ++node)
+            dfs(node);
+        return answer;
+    }
+
+    public int dfs(int node) {
+        if (answer[node] == -1) {
+            answer[node] = node;
+            for (int child: graph[node]) {
+                int cand = dfs(child);
+                if (quiet[cand] < quiet[answer[node]])
+                    answer[node] = cand;
+            }
+        }
+        return answer[node];
     }
 
     public static void main(String[] args) {
