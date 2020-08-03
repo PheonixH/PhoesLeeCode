@@ -1347,7 +1347,7 @@ public class Solution2 {
      * 如果能够肯定 person x 比 person y 更有钱的话，我们会说 richer[i] = [x, y] 。注意 richer 可能只是有效观察的一个子集。
      * 另外，如果 person x 的安静程度为 q ，我们会说 quiet[x] = q 。
      * 现在，返回答案 answer ，其中 answer[x] = y 的前提是，在所有拥有的钱不少于 person x 的人中，person y 是最安静的人（也就是安静值 quiet[y] 最小的人）。
-     *
+     * <p>
      * 执行用时：7 ms, 在所有 Java 提交中击败了97.22% 的用户
      * 内存消耗：48 MB, 在所有 Java 提交中击败了100.00% 的用户
      */
@@ -1364,7 +1364,7 @@ public class Solution2 {
         for (int node = 0; node < N; ++node)
             graph[node] = new ArrayList<Integer>();
 
-        for (int[] edge: richer)
+        for (int[] edge : richer)
             graph[edge[1]].add(edge[0]);
 
         Arrays.fill(answer, -1);
@@ -1377,13 +1377,101 @@ public class Solution2 {
     public int dfs(int node) {
         if (answer[node] == -1) {
             answer[node] = node;
-            for (int child: graph[node]) {
+            for (int child : graph[node]) {
                 int cand = dfs(child);
                 if (quiet[cand] < quiet[answer[node]])
                     answer[node] = cand;
             }
         }
         return answer[node];
+    }
+
+    /**
+     * 415. 字符串相加
+     * 给定两个字符串形式的非负整数 num1 和num2 ，计算它们的和。
+     * 执行用时：8 ms, 在所有 Java 提交中击败了12.55% 的用户
+     * 内存消耗：40.4 MB, 在所有 Java 提交中击败了5.18% 的用户
+     *
+     * @param num1 第一个字符串
+     * @param num2 第二个字符串
+     * @return 字符串的和
+     */
+    public String addStrings(String num1, String num2) {
+        int n = num1.length() - 1;
+        int m = num2.length() - 1;
+        String res = "";
+        boolean add = false;
+        while (n >= 0 && m >= 0) {
+            int a = num1.charAt(n--) - '0' + num2.charAt(m--) - '0';
+            if (add) {
+                a += 1;
+            }
+            add = a >= 10;
+            res = String.valueOf(a % 10) + res;
+        }
+        while (n >= 0) {
+            int a = num1.charAt(n--) - '0';
+            if (add) {
+                a += 1;
+            }
+            add = a >= 10;
+            res = String.valueOf(a % 10) + res;
+        }
+        while (m >= 0) {
+            int a = num2.charAt(m--) - '0';
+            if (add) {
+                a += 1;
+            }
+            add = a >= 10;
+            res = String.valueOf(a % 10) + res;
+        }
+        if (add) {
+            res = String.valueOf(1) + res;
+        }
+        return res;
+    }
+
+    public boolean canPartition(int[] nums) {
+        int len = nums.length;
+        if (len == 0) {
+            return false;
+        }
+
+        int sum = 0;
+        for (int num : nums) {
+            sum += num;
+        }
+
+        if ((sum & 1) == 1) {
+            return false;
+        }
+
+        int target = sum / 2;
+
+        // 创建二维状态数组，行：物品索引，列：容量（包括 0）
+        boolean[][] dp = new boolean[len][target + 1];
+
+        // 先填表格第 0 行，第 1 个数只能让容积为它自己的背包恰好装满
+        if (nums[0] <= target) {
+            dp[0][nums[0]] = true;
+        }
+
+        // 再填表格后面几行
+        for (int i = 1; i < len; i++) {
+            for (int j = 0; j <= target; j++) {
+                // 直接从上一行先把结果抄下来，然后再修正
+                dp[i][j] = dp[i - 1][j];
+
+                if (nums[i] == j) {
+                    dp[i][j] = true;
+                    continue;
+                }
+                if (nums[i] < j) {
+                    dp[i][j] = dp[i - 1][j] || dp[i - 1][j - nums[i]];
+                }
+            }
+        }
+        return dp[len - 1][target];
     }
 
     public static void main(String[] args) {
