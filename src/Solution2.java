@@ -1474,6 +1474,55 @@ public class Solution2 {
         return dp[len - 1][target];
     }
 
+    /**
+     * 207. 课程表
+     * 你这个学期必须选修 numCourse 门课程，记为 0 到 numCourse-1 。
+     * 在选修某些课程之前需要一些先修课程。 例如，想要学习课程 0 ，你需要先完成课程 1 ，我们用一个匹配来表示他们：[0,1]
+     * 给定课程总量以及它们的先决条件，请你判断是否可能完成所有课程的学习？
+     * 执行用时：4 ms, 在所有 Java 提交中击败了93.04% 的用户
+     * 内存消耗：40.4 MB, 在所有 Java 提交中击败了50.50% 的用户
+     * @param numCourses
+     * @param prerequisites
+     * @return
+     */
+    int[] learned;
+    List<List<Integer>> pre = new ArrayList<>();
+    boolean canFinish = true;
+
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        learned = new int[numCourses];
+        for (int i : learned) {
+            List<Integer> tmp = new ArrayList<>();
+            pre.add(tmp);
+        }
+        for (int[] p : prerequisites) {
+            pre.get(p[1]).add(p[0]);
+        }
+        for (int i = 0; i < numCourses; i++) {
+            canFinishDFS(i);
+            if(!canFinish){
+                return false;
+            }
+        }
+        return canFinish;
+    }
+
+    public void canFinishDFS(int key) {
+        learned[key] = 1;
+        for (int k : pre.get(key)) {
+            if (!canFinish) {
+                break;
+            }
+            if (learned[k] == 0) {
+                canFinishDFS(k);
+            } else if (learned[k] == 1) {
+                canFinish = false;
+            }
+        }
+        learned[key] = 2;
+    }
+
     public static void main(String[] args) {
         Solution2 solution = new Solution2();
 
