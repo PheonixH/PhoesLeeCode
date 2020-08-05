@@ -25,7 +25,7 @@ public class Solution2 {
     //174
     //执行用时 : 13 ms, 在Dungeon Game的Java提交中击败了5.56% 的用户
     //内存消耗 : 39.7 MB, 在Dungeon Game的Java提交中击败了33.82% 的用户
-    public int calculateMinimumHP(int[][] dungeon) {
+    public int calculateMiniumHP(int[][] dungeon) {
         int xlen = dungeon.length;
         int ylen = dungeon[0].length;
         int min = 0;
@@ -1379,8 +1379,9 @@ public class Solution2 {
             answer[node] = node;
             for (int child : graph[node]) {
                 int cand = dfs(child);
-                if (quiet[cand] < quiet[answer[node]])
+                if (quiet[cand] < quiet[answer[node]]) {
                     answer[node] = cand;
+                }
             }
         }
         return answer[node];
@@ -1481,14 +1482,14 @@ public class Solution2 {
      * 给定课程总量以及它们的先决条件，请你判断是否可能完成所有课程的学习？
      * 执行用时：4 ms, 在所有 Java 提交中击败了93.04% 的用户
      * 内存消耗：40.4 MB, 在所有 Java 提交中击败了50.50% 的用户
-     * @param numCourses
-     * @param prerequisites
-     * @return
+     *
+     * @param numCourses 课程数量
+     * @param prerequisites 课程关系
+     * @return 是否可以学完
      */
     int[] learned;
     List<List<Integer>> pre = new ArrayList<>();
     boolean canFinish = true;
-
 
     public boolean canFinish(int numCourses, int[][] prerequisites) {
         learned = new int[numCourses];
@@ -1501,7 +1502,7 @@ public class Solution2 {
         }
         for (int i = 0; i < numCourses; i++) {
             canFinishDFS(i);
-            if(!canFinish){
+            if (!canFinish) {
                 return false;
             }
         }
@@ -1521,6 +1522,78 @@ public class Solution2 {
             }
         }
         learned[key] = 2;
+    }
+
+    /**
+     * 337. 打家劫舍 III
+     * 在上次打劫完一条街道之后和一圈房屋后，小偷又发现了一个新的可行窃的地区。这个地区只有一个入口，我们称之为“根”。 除了“根”之外，每栋房子有且只有一个“父“房子与之相连。一番侦察之后，聪明的小偷意识到“这个地方的所有房屋的排列类似于一棵二叉树”。 如果两个直接相连的房子在同一天晚上被打劫，房屋将自动报警。
+     * 计算在不触动警报的情况下，小偷一晚能够盗取的最高金额。
+     * 执行用时：412 ms, 在所有 Java 提交中击败了33.92% 的用户
+     * 内存消耗：39.4 MB, 在所有 Java 提交中击败了67.02% 的用户
+     *
+     * @param root 街道树
+     * @return 最高金额
+     */
+    public int rob(TreeNode root) {
+        return root == null ? 0 : robAss(root);
+    }
+
+    public int robAss(TreeNode root) {
+        if (root.left == null && root.right == null) {
+            return root.val;
+        }
+        int max = root.val;
+        int sonMax = 0;
+        int gradsonMax = 0;
+        if (root.left != null) {
+            TreeNode l = root.left;
+            sonMax += robAss(l);
+            if (l.left != null) {
+                gradsonMax += robAss(l.left);
+            }
+            if (l.right != null) {
+                gradsonMax += robAss(l.right);
+            }
+        }
+        if (root.right != null) {
+            TreeNode r = root.right;
+            sonMax += robAss(r);
+            if (r.left != null) {
+                gradsonMax += robAss(r.left);
+            }
+            if (r.right != null) {
+                gradsonMax += robAss(r.right);
+            }
+        }
+        return Math.max(max + gradsonMax, sonMax);
+    }
+
+    /**
+     * 337. 打家劫舍 III
+     * 在上次打劫完一条街道之后和一圈房屋后，小偷又发现了一个新的可行窃的地区。这个地区只有一个入口，我们称之为“根”。 除了“根”之外，每栋房子有且只有一个“父“房子与之相连。一番侦察之后，聪明的小偷意识到“这个地方的所有房屋的排列类似于一棵二叉树”。 如果两个直接相连的房子在同一天晚上被打劫，房屋将自动报警。
+     * 计算在不触动警报的情况下，小偷一晚能够盗取的最高金额。
+     * 执行用时：5 ms, 在所有 Java 提交中击败了35.86% 的用户
+     * 内存消耗：39.6 MB, 在所有 Java 提交中击败了47.09% 的用户
+     *
+     * @param root 街道树
+     * @return 最高金额
+     */
+    public int rob0(TreeNode root) {
+        dfs(root);
+        return Math.max(f.getOrDefault(root, 0), g.getOrDefault(root, 0));
+    }
+
+    Map<TreeNode, Integer> f = new HashMap<TreeNode, Integer>();
+    Map<TreeNode, Integer> g = new HashMap<TreeNode, Integer>();
+
+    public void dfs(TreeNode node) {
+        if (node == null) {
+            return;
+        }
+        dfs(node.left);
+        dfs(node.right);
+        f.put(node, node.val + g.getOrDefault(node.left, 0) + g.getOrDefault(node.right, 0));
+        g.put(node, Math.max(f.getOrDefault(node.left, 0), g.getOrDefault(node.left, 0)) + Math.max(f.getOrDefault(node.right, 0), g.getOrDefault(node.right, 0)));
     }
 
     public static void main(String[] args) {
