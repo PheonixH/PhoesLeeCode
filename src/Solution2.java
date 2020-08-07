@@ -1596,6 +1596,64 @@ public class Solution2 {
         g.put(node, Math.max(f.getOrDefault(node.left, 0), g.getOrDefault(node.left, 0)) + Math.max(f.getOrDefault(node.right, 0), g.getOrDefault(node.right, 0)));
     }
 
+    public List<List<Integer>> palindromePairs(String[] words) {
+        int len = words.length;
+        List<List<Integer>> res = new ArrayList<>();
+        for (int i = 0; i < len; i++) {
+            for (int j = i + 1; j < len; j++) {
+                String tmp = words[i] + words[j];
+                if (palindromePairsIsOK(tmp)) {
+                    List<Integer> l = new ArrayList<>();
+                    l.add(i);
+                    l.add(j);
+                    res.add(l);
+                }
+                tmp = words[j] + words[i];
+                if (palindromePairsIsOK(tmp)) {
+                    List<Integer> l = new ArrayList<>();
+                    l.add(j);
+                    l.add(i);
+                    res.add(l);
+                }
+            }
+        }
+        return res;
+    }
+
+    public boolean palindromePairsIsOK(String str) {
+        int l = 0, r = str.length() - 1;
+        while (l < r) {
+            if (str.charAt(l) != str.charAt(r)) {
+                return false;
+            }
+            l++;
+            r--;
+        }
+        return true;
+    }
+
+    /**
+     * 100. 相同的树
+     * 给定两个二叉树，编写一个函数来检验它们是否相同。
+     * 如果两个树在结构上相同，并且节点具有相同的值，则认为它们是相同的。
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：36.9 MB, 在所有 Java 提交中击败了91.42% 的用户
+     *
+     * @param p p树
+     * @param q q树
+     * @return p.q树是否相同
+     */
+    public boolean isSameTree(TreeNode p, TreeNode q) {
+        if (p == null && q == null) {
+            return true;
+        } else if (p == null || q == null) {
+            return false;
+        } else if (p.val != q.val) {
+            return false;
+        }
+        return isSameTree(p.left, q.left) && isSameTree(p.right, q.right);
+    }
+
     public static void main(String[] args) {
         Solution2 solution = new Solution2();
 
