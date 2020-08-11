@@ -2380,6 +2380,247 @@ public class Games {
         return x == 0 ? 0 : digit(x / 10) + 1;
     }
 
+    /**
+     * 第32场双周赛
+     */
+
+    public int findKthPositive(int[] arr, int k) {
+        int len = arr.length;
+        int num = 0;
+        int key = 1;
+        int i = 0;
+        while (num < k) {
+            if (i < len && key == arr[i]) {
+                i++;
+            } else {
+                num++;
+            }
+            key++;
+        }
+        return key;
+    }
+
+    public boolean canConvertString(String s, String t, int k) {
+        if (s.length() != t.length()) {
+            return false;
+        }
+        char[] cs = s.toCharArray();
+        char[] ct = t.toCharArray();
+        int len = cs.length;
+        int[] arr = new int[26];
+        int max = 0;
+        for (int i = 0; i < len; i++) {
+            if (cs[i] == ct[i]) {
+                continue;
+            }
+            int tmp = 0;
+            if (cs[i] > ct[i]) {
+                tmp = ct[i] + 26 - cs[i];
+            } else {
+                tmp = ct[i] - cs[i];
+            }
+            max = Math.max(tmp + arr[tmp] * 26, max);
+            if (max > k) {
+                return false;
+            }
+            arr[tmp]++;
+        }
+        return max <= k;
+    }
+
+    public int minInsertions(String s) {
+        char[] cs = s.toCharArray();
+        int l = 0, r = 0;
+        int len = cs.length;
+        int num = 0;
+        int i = 0;
+        while (i < len) {
+            if (cs[i] == '(') {
+                l++;
+                i++;
+                continue;
+            }
+            r = 0;
+            while (i < len && cs[i] == ')') {
+                r++;
+                i++;
+            }
+            if (r % 2 != 0) {
+                num++;
+                r++;
+            }
+            if (l >= r / 2) {
+                l = l - r / 2;
+            } else {
+                num += r / 2 - l;
+                l = 0;
+            }
+        }
+        if (l != 0) {
+            num += l * 2;
+        }
+        return num;
+    }
+
+    public int longestAwesome(String s) {
+        int len = s.length();
+        int[] arr = new int[len];
+        int[] brr = new int[10];
+        char[] cs = s.toCharArray();
+        int pre = 0;
+        for (int i = 0; i < len; i++) {
+            int tmp = cs[i] - '0';
+            brr[tmp]++;
+            if (brr[tmp] % 2 == 1) {
+                pre++;
+            } else {
+                pre--;
+            }
+            arr[i] = pre;
+        }
+        int max = 0;
+        int[] l = new int[10];
+        for (int j = 0; j < 10; j++) {
+            l[j] = -1;
+        }
+        for (int i = 0; i < len; i++) {
+            if (arr[i] == 0) {
+                max = Math.max(max, i + 1);
+                continue;
+            }
+            if (l[arr[i]] == -1) {
+                l[arr[i]] = i;
+                continue;
+            }
+            int m = i - l[arr[i]];
+            if (l[arr[i]] == 1) {
+                max = Math.max(max, m + 1);
+            }
+        }
+        return Math.max(1, max);
+    }
+
+    /**
+     * 第201周赛
+     */
+
+    public String makeGood(String s) {
+        int len = s.length();
+        if (len <= 1) {
+            return s;
+        }
+        char[] chars = s.toCharArray();
+        Stack<Character> pre = new Stack<>();
+        for (int i = 0; i < len; i++) {
+            char c = chars[i];
+            if (pre.empty()) {
+                pre.add(c);
+            } else {
+                char tmp = pre.peek();
+                if (Math.abs(tmp - c) == 'a' - 'A') {
+                    pre.pop();
+                } else {
+                    pre.add(c);
+                }
+            }
+        }
+        StringBuilder res = new StringBuilder();
+        while (!pre.empty()) {
+            res.append(pre.pop());
+        }
+        return res.reverse().toString();
+    }
+
+    public char findKthBit(int n, int k) {
+        if (n == 1) {
+            return '0';
+        }
+        int half = (int) Math.pow(2, n - 1);
+        if (k == half) {
+            return '1';
+        }
+        if (k > half) {
+            return findKthBit(n - 1, k);
+        } else {
+            return findKthBit(n - 1, 2 * half - k) == '0' ? '1' : '0';
+        }
+    }
+
+    public int maxNonOverlapping(int[] nums, int target) {
+        int len = nums.length;
+        int[] preFix = new int[len];
+        preFix[0] = nums[0];
+        for (int i = 1; i < len; i++) {
+            preFix[i] = nums[i] + preFix[i - 1];
+        }
+        int num = 0;
+        int pre = 0;
+        int min = preFix[0];
+        boolean first = false;
+        for (int i = 0; i < len; i++) {
+            int tmp = preFix[i];
+            if (tmp == target && !first) {
+                num++;
+                pre = i;
+                min = preFix[i];
+                first = true;
+                continue;
+            }
+            min = Math.min(min, tmp);
+            if (tmp - min < target) {
+                continue;
+            }
+            for (int j = pre; j < i; j++) {
+                if (tmp - preFix[j] == target) {
+                    num++;
+                    pre = i;
+                    min = preFix[i];
+                    first = true;
+                    break;
+                }
+            }
+        }
+        return num;
+    }
+
+    private int sum = 0;
+
+    int[][] dp;
+    int[] cuts;
+
+    public int dp(int l, int r){
+        if(r - l <= 1){
+            return 0;
+        }
+        if(dp[l][r] == -1){
+            int len = cuts[r] - cuts[l];
+            dp[l][r] = (int)1e9;
+            for(int i = l + 1; i < r; i++){
+                dp[l][r] = Math.min(dp[l][r], dp(l, i) + dp(i, r) + len);
+            }
+        }
+        return dp[l][r];
+
+    }
+
+    public int minCost(int n, int[] cuts) {
+        Arrays.sort(cuts);
+        int m = cuts.length;
+        int[] more = new int[m + 2];
+        more[0] = 0;
+        more[m + 1] = n;
+        for(int i = 0; i < m; i++){
+            more[i + 1] = cuts[i];
+        }
+
+        this.cuts = more;
+        dp = new int[m + 2][m + 2];
+        for(int i = 0; i < m + 2; i++){
+            Arrays.fill(dp[i], -1);
+        }
+
+        return dp(0, m + 1);
+    }
 
     public static void main(String[] args) {
 
@@ -2423,8 +2664,8 @@ public class Games {
 
         //Arrays
         String[] oneDimensionalStringArray = {"5", "2", "C", "D", "+"};
-        int[] oneDimensionalArrayA = {1, 3, 5};
-        int[] oneDimensionalArrayB = {5, 2, 2, 5, 3, 5};
+        int[] oneDimensionalArrayA = {13,6,7,2,10};
+        int[] oneDimensionalArrayB = {3, 0, 2, 0, 2, 3, 3, 0, 0, 2, 1, 1, 1, 0, -1, -1, 1, -1, 1, 0, 2, 0, 0, 3, 0, 0, 3, 1, 0, 2, 0, -1, 2, -1, 1, 1, 3, 0, 2, 3, 3, 0, 0, 2, -1, 1};
         int[][] twoDimensionalArrayA = {{1, 3,}, {0, 2}, {1, 3}, {0, 2}};
         int[][] twoDimensionalArrayB = {
                 {0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0},
@@ -2461,7 +2702,7 @@ public class Games {
 
 
         Games games = new Games();
-        double p = games.countPairs(root, 3);
+        double p = games.minCost(20, oneDimensionalArrayA);
         System.out.println(p);
     }
 }
