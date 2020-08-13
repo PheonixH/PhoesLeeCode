@@ -3,6 +3,7 @@ import java.lang.reflect.Array;
 import java.util.*;
 
 import datestruct.ListNode;
+import data.Node;
 import datestruct.TreeNode;
 
 import javax.swing.text.MutableAttributeSet;
@@ -1726,6 +1727,33 @@ public class Solution2 {
         }
     }
 
+    public Node cloneGraph(Node node) {
+        if(node != null){
+            Set<Node> set = new HashSet<>();
+            Node res = new Node();
+            cloneGraph(node, res, set);
+            return res;
+        } else {
+            return null;
+        }
+    }
+
+    public void cloneGraph(Node node, Node newNode, Set<Node> visit) {
+        if(node.neighbors!=null) {
+            if(newNode.neighbors == null){
+                newNode.neighbors = new ArrayList<>();
+            }
+            for (Node n : node.neighbors) {
+                if (visit.add(n)) {
+                    Node newN = new Node();
+                    newN.val = n.val;
+                    newNode.neighbors.add(newN);
+                    cloneGraph(node, newNode, visit);
+                }
+            }
+        }
+    }
+
 
     public static void main(String[] args) {
         Solution2 solution = new Solution2();
@@ -1806,10 +1834,10 @@ public class Solution2 {
             stringListList.add(collect);
         }
 
-        solution.solve(twoDimensionalCharArray);
+
         System.out.println(5*15*0.95+5*25*0.6);
         System.out.println(5*40*0.95);
-        System.out.print(solution.distributeCandies(26, 4));
+//        System.out.print(solution.solve(twoDimensionalCharArray));
     }
 
 }
