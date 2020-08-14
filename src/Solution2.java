@@ -1659,68 +1659,69 @@ public class Solution2 {
     }
 
 
-
-
     /**
      * 130. 被围绕的区域
      * 给定一个二维的矩阵，包含 'X' 和 'O'（字母 O）。
      * 找到所有被 'X' 围绕的区域，并将这些区域里所有的 'O' 用 'X' 填充。
-     *
+     * <p>
      * 执行用时：2 ms, 在所有 Java 提交中击败了98.14% 的用户
      * 内存消耗：41.7 MB, 在所有 Java 提交中击败了82.86% 的用户
+     *
      * @param board 二维的矩阵
      */
 
     public void solve(char[][] board) {
         solveM = board.length;
-        if(solveM == 0){
+        if (solveM == 0) {
             return;
         }
         solveN = board[0].length;
-        if(solveM <= 2||solveN <= 2){
+        if (solveM <= 2 || solveN <= 2) {
             return;
         }
-        for(int i = 0;i<solveM;i++){
-            if(board[i][0] == 'O') {
+        for (int i = 0; i < solveM; i++) {
+            if (board[i][0] == 'O') {
                 board[i][0] = 'T';
                 solveDfs(board, i, 0);
             }
-            if(board[i][solveN-1] == 'O') {
-                board[i][solveN-1] = 'T';
-                solveDfs(board, i, solveN-1);
+            if (board[i][solveN - 1] == 'O') {
+                board[i][solveN - 1] = 'T';
+                solveDfs(board, i, solveN - 1);
             }
         }
-        for(int i = 1;i<solveN;i++){
-            if(board[0][i] == 'O') {
+        for (int i = 1; i < solveN; i++) {
+            if (board[0][i] == 'O') {
                 board[0][i] = 'T';
                 solveDfs(board, 0, i);
             }
-            if(board[solveM-1][i] == 'O') {
-                board[solveM-1][i] = 'T';
-                solveDfs(board, solveM-1, i);
+            if (board[solveM - 1][i] == 'O') {
+                board[solveM - 1][i] = 'T';
+                solveDfs(board, solveM - 1, i);
             }
         }
-        for(int i = 0;i<solveM;i++){
-            for(int j = 0;j<solveN;j++){
-                if(board[i][j] == 'O'){
-                    board[i][j]  = 'X';
-                } else if(board[i][j]  == 'T'){
-                    board[i][j]  = 'O';
+        for (int i = 0; i < solveM; i++) {
+            for (int j = 0; j < solveN; j++) {
+                if (board[i][j] == 'O') {
+                    board[i][j] = 'X';
+                } else if (board[i][j] == 'T') {
+                    board[i][j] = 'O';
                 }
             }
         }
         return;
     }
-    private int [][] dir = new int[][]{{1,0},{-1,0},{0,1},{0,-1}};
+
+    private int[][] dir = new int[][]{{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
     private int solveM = 0, solveN = 0;
-    public void solveDfs(char[][] board, int x, int y){
-        for(int[] d:dir){
+
+    public void solveDfs(char[][] board, int x, int y) {
+        for (int[] d : dir) {
             int tx = x + d[0];
             int ty = y + d[1];
-            if(tx<0||tx>=solveM||ty<0||ty>=solveN){
+            if (tx < 0 || tx >= solveM || ty < 0 || ty >= solveN) {
                 continue;
             }
-            if(board[tx][ty] == 'O'){
+            if (board[tx][ty] == 'O') {
                 board[tx][ty] = 'T';
                 solveDfs(board, tx, ty);
             }
@@ -1728,7 +1729,7 @@ public class Solution2 {
     }
 
     public Node cloneGraph(Node node) {
-        if(node != null){
+        if (node != null) {
             Set<Node> set = new HashSet<>();
             Node res = new Node();
             cloneGraph(node, res, set);
@@ -1739,8 +1740,8 @@ public class Solution2 {
     }
 
     public void cloneGraph(Node node, Node newNode, Set<Node> visit) {
-        if(node.neighbors!=null) {
-            if(newNode.neighbors == null){
+        if (node.neighbors != null) {
+            if (newNode.neighbors == null) {
                 newNode.neighbors = new ArrayList<>();
             }
             for (Node n : node.neighbors) {
@@ -1752,6 +1753,62 @@ public class Solution2 {
                 }
             }
         }
+    }
+
+    /**
+     * 20. 有效的括号
+     * 给定一个只包括 '('，')'，'{'，'}'，'['，']' 的字符串，判断字符串是否有效。
+     * 有效字符串需满足：
+     * 左括号必须用相同类型的右括号闭合。
+     * 左括号必须以正确的顺序闭合。
+     * 注意空字符串可被认为是有效字符串。
+     * 执行用时：1 ms, 在所有 Java 提交中击败了98.54% 的用户
+     * 内存消耗：37.7 MB, 在所有 Java 提交中击败了63.62% 的用户
+     *
+     * @param s 字符串
+     * @return 字符串是否有效
+     */
+    public boolean isValid(String s) {
+        int len = s.length();
+        if (len == 0) {
+            return true;
+        }
+        if (len % 2 != 0) {
+            return false;
+        }
+        char[] cs = s.toCharArray();
+        Stack<Character> stack = new Stack<>();
+        for (char c : cs) {
+            switch (c) {
+                case '(', '{', '[' -> {
+                    stack.add(c);
+                }
+                default -> {
+                    if (stack.empty()) {
+                        return false;
+                    }
+                    char tmp = stack.pop();
+                    switch (c) {
+                        case ')' -> {
+                            if (tmp != '(') {
+                                return false;
+                            }
+                        }
+                        case '}' -> {
+                            if (tmp != '{') {
+                                return false;
+                            }
+                        }
+                        case ']' -> {
+                            if (tmp != '[') {
+                                return false;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return stack.empty();
     }
 
 
@@ -1813,9 +1870,9 @@ public class Solution2 {
         };
         char[] oneDimensionalCharArray = {'A', 'B'};
         char[][] twoDimensionalCharArray = {
-                {'X','O','X'},
-                {'O','X','O'},
-                {'X','O','X'}
+                {'X', 'O', 'X'},
+                {'O', 'X', 'O'},
+                {'X', 'O', 'X'}
         };
 
         //List<List<Integer>>
@@ -1835,8 +1892,8 @@ public class Solution2 {
         }
 
 
-        System.out.println(5*15*0.95+5*25*0.6);
-        System.out.println(5*40*0.95);
+        System.out.println(5 * 15 * 0.95 + 5 * 25 * 0.6);
+        System.out.println(5 * 40 * 0.95);
 //        System.out.print(solution.solve(twoDimensionalCharArray));
     }
 
