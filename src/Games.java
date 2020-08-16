@@ -1,3 +1,4 @@
+import java.io.PrintWriter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -2380,6 +2381,126 @@ public class Games {
         return x == 0 ? 0 : digit(x / 10) + 1;
     }
 
+    //2020-8-02 第200周赛
+
+    public int countGoodTriplets(int[] arr, int a, int b, int c) {
+        int len = arr.length;
+        int num = 0;
+        for (int i = 0; i < len; i++) {
+            for (int j = i + 1; j < len; j++) {
+                if (Math.abs(arr[i] - arr[j]) > a) {
+                    continue;
+                }
+                for (int k = j + 1; k < len; k++) {
+                    if (Math.abs(arr[j] - arr[k]) <= b && Math.abs(arr[i] - arr[k]) <= c) {
+                        num++;
+                    }
+                }
+            }
+        }
+        return num;
+    }
+
+    public int getWinner(int[] arr, int k) {
+        int len = arr.length;
+        int winTime = 1;
+        int winKey = arr[0] > arr[1] ? arr[0] : arr[1];
+        for (int i = 2; i < len; i++) {
+            if (k == winTime) {
+                return winKey;
+            }
+            if (winKey > arr[i]) {
+                winTime++;
+            } else {
+                winKey = arr[i];
+                winTime = 1;
+            }
+        }
+        return winKey;
+    }
+
+    public int minSwaps(int[][] grid) {
+        int len = grid.length;
+        int[] status = new int[len];
+        for (int i = 0; i < len; i++) {
+            for (int j = len - 1; j >= 0; j--) {
+                if (grid[i][j] == 1) {
+                    status[i] = j;
+                    break;
+                }
+            }
+        }
+        int step = 0;
+        for (int i = 0; i < len; i++) {
+            boolean f = false;
+            for (int j = i; j < len; j++) {
+                if (j > i) {
+                    int p = status[i];
+                    status[i] = status[j];
+                    status[j] = p;
+                }
+                if (status[i] < i + 1) {
+                    step += j - i;
+                    f = true;
+                    break;
+                }
+            }
+            if (!f) {
+                return -1;
+            }
+        }
+        return step;
+    }
+
+    public int maxSum(int[] nums1, int[] nums2) {
+        Comparator<int[]> c = new Comparator<int[]>() {
+            @Override
+            public int compare(int[] o1, int[] o2) {
+                return o1[0] - o2[0];
+            }
+        };
+        PriorityQueue<int[]> queue = new PriorityQueue<>(c);
+        int a = 0, b = 0;
+        int lenA = nums1.length, lenB = nums2.length;
+        while (a < lenA && b < lenB) {
+            if (nums1[a] < nums2[b]) {
+                queue.add(new int[]{nums1[a], 1});
+                a++;
+            } else if (nums1[a] > nums2[b]) {
+                queue.add(new int[]{nums2[b], 2});
+                b++;
+            } else {
+                queue.add(new int[]{nums1[a], 3});
+                a++;
+                b++;
+            }
+        }
+        while (a < lenA) {
+            queue.add(new int[]{nums1[a++], 1});
+        }
+        while (b < lenB) {
+            queue.add(new int[]{nums2[b++], 2});
+        }
+        long res = 0;
+        long aRoad = 0, bRoad = 0;
+        for (int[] crr : queue) {
+            if (crr[1] == 1) {
+                aRoad += crr[0];
+            } else if (crr[1] == 2) {
+                bRoad += crr[0];
+            } else {
+                res += Math.max(aRoad, bRoad);
+                res += crr[0];
+                res = res % 1000000007;
+                aRoad = 0;
+                bRoad = 0;
+            }
+        }
+        res += Math.max(aRoad, bRoad);
+        res = res % 1000000007;
+        return (int) res;
+    }
+
 
     public static void main(String[] args) {
 
@@ -2423,9 +2544,9 @@ public class Games {
 
         //Arrays
         String[] oneDimensionalStringArray = {"5", "2", "C", "D", "+"};
-        int[] oneDimensionalArrayA = {1, 3, 5};
-        int[] oneDimensionalArrayB = {5, 2, 2, 5, 3, 5};
-        int[][] twoDimensionalArrayA = {{1, 3,}, {0, 2}, {1, 3}, {0, 2}};
+        int[] oneDimensionalArrayA = {2, 4, 5, 8, 10};
+        int[] oneDimensionalArrayB = {4, 6, 8, 9};
+        int[][] twoDimensionalArrayA = {{0, 0, 1}, {1, 1, 0}, {1, 0, 0}};
         int[][] twoDimensionalArrayB = {
                 {0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0},
                 {0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0},
@@ -2461,7 +2582,7 @@ public class Games {
 
 
         Games games = new Games();
-        double p = games.countPairs(root, 3);
+        double p = games.minSwaps(twoDimensionalArrayA);
         System.out.println(p);
     }
 }
