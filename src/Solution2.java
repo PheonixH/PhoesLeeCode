@@ -1361,16 +1361,19 @@ public class Solution2 {
         answer = new int[N];
         this.quiet = quiet;
 
-        for (int node = 0; node < N; ++node)
+        for (int node = 0; node < N; ++node) {
             graph[node] = new ArrayList<Integer>();
+        }
 
-        for (int[] edge : richer)
+        for (int[] edge : richer) {
             graph[edge[1]].add(edge[0]);
+        }
 
         Arrays.fill(answer, -1);
 
-        for (int node = 0; node < N; ++node)
+        for (int node = 0; node < N; ++node) {
             dfs(node);
+        }
         return answer;
     }
 
@@ -1654,6 +1657,76 @@ public class Solution2 {
         return isSameTree(p.left, q.left) && isSameTree(p.right, q.right);
     }
 
+
+
+
+    /**
+     * 130. 被围绕的区域
+     * 给定一个二维的矩阵，包含 'X' 和 'O'（字母 O）。
+     * 找到所有被 'X' 围绕的区域，并将这些区域里所有的 'O' 用 'X' 填充。
+     *
+     * 执行用时：2 ms, 在所有 Java 提交中击败了98.14% 的用户
+     * 内存消耗：41.7 MB, 在所有 Java 提交中击败了82.86% 的用户
+     * @param board 二维的矩阵
+     */
+
+    public void solve(char[][] board) {
+        solveM = board.length;
+        if(solveM == 0){
+            return;
+        }
+        solveN = board[0].length;
+        if(solveM <= 2||solveN <= 2){
+            return;
+        }
+        for(int i = 0;i<solveM;i++){
+            if(board[i][0] == 'O') {
+                board[i][0] = 'T';
+                solveDfs(board, i, 0);
+            }
+            if(board[i][solveN-1] == 'O') {
+                board[i][solveN-1] = 'T';
+                solveDfs(board, i, solveN-1);
+            }
+        }
+        for(int i = 1;i<solveN;i++){
+            if(board[0][i] == 'O') {
+                board[0][i] = 'T';
+                solveDfs(board, 0, i);
+            }
+            if(board[solveM-1][i] == 'O') {
+                board[solveM-1][i] = 'T';
+                solveDfs(board, solveM-1, i);
+            }
+        }
+        for(int i = 0;i<solveM;i++){
+            for(int j = 0;j<solveN;j++){
+                if(board[i][j] == 'O'){
+                    board[i][j]  = 'X';
+                } else if(board[i][j]  == 'T'){
+                    board[i][j]  = 'O';
+                }
+            }
+        }
+        return;
+    }
+    private int [][] dir = new int[][]{{1,0},{-1,0},{0,1},{0,-1}};
+    private int solveM = 0, solveN = 0;
+    public void solveDfs(char[][] board, int x, int y){
+        for(int[] d:dir){
+            int tx = x + d[0];
+            int ty = y + d[1];
+            if(tx<0||tx>=solveM||ty<0||ty>=solveN){
+                continue;
+            }
+            if(board[tx][ty] == 'O'){
+                board[tx][ty] = 'T';
+                solveDfs(board, tx, ty);
+            }
+        }
+    }
+
+
     public static void main(String[] args) {
         Solution2 solution = new Solution2();
 
@@ -1712,9 +1785,9 @@ public class Solution2 {
         };
         char[] oneDimensionalCharArray = {'A', 'B'};
         char[][] twoDimensionalCharArray = {
-                {'A', 'B', 'C', 'E'},
-                {'S', 'F', 'C', 'S'},
-                {'A', 'D', 'E', 'E'}
+                {'X','O','X'},
+                {'O','X','O'},
+                {'X','O','X'}
         };
 
         //List<List<Integer>>
@@ -1733,6 +1806,9 @@ public class Solution2 {
             stringListList.add(collect);
         }
 
+        solution.solve(twoDimensionalCharArray);
+        System.out.println(5*15*0.95+5*25*0.6);
+        System.out.println(5*40*0.95);
         System.out.print(solution.distributeCandies(26, 4));
     }
 
