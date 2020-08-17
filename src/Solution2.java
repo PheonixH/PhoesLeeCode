@@ -1811,6 +1811,31 @@ public class Solution2 {
         return stack.empty();
     }
 
+    /**
+     * 110. 平衡二叉树
+     * 给定一个二叉树，判断它是否是高度平衡的二叉树。
+     * 本题中，一棵高度平衡二叉树定义为：
+     *     一个二叉树每个节点 的左右两个子树的高度差的绝对值不超过1。
+     * 执行用时：1 ms, 在所有 Java 提交中击败了99.76% 的用户
+     * 内存消耗：39.6 MB, 在所有 Java 提交中击败了92.89% 的用户
+     * @param root 二叉树
+     * @return 是否是平衡二叉树
+     */
+    public boolean isBalanced(TreeNode root) {
+        if (root == null) {
+            return true;
+        } else {
+            return Math.abs(height(root.left) - height(root.right)) <= 1 && isBalanced(root.left) && isBalanced(root.right);
+        }
+    }
+
+    public int height(TreeNode root) {
+        if (root == null) {
+            return 0;
+        } else {
+            return Math.max(height(root.left), height(root.right)) + 1;
+        }
+    }
 
     public static void main(String[] args) {
         Solution2 solution = new Solution2();
@@ -1826,13 +1851,13 @@ public class Solution2 {
         }
 
         //TreeNode -1 is null TreeNode;
-        int[] treeNodeValue = {3, 2, -1, 3, 1, 3, -1, 2};
+        int[] treeNodeValue = {2, -1, 3, -1, 4, -1, 5, -1, 6};
         int treeNodeLen = treeNodeValue.length;
-        Stack<TreeNode> createTreeNodeStack = new Stack<>();
+        List<TreeNode> createTreeNodeStack = new ArrayList<>();
         TreeNode root = new TreeNode(treeNodeValue[0]);
         createTreeNodeStack.add(root);
         for (int i = 1; i < listNodeLen; i++) {
-            TreeNode tmp = createTreeNodeStack.pop();
+            TreeNode tmp = createTreeNodeStack.remove(0);
             if (tmp == null) {
                 i++;
                 continue;
@@ -1894,7 +1919,7 @@ public class Solution2 {
 
         System.out.println(5 * 15 * 0.95 + 5 * 25 * 0.6);
         System.out.println(5 * 40 * 0.95);
-//        System.out.print(solution.solve(twoDimensionalCharArray));
+        System.out.print(solution.isBalanced(root));
     }
 
 }
