@@ -1815,9 +1815,10 @@ public class Solution2 {
      * 110. 平衡二叉树
      * 给定一个二叉树，判断它是否是高度平衡的二叉树。
      * 本题中，一棵高度平衡二叉树定义为：
-     *     一个二叉树每个节点 的左右两个子树的高度差的绝对值不超过1。
+     * 一个二叉树每个节点 的左右两个子树的高度差的绝对值不超过1。
      * 执行用时：1 ms, 在所有 Java 提交中击败了99.76% 的用户
      * 内存消耗：39.6 MB, 在所有 Java 提交中击败了92.89% 的用户
+     *
      * @param root 二叉树
      * @return 是否是平衡二叉树
      */
@@ -1835,6 +1836,35 @@ public class Solution2 {
         } else {
             return Math.max(height(root.left), height(root.right)) + 1;
         }
+    }
+
+    /**
+     * 111. 二叉树的最小深度
+     * 给定一个二叉树，找出其最小深度。
+     * 最小深度是从根节点到最近叶子节点的最短路径上的节点数量。
+     * 说明: 叶子节点是指没有子节点的节点。
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：39.8 MB, 在所有 Java 提交中击败了47.85% 的用户
+     * @param root 二叉树
+     * @return 二叉树的最小深度
+     */
+    public int minDepth(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        if (root.left == null && root.right == null) {
+            return 1;
+        }
+        int tmp = Integer.MAX_VALUE;
+        if (root.left != null) {
+            int l = minDepth(root.left) + 1;
+            tmp = Math.min(tmp, l);
+        }
+        if (root.right != null) {
+            int r = minDepth(root.right) + 1;
+            tmp = Math.min(tmp, r);
+        }
+        return tmp;
     }
 
     public static void main(String[] args) {
