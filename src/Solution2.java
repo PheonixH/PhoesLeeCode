@@ -1845,6 +1845,7 @@ public class Solution2 {
      * 说明: 叶子节点是指没有子节点的节点。
      * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
      * 内存消耗：39.8 MB, 在所有 Java 提交中击败了47.85% 的用户
+     *
      * @param root 二叉树
      * @return 二叉树的最小深度
      */
@@ -1865,6 +1866,48 @@ public class Solution2 {
             tmp = Math.min(tmp, r);
         }
         return tmp;
+    }
+
+    /**
+     * 6. Z 字形变换
+     * 将一个给定字符串根据给定的行数，以从上往下、从左到右进行 Z 字形排列。
+     * 执行用时：3 ms, 在所有 Java 提交中击败了99.11% 的用户
+     * 内存消耗：39.8 MB, 在所有 Java 提交中击败了88.70% 的用户
+     * @param s
+     * @param numRows
+     * @return
+     */
+    public String convert(String s, int numRows) {
+        char[] cs = s.toCharArray();
+        int len = cs.length;
+        if (len == 0) {
+            return "";
+        }
+        if (numRows == 1) {
+            return s;
+        }
+        int k = numRows * 2 - 2;
+        StringBuilder res = new StringBuilder();
+        for (int i = 0; i < numRows; i++) {
+            if (i == 0 || i == numRows - 1) {
+                int n = i;
+                while (n < len) {
+                    res.append(cs[n]);
+                    n += k;
+                }
+            } else {
+                int n = i;
+                int t = k - i * 2;
+                while (n < len) {
+                    res.append(cs[n]);
+                    if (n + t < len) {
+                        res.append(cs[n + t]);
+                    }
+                    n += k;
+                }
+            }
+        }
+        return res.toString();
     }
 
     public static void main(String[] args) {
@@ -1949,7 +1992,7 @@ public class Solution2 {
 
         System.out.println(5 * 15 * 0.95 + 5 * 25 * 0.6);
         System.out.println(5 * 40 * 0.95);
-        System.out.print(solution.isBalanced(root));
+        System.out.print(solution.convert("A", 1));
     }
 
 }
