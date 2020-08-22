@@ -2622,6 +2622,7 @@ public class Games {
 
         return dp(0, m + 1);
     }
+
     //2020-8-02 第200周赛
 
     public int countGoodTriplets(int[] arr, int a, int b, int c) {
@@ -2801,7 +2802,7 @@ public class Games {
         dp[0] = 1;
         for (int i = 1; i < n; i++) {
             int tmp = i + 1;
-            dp[i] = dp[i-1] + 1;
+            dp[i] = dp[i - 1] + 1;
             if (tmp % 2 == 0) {
                 dp[i] = Math.min(dp[i], dp[i / 2] + 1);
             }
@@ -2830,6 +2831,116 @@ public class Games {
             list.add(t);
         }
         return list.get(n - pre - 1);
+    }
+
+    //第 33 场双周赛
+    public String thousandSeparator(int n) {
+        if (n < 1000) {
+            return String.valueOf(n);
+        }
+        StringBuilder res = new StringBuilder();
+        int i = 0;
+        while (n > 0) {
+            if (i > 0 && i % 3 == 0) {
+                res.append(".");
+            }
+            res.append(n % 10);
+            n = n / 10;
+            i++;
+        }
+        return res.reverse().toString();
+    }
+
+    public List<Integer> findSmallestSetOfVertices(int n, List<List<Integer>> edges) {
+        boolean[] visit = new boolean[n];
+        for (List<Integer> list : edges) {
+            int from = list.get(0);
+            int to = list.get(1);
+            if (!visit[to]) {
+                visit[to] = true;
+            }
+        }
+        List<Integer> res = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            if (!visit[i]) {
+                res.add(i);
+            }
+        }
+        return res;
+    }
+
+    public int minOperations(int[] nums) {
+        int len = nums.length;
+//        int[][] arr = new int[len][2];
+        int sum = 0, max = 0;
+        for (int i = 0; i < len; i++) {
+            int tmp = nums[i];
+            int a = 0, b = 0;
+            while (tmp != 0) {
+                if (tmp % 2 == 0) {
+                    tmp = tmp / 2;
+                    b++;
+                } else {
+                    tmp = tmp - 1;
+                    a++;
+                }
+            }
+            sum += a;
+            max = Math.max(max, b);
+        }
+        return sum + max;
+    }
+
+    public boolean containsCycle(char[][] grid) {
+        containsCycleM = grid.length;
+        containsCycleN = grid[0].length;
+        Set<String> visited = new HashSet<>();
+        for (int i = 0; i < containsCycleM; i++) {
+            for (int j = 0; j < containsCycleN; j++) {
+                containsCycleDfs(visited, grid, i, j, i, j, i, j);
+                if (containsCycleFlag) {
+                    return containsCycleFlag;
+                }
+            }
+        }
+        return containsCycleFlag;
+    }
+
+    int containsCycleM = 0, containsCycleN = 0;
+
+    int[][] containsCycleDir = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+
+    boolean containsCycleFlag = false;
+
+    public void containsCycleDfs(Set<String> visited, char[][] grid, int beginX, int beginY,
+                                 int preX, int preY, int x, int y) {
+        String key = x + "," + y;
+        if (visited.contains(key)) {
+            return;
+        }
+        visited.add(key);
+        for (int[] dir : containsCycleDir) {
+            int newx = x + dir[0];
+            int newy = y + dir[1];
+            if (newx < 0 || newx == containsCycleM || newy < 0 || newy == containsCycleN) {
+                continue;
+            }
+            if (newx == preX && newy == preY) {
+                continue;
+            }
+            if (grid[newx][newy] != grid[x][y]) {
+                continue;
+            }
+            String newkey = newx + "," + newy;
+            if (visited.contains(newkey)) {
+                containsCycleFlag = true;
+                return;
+            }
+            containsCycleDfs(visited, grid, beginX, beginY, x, y, newx, newy);
+            if (containsCycleFlag) {
+                return;
+            }
+        }
     }
 
     public static void main(String[] args) {
@@ -2889,9 +3000,11 @@ public class Games {
         };
         char[] oneDimensionalCharArray = {'A', 'B'};
         char[][] twoDimensionalCharArray = {
-                {'A', 'B', 'C', 'E'},
-                {'S', 'F', 'C', 'S'},
-                {'A', 'D', 'E', 'E'}
+                {'c', 'a', 'd'},
+                {'a', 'a', 'a'},
+                {'a', 'a', 'd'},
+                {'a', 'c', 'd'},
+                {'a', 'b', 'c'}
         };
 
         //List<List<Integer>>
@@ -2912,7 +3025,7 @@ public class Games {
 
 
         Games games = new Games();
-        int p = games.minDays(56);
+        boolean p = games.containsCycle(twoDimensionalCharArray);
         System.out.println(p);
     }
 }
