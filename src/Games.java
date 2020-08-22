@@ -2589,14 +2589,14 @@ public class Games {
     int[][] dp;
     int[] cuts;
 
-    public int dp(int l, int r){
-        if(r - l <= 1){
+    public int dp(int l, int r) {
+        if (r - l <= 1) {
             return 0;
         }
-        if(dp[l][r] == -1){
+        if (dp[l][r] == -1) {
             int len = cuts[r] - cuts[l];
-            dp[l][r] = (int)1e9;
-            for(int i = l + 1; i < r; i++){
+            dp[l][r] = (int) 1e9;
+            for (int i = l + 1; i < r; i++) {
                 dp[l][r] = Math.min(dp[l][r], dp(l, i) + dp(i, r) + len);
             }
         }
@@ -2610,13 +2610,13 @@ public class Games {
         int[] more = new int[m + 2];
         more[0] = 0;
         more[m + 1] = n;
-        for(int i = 0; i < m; i++){
+        for (int i = 0; i < m; i++) {
             more[i + 1] = cuts[i];
         }
 
         this.cuts = more;
         dp = new int[m + 2][m + 2];
-        for(int i = 0; i < m + 2; i++){
+        for (int i = 0; i < m + 2; i++) {
             Arrays.fill(dp[i], -1);
         }
 
@@ -2742,6 +2742,95 @@ public class Games {
         return (int) res;
     }
 
+    //2020-8-16 第201 周赛
+    public boolean threeConsecutiveOdds(int[] arr) {
+        int num = 0;
+        for (int a : arr) {
+            if (a % 2 == 1) {
+                num++;
+                if (num >= 3) {
+                    return true;
+                }
+            } else {
+                num = 0;
+            }
+        }
+        return false;
+    }
+
+    public int minOperations(int n) {
+        int tmp = 1;
+        int sum = 0;
+        while (tmp < n) {
+            sum += n - tmp;
+            tmp += 2;
+        }
+        return sum;
+    }
+
+    public int maxDistance(int[] position, int m) {
+        Arrays.sort(position);
+        int len = position.length;
+        int l = 0;
+        int r = position[len - 1] * 2 + 1;
+        while (l < r) {
+            int mid = (l + r) >> 1;
+            if (maxDistanceOK(position, mid, m)) {
+                l = mid + 1;
+            } else {
+                r = mid;
+            }
+        }
+        return l;
+    }
+
+    public boolean maxDistanceOK(int[] position, int d, int m) {
+        int pre = position[0];
+        int n = 1;
+        for (int i = 1; i < position.length; i++) {
+            if (position[i] - pre >= d) {
+                pre = position[i];
+                n++;
+            }
+        }
+        return n >= m;
+    }
+
+    public int minDays(int n) {
+        int[] dp = new int[n];
+        dp[0] = 1;
+        for (int i = 1; i < n; i++) {
+            int tmp = i + 1;
+            dp[i] = dp[i-1] + 1;
+            if (tmp % 2 == 0) {
+                dp[i] = Math.min(dp[i], dp[i / 2] + 1);
+            }
+            if (tmp % 3 == 0) {
+                dp[i] = Math.min(dp[i], dp[i / 3] + 1);
+            }
+        }
+//        return dp[n-1];
+
+        List<Integer> list = new ArrayList<>();
+        int pre = 0;
+        list.add(1);
+        for (int i = 1; i < n; i++) {
+            int tmp = i + 1;
+            int t = list.get(i - 1 - pre) + 1;
+            if (tmp % 2 == 0) {
+                t = Math.min(t, list.get(tmp / 2 - 1 - pre) + 1);
+            }
+            if (tmp % 3 == 0) {
+                t = Math.min(t, list.get(tmp / 3 - 1 - pre) + 1);
+                for (int j = pre; j < tmp / 3; j++) {
+                    list.remove(j - pre);
+                }
+                pre = tmp / 3;
+            }
+            list.add(t);
+        }
+        return list.get(n - pre - 1);
+    }
 
     public static void main(String[] args) {
 
@@ -2785,7 +2874,7 @@ public class Games {
 
         //Arrays
         String[] oneDimensionalStringArray = {"5", "2", "C", "D", "+"};
-        int[] oneDimensionalArrayA = {1, 3, 5};
+        int[] oneDimensionalArrayA = {79, 74, 57, 22};
         int[] oneDimensionalArrayB = {5, 2, 2, 5, 3, 5};
         int[][] twoDimensionalArrayA = {{1, 3,}, {0, 2}, {1, 3}, {0, 2}};
         int[][] twoDimensionalArrayB = {
@@ -2823,7 +2912,7 @@ public class Games {
 
 
         Games games = new Games();
-        double p = games.countPairs(root, 3);
+        int p = games.minDays(56);
         System.out.println(p);
     }
 }
