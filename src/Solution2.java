@@ -1873,6 +1873,7 @@ public class Solution2 {
      * 将一个给定字符串根据给定的行数，以从上往下、从左到右进行 Z 字形排列。
      * 执行用时：3 ms, 在所有 Java 提交中击败了99.11% 的用户
      * 内存消耗：39.8 MB, 在所有 Java 提交中击败了88.70% 的用户
+     *
      * @param s
      * @param numRows
      * @return
@@ -1908,6 +1909,43 @@ public class Solution2 {
             }
         }
         return res.toString();
+    }
+
+    /**
+     * 459. 重复的子字符串
+     * 给定一个非空的字符串，判断它是否可以由它的一个子串重复多次构成。给定的字符串只含有小写英文字母，并且长度不超过10000。
+     * 执行用时：8 ms, 在所有 Java 提交中击败了92.46% 的用户
+     * 内存消耗：40.2 MB, 在所有 Java 提交中击败了61.22% 的用户
+     *
+     * @param s 字符串
+     * @return 是否有重复的子字符串
+     */
+    public boolean repeatedSubstringPattern(String s) {
+        int len = s.length();
+        if (len <= 1) {
+            return false;
+        }
+//        boolean isSuccess = false;
+        for (int i = 1; i <= len / 2; i++) {
+            if (len % i != 0) {
+                continue;
+            }
+            String tmp = s.substring(0, i);
+            int n = i;
+            boolean isS = true;
+            while (n + i <= len) {
+                String t = s.substring(n, n + i);
+                if (!tmp.equals(t)) {
+                    isS = false;
+                    break;
+                }
+                n += i;
+            }
+            if (isS) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static void main(String[] args) {
@@ -1992,7 +2030,7 @@ public class Solution2 {
 
         System.out.println(5 * 15 * 0.95 + 5 * 25 * 0.6);
         System.out.println(5 * 40 * 0.95);
-        System.out.print(solution.convert("A", 1));
+        System.out.print(solution.repeatedSubstringPattern("abab"));
     }
 
 }
