@@ -1948,6 +1948,38 @@ public class Solution2 {
         return false;
     }
 
+
+    /**
+     * 1553. 吃掉 N 个橘子的最少天数
+     * 厨房里总共有 n 个橘子，你决定每一天选择如下方式之一吃这些橘子：
+     * <p>
+     * 吃掉一个橘子。
+     * 如果剩余橘子数 n 能被 2 整除，那么你可以吃掉 n/2 个橘子。
+     * 如果剩余橘子数 n 能被 3 整除，那么你可以吃掉 2*(n/3) 个橘子。
+     * <p>
+     * 每天你只能从以上 3 种方案中选择一种方案。
+     * <p>
+     * 请你返回吃掉所有 n 个橘子的最少天数。
+     *
+     * 执行用时：4 ms, 在所有 Java 提交中击败了88.30% 的用户
+     * 内存消耗：39 MB, 在所有 Java 提交中击败了52.96% 的用户
+     * @param n 橘子数量
+     * @return 最小天数
+     */
+    public int minDays(int n) {
+        if (n <= 1) {
+            return n;
+        }
+        if (memo.containsKey(n)) {
+            return memo.get(n);
+        }
+        memo.put(n, Math.min(n % 2 + 1 + minDays(n / 2), n % 3 + 1 + minDays(n / 3)));
+        return memo.get(n);
+    }
+
+    Map<Integer, Integer> memo = new HashMap<Integer, Integer>();
+
+
     public static void main(String[] args) {
         Solution2 solution = new Solution2();
 
@@ -2030,7 +2062,8 @@ public class Solution2 {
 
         System.out.println(5 * 15 * 0.95 + 5 * 25 * 0.6);
         System.out.println(5 * 40 * 0.95);
-        System.out.print(solution.repeatedSubstringPattern("abab"));
+        System.out.print(solution.minDays(100));
+        return;
     }
 
 }
