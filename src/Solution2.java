@@ -1960,9 +1960,10 @@ public class Solution2 {
      * 每天你只能从以上 3 种方案中选择一种方案。
      * <p>
      * 请你返回吃掉所有 n 个橘子的最少天数。
-     *
+     * <p>
      * 执行用时：4 ms, 在所有 Java 提交中击败了88.30% 的用户
      * 内存消耗：39 MB, 在所有 Java 提交中击败了52.96% 的用户
+     *
      * @param n 橘子数量
      * @return 最小天数
      */
@@ -1979,6 +1980,46 @@ public class Solution2 {
 
     Map<Integer, Integer> memo = new HashMap<Integer, Integer>();
 
+    /**
+     * 491. 递增子序列
+     * 给定一个整型数组, 你的任务是找到所有该数组的递增子序列，递增子序列的长度至少是2。
+     * 执行用时：57 ms, 在所有 Java 提交中击败了6.31% 的用户
+     * 内存消耗：49.4 MB, 在所有 Java 提交中击败了7.67% 的用户
+     * @param nums 数组
+     * @return 数组的递增子序列
+     */
+    public List<List<Integer>> findSubsequences(int[] nums) {
+        int len = nums.length;
+        if (len <= 1) {
+            return new ArrayList<>();
+        }
+        Map<Integer, List<String>> map = new HashMap<>();
+        List<List<Integer>> list = new ArrayList<>();
+        Set<String> set = new HashSet<>();
+        for (int i = 0; i < len; i++) {
+            List<List<Integer>> tmp = new ArrayList<>();
+            List<String> newS = new ArrayList<>();
+            newS.add(String.valueOf(nums[i]));
+            for (int j = 0; j < i; j++) {
+                if (nums[i] >= nums[j]) {
+                    for (String s : map.get(j)) {
+                        String ns = s + ',' + nums[i];
+                        if (set.add(ns)) {
+                            String[] ss = ns.split(",");
+                            List<Integer> newTmp = new ArrayList<>();
+                            for (String sss : ss) {
+                                newTmp.add(Integer.valueOf(sss));
+                            }
+                            list.add(newTmp);
+                        }
+                        newS.add(ns);
+                    }
+                }
+            }
+            map.put(i, newS);
+        }
+        return list;
+    }
 
     public static void main(String[] args) {
         Solution2 solution = new Solution2();
@@ -2023,7 +2064,7 @@ public class Solution2 {
 
         //Arrays
         String[] oneDimensionalStringArray = {"5", "2", "C", "D", "+"};
-        int[] oneDimensionalArrayA = {2, 3, 3};
+        int[] oneDimensionalArrayA = {4, 6, 7, 7};
         int[] oneDimensionalArrayB = {5, 2, 2, 5, 3, 5};
         int[][] twoDimensionalArrayA = {{0, 1}};
         int[][] twoDimensionalArrayB = {
@@ -2062,7 +2103,7 @@ public class Solution2 {
 
         System.out.println(5 * 15 * 0.95 + 5 * 25 * 0.6);
         System.out.println(5 * 40 * 0.95);
-        System.out.print(solution.minDays(100));
+        System.out.print(solution.findSubsequences(oneDimensionalArrayA));
         return;
     }
 
