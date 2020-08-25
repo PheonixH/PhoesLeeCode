@@ -2027,6 +2027,7 @@ public class Solution2 {
      * 请你来实现一个 atoi 函数，使其能将字符串转换成整数。
      * 执行用时：2 ms, 在所有 Java 提交中击败了99.73% 的用户
      * 内存消耗：39.7 MB, 在所有 Java 提交中击败了76.74% 的用户
+     *
      * @param str 字符串
      * @return 字符串转成整数
      */
@@ -2074,6 +2075,38 @@ public class Solution2 {
             index++;
         }
         return ans * sign;
+    }
+
+    /**
+     * 17. 电话号码的字母组合
+     * 给定一个仅包含数字 2-9 的字符串，返回所有它能表示的字母组合。
+     * 给出数字到字母的映射如下（与电话按键相同）。注意 1 不对应任何字母。
+     * 执行用时：1 ms, 在所有 Java 提交中击败了89.00% 的用户
+     * 内存消耗：38.2 MB, 在所有 Java 提交中击败了95.69% 的用户
+     * @param digits 电话号码
+     * @return 电话号码的字母组合
+     */
+    public List<String> letterCombinations(String digits) {
+        String[][] key = {{"a", "b", "c"}, {"d", "e", "f"}, {"g", "h", "i"},
+                {"j", "k", "l"}, {"m", "n", "o"}, {"p", "q", "r", "s"},
+                {"t", "u", "v"}, {"w", "x", "y", "z"}};
+        List<String> res = new ArrayList<>();
+        char[] cs = digits.toCharArray();
+        for (int i = 0; i < cs.length; i++) {
+            int tmp = cs[i] - '2';
+            List<String> newRes = new ArrayList<>();
+            for (String value:key[tmp]) {
+                if (res.size() == 0) {
+                    newRes.add(value);
+                    continue;
+                }
+                for (String r : res) {
+                    newRes.add(r + value);
+                }
+            }
+            res = newRes;
+        }
+        return res;
     }
 
     public static void main(String[] args) {
@@ -2157,7 +2190,7 @@ public class Solution2 {
 
         System.out.println(5 * 15 * 0.95 + 5 * 25 * 0.6);
         System.out.println(5 * 40 * 0.95);
-        System.out.print(solution.myAtoi("4193 with words"));
+        System.out.print(solution.letterCombinations("23"));
         return;
     }
 
