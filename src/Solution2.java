@@ -1985,6 +1985,7 @@ public class Solution2 {
      * 给定一个整型数组, 你的任务是找到所有该数组的递增子序列，递增子序列的长度至少是2。
      * 执行用时：57 ms, 在所有 Java 提交中击败了6.31% 的用户
      * 内存消耗：49.4 MB, 在所有 Java 提交中击败了7.67% 的用户
+     *
      * @param nums 数组
      * @return 数组的递增子序列
      */
@@ -2021,6 +2022,60 @@ public class Solution2 {
         return list;
     }
 
+    /**
+     * 8. 字符串转换整数 (atoi)
+     * 请你来实现一个 atoi 函数，使其能将字符串转换成整数。
+     * 执行用时：2 ms, 在所有 Java 提交中击败了99.73% 的用户
+     * 内存消耗：39.7 MB, 在所有 Java 提交中击败了76.74% 的用户
+     * @param str 字符串
+     * @return 字符串转成整数
+     */
+    public int myAtoi(String str) {
+        int index = 0, sign = 1, ans = 0;
+
+        // 1. 判断是否为空
+        if (str == null || str.length() == 0) {
+            return 0;
+        }
+
+        int len = str.length();
+
+        // 2. 移除空格
+        while (index < len && str.charAt(index) == ' ') {
+            index++;
+        }
+
+        if (index == len) {
+            // 去掉前面空格以后到了末尾了
+            return 0;
+        }
+
+        // 3. 处理正负符号
+        if (str.charAt(index) == '+' || str.charAt(index) == '-') {
+            sign = str.charAt(index) == '+' ? 1 : -1;
+            index++;
+        }
+
+        // 4. 转换数字，避免溢出
+        while (index < len) {
+            // 判断是否是数字
+            int digit = str.charAt(index) - '0';
+            if (digit < 0 || digit > 9) {
+                break;
+            }
+
+            if (ans > (Integer.MAX_VALUE - digit) / 10) {
+                // 本来应该是 ans * 10 + digit > Integer.MAX_VALUE
+                // 但是 *10 和 + digit 都有可能越界，所有都移动到右边去就可以了。
+                return sign == 1 ? Integer.MAX_VALUE : Integer.MIN_VALUE;
+            }
+
+            ans = 10 * ans + digit;
+            index++;
+        }
+        return ans * sign;
+    }
+
     public static void main(String[] args) {
         Solution2 solution = new Solution2();
 
@@ -2036,7 +2091,6 @@ public class Solution2 {
 
         //TreeNode -1 is null TreeNode;
         int[] treeNodeValue = {2, -1, 3, -1, 4, -1, 5, -1, 6};
-        int treeNodeLen = treeNodeValue.length;
         List<TreeNode> createTreeNodeStack = new ArrayList<>();
         TreeNode root = new TreeNode(treeNodeValue[0]);
         createTreeNodeStack.add(root);
@@ -2103,7 +2157,7 @@ public class Solution2 {
 
         System.out.println(5 * 15 * 0.95 + 5 * 25 * 0.6);
         System.out.println(5 * 40 * 0.95);
-        System.out.print(solution.findSubsequences(oneDimensionalArrayA));
+        System.out.print(solution.myAtoi("4193 with words"));
         return;
     }
 
