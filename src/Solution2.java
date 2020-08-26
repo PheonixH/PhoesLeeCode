@@ -2264,10 +2264,11 @@ public class Solution2 {
 
     /**
      * 38. 外观数列
-     *
+     * <p>
      * 给定一个正整数 n（1 ≤ n ≤ 30），输出外观数列的第 n 项。
      * 执行用时：3 ms, 在所有 Java 提交中击败了48.11% 的用户
      * 内存消耗：37.2 MB, 在所有 Java 提交中击败了41.88% 的用户
+     *
      * @param n 正整数
      * @return 外观数列
      */
@@ -2293,6 +2294,42 @@ public class Solution2 {
             s = sb.toString();
         }
         return s;
+    }
+
+    /**
+     * 49. 字母异位词分组
+     * <p>
+     * 给定一个字符串数组，将字母异位词组合在一起。字母异位词指字母相同，但排列不同的字符串。
+     * <p>
+     * 执行用时：11 ms, 在所有 Java 提交中击败了40.56% 的用户
+     * 内存消耗：43.6 MB, 在所有 Java 提交中击败了11.23% 的用户
+     *
+     * @param strs 字符串数组
+     * @return 分组后的字符串
+     */
+    public List<List<String>> groupAnagrams(String[] strs) {
+        Map<String, List<String>> map = new HashMap<>();
+        for (String str : strs) {
+            char[] cs = str.toCharArray();
+            Arrays.sort(cs);
+            StringBuilder sss = new StringBuilder();
+            for (char c : cs) {
+                sss.append(c);
+            }
+            String ss = sss.toString();
+            if (map.containsKey(ss)) {
+                map.get(ss).add(str);
+            } else {
+                List<String> li = new ArrayList<>();
+                li.add(str);
+                map.put(ss, li);
+            }
+        }
+        List<List<String>> res = new ArrayList<>();
+        for (String key : map.keySet()) {
+            res.add(map.get(key));
+        }
+        return res;
     }
 
     public static void main(String[] args) {
@@ -2336,7 +2373,7 @@ public class Solution2 {
 
 
         //Arrays
-        String[] oneDimensionalStringArray = {"5", "2", "C", "D", "+"};
+        String[] oneDimensionalStringArray = {"eat", "tea", "tan", "ate", "nat", "bat"};
         int[] oneDimensionalArrayA = {4, 6, 7, 7};
         int[] oneDimensionalArrayB = {5, 2, 2, 5, 3, 5};
         int[][] twoDimensionalArrayA = {{0, 1}};
@@ -2372,7 +2409,7 @@ public class Solution2 {
             stringListList.add(collect);
         }
 
-        solution.rotate(twoDimensionalArrayB);
+        solution.groupAnagrams(oneDimensionalStringArray);
         return;
     }
 
