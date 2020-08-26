@@ -2301,8 +2301,8 @@ public class Solution2 {
      * <p>
      * 给定一个字符串数组，将字母异位词组合在一起。字母异位词指字母相同，但排列不同的字符串。
      * <p>
-     * 执行用时：11 ms, 在所有 Java 提交中击败了40.56% 的用户
-     * 内存消耗：43.6 MB, 在所有 Java 提交中击败了11.23% 的用户
+     * 执行用时：9 ms, 在所有 Java 提交中击败了79.73% 的用户
+     * 内存消耗：42.6 MB, 在所有 Java 提交中击败了75.32% 的用户
      *
      * @param strs 字符串数组
      * @return 分组后的字符串
@@ -2312,11 +2312,7 @@ public class Solution2 {
         for (String str : strs) {
             char[] cs = str.toCharArray();
             Arrays.sort(cs);
-            StringBuilder sss = new StringBuilder();
-            for (char c : cs) {
-                sss.append(c);
-            }
-            String ss = sss.toString();
+            String ss = String.valueOf(cs);
             if (map.containsKey(ss)) {
                 map.get(ss).add(str);
             } else {
