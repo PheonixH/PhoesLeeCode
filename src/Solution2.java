@@ -2083,6 +2083,7 @@ public class Solution2 {
      * 给出数字到字母的映射如下（与电话按键相同）。注意 1 不对应任何字母。
      * 执行用时：1 ms, 在所有 Java 提交中击败了89.00% 的用户
      * 内存消耗：38.2 MB, 在所有 Java 提交中击败了95.69% 的用户
+     *
      * @param digits 电话号码
      * @return 电话号码的字母组合
      */
@@ -2095,7 +2096,7 @@ public class Solution2 {
         for (int i = 0; i < cs.length; i++) {
             int tmp = cs[i] - '2';
             List<String> newRes = new ArrayList<>();
-            for (String value:key[tmp]) {
+            for (String value : key[tmp]) {
                 if (res.size() == 0) {
                     newRes.add(value);
                     continue;
@@ -2107,6 +2108,85 @@ public class Solution2 {
             res = newRes;
         }
         return res;
+    }
+
+    /**
+     * 36. 有效的数独
+     *
+     * 判断一个 9x9 的数独是否有效。只需要根据以下规则，验证已经填入的数字是否有效即可。
+     *
+     *     数字 1-9 在每一行只能出现一次。
+     *     数字 1-9 在每一列只能出现一次。
+     *     数字 1-9 在每一个以粗实线分隔的 3x3 宫内只能出现一次。
+     * 执行用时：3 ms, 在所有 Java 提交中击败了56.47% 的用户
+     * 内存消耗：40.5 MB, 在所有 Java 提交中击败了5.06% 的用户
+     * @param board 数独数组
+     * @return 是否是有效的数独
+     */
+    public boolean isValidSudoku(char[][] board) {
+        Map<Integer, Set<Character>> map = new HashMap<>();
+        for (int i = 0; i < 9; i++) {
+            Set<Character> set = new HashSet<>();
+            map.put(i, set);
+        }
+        for (int i = 0; i < 9; i++) {
+            Set<Character> x = new HashSet<>();
+            Set<Character> y = new HashSet<>();
+            for (int j = 0; j < 9; j++) {
+                if (board[j][i] != '.' && !y.add(board[j][i])) {
+                    return false;
+                }
+                if (board[i][j] != '.') {
+                    if (!x.add(board[i][j])) {
+                        return false;
+                    }
+                    if (i <= 2) {
+                        if (j <= 2) {
+                            if (!map.get(0).add(board[i][j])) {
+                                return false;
+                            }
+                        } else if (j <= 5) {
+                            if (!map.get(1).add(board[i][j])) {
+                                return false;
+                            }
+                        } else {
+                            if (!map.get(2).add(board[i][j])) {
+                                return false;
+                            }
+                        }
+                    } else if (i <= 5) {
+                        if (j <= 2) {
+                            if (!map.get(3).add(board[i][j])) {
+                                return false;
+                            }
+                        } else if (j <= 5) {
+                            if (!map.get(4).add(board[i][j])) {
+                                return false;
+                            }
+                        } else {
+                            if (!map.get(5).add(board[i][j])) {
+                                return false;
+                            }
+                        }
+                    } else {
+                        if (j <= 2) {
+                            if (!map.get(6).add(board[i][j])) {
+                                return false;
+                            }
+                        } else if (j <= 5) {
+                            if (!map.get(7).add(board[i][j])) {
+                                return false;
+                            }
+                        } else {
+                            if (!map.get(8).add(board[i][j])) {
+                                return false;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return true;
     }
 
     public static void main(String[] args) {
