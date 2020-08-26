@@ -2564,7 +2564,7 @@ public class Solution2 {
      * 内存消耗：38 MB, 在所有 Java 提交中击败了34.55% 的用户
      *
      * @param head 链表
-     * @param n N
+     * @param n    N
      * @return 删除倒数第N个结点后的链表
      */
     public ListNode removeNthFromEnd(ListNode head, int n) {
@@ -2583,6 +2583,58 @@ public class Solution2 {
         }
         p.next = p.next.next;
         return head;
+    }
+
+    /**
+     * 32. 最长有效括号
+     *
+     * 给定一个只包含 '(' 和 ')' 的字符串，找出最长的包含有效括号的子串的长度。
+     *
+     * 执行用时：1 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：40.1 MB, 在所有 Java 提交中击败了6.07% 的用户
+     * @param s 字符串
+     * @return 最长有效字符字串长度
+     */
+    public int longestValidParentheses(String s) {
+        int len = s.length();
+        if(len == 0){
+            return 0;
+        }
+        char[] ss = s.toCharArray();
+        int[] dp = new int[len];
+        dp[0] = -1;
+        int max = 0;
+        for (int i = 1; i < len; i++) {
+            if ('(' == ss[i]) {
+                dp[i] = -1;
+                continue;
+            }
+            if (dp[i - 1] == -1) {
+                if (ss[i - 1] == ss[i]) {
+                    dp[i] = -1;
+                } else {
+                    dp[i] = i - 1;
+                    if (i - 1 > 0 && dp[i - 2] != -1) {
+                        dp[i] = dp[i - 2];
+                    }
+                    max = Math.max(max, i - dp[i] + 1);
+                }
+                continue;
+            }
+            int t = dp[i - 1];
+            if (t == 0) {
+                dp[i] = -1;
+            } else if (ss[t - 1] == ss[i]) {
+                dp[i] = -1;
+            } else {
+                dp[i] = t - 1;
+                if (t - 1 > 0 && dp[t - 2] != -1) {
+                    dp[i] = dp[t - 2];
+                }
+                max = Math.max(max, i - dp[i] + 1);
+            }
+        }
+        return max;
     }
 
     public static void main(String[] args) {
