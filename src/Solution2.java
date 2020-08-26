@@ -2262,6 +2262,39 @@ public class Solution2 {
         }
     }
 
+    /**
+     * 38. 外观数列
+     *
+     * 给定一个正整数 n（1 ≤ n ≤ 30），输出外观数列的第 n 项。
+     * 执行用时：3 ms, 在所有 Java 提交中击败了48.11% 的用户
+     * 内存消耗：37.2 MB, 在所有 Java 提交中击败了41.88% 的用户
+     * @param n 正整数
+     * @return 外观数列
+     */
+    public String countAndSay(int n) {
+        if (n == 0) {
+            return "";
+        }
+        String s = "1";
+        for (int i = 0; i < n - 1; i++) {
+            StringBuilder sb = new StringBuilder();
+            char t = s.charAt(0);
+            int nt = 1;
+            for (int j = 1; j < s.length(); j++) {
+                if (s.charAt(j) == t) {
+                    nt++;
+                } else {
+                    sb.append(nt).append(t);
+                    t = s.charAt(j);
+                    nt = 1;
+                }
+            }
+            sb.append(nt).append(t);
+            s = sb.toString();
+        }
+        return s;
+    }
+
     public static void main(String[] args) {
         Solution2 solution = new Solution2();
 
