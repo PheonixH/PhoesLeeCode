@@ -2412,7 +2412,6 @@ public class Solution2 {
         return dp[sLen - 1][pLen - 1] != 0;
     }
 
-
     /**
      * 34. 在排序数组中查找元素的第一个和最后一个位置
      * <p>
@@ -2556,11 +2555,41 @@ public class Solution2 {
         return sb.toString();
     }
 
+    /**
+     * 19. 删除链表的倒数第N个节点
+     * <p>
+     * 给定一个链表，删除链表的倒数第 n 个节点，并且返回链表的头结点。
+     * <p>
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：38 MB, 在所有 Java 提交中击败了34.55% 的用户
+     *
+     * @param head 链表
+     * @param n N
+     * @return 删除倒数第N个结点后的链表
+     */
+    public ListNode removeNthFromEnd(ListNode head, int n) {
+        ListNode p = head;
+        ListNode q = p;
+        for (int i = 1; i < n; i++) {
+            q = q.next;
+        }
+        if (q.next == null) {
+            return head.next;
+        }
+        q = q.next;
+        while (q.next != null) {
+            p = p.next;
+            q = q.next;
+        }
+        p.next = p.next.next;
+        return head;
+    }
+
     public static void main(String[] args) {
         Solution2 solution = new Solution2();
 
         //ListNode
-        int[] listNodeValue = {1, 2, 2, 4, 5, 3, 2, 1};
+        int[] listNodeValue = {1, 2, 3, 4, 5};
         int listNodeLen = listNodeValue.length;
         ListNode head = new ListNode(listNodeValue[0]);
         ListNode listNodeTmp = head;
@@ -2633,7 +2662,7 @@ public class Solution2 {
             stringListList.add(collect);
         }
 
-        System.out.println(solution.intToRoman(100));
+        System.out.println(solution.removeNthFromEnd(head, 2));
         return;
     }
 
