@@ -2328,6 +2328,90 @@ public class Solution2 {
         return res;
     }
 
+    /**
+     * 44. 通配符匹配
+     * <p>
+     * 给定一个字符串 (s) 和一个字符模式 (p) ，实现一个支持 '?' 和 '*' 的通配符匹配。
+     * '?' 可以匹配任何单个字符。
+     * '*' 可以匹配任意字符串（包括空字符串）。
+     * 两个字符串完全匹配才算匹配成功。
+     * <p>
+     * 执行用时：17 ms, 在所有 Java 提交中击败了85.61% 的用户
+     * 内存消耗：41.4 MB, 在所有 Java 提交中击败了5.06% 的用户
+     *
+     * @param s 字符串
+     * @param p 字符模式
+     * @return 是否匹配
+     */
+    public boolean isMatch(String s, String p) {
+        char[] ss = s.toCharArray();
+        char[] ps = p.toCharArray();
+        int sLen = ss.length;
+        int pLen = ps.length;
+        if (pLen == 0 && sLen == 0) {
+            return true;
+        }
+        if (pLen == 0) {
+            return false;
+        } else if (sLen == 0) {
+            for (char c : ps) {
+                if (c != '*') {
+                    return false;
+                }
+            }
+            return true;
+        }
+        //0：失败 1:成功 2:* 3:* == “”
+        int[][] dp = new int[sLen][pLen];
+        if (ps[0] == ss[0] || ps[0] == '?') {
+            dp[0][0] = 1;
+        }
+        if (ps[0] == '*') {
+            dp[0][0] = 2;
+        }
+        for (int j = 1; j < pLen; j++) {
+            if (dp[0][j - 1] == 2) {
+                if (ps[j] == '*') {
+                    dp[0][j] = dp[0][j - 1];
+                } else if (ps[j] == '?' || ps[j] == ss[0]) {
+                    dp[0][j] = 1;
+                } else {
+                    dp[0][j] = 0;
+                }
+            } else if (dp[0][j - 1] == 1) {
+                if ('*' == ps[j]) {
+                    dp[0][j] = 3;
+                }
+            }
+        }
+        for (int i = 1; i < sLen; i++) {
+            for (int j = 0; j < pLen; j++) {
+                if (dp[i - 1][j] == 2) {
+                    dp[i][j] = 2;
+                    continue;
+                }
+                if (j > 0 && dp[i - 1][j - 1] != 0) {
+                    if (ss[i] == ps[j]) {
+                        dp[i][j] = 1;
+                        continue;
+                    }
+                    if ('?' == ps[j]) {
+                        dp[i][j] = 1;
+                        continue;
+                    }
+                    if ('*' == ps[j]) {
+                        dp[i][j] = 2;
+                        continue;
+                    }
+                }
+                if ('*' == ps[j]) {
+                    dp[i][j] = dp[i][j - 1];
+                }
+            }
+        }
+        return dp[sLen - 1][pLen - 1] != 0;
+    }
+
     public static void main(String[] args) {
         Solution2 solution = new Solution2();
 
@@ -2405,7 +2489,7 @@ public class Solution2 {
             stringListList.add(collect);
         }
 
-        solution.groupAnagrams(oneDimensionalStringArray);
+        System.out.println(solution.isMatch("bbb", "bb*?"));
         return;
     }
 
