@@ -2236,6 +2236,32 @@ public class Solution2 {
         return true;
     }
 
+    /**
+     * 48. 旋转图像
+     * 给定一个 n × n 的二维矩阵表示一个图像。
+     * 将图像顺时针旋转 90 度。
+     * 说明：
+     * 你必须在原地旋转图像，这意味着你需要直接修改输入的二维矩阵。请不要使用另一个矩阵来旋转图像
+     * <p>
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：39.8 MB, 在所有 Java 提交中击败了56.48% 的用户
+     *
+     * @param matrix 二维矩阵表示的一个图像
+     */
+    public void rotate(int[][] matrix) {
+        int len = matrix.length;
+        for (int i = 0; i < len / 2; i++) {
+            int t = len % 2 == 0 ? len / 2 : (len + 1) / 2;
+            for (int j = 0; j < t; j++) {
+                int tmp = matrix[i][j];
+                matrix[i][j] = matrix[len - 1 - j][i];
+                matrix[len - 1 - j][i] = matrix[len - 1 - i][len - 1 - j];
+                matrix[len - 1 - i][len - 1 - j] = matrix[j][len - 1 - i];
+                matrix[j][len - 1 - i] = tmp;
+            }
+        }
+    }
+
     public static void main(String[] args) {
         Solution2 solution = new Solution2();
 
@@ -2282,14 +2308,7 @@ public class Solution2 {
         int[] oneDimensionalArrayB = {5, 2, 2, 5, 3, 5};
         int[][] twoDimensionalArrayA = {{0, 1}};
         int[][] twoDimensionalArrayB = {
-                {0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0},
-                {0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0},
-                {0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0},
-                {0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0},
-                {0, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0},
-                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0},
-                {0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0},
-                {0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0}
+                {1, 2, 3}, {4, 5, 6}, {7, 8, 9}
         };
         char[] oneDimensionalCharArray = {'A', 'B'};
         char[][] twoDimensionalCharArray = {
@@ -2320,7 +2339,7 @@ public class Solution2 {
             stringListList.add(collect);
         }
 
-        System.out.print(solution.isValidSudoku0(twoDimensionalCharArray));
+        solution.rotate(twoDimensionalArrayB);
         return;
     }
 
