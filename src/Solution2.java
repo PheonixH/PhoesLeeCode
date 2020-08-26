@@ -2415,15 +2415,16 @@ public class Solution2 {
 
     /**
      * 34. 在排序数组中查找元素的第一个和最后一个位置
-     *
+     * <p>
      * 给定一个按照升序排列的整数数组 nums，和一个目标值 target。找出给定目标值在数组中的开始位置和结束位置。
-     *
+     * <p>
      * 你的算法时间复杂度必须是 O(log n) 级别。
-     *
+     * <p>
      * 如果数组中不存在目标值，返回 [-1, -1]。
      * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
      * 内存消耗：43.4 MB, 在所有 Java 提交中击败了5.15% 的用户
-     * @param nums 数组
+     *
+     * @param nums   数组
      * @param target 目标值
      * @return 目标值在排序数组中查找元素的第一个和最后一个位置
      */
@@ -2460,6 +2461,100 @@ public class Solution2 {
         return lo;
     }
 
+    /**
+     * 12. 整数转罗马数字
+     * <p>
+     * 罗马数字包含以下七种字符： I， V， X， L，C，D 和 M。
+     * 字符          数值
+     * I             1
+     * V             5
+     * X             10
+     * L             50
+     * C             100
+     * D             500
+     * M             1000
+     * 给定一个整数，将其转为罗马数字。输入确保在 1 到 3999 的范围内。
+     * <p>
+     * 执行用时：5 ms, 在所有 Java 提交中击败了87.76% 的用户
+     * 内存消耗：39.6 MB, 在所有 Java 提交中击败了49.29% 的用户
+     *
+     * @param num 数字
+     * @return 罗马数字
+     */
+    public String intToRoman(int num) {
+        StringBuilder sb = new StringBuilder();
+        int nm = num / 1000;
+        num -= nm * 1000;
+        for (int i = 0; i < nm; i++) {
+            sb.append("M");
+        }
+
+        if (num >= 900) {
+            num -= 900;
+            sb.append("CM");
+        }
+
+        nm = num / 500;
+        num -= nm * 500;
+        for (int i = 0; i < nm; i++) {
+            sb.append("D");
+        }
+
+        if (num >= 400) {
+            num -= 400;
+            sb.append("CD");
+        }
+
+        nm = num / 100;
+        num -= nm * 100;
+        for (int i = 0; i < nm; i++) {
+            sb.append("C");
+        }
+
+        if (num >= 90) {
+            num -= 90;
+            sb.append("XC");
+        }
+
+        nm = num / 50;
+        num -= nm * 50;
+        for (int i = 0; i < nm; i++) {
+            sb.append("L");
+        }
+
+        if (num >= 40) {
+            num -= 40;
+            sb.append("XL");
+        }
+
+        nm = num / 10;
+        num -= nm * 10;
+        for (int i = 0; i < nm; i++) {
+            sb.append("X");
+        }
+
+        if (num >= 9) {
+            num -= 9;
+            sb.append("IX");
+        }
+
+        nm = num / 5;
+        num -= nm * 5;
+        for (int i = 0; i < nm; i++) {
+            sb.append("V");
+        }
+
+        if (num >= 4) {
+            num -= 4;
+            sb.append("IV");
+        }
+
+        for (int i = 0; i < num; i++) {
+            sb.append("I");
+        }
+
+        return sb.toString();
+    }
 
     public static void main(String[] args) {
         Solution2 solution = new Solution2();
@@ -2538,7 +2633,7 @@ public class Solution2 {
             stringListList.add(collect);
         }
 
-        System.out.println(solution.isMatch("bbb", "bb*?"));
+        System.out.println(solution.intToRoman(100));
         return;
     }
 
