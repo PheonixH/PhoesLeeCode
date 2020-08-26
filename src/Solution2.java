@@ -2112,14 +2112,15 @@ public class Solution2 {
 
     /**
      * 36. 有效的数独
-     *
+     * <p>
      * 判断一个 9x9 的数独是否有效。只需要根据以下规则，验证已经填入的数字是否有效即可。
-     *
-     *     数字 1-9 在每一行只能出现一次。
-     *     数字 1-9 在每一列只能出现一次。
-     *     数字 1-9 在每一个以粗实线分隔的 3x3 宫内只能出现一次。
+     * <p>
+     * 数字 1-9 在每一行只能出现一次。
+     * 数字 1-9 在每一列只能出现一次。
+     * 数字 1-9 在每一个以粗实线分隔的 3x3 宫内只能出现一次。
      * 执行用时：3 ms, 在所有 Java 提交中击败了56.47% 的用户
      * 内存消耗：40.5 MB, 在所有 Java 提交中击败了5.06% 的用户
+     *
      * @param board 数独数组
      * @return 是否是有效的数独
      */
@@ -2189,6 +2190,52 @@ public class Solution2 {
         return true;
     }
 
+    /**
+     * 36. 有效的数独 ： 数组替代set
+     * <p>
+     * 判断一个 9x9 的数独是否有效。只需要根据以下规则，验证已经填入的数字是否有效即可。
+     * <p>
+     * 数字 1-9 在每一行只能出现一次。
+     * 数字 1-9 在每一列只能出现一次。
+     * 数字 1-9 在每一个以粗实线分隔的 3x3 宫内只能出现一次。
+     * 执行用时：2 ms, 在所有 Java 提交中击败了96.43% 的用户
+     * 内存消耗：39.7 MB, 在所有 Java 提交中击败了69.71% 的用户
+     *
+     * @param board 数独数组
+     * @return 是否是有效的数独
+     */
+    public boolean isValidSudoku0(char[][] board) {
+        boolean[][] bs = new boolean[9][9];
+        for (int i = 0; i < 9; i++) {
+            boolean[] x = new boolean[9];
+            boolean[] y = new boolean[9];
+            for (int j = 0; j < 9; j++) {
+                if (board[j][i] != '.') {
+                    int t = board[j][i] - '1';
+                    if (y[t]) {
+                        return false;
+                    } else {
+                        y[t] = true;
+                    }
+                }
+                if (board[i][j] != '.') {
+                    int t = board[i][j] - '1';
+                    if (x[t]) {
+                        return false;
+                    } else {
+                        x[t] = true;
+                    }
+                    int tmp = i / 3 * 3 + j / 3;
+                    if (bs[tmp][t]) {
+                        return false;
+                    }
+                    bs[tmp][t] = true;
+                }
+            }
+        }
+        return true;
+    }
+
     public static void main(String[] args) {
         Solution2 solution = new Solution2();
 
@@ -2246,10 +2293,16 @@ public class Solution2 {
         };
         char[] oneDimensionalCharArray = {'A', 'B'};
         char[][] twoDimensionalCharArray = {
-                {'X', 'O', 'X'},
-                {'O', 'X', 'O'},
-                {'X', 'O', 'X'}
-        };
+                {'5', '3', '.', '.', '7', '.', '.', '.', '.'},
+                {'6', '.', '.', '1', '9', '5', '.', '.', '.'},
+                {'.', '9', '8', '.', '.', '.', '.', '6', '.'},
+                {'8', '.', '.', '.', '6', '.', '.', '.', '3'},
+                {'4', '.', '.', '8', '.', '3', '.', '.', '1'},
+                {'7', '.', '.', '.', '2', '.', '.', '.', '6'},
+                {'.', '6', '.', '.', '.', '.', '2', '8', '.'},
+                {'.', '.', '.', '4', '1', '9', '.', '.', '5'},
+                {'.', '.', '.', '.', '8', '.', '.', '7', '9'}};
+
 
         //List<List<Integer>>
         int[][] listListIntegerArray = {{4, 14, 24, 34, 40}, {12, 14, 25, 38, 41}, {9, 19, 20, 26, 50}};
@@ -2267,10 +2320,7 @@ public class Solution2 {
             stringListList.add(collect);
         }
 
-
-        System.out.println(5 * 15 * 0.95 + 5 * 25 * 0.6);
-        System.out.println(5 * 40 * 0.95);
-        System.out.print(solution.letterCombinations("23"));
+        System.out.print(solution.isValidSudoku0(twoDimensionalCharArray));
         return;
     }
 
