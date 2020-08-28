@@ -2587,17 +2587,18 @@ public class Solution2 {
 
     /**
      * 32. 最长有效括号
-     *
+     * <p>
      * 给定一个只包含 '(' 和 ')' 的字符串，找出最长的包含有效括号的子串的长度。
-     *
+     * <p>
      * 执行用时：1 ms, 在所有 Java 提交中击败了100.00% 的用户
      * 内存消耗：40.1 MB, 在所有 Java 提交中击败了6.07% 的用户
+     *
      * @param s 字符串
      * @return 最长有效字符字串长度
      */
     public int longestValidParentheses(String s) {
         int len = s.length();
-        if(len == 0){
+        if (len == 0) {
             return 0;
         }
         char[] ss = s.toCharArray();
@@ -2637,11 +2638,84 @@ public class Solution2 {
         return max;
     }
 
+    public List<String> findItinerary(List<List<String>> tickets) {
+        for (List<String> ticket : tickets) {
+            String from = ticket.get(0), to = ticket.get(1);
+            if (!findItineraryMap.containsKey(from)) {
+                findItineraryMap.put(from, new PriorityQueue<String>());
+            }
+            findItineraryMap.get(from).offer(to);
+        }
+        dfs("JFK");
+        Collections.reverse(findItineraryItinerary);
+        return findItineraryItinerary;
+    }
+
+    Map<String, PriorityQueue<String>> findItineraryMap = new HashMap<String, PriorityQueue<String>>();
+    List<String> findItineraryItinerary = new LinkedList<String>();
+
+    public void dfs(String curr) {
+        while (findItineraryMap.containsKey(curr) && findItineraryMap.get(curr).size() > 0) {
+            String tmp = findItineraryMap.get(curr).poll();
+            dfs(tmp);
+        }
+        findItineraryItinerary.add(curr);
+    }
+
+
+    /**
+     * 24. 两两交换链表中的节点
+     * <p>
+     * 给定一个链表，两两交换其中相邻的节点，并返回交换后的链表。
+     * <p>
+     * 你不能只是单纯的改变节点内部的值，而是需要实际的进行节点交换。
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：37.4 MB, 在所有 Java 提交中击败了60.79% 的用户
+     *
+     * @param head 链表
+     * @return 交换后的链表
+     */
+    public ListNode swapPairs(ListNode head) {
+        ListNode p = head;
+        if (p == null) {
+            return p;
+        }
+        ListNode q = head.next;
+        if (q == null) {
+            return p;
+        }
+        p.next = q.next;
+        q.next = p;
+        if (p.next == null) {
+            return q;
+        }
+        ListNode pre = p;
+        head = q;
+        p = p.next;
+        if (p == null) {
+            return head;
+        }
+        q = p.next;
+        while (p != null && q != null) {
+            p.next = q.next;
+            pre.next = q;
+            q.next = p;
+            pre = p;
+            p = p.next;
+            if (p == null) {
+                break;
+            }
+            q = p.next;
+        }
+        return head;
+    }
+
+
     public static void main(String[] args) {
         Solution2 solution = new Solution2();
 
         //ListNode
-        int[] listNodeValue = {1, 2, 3, 4, 5};
+        int[] listNodeValue = {1, 2, 3, 4};
         int listNodeLen = listNodeValue.length;
         ListNode head = new ListNode(listNodeValue[0]);
         ListNode listNodeTmp = head;
@@ -2707,14 +2781,15 @@ public class Solution2 {
         }
 
         //List<List<String>>
-        String[][] listListStringArray = {{"JFK", "SFO"}, {"JFK", "ATL"}, {"SFO", "ATL"}, {"ATL", "JFK"}, {"ATL", "SFO"}};
+        String[][] listListStringArray = {{"JFK", "KUL"}, {"JFK", "NRT"}, {"NRT", "JFK"}};
+        //{{"JFK", "SFO"}, {"JFK", "ATL"}, {"SFO", "ATL"}, {"ATL", "JFK"}, {"ATL", "SFO"}};
         List<List<String>> stringListList = new LinkedList();
         for (String[] listStringArray : listListStringArray) {
             List<String> collect = Arrays.stream(listStringArray).collect(Collectors.toList());
             stringListList.add(collect);
         }
 
-        System.out.println(solution.removeNthFromEnd(head, 2));
+        System.out.println(solution.swapPairs(head));
         return;
     }
 
