@@ -2710,6 +2710,115 @@ public class Solution2 {
         return head;
     }
 
+    /**
+     * 15. 三数之和
+     * <p>
+     * 给你一个包含 n 个整数的数组 nums，判断 nums 中是否存在三个元素 a，b，c ，使得 a + b + c = 0 ？请你找出所有满足条件且不重复的三元组。
+     * <p>
+     * 注意：答案中不可以包含重复的三元组。
+     * 执行用时：736 ms, 在所有 Java 提交中击败了5.00% 的用户
+     * 内存消耗：45.3 MB, 在所有 Java 提交中击败了5.00% 的用户
+     *
+     * @param nums 包含n个整数的数组
+     * @return 三数之和集合链表
+     */
+    public List<List<Integer>> threeSum(int[] nums) {
+        Arrays.sort(nums);
+        List<List<Integer>> res = new ArrayList<>();
+        Set<String> set = new HashSet<>();
+        int len = nums.length;
+        for (int i = 0; i < len; i++) {
+            if (nums[i] > 0) {
+                break;
+            }
+            for (int j = len - 1; j > i; j--) {
+                if (nums[j] < 0) {
+                    break;
+                }
+                int l = i, r = j;
+                int target = 0 - nums[i] - nums[j];
+                if (target < nums[i] || target > nums[j]) {
+                    continue;
+                }
+                while (l < r) {
+                    int mid = l + (r - l) / 2;
+                    if (mid == i || mid == j) {
+                        break;
+                    }
+                    if (nums[mid] == target) {
+                        String key = nums[i] + "," + nums[mid] + "," + nums[j];
+                        if (set.add(key)) {
+                            List<Integer> re = new ArrayList<>();
+                            re.add(nums[i]);
+                            re.add(nums[mid]);
+                            re.add(nums[j]);
+                            res.add(re);
+                        }
+                        break;
+                    }
+                    if (nums[mid] < target) {
+                        l = mid + 1;
+                    } else {
+                        r = mid;
+                    }
+                }
+            }
+        }
+        return res;
+    }
+
+    /**
+     * 15. 三数之和
+     * <p>
+     * 给你一个包含 n 个整数的数组 nums，判断 nums 中是否存在三个元素 a，b，c ，使得 a + b + c = 0 ？请你找出所有满足条件且不重复的三元组。
+     * <p>
+     * 注意：答案中不可以包含重复的三元组。
+     * 执行用时：31 ms, 在所有 Java 提交中击败了25.80% 的用户
+     * 内存消耗：43.9 MB, 在所有 Java 提交中击败了41.11% 的用户
+     *
+     * @param nums 包含n个整数的数组
+     * @return 三数之和集合链表
+     */
+    public List<List<Integer>> threeSum0(int[] nums) {
+        int n = nums.length;
+        Arrays.sort(nums);
+        List<List<Integer>> ans = new ArrayList<List<Integer>>();
+        // 枚举 a
+        for (int first = 0; first < n; ++first) {
+            // 需要和上一次枚举的数不相同
+            if (first > 0 && nums[first] == nums[first - 1]) {
+                continue;
+            }
+            // c 对应的指针初始指向数组的最右端
+            int third = n - 1;
+            int target = -nums[first];
+            // 枚举 b
+            for (int second = first + 1; second < n; ++second) {
+                // 需要和上一次枚举的数不相同
+                if (second > first + 1 && nums[second] == nums[second - 1]) {
+                    continue;
+                }
+                // 需要保证 b 的指针在 c 的指针的左侧
+                while (second < third && nums[second] + nums[third] > target) {
+                    --third;
+                }
+                // 如果指针重合，随着 b 后续的增加
+                // 就不会有满足 a+b+c=0 并且 b<c 的 c 了，可以退出循环
+                if (second == third) {
+                    break;
+                }
+                if (nums[second] + nums[third] == target) {
+                    List<Integer> list = new ArrayList<Integer>();
+                    list.add(nums[first]);
+                    list.add(nums[second]);
+                    list.add(nums[third]);
+                    ans.add(list);
+                }
+            }
+        }
+        return ans;
+    }
+
 
     public static void main(String[] args) {
         Solution2 solution = new Solution2();
@@ -2753,7 +2862,7 @@ public class Solution2 {
 
         //Arrays
         String[] oneDimensionalStringArray = {"eat", "tea", "tan", "ate", "nat", "bat"};
-        int[] oneDimensionalArrayA = {4, 6, 7, 7};
+        int[] oneDimensionalArrayA = {-1, 0, 1, 2, -1, -4};
         int[] oneDimensionalArrayB = {5, 2, 2, 5, 3, 5};
         int[][] twoDimensionalArrayA = {{0, 1}};
         int[][] twoDimensionalArrayB = {
@@ -2789,7 +2898,7 @@ public class Solution2 {
             stringListList.add(collect);
         }
 
-        System.out.println(solution.swapPairs(head));
+        System.out.println(solution.threeSum(oneDimensionalArrayA));
         return;
     }
 
