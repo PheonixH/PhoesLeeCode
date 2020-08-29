@@ -1,4 +1,5 @@
 import java.io.PrintWriter;
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -2943,6 +2944,161 @@ public class Games {
         }
     }
 
+    //2020-8-23 第202 周赛
+    public List<Integer> mostVisited(int n, int[] rounds) {
+        List<Integer> res = new ArrayList<>();
+        int b = rounds[0];
+        int e = rounds[rounds.length - 1];
+        int[] arr = new int[n];
+        if (b > e) {
+            e = e + n;
+        }
+        for (int i = b; i <= e; i++) {
+            arr[i % n == 0 ? i - 1 : i % n - 1]++;
+        }
+        for (int i = 0; i < n; i++) {
+            if (arr[i] != 0) {
+                res.add(i + 1);
+            }
+        }
+        return res;
+    }
+
+
+    public int maxCoins(int[] piles) {
+        Arrays.sort(piles);
+        int l = 0, r = piles.length - 1;
+        int sum = 0;
+        while (l < r) {
+            sum += piles[r - 1];
+            l++;
+            r -= 2;
+        }
+        return sum;
+    }
+
+    public int findLatestStep(int[] arr, int m) {
+        return 0;
+    }
+
+    public int stoneGameV0(int[] stoneValue) {
+        Arrays.sort(stoneValue);
+//        List<Integer> res = new ArrayList<>();
+        List<Integer> res = new ArrayList<>();
+        for (int i = stoneValue.length - 1; i >= 0; i--) {
+            res.add(stoneValue[i]);
+        }
+//        List<Integer> collect = Arrays.stream(stoneValue).boxed().collect(Collectors.toList());
+        return stoneGameVAss(res);
+    }
+
+    public int stoneGameVAss(List<Integer> stoneValue) {
+        int len = stoneValue.size();
+        if (len <= 1) {
+            return 0;
+        }
+        if (len == 2) {
+            return Math.min(stoneValue.get(0), stoneValue.get(1));
+        }
+        List<Integer> a = new ArrayList<>();
+        List<Integer> b = new ArrayList<>();
+        int sa = 0, sb = 0;
+        for (int s : stoneValue) {
+            if (sa <= sb) {
+                a.add(s);
+                sa += s;
+            } else {
+                b.add(s);
+                sb += s;
+            }
+        }
+        if (sa < sb) {
+            return sa + stoneGameVAss(a);
+        }
+        if (sb < sa) {
+            return sb + stoneGameVAss(b);
+        }
+        int ta = sa + stoneGameVAss(a);
+        int tb = sb + stoneGameVAss(b);
+        return Math.max(ta, tb);
+    }
+
+    public int stoneGameV(int[] stoneValue) {
+        return stoneGameVAss2(stoneValue, 0, stoneValue.length - 1);
+    }
+
+    public int stoneGameVAss2(int[] stoneValue, int l, int r) {
+        int len = r - l + 1;
+        if (len <= 1) {
+            return 0;
+        }
+        if (len == 2) {
+            return Math.min(stoneValue[l], stoneValue[r]);
+        }
+        int sa = 0, sb = 0;
+        int ll = l, rr = r;
+        while (ll <= rr) {
+            if (sa <= sb) {
+                sa += stoneValue[ll++];
+            } else {
+                sb += stoneValue[rr--];
+            }
+        }
+        if (sa < sb) {
+            return sa + stoneGameVAss2(stoneValue, l, ll - 1);
+        }
+        if (sb < sa) {
+            return sb + stoneGameVAss2(stoneValue, rr + 1, r);
+        }
+        int ta = sa + stoneGameVAss2(stoneValue, l, ll - 1);
+        int tb = sb + stoneGameVAss2(stoneValue, rr + 1, r);
+        return Math.max(ta, tb);
+    }
+
+
+    public int stoneGameVAss3(int[] stoneValue, int l, int r) {
+        int len = r - l + 1;
+        if (len <= 1) {
+            return 0;
+        }
+        if (len == 2) {
+            return Math.min(stoneValue[l], stoneValue[r]);
+        }
+        int sa = 0, sb = 0;
+        int ll = l, rr = r;
+        while (ll <= rr) {
+            if (sa <= sb) {
+                sa += stoneValue[ll++];
+            } else {
+                sb += stoneValue[rr--];
+            }
+        }
+        if (sa < sb) {
+            int td = 0;
+            if (sb - stoneValue[rr + 1] < sa + stoneValue[rr + 1]) {
+                td = sb - stoneValue[rr + 1] + stoneGameVAss3(stoneValue, rr + 2, r);
+            }
+            int ta = sa + stoneGameVAss3(stoneValue, l, ll - 1);
+            return Math.max(ta, td);
+        }
+        if (sb < sa) {
+            int tc = 0;
+            if (sb + stoneValue[ll - 1] > sa - stoneValue[ll - 1]) {
+                tc = sa - stoneValue[ll - 1] + stoneGameVAss3(stoneValue, l, ll - 2);
+            }
+            int tb = sb + stoneGameVAss3(stoneValue, rr + 1, r);
+            return Math.max(tb, tc);
+        }
+        int ta = sa + stoneGameVAss3(stoneValue, l, ll - 1);
+        int tb = sb + stoneGameVAss3(stoneValue, rr + 1, r);
+//        int tc = sa - stoneValue[ll - 1] + stoneGameVAss3(stoneValue, l, ll - 2);
+//        int td = sb - stoneValue[rr + 1] + stoneGameVAss3(stoneValue, rr + 2, r);
+//        int tmp = Math.max(tc, td), tmp2 = Math.max(ta, tb);
+//        return Math.max(tmp, tmp2);
+        return Math.max(ta, tb);
+    }
+
+
     public static void main(String[] args) {
 
         //ListNode
@@ -2985,7 +3141,7 @@ public class Games {
 
         //Arrays
         String[] oneDimensionalStringArray = {"5", "2", "C", "D", "+"};
-        int[] oneDimensionalArrayA = {79, 74, 57, 22};
+        int[] oneDimensionalArrayA = {6, 2, 3, 4, 5, 5};
         int[] oneDimensionalArrayB = {5, 2, 2, 5, 3, 5};
         int[][] twoDimensionalArrayA = {{1, 3,}, {0, 2}, {1, 3}, {0, 2}};
         int[][] twoDimensionalArrayB = {
@@ -3025,7 +3181,7 @@ public class Games {
 
 
         Games games = new Games();
-        boolean p = games.containsCycle(twoDimensionalCharArray);
-        System.out.println(p);
+        games.stoneGameV(oneDimensionalArrayA);
+        System.out.println();
     }
 }
