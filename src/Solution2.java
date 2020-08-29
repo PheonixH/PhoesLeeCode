@@ -2587,17 +2587,18 @@ public class Solution2 {
 
     /**
      * 32. 最长有效括号
-     *
+     * <p>
      * 给定一个只包含 '(' 和 ')' 的字符串，找出最长的包含有效括号的子串的长度。
-     *
+     * <p>
      * 执行用时：1 ms, 在所有 Java 提交中击败了100.00% 的用户
      * 内存消耗：40.1 MB, 在所有 Java 提交中击败了6.07% 的用户
+     *
      * @param s 字符串
      * @return 最长有效字符字串长度
      */
     public int longestValidParentheses(String s) {
         int len = s.length();
-        if(len == 0){
+        if (len == 0) {
             return 0;
         }
         char[] ss = s.toCharArray();
@@ -2635,6 +2636,45 @@ public class Solution2 {
             }
         }
         return max;
+    }
+
+    /**
+     * 214. 最短回文串
+     *
+     * 给定一个字符串 s，你可以通过在字符串前面添加字符将其转换为回文串。找到并返回可以用这种方式转换的最短回文串。
+     * 执行用时：350 ms, 在所有 Java 提交中击败了31.01% 的用户
+     * 内存消耗：40 MB, 在所有 Java 提交中击败了55.32% 的用户
+     * @param s 字符串
+     * @return 最短回文串
+     */
+    public String shortestPalindrome(String s) {
+        int len = s.length();
+        if (len <= 1) {
+            return s;
+        }
+        char[] cs = s.toCharArray();
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < len; i++) {
+            int j = len - i - 1;
+            int k = 0;
+            boolean could = true;
+            while (k < j) {
+                if (cs[j] != cs[k]) {
+                    could = false;
+                    break;
+                }
+                j--;
+                k++;
+            }
+            if (could && k != 0) {
+                for (int jj = len - 1; jj > len - i - 1; jj--) {
+                    sb.append(cs[jj]);
+                }
+                sb.append(s);
+                return sb.toString();
+            }
+        }
+        return sb.append(s.substring(1, len)).reverse().toString() + s;
     }
 
     public static void main(String[] args) {
@@ -2714,7 +2754,7 @@ public class Solution2 {
             stringListList.add(collect);
         }
 
-        System.out.println(solution.removeNthFromEnd(head, 2));
+        System.out.println(solution.shortestPalindrome("aacecaaa"));
         return;
     }
 
