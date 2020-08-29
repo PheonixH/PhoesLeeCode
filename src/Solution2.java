@@ -3,6 +3,7 @@ import java.lang.reflect.Array;
 import java.util.*;
 
 import datestruct.ListNode;
+import data.Node;
 import datestruct.TreeNode;
 
 import javax.swing.text.MutableAttributeSet;
@@ -1658,80 +1659,989 @@ public class Solution2 {
     }
 
 
-
-
     /**
      * 130. 被围绕的区域
      * 给定一个二维的矩阵，包含 'X' 和 'O'（字母 O）。
      * 找到所有被 'X' 围绕的区域，并将这些区域里所有的 'O' 用 'X' 填充。
-     *
+     * <p>
      * 执行用时：2 ms, 在所有 Java 提交中击败了98.14% 的用户
      * 内存消耗：41.7 MB, 在所有 Java 提交中击败了82.86% 的用户
+     *
      * @param board 二维的矩阵
      */
 
     public void solve(char[][] board) {
         solveM = board.length;
-        if(solveM == 0){
+        if (solveM == 0) {
             return;
         }
         solveN = board[0].length;
-        if(solveM <= 2||solveN <= 2){
+        if (solveM <= 2 || solveN <= 2) {
             return;
         }
-        for(int i = 0;i<solveM;i++){
-            if(board[i][0] == 'O') {
+        for (int i = 0; i < solveM; i++) {
+            if (board[i][0] == 'O') {
                 board[i][0] = 'T';
                 solveDfs(board, i, 0);
             }
-            if(board[i][solveN-1] == 'O') {
-                board[i][solveN-1] = 'T';
-                solveDfs(board, i, solveN-1);
+            if (board[i][solveN - 1] == 'O') {
+                board[i][solveN - 1] = 'T';
+                solveDfs(board, i, solveN - 1);
             }
         }
-        for(int i = 1;i<solveN;i++){
-            if(board[0][i] == 'O') {
+        for (int i = 1; i < solveN; i++) {
+            if (board[0][i] == 'O') {
                 board[0][i] = 'T';
                 solveDfs(board, 0, i);
             }
-            if(board[solveM-1][i] == 'O') {
-                board[solveM-1][i] = 'T';
-                solveDfs(board, solveM-1, i);
+            if (board[solveM - 1][i] == 'O') {
+                board[solveM - 1][i] = 'T';
+                solveDfs(board, solveM - 1, i);
             }
         }
-        for(int i = 0;i<solveM;i++){
-            for(int j = 0;j<solveN;j++){
-                if(board[i][j] == 'O'){
-                    board[i][j]  = 'X';
-                } else if(board[i][j]  == 'T'){
-                    board[i][j]  = 'O';
+        for (int i = 0; i < solveM; i++) {
+            for (int j = 0; j < solveN; j++) {
+                if (board[i][j] == 'O') {
+                    board[i][j] = 'X';
+                } else if (board[i][j] == 'T') {
+                    board[i][j] = 'O';
                 }
             }
         }
         return;
     }
-    private int [][] dir = new int[][]{{1,0},{-1,0},{0,1},{0,-1}};
+
+    private int[][] dir = new int[][]{{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
     private int solveM = 0, solveN = 0;
-    public void solveDfs(char[][] board, int x, int y){
-        for(int[] d:dir){
+
+    public void solveDfs(char[][] board, int x, int y) {
+        for (int[] d : dir) {
             int tx = x + d[0];
             int ty = y + d[1];
-            if(tx<0||tx>=solveM||ty<0||ty>=solveN){
+            if (tx < 0 || tx >= solveM || ty < 0 || ty >= solveN) {
                 continue;
             }
-            if(board[tx][ty] == 'O'){
+            if (board[tx][ty] == 'O') {
                 board[tx][ty] = 'T';
                 solveDfs(board, tx, ty);
             }
         }
     }
 
+    public Node cloneGraph(Node node) {
+        if (node != null) {
+            Set<Node> set = new HashSet<>();
+            Node res = new Node();
+            cloneGraph(node, res, set);
+            return res;
+        } else {
+            return null;
+        }
+    }
+
+    public void cloneGraph(Node node, Node newNode, Set<Node> visit) {
+        if (node.neighbors != null) {
+            if (newNode.neighbors == null) {
+                newNode.neighbors = new ArrayList<>();
+            }
+            for (Node n : node.neighbors) {
+                if (visit.add(n)) {
+                    Node newN = new Node();
+                    newN.val = n.val;
+                    newNode.neighbors.add(newN);
+                    cloneGraph(node, newNode, visit);
+                }
+            }
+        }
+    }
+
+    /**
+     * 20. 有效的括号
+     * 给定一个只包括 '('，')'，'{'，'}'，'['，']' 的字符串，判断字符串是否有效。
+     * 有效字符串需满足：
+     * 左括号必须用相同类型的右括号闭合。
+     * 左括号必须以正确的顺序闭合。
+     * 注意空字符串可被认为是有效字符串。
+     * 执行用时：1 ms, 在所有 Java 提交中击败了98.54% 的用户
+     * 内存消耗：37.7 MB, 在所有 Java 提交中击败了63.62% 的用户
+     *
+     * @param s 字符串
+     * @return 字符串是否有效
+     */
+    public boolean isValid(String s) {
+        int len = s.length();
+        if (len == 0) {
+            return true;
+        }
+        if (len % 2 != 0) {
+            return false;
+        }
+        char[] cs = s.toCharArray();
+        Stack<Character> stack = new Stack<>();
+        for (char c : cs) {
+            switch (c) {
+                case '(', '{', '[' -> {
+                    stack.add(c);
+                }
+                default -> {
+                    if (stack.empty()) {
+                        return false;
+                    }
+                    char tmp = stack.pop();
+                    switch (c) {
+                        case ')' -> {
+                            if (tmp != '(') {
+                                return false;
+                            }
+                        }
+                        case '}' -> {
+                            if (tmp != '{') {
+                                return false;
+                            }
+                        }
+                        case ']' -> {
+                            if (tmp != '[') {
+                                return false;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return stack.empty();
+    }
+
+    /**
+     * 110. 平衡二叉树
+     * 给定一个二叉树，判断它是否是高度平衡的二叉树。
+     * 本题中，一棵高度平衡二叉树定义为：
+     * 一个二叉树每个节点 的左右两个子树的高度差的绝对值不超过1。
+     * 执行用时：1 ms, 在所有 Java 提交中击败了99.76% 的用户
+     * 内存消耗：39.6 MB, 在所有 Java 提交中击败了92.89% 的用户
+     *
+     * @param root 二叉树
+     * @return 是否是平衡二叉树
+     */
+    public boolean isBalanced(TreeNode root) {
+        if (root == null) {
+            return true;
+        } else {
+            return Math.abs(height(root.left) - height(root.right)) <= 1 && isBalanced(root.left) && isBalanced(root.right);
+        }
+    }
+
+    public int height(TreeNode root) {
+        if (root == null) {
+            return 0;
+        } else {
+            return Math.max(height(root.left), height(root.right)) + 1;
+        }
+    }
+
+    /**
+     * 111. 二叉树的最小深度
+     * 给定一个二叉树，找出其最小深度。
+     * 最小深度是从根节点到最近叶子节点的最短路径上的节点数量。
+     * 说明: 叶子节点是指没有子节点的节点。
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：39.8 MB, 在所有 Java 提交中击败了47.85% 的用户
+     *
+     * @param root 二叉树
+     * @return 二叉树的最小深度
+     */
+    public int minDepth(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        if (root.left == null && root.right == null) {
+            return 1;
+        }
+        int tmp = Integer.MAX_VALUE;
+        if (root.left != null) {
+            int l = minDepth(root.left) + 1;
+            tmp = Math.min(tmp, l);
+        }
+        if (root.right != null) {
+            int r = minDepth(root.right) + 1;
+            tmp = Math.min(tmp, r);
+        }
+        return tmp;
+    }
+
+    /**
+     * 6. Z 字形变换
+     * 将一个给定字符串根据给定的行数，以从上往下、从左到右进行 Z 字形排列。
+     * 执行用时：3 ms, 在所有 Java 提交中击败了99.11% 的用户
+     * 内存消耗：39.8 MB, 在所有 Java 提交中击败了88.70% 的用户
+     *
+     * @param s
+     * @param numRows
+     * @return
+     */
+    public String convert(String s, int numRows) {
+        char[] cs = s.toCharArray();
+        int len = cs.length;
+        if (len == 0) {
+            return "";
+        }
+        if (numRows == 1) {
+            return s;
+        }
+        int k = numRows * 2 - 2;
+        StringBuilder res = new StringBuilder();
+        for (int i = 0; i < numRows; i++) {
+            if (i == 0 || i == numRows - 1) {
+                int n = i;
+                while (n < len) {
+                    res.append(cs[n]);
+                    n += k;
+                }
+            } else {
+                int n = i;
+                int t = k - i * 2;
+                while (n < len) {
+                    res.append(cs[n]);
+                    if (n + t < len) {
+                        res.append(cs[n + t]);
+                    }
+                    n += k;
+                }
+            }
+        }
+        return res.toString();
+    }
+
+    /**
+     * 459. 重复的子字符串
+     * 给定一个非空的字符串，判断它是否可以由它的一个子串重复多次构成。给定的字符串只含有小写英文字母，并且长度不超过10000。
+     * 执行用时：8 ms, 在所有 Java 提交中击败了92.46% 的用户
+     * 内存消耗：40.2 MB, 在所有 Java 提交中击败了61.22% 的用户
+     *
+     * @param s 字符串
+     * @return 是否有重复的子字符串
+     */
+    public boolean repeatedSubstringPattern(String s) {
+        int len = s.length();
+        if (len <= 1) {
+            return false;
+        }
+//        boolean isSuccess = false;
+        for (int i = 1; i <= len / 2; i++) {
+            if (len % i != 0) {
+                continue;
+            }
+            String tmp = s.substring(0, i);
+            int n = i;
+            boolean isS = true;
+            while (n + i <= len) {
+                String t = s.substring(n, n + i);
+                if (!tmp.equals(t)) {
+                    isS = false;
+                    break;
+                }
+                n += i;
+            }
+            if (isS) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    /**
+     * 1553. 吃掉 N 个橘子的最少天数
+     * 厨房里总共有 n 个橘子，你决定每一天选择如下方式之一吃这些橘子：
+     * <p>
+     * 吃掉一个橘子。
+     * 如果剩余橘子数 n 能被 2 整除，那么你可以吃掉 n/2 个橘子。
+     * 如果剩余橘子数 n 能被 3 整除，那么你可以吃掉 2*(n/3) 个橘子。
+     * <p>
+     * 每天你只能从以上 3 种方案中选择一种方案。
+     * <p>
+     * 请你返回吃掉所有 n 个橘子的最少天数。
+     * <p>
+     * 执行用时：4 ms, 在所有 Java 提交中击败了88.30% 的用户
+     * 内存消耗：39 MB, 在所有 Java 提交中击败了52.96% 的用户
+     *
+     * @param n 橘子数量
+     * @return 最小天数
+     */
+    public int minDays(int n) {
+        if (n <= 1) {
+            return n;
+        }
+        if (memo.containsKey(n)) {
+            return memo.get(n);
+        }
+        memo.put(n, Math.min(n % 2 + 1 + minDays(n / 2), n % 3 + 1 + minDays(n / 3)));
+        return memo.get(n);
+    }
+
+    Map<Integer, Integer> memo = new HashMap<Integer, Integer>();
+
+    /**
+     * 491. 递增子序列
+     * 给定一个整型数组, 你的任务是找到所有该数组的递增子序列，递增子序列的长度至少是2。
+     * 执行用时：57 ms, 在所有 Java 提交中击败了6.31% 的用户
+     * 内存消耗：49.4 MB, 在所有 Java 提交中击败了7.67% 的用户
+     *
+     * @param nums 数组
+     * @return 数组的递增子序列
+     */
+    public List<List<Integer>> findSubsequences(int[] nums) {
+        int len = nums.length;
+        if (len <= 1) {
+            return new ArrayList<>();
+        }
+        Map<Integer, List<String>> map = new HashMap<>();
+        List<List<Integer>> list = new ArrayList<>();
+        Set<String> set = new HashSet<>();
+        for (int i = 0; i < len; i++) {
+            List<List<Integer>> tmp = new ArrayList<>();
+            List<String> newS = new ArrayList<>();
+            newS.add(String.valueOf(nums[i]));
+            for (int j = 0; j < i; j++) {
+                if (nums[i] >= nums[j]) {
+                    for (String s : map.get(j)) {
+                        String ns = s + ',' + nums[i];
+                        if (set.add(ns)) {
+                            String[] ss = ns.split(",");
+                            List<Integer> newTmp = new ArrayList<>();
+                            for (String sss : ss) {
+                                newTmp.add(Integer.valueOf(sss));
+                            }
+                            list.add(newTmp);
+                        }
+                        newS.add(ns);
+                    }
+                }
+            }
+            map.put(i, newS);
+        }
+        return list;
+    }
+
+    /**
+     * 8. 字符串转换整数 (atoi)
+     * 请你来实现一个 atoi 函数，使其能将字符串转换成整数。
+     * 执行用时：2 ms, 在所有 Java 提交中击败了99.73% 的用户
+     * 内存消耗：39.7 MB, 在所有 Java 提交中击败了76.74% 的用户
+     *
+     * @param str 字符串
+     * @return 字符串转成整数
+     */
+    public int myAtoi(String str) {
+        int index = 0, sign = 1, ans = 0;
+
+        // 1. 判断是否为空
+        if (str == null || str.length() == 0) {
+            return 0;
+        }
+
+        int len = str.length();
+
+        // 2. 移除空格
+        while (index < len && str.charAt(index) == ' ') {
+            index++;
+        }
+
+        if (index == len) {
+            // 去掉前面空格以后到了末尾了
+            return 0;
+        }
+
+        // 3. 处理正负符号
+        if (str.charAt(index) == '+' || str.charAt(index) == '-') {
+            sign = str.charAt(index) == '+' ? 1 : -1;
+            index++;
+        }
+
+        // 4. 转换数字，避免溢出
+        while (index < len) {
+            // 判断是否是数字
+            int digit = str.charAt(index) - '0';
+            if (digit < 0 || digit > 9) {
+                break;
+            }
+
+            if (ans > (Integer.MAX_VALUE - digit) / 10) {
+                // 本来应该是 ans * 10 + digit > Integer.MAX_VALUE
+                // 但是 *10 和 + digit 都有可能越界，所有都移动到右边去就可以了。
+                return sign == 1 ? Integer.MAX_VALUE : Integer.MIN_VALUE;
+            }
+
+            ans = 10 * ans + digit;
+            index++;
+        }
+        return ans * sign;
+    }
+
+    /**
+     * 17. 电话号码的字母组合
+     * 给定一个仅包含数字 2-9 的字符串，返回所有它能表示的字母组合。
+     * 给出数字到字母的映射如下（与电话按键相同）。注意 1 不对应任何字母。
+     * 执行用时：1 ms, 在所有 Java 提交中击败了89.00% 的用户
+     * 内存消耗：38.2 MB, 在所有 Java 提交中击败了95.69% 的用户
+     *
+     * @param digits 电话号码
+     * @return 电话号码的字母组合
+     */
+    public List<String> letterCombinations(String digits) {
+        String[][] key = {{"a", "b", "c"}, {"d", "e", "f"}, {"g", "h", "i"},
+                {"j", "k", "l"}, {"m", "n", "o"}, {"p", "q", "r", "s"},
+                {"t", "u", "v"}, {"w", "x", "y", "z"}};
+        List<String> res = new ArrayList<>();
+        char[] cs = digits.toCharArray();
+        for (int i = 0; i < cs.length; i++) {
+            int tmp = cs[i] - '2';
+            List<String> newRes = new ArrayList<>();
+            for (String value : key[tmp]) {
+                if (res.size() == 0) {
+                    newRes.add(value);
+                    continue;
+                }
+                for (String r : res) {
+                    newRes.add(r + value);
+                }
+            }
+            res = newRes;
+        }
+        return res;
+    }
+
+    /**
+     * 36. 有效的数独
+     * <p>
+     * 判断一个 9x9 的数独是否有效。只需要根据以下规则，验证已经填入的数字是否有效即可。
+     * <p>
+     * 数字 1-9 在每一行只能出现一次。
+     * 数字 1-9 在每一列只能出现一次。
+     * 数字 1-9 在每一个以粗实线分隔的 3x3 宫内只能出现一次。
+     * 执行用时：3 ms, 在所有 Java 提交中击败了56.47% 的用户
+     * 内存消耗：40.5 MB, 在所有 Java 提交中击败了5.06% 的用户
+     *
+     * @param board 数独数组
+     * @return 是否是有效的数独
+     */
+    public boolean isValidSudoku(char[][] board) {
+        Map<Integer, Set<Character>> map = new HashMap<>();
+        for (int i = 0; i < 9; i++) {
+            Set<Character> set = new HashSet<>();
+            map.put(i, set);
+        }
+        for (int i = 0; i < 9; i++) {
+            Set<Character> x = new HashSet<>();
+            Set<Character> y = new HashSet<>();
+            for (int j = 0; j < 9; j++) {
+                if (board[j][i] != '.' && !y.add(board[j][i])) {
+                    return false;
+                }
+                if (board[i][j] != '.') {
+                    if (!x.add(board[i][j])) {
+                        return false;
+                    }
+                    if (i <= 2) {
+                        if (j <= 2) {
+                            if (!map.get(0).add(board[i][j])) {
+                                return false;
+                            }
+                        } else if (j <= 5) {
+                            if (!map.get(1).add(board[i][j])) {
+                                return false;
+                            }
+                        } else {
+                            if (!map.get(2).add(board[i][j])) {
+                                return false;
+                            }
+                        }
+                    } else if (i <= 5) {
+                        if (j <= 2) {
+                            if (!map.get(3).add(board[i][j])) {
+                                return false;
+                            }
+                        } else if (j <= 5) {
+                            if (!map.get(4).add(board[i][j])) {
+                                return false;
+                            }
+                        } else {
+                            if (!map.get(5).add(board[i][j])) {
+                                return false;
+                            }
+                        }
+                    } else {
+                        if (j <= 2) {
+                            if (!map.get(6).add(board[i][j])) {
+                                return false;
+                            }
+                        } else if (j <= 5) {
+                            if (!map.get(7).add(board[i][j])) {
+                                return false;
+                            }
+                        } else {
+                            if (!map.get(8).add(board[i][j])) {
+                                return false;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     * 36. 有效的数独 ： 数组替代set
+     * <p>
+     * 判断一个 9x9 的数独是否有效。只需要根据以下规则，验证已经填入的数字是否有效即可。
+     * <p>
+     * 数字 1-9 在每一行只能出现一次。
+     * 数字 1-9 在每一列只能出现一次。
+     * 数字 1-9 在每一个以粗实线分隔的 3x3 宫内只能出现一次。
+     * 执行用时：2 ms, 在所有 Java 提交中击败了96.43% 的用户
+     * 内存消耗：39.7 MB, 在所有 Java 提交中击败了69.71% 的用户
+     *
+     * @param board 数独数组
+     * @return 是否是有效的数独
+     */
+    public boolean isValidSudoku0(char[][] board) {
+        boolean[][] bs = new boolean[9][9];
+        for (int i = 0; i < 9; i++) {
+            boolean[] x = new boolean[9];
+            boolean[] y = new boolean[9];
+            for (int j = 0; j < 9; j++) {
+                if (board[j][i] != '.') {
+                    int t = board[j][i] - '1';
+                    if (y[t]) {
+                        return false;
+                    } else {
+                        y[t] = true;
+                    }
+                }
+                if (board[i][j] != '.') {
+                    int t = board[i][j] - '1';
+                    if (x[t]) {
+                        return false;
+                    } else {
+                        x[t] = true;
+                    }
+                    int tmp = i / 3 * 3 + j / 3;
+                    if (bs[tmp][t]) {
+                        return false;
+                    }
+                    bs[tmp][t] = true;
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     * 48. 旋转图像
+     * 给定一个 n × n 的二维矩阵表示一个图像。
+     * 将图像顺时针旋转 90 度。
+     * 说明：
+     * 你必须在原地旋转图像，这意味着你需要直接修改输入的二维矩阵。请不要使用另一个矩阵来旋转图像
+     * <p>
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：39.8 MB, 在所有 Java 提交中击败了56.48% 的用户
+     *
+     * @param matrix 二维矩阵表示的一个图像
+     */
+    public void rotate(int[][] matrix) {
+        int len = matrix.length;
+        for (int i = 0; i < len / 2; i++) {
+            int t = len % 2 == 0 ? len / 2 : (len + 1) / 2;
+            for (int j = 0; j < t; j++) {
+                int tmp = matrix[i][j];
+                matrix[i][j] = matrix[len - 1 - j][i];
+                matrix[len - 1 - j][i] = matrix[len - 1 - i][len - 1 - j];
+                matrix[len - 1 - i][len - 1 - j] = matrix[j][len - 1 - i];
+                matrix[j][len - 1 - i] = tmp;
+            }
+        }
+    }
+
+    /**
+     * 38. 外观数列
+     * <p>
+     * 给定一个正整数 n（1 ≤ n ≤ 30），输出外观数列的第 n 项。
+     * 执行用时：3 ms, 在所有 Java 提交中击败了48.11% 的用户
+     * 内存消耗：37.2 MB, 在所有 Java 提交中击败了41.88% 的用户
+     *
+     * @param n 正整数
+     * @return 外观数列
+     */
+    public String countAndSay(int n) {
+        if (n == 0) {
+            return "";
+        }
+        String s = "1";
+        for (int i = 0; i < n - 1; i++) {
+            StringBuilder sb = new StringBuilder();
+            char t = s.charAt(0);
+            int nt = 1;
+            for (int j = 1; j < s.length(); j++) {
+                if (s.charAt(j) == t) {
+                    nt++;
+                } else {
+                    sb.append(nt).append(t);
+                    t = s.charAt(j);
+                    nt = 1;
+                }
+            }
+            sb.append(nt).append(t);
+            s = sb.toString();
+        }
+        return s;
+    }
+
+    /**
+     * 49. 字母异位词分组
+     * <p>
+     * 给定一个字符串数组，将字母异位词组合在一起。字母异位词指字母相同，但排列不同的字符串。
+     * <p>
+     * 执行用时：9 ms, 在所有 Java 提交中击败了79.73% 的用户
+     * 内存消耗：42.6 MB, 在所有 Java 提交中击败了75.32% 的用户
+     *
+     * @param strs 字符串数组
+     * @return 分组后的字符串
+     */
+    public List<List<String>> groupAnagrams(String[] strs) {
+        Map<String, List<String>> map = new HashMap<>();
+        for (String str : strs) {
+            char[] cs = str.toCharArray();
+            Arrays.sort(cs);
+            String ss = String.valueOf(cs);
+            if (map.containsKey(ss)) {
+                map.get(ss).add(str);
+            } else {
+                List<String> li = new ArrayList<>();
+                li.add(str);
+                map.put(ss, li);
+            }
+        }
+        List<List<String>> res = new ArrayList<>();
+        for (String key : map.keySet()) {
+            res.add(map.get(key));
+        }
+        return res;
+    }
+
+    /**
+     * 44. 通配符匹配
+     * <p>
+     * 给定一个字符串 (s) 和一个字符模式 (p) ，实现一个支持 '?' 和 '*' 的通配符匹配。
+     * '?' 可以匹配任何单个字符。
+     * '*' 可以匹配任意字符串（包括空字符串）。
+     * 两个字符串完全匹配才算匹配成功。
+     * <p>
+     * 执行用时：17 ms, 在所有 Java 提交中击败了85.61% 的用户
+     * 内存消耗：41.4 MB, 在所有 Java 提交中击败了5.06% 的用户
+     *
+     * @param s 字符串
+     * @param p 字符模式
+     * @return 是否匹配
+     */
+    public boolean isMatch(String s, String p) {
+        char[] ss = s.toCharArray();
+        char[] ps = p.toCharArray();
+        int sLen = ss.length;
+        int pLen = ps.length;
+        if (pLen == 0 && sLen == 0) {
+            return true;
+        }
+        if (pLen == 0) {
+            return false;
+        } else if (sLen == 0) {
+            for (char c : ps) {
+                if (c != '*') {
+                    return false;
+                }
+            }
+            return true;
+        }
+        //0：失败 1:成功 2:* 3:* == “”
+        int[][] dp = new int[sLen][pLen];
+        if (ps[0] == ss[0] || ps[0] == '?') {
+            dp[0][0] = 1;
+        }
+        if (ps[0] == '*') {
+            dp[0][0] = 2;
+        }
+        for (int j = 1; j < pLen; j++) {
+            if (dp[0][j - 1] == 2) {
+                if (ps[j] == '*') {
+                    dp[0][j] = dp[0][j - 1];
+                } else if (ps[j] == '?' || ps[j] == ss[0]) {
+                    dp[0][j] = 1;
+                } else {
+                    dp[0][j] = 0;
+                }
+            } else if (dp[0][j - 1] == 1) {
+                if ('*' == ps[j]) {
+                    dp[0][j] = 3;
+                }
+            }
+        }
+        for (int i = 1; i < sLen; i++) {
+            for (int j = 0; j < pLen; j++) {
+                if (dp[i - 1][j] == 2) {
+                    dp[i][j] = 2;
+                    continue;
+                }
+                if (j > 0 && dp[i - 1][j - 1] != 0) {
+                    if (ss[i] == ps[j]) {
+                        dp[i][j] = 1;
+                        continue;
+                    }
+                    if ('?' == ps[j]) {
+                        dp[i][j] = 1;
+                        continue;
+                    }
+                    if ('*' == ps[j]) {
+                        dp[i][j] = 2;
+                        continue;
+                    }
+                }
+                if ('*' == ps[j]) {
+                    dp[i][j] = dp[i][j - 1];
+                }
+            }
+        }
+        return dp[sLen - 1][pLen - 1] != 0;
+    }
+
+    /**
+     * 34. 在排序数组中查找元素的第一个和最后一个位置
+     * <p>
+     * 给定一个按照升序排列的整数数组 nums，和一个目标值 target。找出给定目标值在数组中的开始位置和结束位置。
+     * <p>
+     * 你的算法时间复杂度必须是 O(log n) 级别。
+     * <p>
+     * 如果数组中不存在目标值，返回 [-1, -1]。
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：43.4 MB, 在所有 Java 提交中击败了5.15% 的用户
+     *
+     * @param nums   数组
+     * @param target 目标值
+     * @return 目标值在排序数组中查找元素的第一个和最后一个位置
+     */
+    public int[] searchRange(int[] nums, int target) {
+        int[] targetRange = {-1, -1};
+
+        int leftIdx = extremeInsertionIndex(nums, target, true);
+
+        // assert that `leftIdx` is within the array bounds and that `target`
+        // is actually in `nums`.
+        if (leftIdx == nums.length || nums[leftIdx] != target) {
+            return targetRange;
+        }
+
+        targetRange[0] = leftIdx;
+        targetRange[1] = extremeInsertionIndex(nums, target, false) - 1;
+
+        return targetRange;
+    }
+
+    private int extremeInsertionIndex(int[] nums, int target, boolean left) {
+        int lo = 0;
+        int hi = nums.length;
+
+        while (lo < hi) {
+            int mid = (lo + hi) / 2;
+            if (nums[mid] > target || (left && target == nums[mid])) {
+                hi = mid;
+            } else {
+                lo = mid + 1;
+            }
+        }
+
+        return lo;
+    }
+
+    /**
+     * 12. 整数转罗马数字
+     * <p>
+     * 罗马数字包含以下七种字符： I， V， X， L，C，D 和 M。
+     * 字符          数值
+     * I             1
+     * V             5
+     * X             10
+     * L             50
+     * C             100
+     * D             500
+     * M             1000
+     * 给定一个整数，将其转为罗马数字。输入确保在 1 到 3999 的范围内。
+     * <p>
+     * 执行用时：5 ms, 在所有 Java 提交中击败了87.76% 的用户
+     * 内存消耗：39.6 MB, 在所有 Java 提交中击败了49.29% 的用户
+     *
+     * @param num 数字
+     * @return 罗马数字
+     */
+    public String intToRoman(int num) {
+        StringBuilder sb = new StringBuilder();
+        int nm = num / 1000;
+        num -= nm * 1000;
+        for (int i = 0; i < nm; i++) {
+            sb.append("M");
+        }
+
+        if (num >= 900) {
+            num -= 900;
+            sb.append("CM");
+        }
+
+        nm = num / 500;
+        num -= nm * 500;
+        for (int i = 0; i < nm; i++) {
+            sb.append("D");
+        }
+
+        if (num >= 400) {
+            num -= 400;
+            sb.append("CD");
+        }
+
+        nm = num / 100;
+        num -= nm * 100;
+        for (int i = 0; i < nm; i++) {
+            sb.append("C");
+        }
+
+        if (num >= 90) {
+            num -= 90;
+            sb.append("XC");
+        }
+
+        nm = num / 50;
+        num -= nm * 50;
+        for (int i = 0; i < nm; i++) {
+            sb.append("L");
+        }
+
+        if (num >= 40) {
+            num -= 40;
+            sb.append("XL");
+        }
+
+        nm = num / 10;
+        num -= nm * 10;
+        for (int i = 0; i < nm; i++) {
+            sb.append("X");
+        }
+
+        if (num >= 9) {
+            num -= 9;
+            sb.append("IX");
+        }
+
+        nm = num / 5;
+        num -= nm * 5;
+        for (int i = 0; i < nm; i++) {
+            sb.append("V");
+        }
+
+        if (num >= 4) {
+            num -= 4;
+            sb.append("IV");
+        }
+
+        for (int i = 0; i < num; i++) {
+            sb.append("I");
+        }
+
+        return sb.toString();
+    }
+
+    /**
+     * 19. 删除链表的倒数第N个节点
+     * <p>
+     * 给定一个链表，删除链表的倒数第 n 个节点，并且返回链表的头结点。
+     * <p>
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：38 MB, 在所有 Java 提交中击败了34.55% 的用户
+     *
+     * @param head 链表
+     * @param n    N
+     * @return 删除倒数第N个结点后的链表
+     */
+    public ListNode removeNthFromEnd(ListNode head, int n) {
+        ListNode p = head;
+        ListNode q = p;
+        for (int i = 1; i < n; i++) {
+            q = q.next;
+        }
+        if (q.next == null) {
+            return head.next;
+        }
+        q = q.next;
+        while (q.next != null) {
+            p = p.next;
+            q = q.next;
+        }
+        p.next = p.next.next;
+        return head;
+    }
+
+    /**
+     * 32. 最长有效括号
+     *
+     * 给定一个只包含 '(' 和 ')' 的字符串，找出最长的包含有效括号的子串的长度。
+     *
+     * 执行用时：1 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：40.1 MB, 在所有 Java 提交中击败了6.07% 的用户
+     * @param s 字符串
+     * @return 最长有效字符字串长度
+     */
+    public int longestValidParentheses(String s) {
+        int len = s.length();
+        if(len == 0){
+            return 0;
+        }
+        char[] ss = s.toCharArray();
+        int[] dp = new int[len];
+        dp[0] = -1;
+        int max = 0;
+        for (int i = 1; i < len; i++) {
+            if ('(' == ss[i]) {
+                dp[i] = -1;
+                continue;
+            }
+            if (dp[i - 1] == -1) {
+                if (ss[i - 1] == ss[i]) {
+                    dp[i] = -1;
+                } else {
+                    dp[i] = i - 1;
+                    if (i - 1 > 0 && dp[i - 2] != -1) {
+                        dp[i] = dp[i - 2];
+                    }
+                    max = Math.max(max, i - dp[i] + 1);
+                }
+                continue;
+            }
+            int t = dp[i - 1];
+            if (t == 0) {
+                dp[i] = -1;
+            } else if (ss[t - 1] == ss[i]) {
+                dp[i] = -1;
+            } else {
+                dp[i] = t - 1;
+                if (t - 1 > 0 && dp[t - 2] != -1) {
+                    dp[i] = dp[t - 2];
+                }
+                max = Math.max(max, i - dp[i] + 1);
+            }
+        }
+        return max;
+    }
 
     public static void main(String[] args) {
         Solution2 solution = new Solution2();
 
         //ListNode
-        int[] listNodeValue = {1, 2, 2, 4, 5, 3, 2, 1};
+        int[] listNodeValue = {1, 2, 3, 4, 5};
         int listNodeLen = listNodeValue.length;
         ListNode head = new ListNode(listNodeValue[0]);
         ListNode listNodeTmp = head;
@@ -1741,13 +2651,12 @@ public class Solution2 {
         }
 
         //TreeNode -1 is null TreeNode;
-        int[] treeNodeValue = {3, 2, -1, 3, 1, 3, -1, 2};
-        int treeNodeLen = treeNodeValue.length;
-        Stack<TreeNode> createTreeNodeStack = new Stack<>();
+        int[] treeNodeValue = {2, -1, 3, -1, 4, -1, 5, -1, 6};
+        List<TreeNode> createTreeNodeStack = new ArrayList<>();
         TreeNode root = new TreeNode(treeNodeValue[0]);
         createTreeNodeStack.add(root);
         for (int i = 1; i < listNodeLen; i++) {
-            TreeNode tmp = createTreeNodeStack.pop();
+            TreeNode tmp = createTreeNodeStack.remove(0);
             if (tmp == null) {
                 i++;
                 continue;
@@ -1769,26 +2678,25 @@ public class Solution2 {
 
 
         //Arrays
-        String[] oneDimensionalStringArray = {"5", "2", "C", "D", "+"};
-        int[] oneDimensionalArrayA = {2, 3, 3};
+        String[] oneDimensionalStringArray = {"eat", "tea", "tan", "ate", "nat", "bat"};
+        int[] oneDimensionalArrayA = {4, 6, 7, 7};
         int[] oneDimensionalArrayB = {5, 2, 2, 5, 3, 5};
         int[][] twoDimensionalArrayA = {{0, 1}};
         int[][] twoDimensionalArrayB = {
-                {0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0},
-                {0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0},
-                {0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0},
-                {0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0},
-                {0, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0},
-                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0},
-                {0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0},
-                {0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0}
+                {1, 2, 3}, {4, 5, 6}, {7, 8, 9}
         };
         char[] oneDimensionalCharArray = {'A', 'B'};
         char[][] twoDimensionalCharArray = {
-                {'X','O','X'},
-                {'O','X','O'},
-                {'X','O','X'}
-        };
+                {'5', '3', '.', '.', '7', '.', '.', '.', '.'},
+                {'6', '.', '.', '1', '9', '5', '.', '.', '.'},
+                {'.', '9', '8', '.', '.', '.', '.', '6', '.'},
+                {'8', '.', '.', '.', '6', '.', '.', '.', '3'},
+                {'4', '.', '.', '8', '.', '3', '.', '.', '1'},
+                {'7', '.', '.', '.', '2', '.', '.', '.', '6'},
+                {'.', '6', '.', '.', '.', '.', '2', '8', '.'},
+                {'.', '.', '.', '4', '1', '9', '.', '.', '5'},
+                {'.', '.', '.', '.', '8', '.', '.', '7', '9'}};
+
 
         //List<List<Integer>>
         int[][] listListIntegerArray = {{4, 14, 24, 34, 40}, {12, 14, 25, 38, 41}, {9, 19, 20, 26, 50}};
@@ -1806,10 +2714,8 @@ public class Solution2 {
             stringListList.add(collect);
         }
 
-        solution.solve(twoDimensionalCharArray);
-        System.out.println(5*15*0.95+5*25*0.6);
-        System.out.println(5*40*0.95);
-        System.out.print(solution.distributeCandies(26, 4));
+        System.out.println(solution.removeNthFromEnd(head, 2));
+        return;
     }
 
 }
