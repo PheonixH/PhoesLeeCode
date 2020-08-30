@@ -3099,6 +3099,119 @@ public class Games {
     }
 
 
+    //2020-8-23 第203 周赛
+    public boolean containsPattern(int[] arr, int m, int k) {
+        int len = arr.length;
+        if (len < m * k) {
+            return false;
+        }
+        for (int i = 0; i <= len - m; i++) {
+            int[] tmp = new int[m];
+            for (int j = 0; j < m; j++) {
+                tmp[j] = arr[i + j];
+            }
+            int t = 1;
+            for (int j = i + m; j <= len - m; j += m) {
+                boolean is = true;
+                for (int o = 0; o < m; o++) {
+                    if (arr[o + j] != tmp[o]) {
+                        is = false;
+                        break;
+                    }
+                }
+                if (is) {
+                    t++;
+                } else {
+                    break;
+                }
+            }
+            if (t >= k) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public int getMaxLen(int[] nums) {
+        int len = nums.length;
+        List<Integer> list = new ArrayList<>();
+        int max = 0, now = 0;
+        for (int i = 0; i < len; i++) {
+            if (nums[i] == 0) {
+                list.add(now);
+                if (list.size() < 3) {
+                    for (int j : list) {
+                        max = Math.max(j, max);
+                    }
+                } else {
+                    int t = -2;
+                    for (int j = 0; j < list.size(); j++) {
+                        if (j % 2 == 0) {
+                            t += list.get(j) + 2;
+                            max = Math.max(t, max);
+                        } else {
+                            t += list.get(j);
+                            int tt = t - list.get(0);
+                            max = Math.max(max, tt);
+                        }
+                    }
+                }
+                list = new ArrayList<>();
+                now = 0;
+            } else if (nums[i] > 0) {
+                now++;
+            } else {
+                list.add(now);
+                now = 0;
+            }
+        }
+        list.add(now);
+        if (list.size() < 3) {
+            for (int j : list) {
+                max = Math.max(j, max);
+            }
+        } else {
+            int t = -2;
+            for (int j = 0; j < list.size(); j++) {
+                if (j % 2 == 0) {
+                    t += list.get(j) + 2;
+                    max = Math.max(t, max);
+                } else {
+                    t += list.get(j);
+                    int tt = t - list.get(0);
+                    max = Math.max(max, tt);
+                }
+            }
+        }
+        return max;
+    }
+
+    public int numOfWays(int[] nums) {
+        List<Integer> li = new ArrayList<>();
+        for(int n :nums){
+            li.add(n);
+        }
+        return numOfWaysAss(li);
+    }
+
+    public int numOfWaysAss(List<Integer> nums) {
+        int mb = 0, ma = 0, key = nums.get(0);
+        List<Integer> a = new ArrayList<>();
+        List<Integer> b = new ArrayList<>();
+        for (int i : nums) {
+            if (i > key) {
+                a.add(i);
+            } else if(i < key){
+                b.add(i);
+            }
+        }
+        ma = a.size();
+        mb = b.size();
+        int t1 = ma == 0 ? 1 : numOfWaysAss(a);
+        int t2 = mb == 0 ? 1 : numOfWaysAss(b);
+        return t1 * t2 - 1;
+    }
+
     public static void main(String[] args) {
 
         //ListNode
@@ -3141,7 +3254,7 @@ public class Games {
 
         //Arrays
         String[] oneDimensionalStringArray = {"5", "2", "C", "D", "+"};
-        int[] oneDimensionalArrayA = {6, 2, 3, 4, 5, 5};
+        int[] oneDimensionalArrayA = {9, 10, 1, 0, 19, 20, -28, 30, -12, 20, 11, -8, 7, 21, -26};
         int[] oneDimensionalArrayB = {5, 2, 2, 5, 3, 5};
         int[][] twoDimensionalArrayA = {{1, 3,}, {0, 2}, {1, 3}, {0, 2}};
         int[][] twoDimensionalArrayB = {
@@ -3181,7 +3294,7 @@ public class Games {
 
 
         Games games = new Games();
-        games.stoneGameV(oneDimensionalArrayA);
+        games.getMaxLen(oneDimensionalArrayA);
         System.out.println();
     }
 }
