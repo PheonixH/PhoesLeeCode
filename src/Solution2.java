@@ -2640,10 +2640,11 @@ public class Solution2 {
 
     /**
      * 214. 最短回文串
-     *
+     * <p>
      * 给定一个字符串 s，你可以通过在字符串前面添加字符将其转换为回文串。找到并返回可以用这种方式转换的最短回文串。
      * 执行用时：350 ms, 在所有 Java 提交中击败了31.01% 的用户
      * 内存消耗：40 MB, 在所有 Java 提交中击败了55.32% 的用户
+     *
      * @param s 字符串
      * @return 最短回文串
      */
@@ -2675,6 +2676,31 @@ public class Solution2 {
             }
         }
         return sb.append(s.substring(1, len)).reverse().toString() + s;
+    }
+
+    /**
+     * 557. 反转字符串中的单词 III
+     * <p>
+     * 给定一个字符串，你需要反转字符串中每个单词的字符顺序，同时仍保留空格和单词的初始顺序。
+     * <p>
+     * 执行用时：5 ms, 在所有 Java 提交中击败了88.46% 的用户
+     * 内存消耗：40.6 MB, 在所有 Java 提交中击败了24.08% 的用户
+     *
+     * @param s 待反转字符串
+     * @return 反转后的字符串
+     */
+    public String reverseWords(String s) {
+        String[] cs = s.split(" ");
+        if (cs.length == 0) {
+            return " ";
+        }
+        StringBuilder sb = new StringBuilder();
+        for (String c : cs) {
+            sb.append(new StringBuilder(c).reverse());
+            sb.append(" ");
+        }
+        String res = sb.toString();
+        return res.substring(0, res.length() - 1);
     }
 
     public static void main(String[] args) {
