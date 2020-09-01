@@ -2703,6 +2703,41 @@ public class Solution2 {
         return res.substring(0, res.length() - 1);
     }
 
+    /**
+     * 486. 预测赢家
+     * 给定一个表示分数的非负整数数组。 玩家 1 从数组任意一端拿取一个分数，随后玩家 2 继续从剩余数组任意一端拿取分数，然后玩家 1 拿，…… 。每次一个玩家只能拿取一个分数，分数被拿取之后不再可取。直到没有剩余分数可取时游戏结束。最终获得分数总和最多的玩家获胜。
+     * 给定一个表示分数的数组，预测玩家1是否会成为赢家。你可以假设每个玩家的玩法都会使他的分数最大化。
+     *
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：37.2 MB, 在所有 Java 提交中击败了33.03% 的用户
+     * @param nums 数组
+     * @return 赢家是否是1
+     */
+    public boolean PredictTheWinner(int[] nums) {
+        if (nums.length % 2 == 0) {
+            return true;
+        }
+        int n = nums.length;
+        int[][] dps = new int[n][n];
+        //dps[i][i]为玩家一从i到i赢得，肯定只能是nums[i]
+        for (int i = 0; i < n; i++) {
+            dps[i][i] = nums[i];
+        }
+        //d=1,其实代表，先算两个数的时候
+        for (int d = 1; d < n; d++) {
+            //有多少组要比较
+            for (int j = 0; j < n - d; j++) {
+                //比较j到d+j
+                //其实意思就是比较j到d+j时，玩家1，只能选择两端的，
+                //玩家一选择了j时，那么玩家二就从j+1到d+j中选最大的。
+                //玩家一选了d+j时，那么玩家二就从j到d+j-1中选最大的
+                dps[j][d + j] = Math.max(nums[j] - dps[j + 1][d + j], nums[d + j] - dps[j][d + j - 1]);
+            }
+        }
+        //两个玩家相等，玩家一仍然胜利。
+        return dps[0][n - 1] >= 0;
+    }
+
     public static void main(String[] args) {
         Solution2 solution = new Solution2();
 
