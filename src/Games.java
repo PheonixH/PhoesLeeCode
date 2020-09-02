@@ -1004,6 +1004,149 @@ public class Games {
         return r;
     }
 
+
+    public int[] arrayRankTransform(int[] arr) {
+        int len = arr.length;
+        int[] brr = Arrays.copyOf(arr, len);
+        Arrays.sort(brr);
+        Map<Integer, Integer> map = new HashMap<>();
+        int k = 1;
+        for (int b : brr) {
+            if (!map.containsKey(b)) {
+                map.put(b, k++);
+            }
+        }
+        for (int i = 0; i < len; i++) {
+            arr[i] = map.get(arr[i]);
+        }
+        return arr;
+    }
+
+
+    public String breakPalindrome(String palindrome) {
+        int len = palindrome.length();
+        if (len <= 1) {
+            return "";
+        }
+        char[] chars = palindrome.toCharArray();
+        boolean is = false;
+        for (int i = 0; i < len / 2; i++) {
+            if (chars[i] != 'a') {
+                chars[i] = 'a';
+                is = true;
+                break;
+            }
+        }
+        if (!is) {
+            chars[chars.length - 1] = 'b';
+        }
+        StringBuilder sb = new StringBuilder();
+        for (char c : chars) {
+            sb.append(c);
+        }
+        return sb.toString();
+    }
+
+    public int[][] diagonalSort(int[][] mat) {
+        int m = mat.length, n = mat[0].length;
+        for (int i = 0; i < m; i++) {
+            int t = Math.min(m - i, n);
+            int[] tmp = new int[t];
+            int p = 0;
+            for (int j = i; j < m && j - i < n; j++) {
+                tmp[p++] = mat[j][j - i];
+            }
+            Arrays.sort(tmp);
+            p = 0;
+            for (int j = i; j < m && j - i < n; j++) {
+                mat[j][j - i] = tmp[p++];
+            }
+        }
+        for (int i = 1; i < n; i++) {
+            int t = Math.min(m, n - i);
+            int[] tmp = new int[t];
+            int p = 0;
+            for (int j = i; j - i < m && j < n; j++) {
+                tmp[p++] = mat[j - i][j];
+            }
+            Arrays.sort(tmp);
+            p = 0;
+            for (int j = i; j - i < m && j < n; j++) {
+                mat[j - i][j] = tmp[p++];
+            }
+        }
+        return mat;
+    }
+
+    public int maxValueAfterReverse(int[] nums) {
+        int len = nums.length;
+        int[] brr = new int[len];
+        for (int i = 0; i < len; i++) {
+            brr[len - i - 1] = nums[i];
+        }
+        return Math.max(maxValueAfterReverseAss(nums), maxValueAfterReverseAss(brr));
+    }
+
+    public int maxValueAfterReverseAss(int[] nums) {
+        int len = nums.length;
+        // 计算出相邻的差
+        int max = 0;
+        for (int i = 1; i < len; i++) {
+            max += Math.abs(nums[i] - nums[i - 1]);
+        }
+        if (len < 3) {
+            return max;
+        }
+        // 选出每个值差值最大的值（非相邻），计算
+        int[] arr = new int[len];
+        int[] brr = new int[len];
+        //len >= 3
+        arr[len - 1] = -1;
+        arr[len - 2] = -1;
+        brr[len - 1] = -1;
+        brr[len - 2] = -1;
+        for (int j = len - 3; j >= 0; j--) {
+            if (arr[j + 1] == -1) {
+                arr[j] = len - 1;
+            } else {
+                if (nums[arr[j + 1]] < nums[j + 2]) {
+                    arr[j] = j + 2;
+                } else {
+                    arr[j] = arr[j + 1];
+                }
+            }
+            if (brr[j + 1] == -1) {
+                brr[j] = len - 1;
+            } else {
+                if (nums[brr[j + 1]] > nums[j + 2]) {
+                    brr[j] = j + 2;
+                } else {
+                    brr[j] = brr[j + 1];
+                }
+            }
+        }
+        int tm = max;
+        for (int i = 0; i < len - 2; i++) {
+            if (arr[i] == len - 1) {
+                int tmax = Math.abs(nums[arr[i]] - nums[i]) - Math.abs(nums[i + 1] - nums[i]);
+                tm = Math.max(tmax + max, tm);
+            } else {
+                int tmax = Math.abs(nums[arr[i]] - nums[i]) + Math.abs(nums[arr[i] + 1] - nums[i + 1])
+                        - Math.abs(nums[i + 1] - nums[i]) - Math.abs(nums[arr[i] + 1] - nums[arr[i]]);
+                tm = Math.max(tmax + max, tm);
+            }
+            if (brr[i] == len - 1) {
+                int tmax = Math.abs(nums[brr[i]] - nums[i]) - Math.abs(nums[i + 1] - nums[i]);
+                tm = Math.max(tmax + max, tm);
+            } else {
+                int tmax = Math.abs(nums[brr[i]] - nums[i]) + Math.abs(nums[brr[i] + 1] - nums[i + 1])
+                        - Math.abs(nums[i + 1] - nums[i]) - Math.abs(nums[brr[i] + 1] - nums[brr[i]]);
+                tm = Math.max(tmax + max, tm);
+            }
+        }
+        return Math.max(tm, max);
+    }
+
     /*public int minNumberOfSemesters(int n, int[][] dependencies, int k) {
         int[] pre = new int[n];
         int[] post = new int[n];
@@ -2588,14 +2731,14 @@ public class Games {
     int[][] dp;
     int[] cuts;
 
-    public int dp(int l, int r){
-        if(r - l <= 1){
+    public int dp(int l, int r) {
+        if (r - l <= 1) {
             return 0;
         }
-        if(dp[l][r] == -1){
+        if (dp[l][r] == -1) {
             int len = cuts[r] - cuts[l];
-            dp[l][r] = (int)1e9;
-            for(int i = l + 1; i < r; i++){
+            dp[l][r] = (int) 1e9;
+            for (int i = l + 1; i < r; i++) {
                 dp[l][r] = Math.min(dp[l][r], dp(l, i) + dp(i, r) + len);
             }
         }
@@ -2609,13 +2752,13 @@ public class Games {
         int[] more = new int[m + 2];
         more[0] = 0;
         more[m + 1] = n;
-        for(int i = 0; i < m; i++){
+        for (int i = 0; i < m; i++) {
             more[i + 1] = cuts[i];
         }
 
         this.cuts = more;
         dp = new int[m + 2][m + 2];
-        for(int i = 0; i < m + 2; i++){
+        for (int i = 0; i < m + 2; i++) {
             Arrays.fill(dp[i], -1);
         }
 
@@ -2664,7 +2807,7 @@ public class Games {
 
         //Arrays
         String[] oneDimensionalStringArray = {"5", "2", "C", "D", "+"};
-        int[] oneDimensionalArrayA = {13,6,7,2,10};
+        int[] oneDimensionalArrayA = {13, 6, 7, 2, 10};
         int[] oneDimensionalArrayB = {3, 0, 2, 0, 2, 3, 3, 0, 0, 2, 1, 1, 1, 0, -1, -1, 1, -1, 1, 0, 2, 0, 0, 3, 0, 0, 3, 1, 0, 2, 0, -1, 2, -1, 1, 1, 3, 0, 2, 3, 3, 0, 0, 2, -1, 1};
         int[][] twoDimensionalArrayA = {{1, 3,}, {0, 2}, {1, 3}, {0, 2}};
         int[][] twoDimensionalArrayB = {
