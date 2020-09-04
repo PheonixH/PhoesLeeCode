@@ -2860,6 +2860,43 @@ public class Solution2 {
         return nums == len;
     }
 
+    /**
+     * 257. 二叉树的所有路径
+     *
+     * 给定一个二叉树，返回所有从根节点到叶子节点的路径。
+     * 执行用时：4 ms, 在所有 Java 提交中击败了60.09% 的用户
+     * 内存消耗：39.9 MB, 在所有 Java 提交中击败了57.97% 的用户
+     * @param root 二叉树
+     * @return 二叉树的所有路径
+     */
+    public List<String> binaryTreePaths(TreeNode root) {
+        List<String> res = new ArrayList<>();
+        if (root != null) {
+            binaryTreePathsAss(root, new Stack<>(), res);
+        }
+        return res;
+    }
+
+    public void binaryTreePathsAss(TreeNode root, Stack<Integer> list, List<String> res) {
+        if (root.right == null && root.left == null) {
+            StringBuilder sb = new StringBuilder();
+            list.forEach(x -> {
+                sb.append(x).append("->");
+            });
+            String tmp = sb.append(root.val).toString();
+            res.add(tmp);
+            return;
+        }
+        list.push(root.val);
+        if (root.left != null) {
+            binaryTreePathsAss(root.left, list, res);
+        }
+        if (root.right != null) {
+            binaryTreePathsAss(root.right, list, res);
+        }
+        list.pop();
+    }
+
     public static void main(String[] args) {
         Solution2 solution = new Solution2();
 
@@ -2902,11 +2939,11 @@ public class Solution2 {
 
         //Arrays
         String[] oneDimensionalStringArray = {"eat", "tea", "tan", "ate", "nat", "bat"};
-        int[] oneDimensionalArrayA = {-1, 0, 1, 2, -1, -4};
+        int[] oneDimensionalArrayA = {93997, 2877, -93018, -76995, -70679};
         int[] oneDimensionalArrayB = {5, 2, 2, 5, 3, 5};
         int[][] twoDimensionalArrayA = {{0, 1}};
         int[][] twoDimensionalArrayB = {
-                {1, 2, 3}, {4, 5, 6}, {7, 8, 9}
+                {3, 3, 1, 1}, {2, 2, 1, 2}, {1, 1, 1, 2}
         };
         char[] oneDimensionalCharArray = {'A', 'B'};
         char[][] twoDimensionalCharArray = {
@@ -2938,7 +2975,7 @@ public class Solution2 {
             stringListList.add(collect);
         }
 
-        System.out.println(solution.threeSum(oneDimensionalArrayA));
+        System.out.println(solution.maxValueAfterReverse(oneDimensionalArrayA));
         return;
     }
 
