@@ -3063,6 +3063,30 @@ public class Solution2 {
         return false;
     }
 
+    /**
+     * 面试题 17.16. 按摩师
+     *
+     * 一个有名的按摩师会收到源源不断的预约请求，每个预约都可以选择接或不接。在每次预约服务之间要有休息时间，因此她不能接受相邻的预约。
+     * 给定一个预约请求序列，替按摩师找到最优的预约集合（总预约时间最长），返回总的分钟数。
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：36.9 MB, 在所有 Java 提交中击败了76.87% 的用户
+     * @param nums 预约请求序列
+     * @return 最优的预约集合
+     */
+    public int massage(int[] nums) {
+        int len = nums.length;
+        if(len == 0){
+            return 0;
+        }
+        int[][] dp = new int[len][2];
+        dp[0][1] = nums[0];
+        for (int i = 1; i < len; i++) {
+            dp[i][0] = Math.max(dp[i - 1][1], dp[i - 1][0]);
+            dp[i][1] = dp[i - 1][0] + nums[i];
+        }
+        return Math.max(dp[len - 1][0], dp[len - 1][1]);
+    }
+
     public static void main(String[] args) {
         Solution2 solution = new Solution2();
 
@@ -3105,7 +3129,7 @@ public class Solution2 {
 
         //Arrays
         String[] oneDimensionalStringArray = {"eat", "tea", "tan", "ate", "nat", "bat"};
-        int[] oneDimensionalArrayA = {1, 9, 5, 6, 6, 4, 4, 2, 2, 2, 1, 1, 3, 4, 8, 8, 7, 8};
+        int[] oneDimensionalArrayA = {1, 2, 3, 1};
         int[] oneDimensionalArrayB = {5, 2, 2, 5, 3, 5};
         int[][] twoDimensionalArrayA = {{0, 1}};
         int[][] twoDimensionalArrayB = {
@@ -3141,7 +3165,7 @@ public class Solution2 {
             stringListList.add(collect);
         }
 
-        System.out.println(solution.isAdditiveNumber("121474836472147483648"));
+        System.out.println(solution.massage(oneDimensionalArrayA));
         return;
     }
 //"1 2147483647 2147483648"
