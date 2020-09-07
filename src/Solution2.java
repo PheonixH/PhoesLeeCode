@@ -2862,10 +2862,11 @@ public class Solution2 {
 
     /**
      * 257. 二叉树的所有路径
-     *
+     * <p>
      * 给定一个二叉树，返回所有从根节点到叶子节点的路径。
      * 执行用时：4 ms, 在所有 Java 提交中击败了60.09% 的用户
      * 内存消耗：39.9 MB, 在所有 Java 提交中击败了57.97% 的用户
+     *
      * @param root 二叉树
      * @return 二叉树的所有路径
      */
@@ -2895,6 +2896,41 @@ public class Solution2 {
             binaryTreePathsAss(root.right, list, res);
         }
         list.pop();
+    }
+
+    /**
+     * 347. 前 K 个高频元素
+     *
+     * 给定一个非空的整数数组，返回其中出现频率前 k 高的元素。
+     * 执行用时：19 ms, 在所有 Java 提交中击败了36.11% 的用户
+     * 内存消耗：42.2 MB, 在所有 Java 提交中击败了82.70% 的用户
+     * @param nums 非空的整数数组
+     * @param k k
+     * @return 前 K 个高频元素
+     */
+    public int[] topKFrequent(int[] nums, int k) {
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int n : nums) {
+            map.putIfAbsent(n, 1);
+            map.put(n, map.get(n) + 1);
+        }
+        Comparator<int[]> comparator = new Comparator<int[]>() {
+            @Override
+            public int compare(int[] o1, int[] o2) {
+                return o2[0] - o1[0];
+            }
+        };
+        PriorityQueue<int[]> p = new PriorityQueue<int[]>(comparator);
+        for (int key : map.keySet()) {
+            int[] tmp = new int[]{map.get(key), key};
+            p.add(tmp);
+        }
+        int[] res = new int[k];
+        while (k > 0) {
+            k--;
+            res[k] = p.poll()[1];
+        }
+        return res;
     }
 
     public static void main(String[] args) {
@@ -2975,7 +3011,7 @@ public class Solution2 {
             stringListList.add(collect);
         }
 
-        System.out.println(solution.maxValueAfterReverse(oneDimensionalArrayA));
+//        System.out.println(solution.maxValueAfterReverse(oneDimensionalArrayA));
         return;
     }
 
