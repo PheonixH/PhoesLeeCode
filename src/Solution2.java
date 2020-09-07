@@ -2985,6 +2985,84 @@ public class Solution2 {
         }
     }
 
+    /**
+     * 306. 累加数
+     * <p>
+     * 累加数是一个字符串，组成它的数字可以形成累加序列。
+     * 一个有效的累加序列必须至少包含 3 个数。除了最开始的两个数以外，字符串中的其他数都等于它之前两个数相加的和。
+     * 给定一个只包含数字 '0'-'9' 的字符串，编写一个算法来判断给定输入是否是累加数。
+     * <p>
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：37.2 MB, 在所有 Java 提交中击败了97.12% 的用户
+     *
+     * @param num 字符串
+     * @return 字符串是否是累加数
+     */
+    public boolean isAdditiveNumber(String num) {
+        char[] chars = num.toCharArray();
+        int len = chars.length;
+        int[] ints = new int[len];
+        for (int i = 0; i < len; i++) {
+            ints[i] = chars[i] - '0';
+        }
+        for (int i = 1; i < len; i++) {
+            long ta = 0;
+            if (ints[0] != 0) {
+                for (int t = 0; t < i; t++) {
+                    ta = ta * 10 + ints[t];
+                }
+            }
+            long a = ta;
+            for (int j = i + 1; j < len; j++) {
+                a = ta;
+                long tb = 0;
+                if (ints[i] != 0) {
+                    for (int t = i; t < j; t++) {
+                        tb = tb * 10 + ints[t];
+                    }
+                }
+                long b = tb;
+                if (a == 0 && b == 0) {
+                    boolean f = true;
+                    for (int t : ints) {
+                        if (t != 0) {
+                            f = false;
+                            continue;
+                        }
+                    }
+                    if (f) {
+                        return true;
+                    }
+                } else {
+                    boolean f = true;
+                    b = tb;
+                    for (int t = j; t < len; ) {
+                        if (ints[t] == 0) {
+                            f = false;
+                            break;
+                        }
+                        long tmp = 0;
+                        while (tmp < a + b && t < len) {
+                            tmp = tmp * 10 + ints[t];
+                            t++;
+                        }
+                        if (tmp != a + b) {
+                            f = false;
+                            break;
+                        } else {
+                            a = b;
+                            b = tmp;
+                        }
+                    }
+                    if (f) {
+                        return f;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
     public static void main(String[] args) {
         Solution2 solution = new Solution2();
 
@@ -3063,8 +3141,8 @@ public class Solution2 {
             stringListList.add(collect);
         }
 
-        System.out.println(solution.topKFrequent(oneDimensionalArrayA, 3));
+        System.out.println(solution.isAdditiveNumber("121474836472147483648"));
         return;
     }
-
+//"1 2147483647 2147483648"
 }
