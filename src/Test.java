@@ -4,7 +4,7 @@
  * @author: Feng.H
  * @create: 2020-06-28 00:11
  **/
-import java.util.*;
+import LeetCode.Solution;
 
 public class Test {
     public static void main(String[] args) {

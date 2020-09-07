@@ -1,4 +1,4 @@
-package datestruct;
+package LeetCode.datestruct;
 
 import java.util.List;
 

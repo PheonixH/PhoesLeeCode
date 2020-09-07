@@ -1,4 +1,4 @@
-package data;
+package LeetCode.data;
 
 /**
  * @program: PhoesLeeCode
@@ -13,7 +13,7 @@ public class Trie {
     private Trie[] children;
 
     /**
-     * Initialize your data structure here.
+     * Initialize your LeetCode.data structure here.
      */
     public Trie() {
         this.children = new Trie[26];

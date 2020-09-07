@@ -1,10 +1,10 @@
-import java.io.PrintWriter;
-import java.lang.reflect.Array;
+package LeetCode;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
-import datestruct.ListNode;
-import datestruct.TreeNode;
+import LeetCode.datestruct.ListNode;
+import LeetCode.datestruct.TreeNode;
 
 /**
  * PhoesLeeCode

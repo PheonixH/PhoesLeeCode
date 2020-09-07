@@ -1,3 +1,5 @@
+package Niuke;
+
 /**
  * @program: PhoesLeeCode
  * @description:

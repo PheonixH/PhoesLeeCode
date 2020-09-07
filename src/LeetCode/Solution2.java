@@ -1,12 +1,11 @@
+package LeetCode;
 
-import java.lang.reflect.Array;
 import java.util.*;
 
-import datestruct.ListNode;
-import data.Node;
-import datestruct.TreeNode;
+import LeetCode.datestruct.ListNode;
+import LeetCode.data.Node;
+import LeetCode.datestruct.TreeNode;
 
-import javax.swing.text.MutableAttributeSet;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -16,7 +15,7 @@ import java.util.stream.Collectors;
 /**
  * @ProjectName: PhoesLeeCode
  * @Package: PACKAGE_NAME
- * @ClassName: Solution2
+ * @ClassName: LeetCode.Solution2
  * @Description:
  * @Author: Pheonix
  * @CreateDate: 2019/4/25 15:05
