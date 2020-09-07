@@ -3065,17 +3065,18 @@ public class Solution2 {
 
     /**
      * 面试题 17.16. 按摩师
-     *
+     * <p>
      * 一个有名的按摩师会收到源源不断的预约请求，每个预约都可以选择接或不接。在每次预约服务之间要有休息时间，因此她不能接受相邻的预约。
      * 给定一个预约请求序列，替按摩师找到最优的预约集合（总预约时间最长），返回总的分钟数。
      * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
      * 内存消耗：36.9 MB, 在所有 Java 提交中击败了76.87% 的用户
+     *
      * @param nums 预约请求序列
      * @return 最优的预约集合
      */
     public int massage(int[] nums) {
         int len = nums.length;
-        if(len == 0){
+        if (len == 0) {
             return 0;
         }
         int[][] dp = new int[len][2];
@@ -3085,6 +3086,56 @@ public class Solution2 {
             dp[i][1] = dp[i - 1][0] + nums[i];
         }
         return Math.max(dp[len - 1][0], dp[len - 1][1]);
+    }
+
+    /**
+     * 1576. 替换所有的问号
+     * 给你一个仅包含小写英文字母和 '?' 字符的字符串 s<var> </var>，请你将所有的 '?' 转换为若干小写字母，使最终的字符串不包含任何 连续重复 的字符。
+     * 注意：你 不能 修改非 '?' 字符。
+     * 题目测试用例保证 除 '?' 字符 之外，不存在连续重复的字符。
+     * 在完成所有转换（可能无需转换）后返回最终的字符串。如果有多个解决方案，请返回其中任何一个。可以证明，在给定的约束条件下，答案总是存在的。
+     *
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：37.8 MB, 在所有 Java 提交中击败了100.00% 的用户
+     * @param s 仅包含小写英文字母和 '?' 字符的字符串
+     * @return 替换所有的问号之后的字符串
+     */
+    public String modifyString(String s) {
+        char[] chars = s.toCharArray();
+        int len = chars.length;
+        if (len == 1 && chars[0] == '?') {
+            return "a";
+        } else if (len == 1) {
+            return s;
+        }
+        for (int i = 0; i < len; i++) {
+            if (chars[i] == '?') {
+                if (i != 0) {
+                    if (chars[i - 1] == 'z') {
+                        chars[i] = 'a';
+                    } else {
+                        chars[i] = (char) (chars[i - 1] + 1);
+                    }
+                    if (i != len - 1 && chars[i] == chars[i + 1]) {
+                        if (chars[i] == chars[i + 1]) {
+                            if (chars[i + 1] == 'z') {
+                                chars[i] = 'a';
+                            } else {
+                                chars[i] = (char) (chars[i + 1] + 1);
+                            }
+                        }
+                    }
+                } else {
+                    if (chars[i + 1] == 'z') {
+                        chars[i] = 'a';
+                    } else {
+                        chars[i] = (char) (chars[i + 1] + 1);
+                    }
+                }
+            }
+        }
+        String res = String.valueOf(chars);
+        return res;
     }
 
     public static void main(String[] args) {
@@ -3168,5 +3219,4 @@ public class Solution2 {
         System.out.println(solution.massage(oneDimensionalArrayA));
         return;
     }
-//"1 2147483647 2147483648"
 }
