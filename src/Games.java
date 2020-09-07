@@ -1,3 +1,5 @@
+import java.io.PrintWriter;
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -2731,14 +2733,14 @@ public class Games {
     int[][] dp;
     int[] cuts;
 
-    public int dp(int l, int r) {
-        if (r - l <= 1) {
+    public int dp(int l, int r){
+        if(r - l <= 1){
             return 0;
         }
-        if (dp[l][r] == -1) {
+        if(dp[l][r] == -1){
             int len = cuts[r] - cuts[l];
-            dp[l][r] = (int) 1e9;
-            for (int i = l + 1; i < r; i++) {
+            dp[l][r] = (int)1e9;
+            for(int i = l + 1; i < r; i++){
                 dp[l][r] = Math.min(dp[l][r], dp(l, i) + dp(i, r) + len);
             }
         }
@@ -2831,6 +2833,481 @@ public class Games {
     }
 
 
+    //2020-8-02 第200周赛
+
+    public int countGoodTriplets(int[] arr, int a, int b, int c) {
+        int len = arr.length;
+        int num = 0;
+        for (int i = 0; i < len; i++) {
+            for (int j = i + 1; j < len; j++) {
+                if (Math.abs(arr[i] - arr[j]) > a) {
+                    continue;
+                }
+                for (int k = j + 1; k < len; k++) {
+                    if (Math.abs(arr[j] - arr[k]) <= b && Math.abs(arr[i] - arr[k]) <= c) {
+                        num++;
+                    }
+                }
+            }
+        }
+        return num;
+    }
+
+    public int getWinner(int[] arr, int k) {
+        int len = arr.length;
+        int winTime = 1;
+        int winKey = arr[0] > arr[1] ? arr[0] : arr[1];
+        for (int i = 2; i < len; i++) {
+            if (k == winTime) {
+                return winKey;
+            }
+            if (winKey > arr[i]) {
+                winTime++;
+            } else {
+                winKey = arr[i];
+                winTime = 1;
+            }
+        }
+        return winKey;
+    }
+
+    public int minSwaps(int[][] grid) {
+        int len = grid.length;
+        int[] status = new int[len];
+        for (int i = 0; i < len; i++) {
+            for (int j = len - 1; j >= 0; j--) {
+                if (grid[i][j] == 1) {
+                    status[i] = j;
+                    break;
+                }
+            }
+        }
+        int step = 0;
+        for (int i = 0; i < len; i++) {
+            boolean f = false;
+            for (int j = i; j < len; j++) {
+                if (j > i) {
+                    int p = status[i];
+                    status[i] = status[j];
+                    status[j] = p;
+                }
+                if (status[i] < i + 1) {
+                    step += j - i;
+                    f = true;
+                    break;
+                }
+            }
+            if (!f) {
+                return -1;
+            }
+        }
+        return step;
+    }
+
+    public int maxSum(int[] nums1, int[] nums2) {
+        Comparator<int[]> c = new Comparator<int[]>() {
+            @Override
+            public int compare(int[] o1, int[] o2) {
+                return o1[0] - o2[0];
+            }
+        };
+        PriorityQueue<int[]> queue = new PriorityQueue<>(c);
+        int a = 0, b = 0;
+        int lenA = nums1.length, lenB = nums2.length;
+        while (a < lenA && b < lenB) {
+            if (nums1[a] < nums2[b]) {
+                queue.add(new int[]{nums1[a], 1});
+                a++;
+            } else if (nums1[a] > nums2[b]) {
+                queue.add(new int[]{nums2[b], 2});
+                b++;
+            } else {
+                queue.add(new int[]{nums1[a], 3});
+                a++;
+                b++;
+            }
+        }
+        while (a < lenA) {
+            queue.add(new int[]{nums1[a++], 1});
+        }
+        while (b < lenB) {
+            queue.add(new int[]{nums2[b++], 2});
+        }
+        long res = 0;
+        long aRoad = 0, bRoad = 0;
+        for (int[] crr : queue) {
+            if (crr[1] == 1) {
+                aRoad += crr[0];
+            } else if (crr[1] == 2) {
+                bRoad += crr[0];
+            } else {
+                res += Math.max(aRoad, bRoad);
+                res += crr[0];
+                res = res % 1000000007;
+                aRoad = 0;
+                bRoad = 0;
+            }
+        }
+        res += Math.max(aRoad, bRoad);
+        res = res % 1000000007;
+        return (int) res;
+    }
+
+    //2020-8-16 第201 周赛
+    public boolean threeConsecutiveOdds(int[] arr) {
+        int num = 0;
+        for (int a : arr) {
+            if (a % 2 == 1) {
+                num++;
+                if (num >= 3) {
+                    return true;
+                }
+            } else {
+                num = 0;
+            }
+        }
+        return false;
+    }
+
+    public int minOperations(int n) {
+        int tmp = 1;
+        int sum = 0;
+        while (tmp < n) {
+            sum += n - tmp;
+            tmp += 2;
+        }
+        return sum;
+    }
+
+    public int maxDistance(int[] position, int m) {
+        Arrays.sort(position);
+        int len = position.length;
+        int l = 0;
+        int r = position[len - 1] * 2 + 1;
+        while (l < r) {
+            int mid = (l + r) >> 1;
+            if (maxDistanceOK(position, mid, m)) {
+                l = mid + 1;
+            } else {
+                r = mid;
+            }
+        }
+        return l;
+    }
+
+    public boolean maxDistanceOK(int[] position, int d, int m) {
+        int pre = position[0];
+        int n = 1;
+        for (int i = 1; i < position.length; i++) {
+            if (position[i] - pre >= d) {
+                pre = position[i];
+                n++;
+            }
+        }
+        return n >= m;
+    }
+
+    public int minDays(int n) {
+        int[] dp = new int[n];
+        dp[0] = 1;
+        for (int i = 1; i < n; i++) {
+            int tmp = i + 1;
+            dp[i] = dp[i - 1] + 1;
+            if (tmp % 2 == 0) {
+                dp[i] = Math.min(dp[i], dp[i / 2] + 1);
+            }
+            if (tmp % 3 == 0) {
+                dp[i] = Math.min(dp[i], dp[i / 3] + 1);
+            }
+        }
+//        return dp[n-1];
+
+        List<Integer> list = new ArrayList<>();
+        int pre = 0;
+        list.add(1);
+        for (int i = 1; i < n; i++) {
+            int tmp = i + 1;
+            int t = list.get(i - 1 - pre) + 1;
+            if (tmp % 2 == 0) {
+                t = Math.min(t, list.get(tmp / 2 - 1 - pre) + 1);
+            }
+            if (tmp % 3 == 0) {
+                t = Math.min(t, list.get(tmp / 3 - 1 - pre) + 1);
+                for (int j = pre; j < tmp / 3; j++) {
+                    list.remove(j - pre);
+                }
+                pre = tmp / 3;
+            }
+            list.add(t);
+        }
+        return list.get(n - pre - 1);
+    }
+
+    //第 33 场双周赛
+    public String thousandSeparator(int n) {
+        if (n < 1000) {
+            return String.valueOf(n);
+        }
+        StringBuilder res = new StringBuilder();
+        int i = 0;
+        while (n > 0) {
+            if (i > 0 && i % 3 == 0) {
+                res.append(".");
+            }
+            res.append(n % 10);
+            n = n / 10;
+            i++;
+        }
+        return res.reverse().toString();
+    }
+
+    public List<Integer> findSmallestSetOfVertices(int n, List<List<Integer>> edges) {
+        boolean[] visit = new boolean[n];
+        for (List<Integer> list : edges) {
+            int from = list.get(0);
+            int to = list.get(1);
+            if (!visit[to]) {
+                visit[to] = true;
+            }
+        }
+        List<Integer> res = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            if (!visit[i]) {
+                res.add(i);
+            }
+        }
+        return res;
+    }
+
+    public int minOperations(int[] nums) {
+        int len = nums.length;
+//        int[][] arr = new int[len][2];
+        int sum = 0, max = 0;
+        for (int i = 0; i < len; i++) {
+            int tmp = nums[i];
+            int a = 0, b = 0;
+            while (tmp != 0) {
+                if (tmp % 2 == 0) {
+                    tmp = tmp / 2;
+                    b++;
+                } else {
+                    tmp = tmp - 1;
+                    a++;
+                }
+            }
+            sum += a;
+            max = Math.max(max, b);
+        }
+        return sum + max;
+    }
+
+    public boolean containsCycle(char[][] grid) {
+        containsCycleM = grid.length;
+        containsCycleN = grid[0].length;
+        Set<String> visited = new HashSet<>();
+        for (int i = 0; i < containsCycleM; i++) {
+            for (int j = 0; j < containsCycleN; j++) {
+                containsCycleDfs(visited, grid, i, j, i, j, i, j);
+                if (containsCycleFlag) {
+                    return containsCycleFlag;
+                }
+            }
+        }
+        return containsCycleFlag;
+    }
+
+    int containsCycleM = 0, containsCycleN = 0;
+
+    int[][] containsCycleDir = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+
+    boolean containsCycleFlag = false;
+
+    public void containsCycleDfs(Set<String> visited, char[][] grid, int beginX, int beginY,
+                                 int preX, int preY, int x, int y) {
+        String key = x + "," + y;
+        if (visited.contains(key)) {
+            return;
+        }
+        visited.add(key);
+        for (int[] dir : containsCycleDir) {
+            int newx = x + dir[0];
+            int newy = y + dir[1];
+            if (newx < 0 || newx == containsCycleM || newy < 0 || newy == containsCycleN) {
+                continue;
+            }
+            if (newx == preX && newy == preY) {
+                continue;
+            }
+            if (grid[newx][newy] != grid[x][y]) {
+                continue;
+            }
+            String newkey = newx + "," + newy;
+            if (visited.contains(newkey)) {
+                containsCycleFlag = true;
+                return;
+            }
+            containsCycleDfs(visited, grid, beginX, beginY, x, y, newx, newy);
+            if (containsCycleFlag) {
+                return;
+            }
+        }
+    }
+
+    //2020-8-23 第202 周赛
+    public List<Integer> mostVisited(int n, int[] rounds) {
+        List<Integer> res = new ArrayList<>();
+        int b = rounds[0];
+        int e = rounds[rounds.length - 1];
+        int[] arr = new int[n];
+        if (b > e) {
+            e = e + n;
+        }
+        for (int i = b; i <= e; i++) {
+            arr[i % n == 0 ? i - 1 : i % n - 1]++;
+        }
+        for (int i = 0; i < n; i++) {
+            if (arr[i] != 0) {
+                res.add(i + 1);
+            }
+        }
+        return res;
+    }
+
+
+    public int maxCoins(int[] piles) {
+        Arrays.sort(piles);
+        int l = 0, r = piles.length - 1;
+        int sum = 0;
+        while (l < r) {
+            sum += piles[r - 1];
+            l++;
+            r -= 2;
+        }
+        return sum;
+    }
+
+    public int findLatestStep(int[] arr, int m) {
+        return 0;
+    }
+
+    public int stoneGameV0(int[] stoneValue) {
+        Arrays.sort(stoneValue);
+//        List<Integer> res = new ArrayList<>();
+        List<Integer> res = new ArrayList<>();
+        for (int i = stoneValue.length - 1; i >= 0; i--) {
+            res.add(stoneValue[i]);
+        }
+//        List<Integer> collect = Arrays.stream(stoneValue).boxed().collect(Collectors.toList());
+        return stoneGameVAss(res);
+    }
+
+    public int stoneGameVAss(List<Integer> stoneValue) {
+        int len = stoneValue.size();
+        if (len <= 1) {
+            return 0;
+        }
+        if (len == 2) {
+            return Math.min(stoneValue.get(0), stoneValue.get(1));
+        }
+        List<Integer> a = new ArrayList<>();
+        List<Integer> b = new ArrayList<>();
+        int sa = 0, sb = 0;
+        for (int s : stoneValue) {
+            if (sa <= sb) {
+                a.add(s);
+                sa += s;
+            } else {
+                b.add(s);
+                sb += s;
+            }
+        }
+        if (sa < sb) {
+            return sa + stoneGameVAss(a);
+        }
+        if (sb < sa) {
+            return sb + stoneGameVAss(b);
+        }
+        int ta = sa + stoneGameVAss(a);
+        int tb = sb + stoneGameVAss(b);
+        return Math.max(ta, tb);
+    }
+
+    public int stoneGameV(int[] stoneValue) {
+        return stoneGameVAss2(stoneValue, 0, stoneValue.length - 1);
+    }
+
+    public int stoneGameVAss2(int[] stoneValue, int l, int r) {
+        int len = r - l + 1;
+        if (len <= 1) {
+            return 0;
+        }
+        if (len == 2) {
+            return Math.min(stoneValue[l], stoneValue[r]);
+        }
+        int sa = 0, sb = 0;
+        int ll = l, rr = r;
+        while (ll <= rr) {
+            if (sa <= sb) {
+                sa += stoneValue[ll++];
+            } else {
+                sb += stoneValue[rr--];
+            }
+        }
+        if (sa < sb) {
+            return sa + stoneGameVAss2(stoneValue, l, ll - 1);
+        }
+        if (sb < sa) {
+            return sb + stoneGameVAss2(stoneValue, rr + 1, r);
+        }
+        int ta = sa + stoneGameVAss2(stoneValue, l, ll - 1);
+        int tb = sb + stoneGameVAss2(stoneValue, rr + 1, r);
+        return Math.max(ta, tb);
+    }
+
+
+    public int stoneGameVAss3(int[] stoneValue, int l, int r) {
+        int len = r - l + 1;
+        if (len <= 1) {
+            return 0;
+        }
+        if (len == 2) {
+            return Math.min(stoneValue[l], stoneValue[r]);
+        }
+        int sa = 0, sb = 0;
+        int ll = l, rr = r;
+        while (ll <= rr) {
+            if (sa <= sb) {
+                sa += stoneValue[ll++];
+            } else {
+                sb += stoneValue[rr--];
+            }
+        }
+        if (sa < sb) {
+            int td = 0;
+            if (sb - stoneValue[rr + 1] < sa + stoneValue[rr + 1]) {
+                td = sb - stoneValue[rr + 1] + stoneGameVAss3(stoneValue, rr + 2, r);
+            }
+            int ta = sa + stoneGameVAss3(stoneValue, l, ll - 1);
+            return Math.max(ta, td);
+        }
+        if (sb < sa) {
+            int tc = 0;
+            if (sb + stoneValue[ll - 1] > sa - stoneValue[ll - 1]) {
+                tc = sa - stoneValue[ll - 1] + stoneGameVAss3(stoneValue, l, ll - 2);
+            }
+            int tb = sb + stoneGameVAss3(stoneValue, rr + 1, r);
+            return Math.max(tb, tc);
+        }
+        int ta = sa + stoneGameVAss3(stoneValue, l, ll - 1);
+        int tb = sb + stoneGameVAss3(stoneValue, rr + 1, r);
+//        int tc = sa - stoneValue[ll - 1] + stoneGameVAss3(stoneValue, l, ll - 2);
+//        int td = sb - stoneValue[rr + 1] + stoneGameVAss3(stoneValue, rr + 2, r);
+//        int tmp = Math.max(tc, td), tmp2 = Math.max(ta, tb);
+//        return Math.max(tmp, tmp2);
+        return Math.max(ta, tb);
+    }
+
+
     public static void main(String[] args) {
 
         //ListNode
@@ -2873,7 +3350,7 @@ public class Games {
 
         //Arrays
         String[] oneDimensionalStringArray = {"5", "2", "C", "D", "+"};
-        int[] oneDimensionalArrayA = {13, 6, 7, 2, 10};
+        int[] oneDimensionalArrayA = {13,6,7,2,10};
         int[] oneDimensionalArrayB = {3, 0, 2, 0, 2, 3, 3, 0, 0, 2, 1, 1, 1, 0, -1, -1, 1, -1, 1, 0, 2, 0, 0, 3, 0, 0, 3, 1, 0, 2, 0, -1, 2, -1, 1, 1, 3, 0, 2, 3, 3, 0, 0, 2, -1, 1};
         int[][] twoDimensionalArrayA = {{1, 3,}, {0, 2}, {1, 3}, {0, 2}};
         int[][] twoDimensionalArrayB = {
@@ -2911,9 +3388,7 @@ public class Games {
 
 
         Games games = new Games();
-        Scanner sc = new Scanner(System.in);
-        String ssss = sc.next();
-        double p = games.numWays(ssss);
+        double p = games.minCost(20, oneDimensionalArrayA);
         System.out.println(p);
     }
 }

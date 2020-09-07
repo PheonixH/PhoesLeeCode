@@ -3138,11 +3138,50 @@ public class Solution2 {
         return res;
     }
 
+    /**
+     * 214. 最短回文串
+     *
+     * 给定一个字符串 s，你可以通过在字符串前面添加字符将其转换为回文串。找到并返回可以用这种方式转换的最短回文串。
+     * 执行用时：350 ms, 在所有 Java 提交中击败了31.01% 的用户
+     * 内存消耗：40 MB, 在所有 Java 提交中击败了55.32% 的用户
+     * @param s 字符串
+     * @return 最短回文串
+     */
+    public String shortestPalindrome(String s) {
+        int len = s.length();
+        if (len <= 1) {
+            return s;
+        }
+        char[] cs = s.toCharArray();
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < len; i++) {
+            int j = len - i - 1;
+            int k = 0;
+            boolean could = true;
+            while (k < j) {
+                if (cs[j] != cs[k]) {
+                    could = false;
+                    break;
+                }
+                j--;
+                k++;
+            }
+            if (could && k != 0) {
+                for (int jj = len - 1; jj > len - i - 1; jj--) {
+                    sb.append(cs[jj]);
+                }
+                sb.append(s);
+                return sb.toString();
+            }
+        }
+        return sb.append(s.substring(1, len)).reverse().toString() + s;
+    }
+
     public static void main(String[] args) {
         Solution2 solution = new Solution2();
 
         //ListNode
-        int[] listNodeValue = {1, 2, 3, 4};
+        int[] listNodeValue = {1, 2, 3, 4, 5};
         int listNodeLen = listNodeValue.length;
         ListNode head = new ListNode(listNodeValue[0]);
         ListNode listNodeTmp = head;
@@ -3180,11 +3219,11 @@ public class Solution2 {
 
         //Arrays
         String[] oneDimensionalStringArray = {"eat", "tea", "tan", "ate", "nat", "bat"};
-        int[] oneDimensionalArrayA = {1, 2, 3, 1};
+        int[] oneDimensionalArrayA = {4, 6, 7, 7};
         int[] oneDimensionalArrayB = {5, 2, 2, 5, 3, 5};
         int[][] twoDimensionalArrayA = {{0, 1}};
         int[][] twoDimensionalArrayB = {
-                {3, 3, 1, 1}, {2, 2, 1, 2}, {1, 1, 1, 2}
+                {1, 2, 3}, {4, 5, 6}, {7, 8, 9}
         };
         char[] oneDimensionalCharArray = {'A', 'B'};
         char[][] twoDimensionalCharArray = {
@@ -3208,15 +3247,15 @@ public class Solution2 {
         }
 
         //List<List<String>>
-        String[][] listListStringArray = {{"JFK", "KUL"}, {"JFK", "NRT"}, {"NRT", "JFK"}};
-        //{{"JFK", "SFO"}, {"JFK", "ATL"}, {"SFO", "ATL"}, {"ATL", "JFK"}, {"ATL", "SFO"}};
+        String[][] listListStringArray = {{"JFK", "SFO"}, {"JFK", "ATL"}, {"SFO", "ATL"}, {"ATL", "JFK"}, {"ATL", "SFO"}};
         List<List<String>> stringListList = new LinkedList();
         for (String[] listStringArray : listListStringArray) {
             List<String> collect = Arrays.stream(listStringArray).collect(Collectors.toList());
             stringListList.add(collect);
         }
 
-        System.out.println(solution.massage(oneDimensionalArrayA));
+        System.out.println(solution.removeNthFromEnd(head, 2));
         return;
     }
+
 }
