@@ -2765,6 +2765,72 @@ public class Games {
         return dp(0, m + 1);
     }
 
+    /**
+     * 第 34 场双周赛
+     */
+
+    /**
+     * 1572. 矩阵对角线元素的和
+     * 给你一个正方形矩阵 mat，请你返回矩阵对角线元素的和。
+     * 请你返回在矩阵主对角线上的元素和副对角线上且不在主对角线上元素的和。
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：39.8 MB, 在所有 Java 提交中击败了100.00% 的用户
+     *
+     * @param mat 矩阵
+     * @return 矩阵对角线元素的和
+     */
+    public int diagonalSum(int[][] mat) {
+        int n = mat.length;
+        int res = 0;
+        if (n % 2 != 0) {
+            res = -mat[n / 2][n / 2];
+        }
+        for (int i = 0; i < n; i++) {
+            res += mat[i][i];
+            res += mat[i][n - i - 1];
+        }
+        return res;
+    }
+
+    public int numWays(String s) {
+        char[] chars = s.toCharArray();
+        int num = 0;
+        for (char c : chars) {
+            if (c == '1') {
+                num++;
+            }
+        }
+        int len = chars.length;
+        if (num == 0) {
+            return (int) (1L * (len - 1) % 1000000007 * ((len - 2) % 1000000007) / 2 % 1000000007);
+        }
+        if (num % 3 != 0) {
+            return 0;
+        }
+        int n = num / 3;
+        int lb = -1, le = -1, rb = -1, re = -1;
+        int nn = 0;
+        for (int i = 0; i < len; i++) {
+            if (chars[i] == '1') {
+                nn++;
+                if (nn == n && lb == -1) {
+                    lb = i;
+                }
+                if (nn == n + 1 && le == -1) {
+                    le = i;
+                }
+                if (nn == 2 * n && rb == -1) {
+                    rb = i;
+                }
+                if (nn == 2 * n + 1 && re == -1) {
+                    re = i;
+                }
+            }
+        }
+        return (int) ((1L * ((le - lb) % 1000000007) * ((re - rb) % 1000000007)) % 1000000007);
+    }
+
+
     public static void main(String[] args) {
 
         //ListNode
@@ -2845,7 +2911,9 @@ public class Games {
 
 
         Games games = new Games();
-        double p = games.minCost(20, oneDimensionalArrayA);
+        Scanner sc = new Scanner(System.in);
+        String ssss = sc.next();
+        double p = games.numWays(ssss);
         System.out.println(p);
     }
 }
