@@ -1,8 +1,8 @@
-package data;
+package LeetCode.data;
 
 /**
  * @program: PhoesLeeCode
- * @className: data.SubrectangleQueries
+ * @className: LeetCode.data.SubrectangleQueries
  * @description:
  * @author: lov.moran
  * @date 2020/6/13 下午10:47

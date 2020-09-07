@@ -1,9 +1,9 @@
-package datestruct;
+package LeetCode.datestruct;
 
 /**
  * @ProjectName: PhoesLeeCode
  * @Package: PACKAGE_NAME
- * @ClassName: datestruct.Node
+ * @ClassName: LeetCode.datestruct.Node
  * @Description: 四叉树接口
  * @Author: Pheonix
  * @CreateDate: 2018/12/24 16:38

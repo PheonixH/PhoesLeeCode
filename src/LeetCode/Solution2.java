@@ -1,12 +1,11 @@
+package LeetCode;
 
-import java.lang.reflect.Array;
 import java.util.*;
 
-import datestruct.ListNode;
-import data.Node;
-import datestruct.TreeNode;
+import LeetCode.datestruct.ListNode;
+import LeetCode.data.Node;
+import LeetCode.datestruct.TreeNode;
 
-import javax.swing.text.MutableAttributeSet;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -16,7 +15,7 @@ import java.util.stream.Collectors;
 /**
  * @ProjectName: PhoesLeeCode
  * @Package: PACKAGE_NAME
- * @ClassName: Solution2
+ * @ClassName: LeetCode.Solution2
  * @Description:
  * @Author: Pheonix
  * @CreateDate: 2019/4/25 15:05
@@ -2638,6 +2637,506 @@ public class Solution2 {
         return max;
     }
 
+    public List<String> findItinerary(List<List<String>> tickets) {
+        for (List<String> ticket : tickets) {
+            String from = ticket.get(0), to = ticket.get(1);
+            if (!findItineraryMap.containsKey(from)) {
+                findItineraryMap.put(from, new PriorityQueue<String>());
+            }
+            findItineraryMap.get(from).offer(to);
+        }
+        dfs("JFK");
+        Collections.reverse(findItineraryItinerary);
+        return findItineraryItinerary;
+    }
+
+    Map<String, PriorityQueue<String>> findItineraryMap = new HashMap<String, PriorityQueue<String>>();
+    List<String> findItineraryItinerary = new LinkedList<String>();
+
+    public void dfs(String curr) {
+        while (findItineraryMap.containsKey(curr) && findItineraryMap.get(curr).size() > 0) {
+            String tmp = findItineraryMap.get(curr).poll();
+            dfs(tmp);
+        }
+        findItineraryItinerary.add(curr);
+    }
+
+
+    /**
+     * 24. 两两交换链表中的节点
+     * <p>
+     * 给定一个链表，两两交换其中相邻的节点，并返回交换后的链表。
+     * <p>
+     * 你不能只是单纯的改变节点内部的值，而是需要实际的进行节点交换。
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：37.4 MB, 在所有 Java 提交中击败了60.79% 的用户
+     *
+     * @param head 链表
+     * @return 交换后的链表
+     */
+    public ListNode swapPairs(ListNode head) {
+        ListNode p = head;
+        if (p == null) {
+            return p;
+        }
+        ListNode q = head.next;
+        if (q == null) {
+            return p;
+        }
+        p.next = q.next;
+        q.next = p;
+        if (p.next == null) {
+            return q;
+        }
+        ListNode pre = p;
+        head = q;
+        p = p.next;
+        if (p == null) {
+            return head;
+        }
+        q = p.next;
+        while (p != null && q != null) {
+            p.next = q.next;
+            pre.next = q;
+            q.next = p;
+            pre = p;
+            p = p.next;
+            if (p == null) {
+                break;
+            }
+            q = p.next;
+        }
+        return head;
+    }
+
+    /**
+     * 15. 三数之和
+     * <p>
+     * 给你一个包含 n 个整数的数组 nums，判断 nums 中是否存在三个元素 a，b，c ，使得 a + b + c = 0 ？请你找出所有满足条件且不重复的三元组。
+     * <p>
+     * 注意：答案中不可以包含重复的三元组。
+     * 执行用时：736 ms, 在所有 Java 提交中击败了5.00% 的用户
+     * 内存消耗：45.3 MB, 在所有 Java 提交中击败了5.00% 的用户
+     *
+     * @param nums 包含n个整数的数组
+     * @return 三数之和集合链表
+     */
+    public List<List<Integer>> threeSum(int[] nums) {
+        Arrays.sort(nums);
+        List<List<Integer>> res = new ArrayList<>();
+        Set<String> set = new HashSet<>();
+        int len = nums.length;
+        for (int i = 0; i < len; i++) {
+            if (nums[i] > 0) {
+                break;
+            }
+            for (int j = len - 1; j > i; j--) {
+                if (nums[j] < 0) {
+                    break;
+                }
+                int l = i, r = j;
+                int target = 0 - nums[i] - nums[j];
+                if (target < nums[i] || target > nums[j]) {
+                    continue;
+                }
+                while (l < r) {
+                    int mid = l + (r - l) / 2;
+                    if (mid == i || mid == j) {
+                        break;
+                    }
+                    if (nums[mid] == target) {
+                        String key = nums[i] + "," + nums[mid] + "," + nums[j];
+                        if (set.add(key)) {
+                            List<Integer> re = new ArrayList<>();
+                            re.add(nums[i]);
+                            re.add(nums[mid]);
+                            re.add(nums[j]);
+                            res.add(re);
+                        }
+                        break;
+                    }
+                    if (nums[mid] < target) {
+                        l = mid + 1;
+                    } else {
+                        r = mid;
+                    }
+                }
+            }
+        }
+        return res;
+    }
+
+    /**
+     * 15. 三数之和
+     * <p>
+     * 给你一个包含 n 个整数的数组 nums，判断 nums 中是否存在三个元素 a，b，c ，使得 a + b + c = 0 ？请你找出所有满足条件且不重复的三元组。
+     * <p>
+     * 注意：答案中不可以包含重复的三元组。
+     * 执行用时：31 ms, 在所有 Java 提交中击败了25.80% 的用户
+     * 内存消耗：43.9 MB, 在所有 Java 提交中击败了41.11% 的用户
+     *
+     * @param nums 包含n个整数的数组
+     * @return 三数之和集合链表
+     */
+    public List<List<Integer>> threeSum0(int[] nums) {
+        int n = nums.length;
+        Arrays.sort(nums);
+        List<List<Integer>> ans = new ArrayList<List<Integer>>();
+        // 枚举 a
+        for (int first = 0; first < n; ++first) {
+            // 需要和上一次枚举的数不相同
+            if (first > 0 && nums[first] == nums[first - 1]) {
+                continue;
+            }
+            // c 对应的指针初始指向数组的最右端
+            int third = n - 1;
+            int target = -nums[first];
+            // 枚举 b
+            for (int second = first + 1; second < n; ++second) {
+                // 需要和上一次枚举的数不相同
+                if (second > first + 1 && nums[second] == nums[second - 1]) {
+                    continue;
+                }
+                // 需要保证 b 的指针在 c 的指针的左侧
+                while (second < third && nums[second] + nums[third] > target) {
+                    --third;
+                }
+                // 如果指针重合，随着 b 后续的增加
+                // 就不会有满足 a+b+c=0 并且 b<c 的 c 了，可以退出循环
+                if (second == third) {
+                    break;
+                }
+                if (nums[second] + nums[third] == target) {
+                    List<Integer> list = new ArrayList<Integer>();
+                    list.add(nums[first]);
+                    list.add(nums[second]);
+                    list.add(nums[third]);
+                    ans.add(list);
+                }
+            }
+        }
+        return ans;
+    }
+
+    /**
+     * 841. 钥匙和房间
+     * <p>
+     * 有 N 个房间，开始时你位于 0 号房间。每个房间有不同的号码：0，1，2，...，N-1，并且房间里可能有一些钥匙能使你进入下一个房间。
+     * 在形式上，对于每个房间 i 都有一个钥匙列表 rooms[i]，每个钥匙 rooms[i][j] 由 [0,1，...，N-1] 中的一个整数表示，其中 N = rooms.length。 钥匙 rooms[i][j] = v 可以打开编号为 v 的房间。
+     * 最初，除 0 号房间外的其余所有房间都被锁住。
+     * 你可以自由地在房间之间来回走动。
+     * 如果能进入每个房间返回 true，否则返回 false。
+     * <p>
+     * 执行用时：3 ms, 在所有 Java 提交中击败了39.43% 的用户
+     * 内存消耗：39.7 MB, 在所有 Java 提交中击败了62.40% 的用户
+     *
+     * @param rooms 对应房间中的钥匙
+     * @return 是否全访问
+     */
+    public boolean canVisitAllRooms(List<List<Integer>> rooms) {
+        int len = rooms.size();
+        boolean[] visited = new boolean[len];
+        Stack<Integer> stack = new Stack<>();
+        for (int i : rooms.get(0)) {
+            stack.push(i);
+        }
+        int nums = 1;
+        visited[0] = true;
+        while (!stack.empty()) {
+            int tmp = stack.pop();
+            if (visited[tmp]) {
+                continue;
+            }
+            visited[tmp] = true;
+            for (int r : rooms.get(tmp)) {
+                stack.push(r);
+            }
+            nums++;
+            if (nums == len) {
+                break;
+            }
+        }
+        return nums == len;
+    }
+
+    /**
+     * 257. 二叉树的所有路径
+     * <p>
+     * 给定一个二叉树，返回所有从根节点到叶子节点的路径。
+     * 执行用时：4 ms, 在所有 Java 提交中击败了60.09% 的用户
+     * 内存消耗：39.9 MB, 在所有 Java 提交中击败了57.97% 的用户
+     *
+     * @param root 二叉树
+     * @return 二叉树的所有路径
+     */
+    public List<String> binaryTreePaths(TreeNode root) {
+        List<String> res = new ArrayList<>();
+        if (root != null) {
+            binaryTreePathsAss(root, new Stack<>(), res);
+        }
+        return res;
+    }
+
+    public void binaryTreePathsAss(TreeNode root, Stack<Integer> list, List<String> res) {
+        if (root.right == null && root.left == null) {
+            StringBuilder sb = new StringBuilder();
+            list.forEach(x -> {
+                sb.append(x).append("->");
+            });
+            String tmp = sb.append(root.val).toString();
+            res.add(tmp);
+            return;
+        }
+        list.push(root.val);
+        if (root.left != null) {
+            binaryTreePathsAss(root.left, list, res);
+        }
+        if (root.right != null) {
+            binaryTreePathsAss(root.right, list, res);
+        }
+        list.pop();
+    }
+
+    /**
+     * 347. 前 K 个高频元素
+     * <p>
+     * 给定一个非空的整数数组，返回其中出现频率前 k 高的元素。
+     * 执行用时：19 ms, 在所有 Java 提交中击败了36.11% 的用户
+     * 内存消耗：42.2 MB, 在所有 Java 提交中击败了82.70% 的用户
+     *
+     * @param nums 非空的整数数组
+     * @param k    k
+     * @return 前 K 个高频元素
+     */
+    public int[] topKFrequent0(int[] nums, int k) {
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int n : nums) {
+            map.putIfAbsent(n, 1);
+            map.put(n, map.get(n) + 1);
+        }
+        Comparator<int[]> comparator = new Comparator<int[]>() {
+            @Override
+            public int compare(int[] o1, int[] o2) {
+                return o2[0] - o1[0];
+            }
+        };
+        PriorityQueue<int[]> p = new PriorityQueue<int[]>(comparator);
+        for (int key : map.keySet()) {
+            int[] tmp = new int[]{map.get(key), key};
+            p.add(tmp);
+        }
+        int[] res = new int[k];
+        while (k > 0) {
+            k--;
+            res[k] = p.poll()[1];
+        }
+        return res;
+    }
+
+    /**
+     * 347. 前 K 个高频元素
+     * 执行用时：15 ms, 在所有 Java 提交中击败了87.76% 的用户
+     * 内存消耗：42.2 MB, 在所有 Java 提交中击败了76.25% 的用户
+     *
+     * @param nums 非空的整数数组
+     * @param k    k
+     * @return 前 K 个高频元素
+     */
+    public int[] topKFrequent(int[] nums, int k) {
+        Map<Integer, Integer> occurrences = new HashMap<Integer, Integer>();
+        for (int num : nums) {
+            occurrences.put(num, occurrences.getOrDefault(num, 0) + 1);
+        }
+
+        List<int[]> values = new ArrayList<int[]>();
+        for (Map.Entry<Integer, Integer> entry : occurrences.entrySet()) {
+            int num = entry.getKey(), count = entry.getValue();
+            values.add(new int[]{num, count});
+        }
+        int[] ret = new int[k];
+        qsort(values, 0, values.size() - 1, ret, 0, k);
+        return ret;
+    }
+
+    public void qsort(List<int[]> values, int start, int end, int[] ret, int retIndex, int k) {
+        int picked = (int) (Math.random() * (end - start + 1)) + start;
+        Collections.swap(values, picked, start);
+
+        int pivot = values.get(start)[1];
+        int index = start;
+        for (int i = start + 1; i <= end; i++) {
+            if (values.get(i)[1] >= pivot) {
+                Collections.swap(values, index + 1, i);
+                index++;
+            }
+        }
+        Collections.swap(values, start, index);
+
+        if (k <= index - start) {
+            qsort(values, start, index - 1, ret, retIndex, k);
+        } else {
+            for (int i = start; i <= index; i++) {
+                ret[retIndex++] = values.get(i)[0];
+            }
+            if (k > index - start + 1) {
+                qsort(values, index + 1, end, ret, retIndex, k - (index - start + 1));
+            }
+        }
+    }
+
+    /**
+     * 306. 累加数
+     * <p>
+     * 累加数是一个字符串，组成它的数字可以形成累加序列。
+     * 一个有效的累加序列必须至少包含 3 个数。除了最开始的两个数以外，字符串中的其他数都等于它之前两个数相加的和。
+     * 给定一个只包含数字 '0'-'9' 的字符串，编写一个算法来判断给定输入是否是累加数。
+     * <p>
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：37.2 MB, 在所有 Java 提交中击败了97.12% 的用户
+     *
+     * @param num 字符串
+     * @return 字符串是否是累加数
+     */
+    public boolean isAdditiveNumber(String num) {
+        char[] chars = num.toCharArray();
+        int len = chars.length;
+        int[] ints = new int[len];
+        for (int i = 0; i < len; i++) {
+            ints[i] = chars[i] - '0';
+        }
+        for (int i = 1; i < len; i++) {
+            long ta = 0;
+            if (ints[0] != 0) {
+                for (int t = 0; t < i; t++) {
+                    ta = ta * 10 + ints[t];
+                }
+            }
+            long a = ta;
+            for (int j = i + 1; j < len; j++) {
+                a = ta;
+                long tb = 0;
+                if (ints[i] != 0) {
+                    for (int t = i; t < j; t++) {
+                        tb = tb * 10 + ints[t];
+                    }
+                }
+                long b = tb;
+                if (a == 0 && b == 0) {
+                    boolean f = true;
+                    for (int t : ints) {
+                        if (t != 0) {
+                            f = false;
+                            continue;
+                        }
+                    }
+                    if (f) {
+                        return true;
+                    }
+                } else {
+                    boolean f = true;
+                    b = tb;
+                    for (int t = j; t < len; ) {
+                        if (ints[t] == 0) {
+                            f = false;
+                            break;
+                        }
+                        long tmp = 0;
+                        while (tmp < a + b && t < len) {
+                            tmp = tmp * 10 + ints[t];
+                            t++;
+                        }
+                        if (tmp != a + b) {
+                            f = false;
+                            break;
+                        } else {
+                            a = b;
+                            b = tmp;
+                        }
+                    }
+                    if (f) {
+                        return f;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 面试题 17.16. 按摩师
+     * <p>
+     * 一个有名的按摩师会收到源源不断的预约请求，每个预约都可以选择接或不接。在每次预约服务之间要有休息时间，因此她不能接受相邻的预约。
+     * 给定一个预约请求序列，替按摩师找到最优的预约集合（总预约时间最长），返回总的分钟数。
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：36.9 MB, 在所有 Java 提交中击败了76.87% 的用户
+     *
+     * @param nums 预约请求序列
+     * @return 最优的预约集合
+     */
+    public int massage(int[] nums) {
+        int len = nums.length;
+        if (len == 0) {
+            return 0;
+        }
+        int[][] dp = new int[len][2];
+        dp[0][1] = nums[0];
+        for (int i = 1; i < len; i++) {
+            dp[i][0] = Math.max(dp[i - 1][1], dp[i - 1][0]);
+            dp[i][1] = dp[i - 1][0] + nums[i];
+        }
+        return Math.max(dp[len - 1][0], dp[len - 1][1]);
+    }
+
+    /**
+     * 1576. 替换所有的问号
+     * 给你一个仅包含小写英文字母和 '?' 字符的字符串 s<var> </var>，请你将所有的 '?' 转换为若干小写字母，使最终的字符串不包含任何 连续重复 的字符。
+     * 注意：你 不能 修改非 '?' 字符。
+     * 题目测试用例保证 除 '?' 字符 之外，不存在连续重复的字符。
+     * 在完成所有转换（可能无需转换）后返回最终的字符串。如果有多个解决方案，请返回其中任何一个。可以证明，在给定的约束条件下，答案总是存在的。
+     *
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：37.8 MB, 在所有 Java 提交中击败了100.00% 的用户
+     * @param s 仅包含小写英文字母和 '?' 字符的字符串
+     * @return 替换所有的问号之后的字符串
+     */
+    public String modifyString(String s) {
+        char[] chars = s.toCharArray();
+        int len = chars.length;
+        if (len == 1 && chars[0] == '?') {
+            return "a";
+        } else if (len == 1) {
+            return s;
+        }
+        for (int i = 0; i < len; i++) {
+            if (chars[i] == '?') {
+                if (i != 0) {
+                    if (chars[i - 1] == 'z') {
+                        chars[i] = 'a';
+                    } else {
+                        chars[i] = (char) (chars[i - 1] + 1);
+                    }
+                    if (i != len - 1 && chars[i] == chars[i + 1]) {
+                        if (chars[i] == chars[i + 1]) {
+                            if (chars[i + 1] == 'z') {
+                                chars[i] = 'a';
+                            } else {
+                                chars[i] = (char) (chars[i + 1] + 1);
+                            }
+                        }
+                    }
+                } else {
+                    if (chars[i + 1] == 'z') {
+                        chars[i] = 'a';
+                    } else {
+                        chars[i] = (char) (chars[i + 1] + 1);
+                    }
+                }
+            }
+        }
+        String res = String.valueOf(chars);
+        return res;
+    }
+
     /**
      * 214. 最短回文串
      * <p>
@@ -2815,7 +3314,7 @@ public class Solution2 {
             stringListList.add(collect);
         }
 
-        System.out.println(solution.shortestPalindrome("aacecaaa"));
+        System.out.println(solution.removeNthFromEnd(head, 2));
         return;
     }
 

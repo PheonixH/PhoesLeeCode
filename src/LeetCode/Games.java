@@ -1006,6 +1006,149 @@ public class Games {
         return r;
     }
 
+
+    public int[] arrayRankTransform(int[] arr) {
+        int len = arr.length;
+        int[] brr = Arrays.copyOf(arr, len);
+        Arrays.sort(brr);
+        Map<Integer, Integer> map = new HashMap<>();
+        int k = 1;
+        for (int b : brr) {
+            if (!map.containsKey(b)) {
+                map.put(b, k++);
+            }
+        }
+        for (int i = 0; i < len; i++) {
+            arr[i] = map.get(arr[i]);
+        }
+        return arr;
+    }
+
+
+    public String breakPalindrome(String palindrome) {
+        int len = palindrome.length();
+        if (len <= 1) {
+            return "";
+        }
+        char[] chars = palindrome.toCharArray();
+        boolean is = false;
+        for (int i = 0; i < len / 2; i++) {
+            if (chars[i] != 'a') {
+                chars[i] = 'a';
+                is = true;
+                break;
+            }
+        }
+        if (!is) {
+            chars[chars.length - 1] = 'b';
+        }
+        StringBuilder sb = new StringBuilder();
+        for (char c : chars) {
+            sb.append(c);
+        }
+        return sb.toString();
+    }
+
+    public int[][] diagonalSort(int[][] mat) {
+        int m = mat.length, n = mat[0].length;
+        for (int i = 0; i < m; i++) {
+            int t = Math.min(m - i, n);
+            int[] tmp = new int[t];
+            int p = 0;
+            for (int j = i; j < m && j - i < n; j++) {
+                tmp[p++] = mat[j][j - i];
+            }
+            Arrays.sort(tmp);
+            p = 0;
+            for (int j = i; j < m && j - i < n; j++) {
+                mat[j][j - i] = tmp[p++];
+            }
+        }
+        for (int i = 1; i < n; i++) {
+            int t = Math.min(m, n - i);
+            int[] tmp = new int[t];
+            int p = 0;
+            for (int j = i; j - i < m && j < n; j++) {
+                tmp[p++] = mat[j - i][j];
+            }
+            Arrays.sort(tmp);
+            p = 0;
+            for (int j = i; j - i < m && j < n; j++) {
+                mat[j - i][j] = tmp[p++];
+            }
+        }
+        return mat;
+    }
+
+    public int maxValueAfterReverse(int[] nums) {
+        int len = nums.length;
+        int[] brr = new int[len];
+        for (int i = 0; i < len; i++) {
+            brr[len - i - 1] = nums[i];
+        }
+        return Math.max(maxValueAfterReverseAss(nums), maxValueAfterReverseAss(brr));
+    }
+
+    public int maxValueAfterReverseAss(int[] nums) {
+        int len = nums.length;
+        // 计算出相邻的差
+        int max = 0;
+        for (int i = 1; i < len; i++) {
+            max += Math.abs(nums[i] - nums[i - 1]);
+        }
+        if (len < 3) {
+            return max;
+        }
+        // 选出每个值差值最大的值（非相邻），计算
+        int[] arr = new int[len];
+        int[] brr = new int[len];
+        //len >= 3
+        arr[len - 1] = -1;
+        arr[len - 2] = -1;
+        brr[len - 1] = -1;
+        brr[len - 2] = -1;
+        for (int j = len - 3; j >= 0; j--) {
+            if (arr[j + 1] == -1) {
+                arr[j] = len - 1;
+            } else {
+                if (nums[arr[j + 1]] < nums[j + 2]) {
+                    arr[j] = j + 2;
+                } else {
+                    arr[j] = arr[j + 1];
+                }
+            }
+            if (brr[j + 1] == -1) {
+                brr[j] = len - 1;
+            } else {
+                if (nums[brr[j + 1]] > nums[j + 2]) {
+                    brr[j] = j + 2;
+                } else {
+                    brr[j] = brr[j + 1];
+                }
+            }
+        }
+        int tm = max;
+        for (int i = 0; i < len - 2; i++) {
+            if (arr[i] == len - 1) {
+                int tmax = Math.abs(nums[arr[i]] - nums[i]) - Math.abs(nums[i + 1] - nums[i]);
+                tm = Math.max(tmax + max, tm);
+            } else {
+                int tmax = Math.abs(nums[arr[i]] - nums[i]) + Math.abs(nums[arr[i] + 1] - nums[i + 1])
+                        - Math.abs(nums[i + 1] - nums[i]) - Math.abs(nums[arr[i] + 1] - nums[arr[i]]);
+                tm = Math.max(tmax + max, tm);
+            }
+            if (brr[i] == len - 1) {
+                int tmax = Math.abs(nums[brr[i]] - nums[i]) - Math.abs(nums[i + 1] - nums[i]);
+                tm = Math.max(tmax + max, tm);
+            } else {
+                int tmax = Math.abs(nums[brr[i]] - nums[i]) + Math.abs(nums[brr[i] + 1] - nums[i + 1])
+                        - Math.abs(nums[i + 1] - nums[i]) - Math.abs(nums[brr[i] + 1] - nums[brr[i]]);
+                tm = Math.max(tmax + max, tm);
+            }
+        }
+        return Math.max(tm, max);
+    }
+
     /*public int minNumberOfSemesters(int n, int[][] dependencies, int k) {
         int[] pre = new int[n];
         int[] post = new int[n];
@@ -2590,14 +2733,14 @@ public class Games {
     int[][] dp;
     int[] cuts;
 
-    public int dp(int l, int r) {
-        if (r - l <= 1) {
+    public int dp(int l, int r){
+        if(r - l <= 1){
             return 0;
         }
-        if (dp[l][r] == -1) {
+        if(dp[l][r] == -1){
             int len = cuts[r] - cuts[l];
-            dp[l][r] = (int) 1e9;
-            for (int i = l + 1; i < r; i++) {
+            dp[l][r] = (int)1e9;
+            for(int i = l + 1; i < r; i++){
                 dp[l][r] = Math.min(dp[l][r], dp(l, i) + dp(i, r) + len);
             }
         }
@@ -2623,6 +2766,72 @@ public class Games {
 
         return dp(0, m + 1);
     }
+
+    /**
+     * 第 34 场双周赛
+     */
+
+    /**
+     * 1572. 矩阵对角线元素的和
+     * 给你一个正方形矩阵 mat，请你返回矩阵对角线元素的和。
+     * 请你返回在矩阵主对角线上的元素和副对角线上且不在主对角线上元素的和。
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：39.8 MB, 在所有 Java 提交中击败了100.00% 的用户
+     *
+     * @param mat 矩阵
+     * @return 矩阵对角线元素的和
+     */
+    public int diagonalSum(int[][] mat) {
+        int n = mat.length;
+        int res = 0;
+        if (n % 2 != 0) {
+            res = -mat[n / 2][n / 2];
+        }
+        for (int i = 0; i < n; i++) {
+            res += mat[i][i];
+            res += mat[i][n - i - 1];
+        }
+        return res;
+    }
+
+    public int numWays(String s) {
+        char[] chars = s.toCharArray();
+        int num = 0;
+        for (char c : chars) {
+            if (c == '1') {
+                num++;
+            }
+        }
+        int len = chars.length;
+        if (num == 0) {
+            return (int) (1L * (len - 1) % 1000000007 * ((len - 2) % 1000000007) / 2 % 1000000007);
+        }
+        if (num % 3 != 0) {
+            return 0;
+        }
+        int n = num / 3;
+        int lb = -1, le = -1, rb = -1, re = -1;
+        int nn = 0;
+        for (int i = 0; i < len; i++) {
+            if (chars[i] == '1') {
+                nn++;
+                if (nn == n && lb == -1) {
+                    lb = i;
+                }
+                if (nn == n + 1 && le == -1) {
+                    le = i;
+                }
+                if (nn == 2 * n && rb == -1) {
+                    rb = i;
+                }
+                if (nn == 2 * n + 1 && re == -1) {
+                    re = i;
+                }
+            }
+        }
+        return (int) ((1L * ((le - lb) % 1000000007) * ((re - rb) % 1000000007)) % 1000000007);
+    }
+
 
     //2020-8-02 第200周赛
 
@@ -3254,7 +3463,7 @@ public class Games {
 
         //Arrays
         String[] oneDimensionalStringArray = {"5", "2", "C", "D", "+"};
-        int[] oneDimensionalArrayA = {9, 10, 1, 0, 19, 20, -28, 30, -12, 20, 11, -8, 7, 21, -26};
+        int[] oneDimensionalArrayA = {6, 2, 3, 4, 5, 5};
         int[] oneDimensionalArrayB = {5, 2, 2, 5, 3, 5};
         int[][] twoDimensionalArrayA = {{1, 3,}, {0, 2}, {1, 3}, {0, 2}};
         int[][] twoDimensionalArrayB = {
@@ -3294,7 +3503,7 @@ public class Games {
 
 
         Games games = new Games();
-        games.getMaxLen(oneDimensionalArrayA);
+        games.stoneGameV(oneDimensionalArrayA);
         System.out.println();
     }
 }
