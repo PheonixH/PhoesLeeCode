@@ -3422,13 +3422,14 @@ public class Solution2 {
     /**
      * 1451. 重新排列句子中的单词
      * 「句子」是一个用空格分隔单词的字符串。给你一个满足下述格式的句子 text :
-     *     句子的首字母大写
-     *     text 中的每个单词都用单个空格分隔。
+     * 句子的首字母大写
+     * text 中的每个单词都用单个空格分隔。
      * 请你重新排列 text 中的单词，使所有单词按其长度的升序排列。如果两个单词的长度相同，则保留其在原句子中的相对顺序。
      * 请同样按上述格式返回新的句子。
-     *
+     * <p>
      * 执行用时：22 ms, 在所有 Java 提交中击败了98.44% 的用户
      * 内存消耗：40.9 MB, 在所有 Java 提交中击败了61.61% 的用户
+     *
      * @param text 原句子
      * @return 新句子
      */
@@ -3448,11 +3449,11 @@ public class Solution2 {
 
         StringBuilder sb = new StringBuilder();
         boolean flag = false;
-        while(!priorityQueue.isEmpty()) {
+        while (!priorityQueue.isEmpty()) {
             int tmp = priorityQueue.poll();
             List<String> list = map.get(tmp);
-            for(String s: list){
-                if(flag){
+            for (String s : list) {
+                if (flag) {
                     sb.append(" ");
                 } else {
                     flag = true;
@@ -3468,6 +3469,47 @@ public class Solution2 {
 
         return sb.toString();
     }
+
+
+    /**
+     * 39. 组合总和
+     * 给定一个无重复元素的数组 candidates 和一个目标数 target ，找出 candidates 中所有可以使数字和为 target 的组合。
+     * candidates 中的数字可以无限制重复被选取。
+     * 说明：
+     *     所有数字（包括 target）都是正整数。
+     *     解集不能包含重复的组合。
+     * 执行用时：4 ms, 在所有 Java 提交中击败了55.43% 的用户
+     * 内存消耗：40.2 MB, 在所有 Java 提交中击败了27.43% 的用户
+     * @param candidates 无重复元素的数组 candidates
+     * @param target 目标数 target
+     * @return candidates 中所有可以使数字和为 target 的组合
+     */
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+        List<Integer> path = new ArrayList<>();
+        Arrays.sort(candidates);
+        backtrack(path, candidates, target, 0, 0);
+        return combinationSumRes;
+    }
+
+    private List<List<Integer>> combinationSumRes = new ArrayList<>();
+
+    private void backtrack(List<Integer> path, int[] candidates, int target, int sum, int begin) {
+        if (sum == target) {
+            combinationSumRes.add(new ArrayList<>(path));
+            return;
+        }
+        for (int i = begin; i < candidates.length; i++) {
+            int rs = candidates[i] + sum;
+            if (rs <= target) {
+                path.add(candidates[i]);
+                backtrack(path, candidates, target, rs, i);
+                path.remove(path.size() - 1);
+            } else {
+                break;
+            }
+        }
+    }
+
 
     public static void main(String[] args) {
         Solution2 solution = new Solution2();
