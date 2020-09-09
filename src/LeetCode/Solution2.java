@@ -3328,18 +3328,19 @@ public class Solution2 {
 
     /**
      * 1463. 摘樱桃 II
-     *
+     * <p>
      * 给你一个 rows x cols 的矩阵 grid 来表示一块樱桃地。 grid 中每个格子的数字表示你能获得的樱桃数目。
      * 你有两个机器人帮你收集樱桃，机器人 1 从左上角格子 (0,0) 出发，机器人 2 从右上角格子 (0, cols-1) 出发。
      * 请你按照如下规则，返回两个机器人能收集的最多樱桃数目：
-     *     从格子 (i,j) 出发，机器人可以移动到格子 (i+1, j-1)，(i+1, j) 或者 (i+1, j+1) 。
-     *     当一个机器人经过某个格子时，它会把该格子内所有的樱桃都摘走，然后这个位置会变成空格子，即没有樱桃的格子。
-     *     当两个机器人同时到达同一个格子时，它们中只有一个可以摘到樱桃。
-     *     两个机器人在任意时刻都不能移动到 grid 外面。
-     *     两个机器人最后都要到达 grid 最底下一行。
-     *
+     * 从格子 (i,j) 出发，机器人可以移动到格子 (i+1, j-1)，(i+1, j) 或者 (i+1, j+1) 。
+     * 当一个机器人经过某个格子时，它会把该格子内所有的樱桃都摘走，然后这个位置会变成空格子，即没有樱桃的格子。
+     * 当两个机器人同时到达同一个格子时，它们中只有一个可以摘到樱桃。
+     * 两个机器人在任意时刻都不能移动到 grid 外面。
+     * 两个机器人最后都要到达 grid 最底下一行。
+     * <p>
      * 执行用时：19 ms, 在所有 Java 提交中击败了57.51% 的用户
      * 内存消耗：40.5 MB, 在所有 Java 提交中击败了37.50% 的用户
+     *
      * @param grid rows x cols 的矩阵 grid
      * @return 最多摘多少个樱桃
      */
@@ -3394,6 +3395,79 @@ public class Solution2 {
         return res;
     }
 
+    /**
+     * 1450. 在既定时间做作业的学生人数
+     * 给你两个整数数组 startTime（开始时间）和 endTime（结束时间），并指定一个整数 queryTime 作为查询时间。
+     * 已知，第 i 名学生在 startTime[i] 时开始写作业并于 endTime[i] 时完成作业。
+     * 请返回在查询时间 queryTime 时正在做作业的学生人数。形式上，返回能够使 queryTime 处于区间 [startTime[i], endTime[i]]（含）的学生人数。
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：37.7 MB, 在所有 Java 提交中击败了69.10% 的用户
+     *
+     * @param startTime 数组 startTime
+     * @param endTime   数组 endTime
+     * @param queryTime 整数 queryTime
+     * @return 在查询时间 queryTime 时正在做作业的学生人数
+     */
+    public int busyStudent(int[] startTime, int[] endTime, int queryTime) {
+        int len = startTime.length;
+        int ans = 0;
+        for (int i = 0; i < len; i++) {
+            if (startTime[i] <= queryTime && endTime[i] >= queryTime) {
+                ans++;
+            }
+        }
+        return ans;
+    }
+
+    /**
+     * 1451. 重新排列句子中的单词
+     * 「句子」是一个用空格分隔单词的字符串。给你一个满足下述格式的句子 text :
+     *     句子的首字母大写
+     *     text 中的每个单词都用单个空格分隔。
+     * 请你重新排列 text 中的单词，使所有单词按其长度的升序排列。如果两个单词的长度相同，则保留其在原句子中的相对顺序。
+     * 请同样按上述格式返回新的句子。
+     *
+     * 执行用时：22 ms, 在所有 Java 提交中击败了98.44% 的用户
+     * 内存消耗：40.9 MB, 在所有 Java 提交中击败了61.61% 的用户
+     * @param text 原句子
+     * @return 新句子
+     */
+    public String arrangeWords(String text) {
+        HashMap<Integer, List<String>> map = new HashMap<>();
+        PriorityQueue<Integer> priorityQueue = new PriorityQueue<>();
+
+        String[] strings = text.split(" ");
+        strings[0] = strings[0].toLowerCase();
+        for (String s : strings) {
+            map.computeIfAbsent(s.length(), k -> new ArrayList<>()).add(s);
+        }
+
+        for (int i : map.keySet()) {
+            priorityQueue.add(i);
+        }
+
+        StringBuilder sb = new StringBuilder();
+        boolean flag = false;
+        while(!priorityQueue.isEmpty()) {
+            int tmp = priorityQueue.poll();
+            List<String> list = map.get(tmp);
+            for(String s: list){
+                if(flag){
+                    sb.append(" ");
+                } else {
+                    flag = true;
+                    if (s.length() > 1) {
+                        s = s.substring(0, 1).toUpperCase() + s.substring(1, s.length());
+                    } else {
+                        s = s.toUpperCase();
+                    }
+                }
+                sb.append(s);
+            }
+        }
+
+        return sb.toString();
+    }
 
     public static void main(String[] args) {
         Solution2 solution = new Solution2();
