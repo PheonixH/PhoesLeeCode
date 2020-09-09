@@ -1,9 +1,6 @@
 package LeetCode;
 
-import java.util.*;
-
 import LeetCode.datestruct.ListNode;
-import LeetCode.data.Node;
 import LeetCode.datestruct.TreeNode;
 
 import java.util.ArrayList;
@@ -21,11 +18,11 @@ import java.util.stream.Collectors;
  * @CreateDate: 2019/4/25 15:05
  * @Version: 1.0
  */
-public class Solution2 {
+public class SolutionNow {
 
 
     public static void main(String[] args) {
-        Solution2 solution = new Solution2();
+        SolutionNow solution = new SolutionNow();
 
         //ListNode
         int[] listNodeValue = {1, 2, 3, 4, 5};
