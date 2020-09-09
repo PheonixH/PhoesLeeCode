@@ -3093,9 +3093,10 @@ public class Solution2 {
      * 注意：你 不能 修改非 '?' 字符。
      * 题目测试用例保证 除 '?' 字符 之外，不存在连续重复的字符。
      * 在完成所有转换（可能无需转换）后返回最终的字符串。如果有多个解决方案，请返回其中任何一个。可以证明，在给定的约束条件下，答案总是存在的。
-     *
+     * <p>
      * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
      * 内存消耗：37.8 MB, 在所有 Java 提交中击败了100.00% 的用户
+     *
      * @param s 仅包含小写英文字母和 '?' 字符的字符串
      * @return 替换所有的问号之后的字符串
      */
@@ -3206,9 +3207,10 @@ public class Solution2 {
      * 486. 预测赢家
      * 给定一个表示分数的非负整数数组。 玩家 1 从数组任意一端拿取一个分数，随后玩家 2 继续从剩余数组任意一端拿取分数，然后玩家 1 拿，…… 。每次一个玩家只能拿取一个分数，分数被拿取之后不再可取。直到没有剩余分数可取时游戏结束。最终获得分数总和最多的玩家获胜。
      * 给定一个表示分数的数组，预测玩家1是否会成为赢家。你可以假设每个玩家的玩法都会使他的分数最大化。
-     *
+     * <p>
      * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
      * 内存消耗：37.2 MB, 在所有 Java 提交中击败了33.03% 的用户
+     *
      * @param nums 数组
      * @return 赢家是否是1
      */
@@ -3236,6 +3238,162 @@ public class Solution2 {
         //两个玩家相等，玩家一仍然胜利。
         return dps[0][n - 1] >= 0;
     }
+
+    /**
+     * 1460. 通过翻转子数组使两个数组相等
+     * 给你两个长度相同的整数数组 target 和 arr 。
+     * 每一步中，你可以选择 arr 的任意 非空子数组 并将它翻转。你可以执行此过程任意次。
+     * 如果你能让 arr 变得与 target 相同，返回 True；否则，返回 False 。
+     * 执行用时：3 ms, 在所有 Java 提交中击败了78.06% 的用户
+     * 内存消耗：39.2 MB, 在所有 Java 提交中击败了97.37% 的用户
+     *
+     * @param target 数组1
+     * @param arr    数组2
+     * @return 两个数组是否相等
+     */
+    public boolean canBeEqual(int[] target, int[] arr) {
+        int tlen = target.length;
+        int alen = arr.length;
+        if (tlen != alen) {
+            return false;
+        }
+        Arrays.sort(target);
+        Arrays.sort(arr);
+        for (int i = 0; i < tlen; i++) {
+            if (target[i] != arr[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * 1461. 检查一个字符串是否包含所有长度为 K 的二进制子串
+     * 滑动窗口！！
+     * 给你一个二进制字符串 s 和一个整数 k 。
+     * 如果所有长度为 k 的二进制字符串都是 s 的子串，请返回 True ，否则请返回 False 。
+     * 执行用时：158 ms, 在所有 Java 提交中击败了66.34% 的用户
+     * 内存消耗：48.7 MB, 在所有 Java 提交中击败了43.86% 的用户
+     *
+     * @param s 字符串
+     * @param k 数字
+     * @return 是否全包含
+     */
+    public boolean hasAllCodes(String s, int k) {
+        HashSet<String> set = new HashSet();
+        for (int i = 0; i <= s.length() - k; i++) {
+            set.add(s.substring(i, i + k));
+        }
+        return set.size() == (int) Math.pow(2, k);
+    }
+
+    /**
+     * 1462. 课程安排 IV
+     * 打表！！
+     * 你总共需要上 n 门课，课程编号依次为 0 到 n-1 。
+     * 有的课会有直接的先修课程，比如如果想上课程 0 ，你必须先上课程 1 ，那么会以 [1,0] 数对的形式给出先修课程数对。
+     * 给你课程总数 n 和一个直接先修课程数对列表 prerequisite 和一个查询对列表 queries 。
+     * 对于每个查询对 queries[i] ，请判断 queries[i][0] 是否是 queries[i][1] 的先修课程。
+     * 请返回一个布尔值列表，列表中每个元素依次分别对应 queries 每个查询对的判断结果。
+     * 注意：如果课程 a 是课程 b 的先修课程且课程 b 是课程 c 的先修课程，那么课程 a 也是课程 c 的先修课程。
+     * <p>
+     * 执行用时：34 ms, 在所有 Java 提交中击败了73.02% 的用户
+     * 内存消耗：43.1 MB, 在所有 Java 提交中击败了80.21% 的用户
+     *
+     * @param n             课程数量
+     * @param prerequisites 先修课程
+     * @param queries       问题：是否是先修课程
+     * @return 答案
+     */
+    public List<Boolean> checkIfPrerequisite(int n, int[][] prerequisites, int[][] queries) {
+        boolean[][] dp = new boolean[n][n];
+        for (int[] p : prerequisites) {
+            dp[p[0]][p[1]] = true;
+        }
+        for (int k = 0; k < n; k++) {
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < n; j++) {
+                    if (dp[i][k] && dp[k][j]) {
+                        dp[i][j] = true;
+                    }
+                }
+            }
+        }
+        List<Boolean> ans = new LinkedList<>();
+        for (int i = 0; i < queries.length; i++) {
+            ans.add(dp[queries[i][0]][queries[i][1]]);
+        }
+        return ans;
+    }
+
+    /**
+     * 1463. 摘樱桃 II
+     *
+     * 给你一个 rows x cols 的矩阵 grid 来表示一块樱桃地。 grid 中每个格子的数字表示你能获得的樱桃数目。
+     * 你有两个机器人帮你收集樱桃，机器人 1 从左上角格子 (0,0) 出发，机器人 2 从右上角格子 (0, cols-1) 出发。
+     * 请你按照如下规则，返回两个机器人能收集的最多樱桃数目：
+     *     从格子 (i,j) 出发，机器人可以移动到格子 (i+1, j-1)，(i+1, j) 或者 (i+1, j+1) 。
+     *     当一个机器人经过某个格子时，它会把该格子内所有的樱桃都摘走，然后这个位置会变成空格子，即没有樱桃的格子。
+     *     当两个机器人同时到达同一个格子时，它们中只有一个可以摘到樱桃。
+     *     两个机器人在任意时刻都不能移动到 grid 外面。
+     *     两个机器人最后都要到达 grid 最底下一行。
+     *
+     * 执行用时：19 ms, 在所有 Java 提交中击败了57.51% 的用户
+     * 内存消耗：40.5 MB, 在所有 Java 提交中击败了37.50% 的用户
+     * @param grid rows x cols 的矩阵 grid
+     * @return 最多摘多少个樱桃
+     */
+    public int cherryPickup(int[][] grid) {
+        int n = grid.length;
+        int m = grid[0].length;
+        //第k行  分别处于i,j位置上 j>=i
+        int[][][] dp = new int[n][m][m];
+        for (int[][] dpp : dp) {
+            for (int[] dppp : dpp) {
+                Arrays.fill(dppp, -1);
+            }
+        }
+        dp[0][0][m - 1] = grid[0][0] + grid[0][m - 1];
+        int[] dir = {-1, 0, 1};
+        int res = 0;
+        for (int k = 1; k < n; k++) {
+            for (int i = 0; i < m; i++) {
+                for (int d : dir) {
+                    int preI = i + d;
+                    if (preI >= m || preI < 0) {
+                        continue;
+                    }
+                    for (int j = i; j < m; j++) {
+                        int tmp = -1;
+                        for (int r : dir) {
+                            int preJ = j + r;
+                            if (preJ >= m || preJ < 0) {
+                                continue;
+                            }
+                            if (preI > preJ) {
+                                continue;
+                            }
+                            tmp = Math.max(dp[k - 1][preI][preJ], tmp);
+                        }
+                        if (tmp == -1) {
+                            dp[k][i][j] = Math.max(-1, dp[k][i][j]);
+                            continue;
+                        } else {
+                            dp[k][i][j] = Math.max(tmp + grid[k][i] + grid[k][j], dp[k][i][j]);
+                        }
+                        if (i == j) {
+                            dp[k][i][j] -= grid[k][i];
+                        }
+                        if (k == n - 1) {
+                            res = Math.max(res, dp[k][i][j]);
+                        }
+                    }
+                }
+            }
+        }
+        return res;
+    }
+
 
     public static void main(String[] args) {
         Solution2 solution = new Solution2();
@@ -3283,8 +3441,13 @@ public class Solution2 {
         int[] oneDimensionalArrayB = {5, 2, 2, 5, 3, 5};
         int[][] twoDimensionalArrayA = {{0, 1}};
         int[][] twoDimensionalArrayB = {
-                {1, 2, 3}, {4, 5, 6}, {7, 8, 9}
-        };
+                {0, 8, 7, 10, 9, 10, 0, 9, 6},
+                {8, 7, 10, 8, 7, 4, 9, 6, 10},
+                {8, 1, 1, 5, 1, 5, 5, 1, 2},
+                {9, 4, 10, 8, 8, 1, 9, 5, 0},
+                {4, 3, 6, 10, 9, 2, 4, 8, 10},
+                {7, 3, 2, 8, 3, 3, 5, 9, 8},
+                {1, 2, 6, 5, 6, 2, 0, 10, 0}};
         char[] oneDimensionalCharArray = {'A', 'B'};
         char[][] twoDimensionalCharArray = {
                 {'5', '3', '.', '.', '7', '.', '.', '.', '.'},
@@ -3299,7 +3462,7 @@ public class Solution2 {
 
 
         //List<List<Integer>>
-        int[][] listListIntegerArray = {{4, 14, 24, 34, 40}, {12, 14, 25, 38, 41}, {9, 19, 20, 26, 50}};
+        int[][] listListIntegerArray = {{0, 8, 7, 10, 9, 10, 0, 9, 6}, {8, 7, 10, 8, 7, 4, 9, 6, 10}, {8, 1, 1, 5, 1, 5, 5, 1, 2}, {9, 4, 10, 8, 8, 1, 9, 5, 0}, {4, 3, 6, 10, 9, 2, 4, 8, 10}, {7, 3, 2, 8, 3, 3, 5, 9, 8}, {1, 2, 6, 5, 6, 2, 0, 10, 0}};
         List<List<Integer>> integerListList = new LinkedList();
         for (int[] listIntegerArray : listListIntegerArray) {
             List<Integer> collect = Arrays.stream(listIntegerArray).boxed().collect(Collectors.toList());
@@ -3314,7 +3477,7 @@ public class Solution2 {
             stringListList.add(collect);
         }
 
-        System.out.println(solution.removeNthFromEnd(head, 2));
+        System.out.println(solution.cherryPickup(twoDimensionalArrayB));
         return;
     }
 
