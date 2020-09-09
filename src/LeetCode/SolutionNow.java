@@ -3,10 +3,7 @@ package LeetCode;
 import LeetCode.datestruct.ListNode;
 import LeetCode.datestruct.TreeNode;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -19,6 +16,48 @@ import java.util.stream.Collectors;
  * @Version: 1.0
  */
 public class SolutionNow {
+
+    /**
+     * 1471. 数组中的 k 个最强值
+     * 注意：题中的中位数是 arr[(n - 1) / 2] 而不是平时的中位数
+     * 给你一个整数数组 arr 和一个整数 k 。
+     * 设 m 为数组的中位数，只要满足下述两个前提之一，就可以判定 arr[i] 的值比 arr[j] 的值更强：
+     *      |arr[i] - m| > |arr[j] - m|
+     *      |arr[i] - m| == |arr[j] - m|，且 arr[i] > arr[j]
+     *
+     * 请返回由数组中最强的 k 个值组成的列表。答案可以以 任意顺序 返回。
+     * 执行用时：138 ms, 在所有 Java 提交中击败了17.03% 的用户
+     * 内存消耗：52.1 MB, 在所有 Java 提交中击败了86.84% 的用户
+     * @param arr 数组
+     * @param k 整数
+     * @return 数组中的 k 个最强值
+     */
+    public int[] getStrongest(int[] arr, int k) {
+        Arrays.sort(arr);
+        int n = arr.length;
+        int m = arr[(n - 1) / 2];
+
+        Comparator<Integer> getStrongestComparable = new Comparator<Integer>() {
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                int a = Math.abs(o1 - m);
+                int b = Math.abs(o2 - m);
+                if (a == b) {
+                    return o2 - o1;
+                }
+                return b - a;
+            }
+        };
+        PriorityQueue<Integer> priorityQueue = new PriorityQueue<Integer>(getStrongestComparable);
+        for (int a : arr) {
+            priorityQueue.add(a);
+        }
+        int[] res = new int[k];
+        for (int i = 0; i < k; i++) {
+            res[i] = priorityQueue.poll();
+        }
+        return res;
+    }
 
 
     public static void main(String[] args) {
@@ -63,7 +102,7 @@ public class SolutionNow {
 
         //Arrays
         String[] oneDimensionalStringArray = {"eat", "tea", "tan", "ate", "nat", "bat"};
-        int[] oneDimensionalArrayA = {4, 6, 7, 7};
+        int[] oneDimensionalArrayA = {-7, 22, 17, 3};
         int[] oneDimensionalArrayB = {5, 2, 2, 5, 3, 5};
         int[][] twoDimensionalArrayA = {{0, 1}};
         int[][] twoDimensionalArrayB = {
@@ -103,7 +142,7 @@ public class SolutionNow {
             stringListList.add(collect);
         }
 
-//        System.out.println(solution.cherryPickup(twoDimensionalArrayB));
+        System.out.println(solution.getStrongest(oneDimensionalArrayA, 2));
         return;
     }
 
