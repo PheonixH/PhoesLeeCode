@@ -1,7 +1,7 @@
-package LeetCode;
+package leetcode;
 
-import LeetCode.datestruct.ListNode;
-import LeetCode.datestruct.TreeNode;
+import leetcode.datestruct.ListNode;
+import leetcode.datestruct.TreeNode;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -48,7 +48,7 @@ public class SolutionNow {
         };
         PriorityQueue<Integer> priorityQueue = new PriorityQueue<>(getStrongestComparable);
         for (int a : arr) {
-            priorityQueue.add(a);
+            priorityQueue.offer(a);
         }
         int[] res = new int[k];
         for (int i = 0; i < k; i++) {
@@ -182,6 +182,66 @@ public class SolutionNow {
         goodNodesDfs(root.right, max);
     }
 
+
+    /**
+     * 1449. 数位成本和为目标值的最大数字
+     * 给你一个整数数组 cost 和一个整数 target 。请你返回满足如下规则可以得到的 最大 整数：
+     * 给当前结果添加一个数位（i + 1）的成本为 cost[i] （cost 数组下标从 0 开始）。
+     * 总成本必须恰好等于 target 。
+     * 添加的数位中没有数字 0 。
+     * 由于答案可能会很大，请你以字符串形式返回。
+     * 如果按照上述要求无法得到任何整数，请你返回 "0" 。
+     * <p>
+     * 执行用时：60 ms, 在所有 Java 提交中击败了61.75% 的用户
+     * 内存消耗：50.2 MB, 在所有 Java 提交中击败了75.86% 的用户
+     *
+     * @param cost   整数数组 cost
+     * @param target 整数 target
+     * @return 最大 整数
+     */
+    public String largestNumber(int[] cost, int target) {
+        // cst -->  number
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int i = cost.length - 1; i >= 0; i--) {
+            //cost数组中，相同的数字只留下下标大的数
+            if (!map.containsKey(cost[i])) {
+                map.put(cost[i], i + 1);
+            }
+        }
+        //dp[i]表示cost为i时最大数字
+        String[] dp = new String[target + 1];
+        dp[0] = "";
+        for (int i = 1; i <= target; i++) {
+            for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+                int cst = entry.getKey();
+                if (cst <= i && dp[i - cst] != null) {
+                    // 如果选择花掉这个成本，得到的数字
+                    String b = dp[i - cst] + entry.getValue();
+                    dp[i] = largestNumberCompare(dp[i], b);
+                }
+            }
+        }
+        return dp[target] == null ? "0" : dp[target];
+    }
+
+    //比较两个数的大小
+    public String largestNumberCompare(String a, String b) {
+        if (a == null) {
+            return b;
+        }
+        if (a.length() > b.length()) {
+            return a;
+        }
+        if (a.length() != b.length()) {
+            return b;
+        }
+        if (a.compareTo(b) > 0) {
+            return a;
+        }
+        return b;
+    }
+
+
     public static void main(String[] args) {
         SolutionNow solution = new SolutionNow();
 
@@ -195,7 +255,8 @@ public class SolutionNow {
             listNodeTmp = listNodeTmp.next;
         }
 
-        //TreeNode -1 is null TreeNode;
+        //TreeNode
+        //-1 is null
         int[] treeNodeValue = {2, -1, 3, -1, 4, -1, 5, -1, 6};
         List<TreeNode> createTreeNodeStack = new ArrayList<>();
         TreeNode root = new TreeNode(treeNodeValue[0]);
@@ -224,7 +285,7 @@ public class SolutionNow {
 
         //Arrays
         String[] oneDimensionalStringArray = {"eat", "tea", "tan", "ate", "nat", "bat"};
-        int[] oneDimensionalArrayA = {-7, 22, 17, 3};
+        int[] oneDimensionalArrayA = {5, 6, 7, 3, 4, 6, 7, 4, 8};
         int[] oneDimensionalArrayB = {5, 2, 2, 5, 3, 5};
         int[][] twoDimensionalArrayA = {{0, 1}};
         int[][] twoDimensionalArrayB = {
@@ -250,7 +311,7 @@ public class SolutionNow {
 
         //List<List<Integer>>
         int[][] listListIntegerArray = {{0, 8, 7, 10, 9, 10, 0, 9, 6}, {8, 7, 10, 8, 7, 4, 9, 6, 10}, {8, 1, 1, 5, 1, 5, 5, 1, 2}, {9, 4, 10, 8, 8, 1, 9, 5, 0}, {4, 3, 6, 10, 9, 2, 4, 8, 10}, {7, 3, 2, 8, 3, 3, 5, 9, 8}, {1, 2, 6, 5, 6, 2, 0, 10, 0}};
-        List<List<Integer>> integerListList = new LinkedList();
+        List<List<Integer>> integerListList = new LinkedList<>();
         for (int[] listIntegerArray : listListIntegerArray) {
             List<Integer> collect = Arrays.stream(listIntegerArray).boxed().collect(Collectors.toList());
             integerListList.add(collect);
@@ -258,14 +319,13 @@ public class SolutionNow {
 
         //List<List<String>>
         String[][] listListStringArray = {{"JFK", "SFO"}, {"JFK", "ATL"}, {"SFO", "ATL"}, {"ATL", "JFK"}, {"ATL", "SFO"}};
-        List<List<String>> stringListList = new LinkedList();
+        List<List<String>> stringListList = new LinkedList<>();
         for (String[] listStringArray : listListStringArray) {
             List<String> collect = Arrays.stream(listStringArray).collect(Collectors.toList());
             stringListList.add(collect);
         }
 
-        System.out.println(solution.maxPower("leetcode"));
-        return;
+        System.out.println(solution.largestNumber(oneDimensionalArrayA, 29));
     }
 
 }

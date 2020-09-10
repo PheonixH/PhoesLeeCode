@@ -1,8 +1,8 @@
 import java.util.*;
 import java.util.stream.Collectors;
 
-import LeetCode.datestruct.ListNode;
-import LeetCode.datestruct.TreeNode;
+import leetcode.datestruct.ListNode;
+import leetcode.datestruct.TreeNode;
 
 /**
  * PhoesLeeCode

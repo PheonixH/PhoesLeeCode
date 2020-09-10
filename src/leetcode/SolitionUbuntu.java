@@ -1,6 +1,6 @@
-package LeetCode;//import jdk.nashorn.api.tree.Tree;
+package leetcode;//import jdk.nashorn.api.tree.Tree;
 
-import LeetCode.datestruct.Nodes;
+import leetcode.datestruct.Nodes;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Stack;
 import java.util.*;
 
-import LeetCode.datestruct.TreeNode;
-import LeetCode.datestruct.ListNode;
+import leetcode.datestruct.TreeNode;
+import leetcode.datestruct.ListNode;
 
 /**
  * @author ：Pheonix

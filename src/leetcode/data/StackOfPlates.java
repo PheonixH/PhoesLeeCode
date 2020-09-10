@@ -1,4 +1,4 @@
-package LeetCode.data;
+package leetcode.data;
 
 import java.util.ArrayList;
 import java.util.LinkedList;

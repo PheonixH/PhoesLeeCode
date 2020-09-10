@@ -1,4 +1,4 @@
-package LeetCode.datestruct;
+package leetcode.datestruct;
 
 /**
  * Definition for a binary tree node.

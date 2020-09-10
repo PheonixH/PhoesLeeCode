@@ -1,4 +1,4 @@
-package LeetCode.data;
+package leetcode.data;
 
 /**
  * @program: PhoesLeeCode
