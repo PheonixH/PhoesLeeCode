@@ -3,7 +3,7 @@ package leetcode;
 import java.util.*;
 
 import leetcode.datestruct.TreeNode;
-s
+
 /**
  * PhoesLeeCode
  * 18-12-16 上午10:28
