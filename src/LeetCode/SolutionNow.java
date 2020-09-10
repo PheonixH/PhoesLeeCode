@@ -70,19 +70,19 @@ public class SolutionNow {
      * 内存消耗：40.2 MB, 在所有 Java 提交中击败了27.43% 的用户
      *
      * @param candidates 数组 candidates
-     * @param target 目标数 target
+     * @param target     目标数 target
      * @return candidates 中所有可以使数字和为 target 的组合
      */
     public List<List<Integer>> combinationSum2(int[] candidates, int target) {
         Arrays.sort(candidates);
-        combinationSum2DFS(new ArrayList<>(), candidates, target, 0, 0);
+        combinationsum2Dfs(new ArrayList<>(), candidates, target, 0, 0);
         return combinationSum2Result;
     }
 
     Set<String> combinationSum2Set = new HashSet<>();
     List<List<Integer>> combinationSum2Result = new ArrayList<>();
 
-    public void combinationSum2DFS(List<Integer> now, int[] candidates, int target, int sum, int k) {
+    public void combinationsum2Dfs(List<Integer> now, int[] candidates, int target, int sum, int k) {
         if (target == sum) {
             StringBuilder stringBuilder = new StringBuilder();
             now.forEach(x -> stringBuilder.append(x).append(","));
@@ -96,10 +96,61 @@ public class SolutionNow {
                 break;
             }
             now.add(candidates[i]);
-            combinationSum2DFS(now, candidates, target, sum + candidates[i], i + 1);
+            combinationsum2Dfs(now, candidates, target, sum + candidates[i], i + 1);
             now.remove(now.size() - 1);
         }
     }
+
+    /**
+     * 1446. 连续字符
+     * 给你一个字符串 s ，字符串的「能量」定义为：只包含一种字符的最长非空子字符串的长度。
+     * 请你返回字符串的能量。
+     * <p>
+     * 执行用时：1 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：39.9 MB, 在所有 Java 提交中击败了18.13% 的用户
+     *
+     * @param s 字符串
+     * @return 字符串的能量
+     */
+    public int maxPower(String s) {
+        int now = 0;
+        char pre = s.charAt(0);
+        int max = 0;
+        for (char t : s.toCharArray()) {
+            if (pre == t) {
+                now++;
+            } else {
+                max = Math.max(max, now);
+                now = 1;
+                pre = t;
+            }
+        }
+        return Math.max(max, now);
+    }
+
+    /**
+     * 1447. 最简分数
+     * 给你一个整数 n ，请你返回所有 0 到 1 之间（不包括 0 和 1）满足分母小于等于  n 的 最简 分数 。分数可以以 任意 顺序返回。
+     * <p>
+     * 执行用时：33 ms, 在所有 Java 提交中击败了42.93% 的用户
+     * 内存消耗：40.7 MB, 在所有 Java 提交中击败了40.81% 的用户
+     *
+     * @param n 整数 n
+     * @return 所有0到1之间（不包括0和1）满足分母小于等于n的最简分数
+     */
+    public List<String> simplifiedFractions(int n) {
+        Set<Double> set = new HashSet<>();
+        List<String> ans = new ArrayList<>();
+        for (int i = 2; i <= n; i++) {
+            for (int j = 1; j < i; j++) {
+                if (set.add((double) j / (double) i)) {
+                    ans.add(j + "/" + i);
+                }
+            }
+        }
+        return ans;
+    }
+
 
     public static void main(String[] args) {
         SolutionNow solution = new SolutionNow();
@@ -183,7 +234,7 @@ public class SolutionNow {
             stringListList.add(collect);
         }
 
-        System.out.println(solution.getStrongest(oneDimensionalArrayA, 2));
+        System.out.println(solution.maxPower("leetcode"));
         return;
     }
 
