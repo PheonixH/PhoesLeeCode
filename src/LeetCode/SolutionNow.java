@@ -22,14 +22,15 @@ public class SolutionNow {
      * 注意：题中的中位数是 arr[(n - 1) / 2] 而不是平时的中位数
      * 给你一个整数数组 arr 和一个整数 k 。
      * 设 m 为数组的中位数，只要满足下述两个前提之一，就可以判定 arr[i] 的值比 arr[j] 的值更强：
-     *      |arr[i] - m| > |arr[j] - m|
-     *      |arr[i] - m| == |arr[j] - m|，且 arr[i] > arr[j]
-     *
+     * |arr[i] - m| > |arr[j] - m|
+     * |arr[i] - m| == |arr[j] - m|，且 arr[i] > arr[j]
+     * <p>
      * 请返回由数组中最强的 k 个值组成的列表。答案可以以 任意顺序 返回。
      * 执行用时：138 ms, 在所有 Java 提交中击败了17.03% 的用户
      * 内存消耗：52.1 MB, 在所有 Java 提交中击败了86.84% 的用户
+     *
      * @param arr 数组
-     * @param k 整数
+     * @param k   整数
      * @return 数组中的 k 个最强值
      */
     public int[] getStrongest(int[] arr, int k) {
@@ -37,18 +38,15 @@ public class SolutionNow {
         int n = arr.length;
         int m = arr[(n - 1) / 2];
 
-        Comparator<Integer> getStrongestComparable = new Comparator<Integer>() {
-            @Override
-            public int compare(Integer o1, Integer o2) {
-                int a = Math.abs(o1 - m);
-                int b = Math.abs(o2 - m);
-                if (a == b) {
-                    return o2 - o1;
-                }
-                return b - a;
+        Comparator<Integer> getStrongestComparable = (o1, o2) -> {
+            int a = Math.abs(o1 - m);
+            int b = Math.abs(o2 - m);
+            if (a == b) {
+                return o2 - o1;
             }
+            return b - a;
         };
-        PriorityQueue<Integer> priorityQueue = new PriorityQueue<Integer>(getStrongestComparable);
+        PriorityQueue<Integer> priorityQueue = new PriorityQueue<>(getStrongestComparable);
         for (int a : arr) {
             priorityQueue.add(a);
         }
@@ -59,6 +57,49 @@ public class SolutionNow {
         return res;
     }
 
+
+    /**
+     * 40. 组合总和 II
+     * 给定一个数组 candidates 和一个目标数 target ，找出 candidates 中所有可以使数字和为 target 的组合。
+     * candidates 中的每个数字在每个组合中只能使用一次。
+     * 说明：
+     * 所有数字（包括目标数）都是正整数。
+     * 解集不能包含重复的组合。
+     * <p>
+     * 执行用时：7 ms, 在所有 Java 提交中击败了22.43% 的用户
+     * 内存消耗：40.2 MB, 在所有 Java 提交中击败了27.43% 的用户
+     *
+     * @param candidates 数组 candidates
+     * @param target 目标数 target
+     * @return candidates 中所有可以使数字和为 target 的组合
+     */
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        Arrays.sort(candidates);
+        combinationSum2DFS(new ArrayList<>(), candidates, target, 0, 0);
+        return combinationSum2Result;
+    }
+
+    Set<String> combinationSum2Set = new HashSet<>();
+    List<List<Integer>> combinationSum2Result = new ArrayList<>();
+
+    public void combinationSum2DFS(List<Integer> now, int[] candidates, int target, int sum, int k) {
+        if (target == sum) {
+            StringBuilder stringBuilder = new StringBuilder();
+            now.forEach(x -> stringBuilder.append(x).append(","));
+            if (combinationSum2Set.add(stringBuilder.toString())) {
+                combinationSum2Result.add(new ArrayList<>(now));
+            }
+            return;
+        }
+        for (int i = k; i < candidates.length; i++) {
+            if (sum + candidates[i] > target) {
+                break;
+            }
+            now.add(candidates[i]);
+            combinationSum2DFS(now, candidates, target, sum + candidates[i], i + 1);
+            now.remove(now.size() - 1);
+        }
+    }
 
     public static void main(String[] args) {
         SolutionNow solution = new SolutionNow();
