@@ -152,6 +152,36 @@ public class SolutionNow {
     }
 
 
+    /**
+     * 1448. 统计二叉树中好节点的数目
+     * 给你一棵根为 root 的二叉树，请你返回二叉树中好节点的数目。
+     * 「好节点」X 定义为：从根到该节点 X 所经过的节点中，没有任何节点的值大于 X 的值。
+     * <p>
+     * 执行用时：2 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：48.6 MB, 在所有 Java 提交中击败了53.36% 的用户
+     *
+     * @param root 一棵根为 root 的二叉树
+     * @return 二叉树中好节点的数目
+     */
+    public int goodNodes(TreeNode root) {
+        goodNodesDfs(root, -10001);
+        return goodNodesNumber;
+    }
+
+    int goodNodesNumber = 0;
+
+    public void goodNodesDfs(TreeNode root, int max) {
+        if (root == null) {
+            return;
+        }
+        if (root.val >= max) {
+            goodNodesNumber++;
+            max = root.val;
+        }
+        goodNodesDfs(root.left, max);
+        goodNodesDfs(root.right, max);
+    }
+
     public static void main(String[] args) {
         SolutionNow solution = new SolutionNow();
 
