@@ -1,9 +1,9 @@
+package leetcode;
+
 import java.util.*;
-import java.util.stream.Collectors;
 
-import leetcode.datestruct.ListNode;
 import leetcode.datestruct.TreeNode;
-
+s
 /**
  * PhoesLeeCode
  * 18-12-16 上午10:28
@@ -32,7 +32,7 @@ public class Games {
         }
         r = 1;
 
-        N = N % 15;
+        N %= 15;
         N = 6;
         while (N != 0) {
             if ((0 == r)) {
@@ -69,73 +69,6 @@ public class Games {
             cells[cells.length - 1] = 0;
             return cells;
         }
-        /*
-        int s = 0;
-        for(int i:cells){
-            s = s * 2 + i;
-        }
-        N = N % 15;
-        N--;
-
-        ArrayList<Integer> list = new ArrayList<>();
-        while(N > 0) {
-            int a = s >> 1;
-
-            int b = s << 1;
-            s = a ^ b % 128;
-            if (s % 2 != 0) {
-                s = s - 1;
-            }
-            list.add(s);
-            N--;
-        }
-        int[] re = new int[8];
-        re[0] = 0;
-        re[7] = 0;
-        s = s / 2;
-        for(int i = 6; i > 0 ;i--){
-            re[i] = s % 2;
-            s = s / 2;
-        }
-        return re;*/
-//        int s = 0;
-//        for(int i:cells){
-//            s = s * 2 + i;
-//        }
-//        ArrayList<Integer> list = new ArrayList<>();
-//        int n = 0;
-//        while(N > 0) {
-//            int a = s >> 1;
-//
-//            int b = s << 1;
-//            s = a ^ b % 128;
-//            if (s % 2 != 0) {
-//                s = s - 1;
-//            }
-//            if(list.contains(s)){
-//                break;
-//            }
-//            N --;
-//            list.add(s);
-//            n++;
-//        }
-//        if(N != 0&&list.contains(s)){
-//            int x = list.indexOf(s);
-//            N = N % (n - x + 1);
-//            N = (N + x);
-//            N = N % list.size();
-//            s = list.get(N);
-//        }
-//        int[] re = new int[8];
-//        re[0] = 0;
-//        re[7] = 0;
-//        s = s / 2;
-//        for(int i = 6; i > 0 ;i--){
-//            re[i] = s % 2;
-//            s = s / 2;
-//        }
-//        return re;
-
     }
 
 
@@ -159,8 +92,6 @@ public class Games {
 
     //962
     public int maxWidthRamp(int[] A) {
-        int ri = 0;
-        int rj = 0;
         int maxl = 0;
         for (int i = 0; i < A.length; i++) {
             for (int j = A.length - 1; j > i; j--) {
@@ -168,8 +99,6 @@ public class Games {
                     break;
                 }
                 if (A[j] >= A[i]) {
-                    ri = i;
-                    rj = j;
                     maxl = j - i;
                     break;
                 }
@@ -451,13 +380,6 @@ public class Games {
 
 
     public int minSumOfLengths(int[] arr, int target) {
-//        Comparator<int[]> comparator = new Comparator<int[]>() {
-//            @Override
-//            public int compare(int[] o1, int[] o2) {
-//                return (o1[0] - o2[0]);
-//            }
-//        };
-//        Queue<int[]> success = new PriorityQueue<int[]>(comparator);
         List<int[]> success = new LinkedList<>();
         Map<Integer, Integer> map = new HashMap<>();
         for (int i = 0; i < arr.length; i++) {
@@ -2731,14 +2653,14 @@ public class Games {
     int[][] dp;
     int[] cuts;
 
-    public int dp(int l, int r){
-        if(r - l <= 1){
+    public int dp(int l, int r) {
+        if (r - l <= 1) {
             return 0;
         }
-        if(dp[l][r] == -1){
+        if (dp[l][r] == -1) {
             int len = cuts[r] - cuts[l];
-            dp[l][r] = (int)1e9;
-            for(int i = l + 1; i < r; i++){
+            dp[l][r] = (int) 1e9;
+            for (int i = l + 1; i < r; i++) {
                 dp[l][r] = Math.min(dp[l][r], dp(l, i) + dp(i, r) + len);
             }
         }
@@ -3395,7 +3317,7 @@ public class Games {
 
     public int numOfWays(int[] nums) {
         List<Integer> li = new ArrayList<>();
-        for(int n :nums){
+        for (int n : nums) {
             li.add(n);
         }
         return numOfWaysAss(li);
@@ -3408,7 +3330,7 @@ public class Games {
         for (int i : nums) {
             if (i > key) {
                 a.add(i);
-            } else if(i < key){
+            } else if (i < key) {
                 b.add(i);
             }
         }
@@ -3417,91 +3339,5 @@ public class Games {
         int t1 = ma == 0 ? 1 : numOfWaysAss(a);
         int t2 = mb == 0 ? 1 : numOfWaysAss(b);
         return t1 * t2 - 1;
-    }
-
-    public static void main(String[] args) {
-
-        //ListNode
-        int[] listNodeValue = {1, 2, 2, 4, 5, 3, 2, 1};
-        int listNodeLen = listNodeValue.length;
-        ListNode head = new ListNode(listNodeValue[0]);
-        ListNode listNodeTmp = head;
-        for (int i = 1; i < listNodeLen; i++) {
-            listNodeTmp.next = new ListNode(listNodeValue[i]);
-            listNodeTmp = listNodeTmp.next;
-        }
-
-        //TreeNode -1 is null TreeNode;
-        int[] treeNodeValue = {1, 2, 3, -1, 4};
-        int treeNodeLen = treeNodeValue.length;
-        Stack<TreeNode> createTreeNodeStack = new Stack<>();
-        TreeNode root = new TreeNode(treeNodeValue[0]);
-        createTreeNodeStack.add(root);
-        for (int i = 1; i < treeNodeLen; i++) {
-            TreeNode tmp = createTreeNodeStack.pop();
-            if (tmp == null) {
-                i++;
-                continue;
-            }
-            if (treeNodeValue[i] == -1) {
-                tmp.left = null;
-            } else {
-                tmp.left = new TreeNode(treeNodeValue[i]);
-            }
-            createTreeNodeStack.add(tmp.left);
-            i++;
-            if (treeNodeValue[i] == -1) {
-                tmp.right = null;
-            } else {
-                tmp.right = new TreeNode(treeNodeValue[i]);
-            }
-            createTreeNodeStack.add(tmp.right);
-        }
-
-
-        //Arrays
-        String[] oneDimensionalStringArray = {"5", "2", "C", "D", "+"};
-        int[] oneDimensionalArrayA = {6, 2, 3, 4, 5, 5};
-        int[] oneDimensionalArrayB = {5, 2, 2, 5, 3, 5};
-        int[][] twoDimensionalArrayA = {{1, 3,}, {0, 2}, {1, 3}, {0, 2}};
-        int[][] twoDimensionalArrayB = {
-                {0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0},
-                {0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0},
-                {0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0},
-                {0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0},
-                {0, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0},
-                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0},
-                {0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0},
-                {0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0}
-        };
-        char[] oneDimensionalCharArray = {'A', 'B'};
-        char[][] twoDimensionalCharArray = {
-                {'c', 'a', 'd'},
-                {'a', 'a', 'a'},
-                {'a', 'a', 'd'},
-                {'a', 'c', 'd'},
-                {'a', 'b', 'c'}
-        };
-
-        //List<List<Integer>>
-        int[][] listListIntegerArray = {{4, 14, 24, 34, 40}, {12, 14, 25, 38, 41}, {9, 19, 20, 26, 50}};
-        List<List<Integer>> integerListList = new LinkedList();
-        for (int[] listIntegerArray : listListIntegerArray) {
-            List<Integer> collect = Arrays.stream(listIntegerArray).boxed().collect(Collectors.toList());
-            integerListList.add(collect);
-        }
-
-        //List<List<String>>
-        String[][] listListStringArray = {{"JFK", "SFO"}, {"JFK", "ATL"}, {"SFO", "ATL"}, {"ATL", "JFK"}, {"ATL", "SFO"}};
-        List<List<String>> stringListList = new LinkedList();
-        for (String[] listStringArray : listListStringArray) {
-            List<String> collect = Arrays.stream(listStringArray).collect(Collectors.toList());
-            stringListList.add(collect);
-        }
-
-
-        Games games = new Games();
-        games.stoneGameV(oneDimensionalArrayA);
-        System.out.println();
     }
 }
