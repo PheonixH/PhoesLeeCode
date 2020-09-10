@@ -102,10 +102,9 @@ public class Main {
 
 
         SolutionNow solution = new SolutionNow();
-        Games games = new Games();
-
         System.out.println(solution.largestNumber(oneDimensionalArrayA, 29));
 
+        Games games = new Games();
         System.out.println(games.addToArrayForm(oneDimensionalArrayA, 29));
     }
 }

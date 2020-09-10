@@ -323,10 +323,8 @@ public class Solution {
                 }
                 list.set(k - jj, list.get(k - jj) + 1);
 
-                //arr[k - j]++;
                 for (int i = 1; i < jj; i++) {
                     list.set(k - jj + i, list.get(k - jj + i - 1) + 1);
-                    //arr[k - j + i] = arr[k - j + i - 1] + 1;
                 }
                 list.set(k - 1, list.get(k - 1) - 1);
             }
@@ -343,22 +341,7 @@ public class Solution {
     //621
     @SuppressWarnings("AlibabaUndefineMagicConstant")
     public int leastInterval(char[] tasks, int n) {
-//        int result = 0;
-//        int[] wait = new int [26];
-//        for(int i = 0;i < 26; i++){
-//            wait[i] = 0;
-//        }
-//        for(int i = 0;i < tasks.length; i++){
-//            int key = (int)(tasks[i] - 'A');
-//            result = result + wait[key] + 1;
-//            for(int j = 0;j < 26; j++){
-//                if(wait[j] != 0) {
-//                    wait[j] = wait[j] - 1;
-//                }
-//            }
-//            wait[key] = 100;
-//        }
-//        return result;
+
         int result = 0;
         int[] num = new int[26];
         for (int i = 0; i < 26; i++) {
@@ -499,44 +482,7 @@ public class Solution {
 
     //342
     public boolean isPowerOfFour(int num) {
-        //1).
-//        while (1 != num&&num > 0){
-//            if(0 != num % 4) {
-//                break;
-//            }
-//            else{
-//                num = num / 4;
-//            }
-//        }
-//        if(1 == num){
-//            return true;
-//        }
-//        else {
-//            return false;
-//        }
-        //2).
-//        Stack<Integer> stack = new Stack<>();
-//        stack.push(num);
-//        int a = stack.peek();
-//        while (!stack.empty()&&0 < a){
-//            a = stack.peek();
-//            if(1 == a){
-//                stack.pop();
-//                break;
-//            }
-//            else if(0 == a % 4){
-//                stack.pop();
-//                stack.push(a/4);
-//            }
-//            else{
-//                break;
-//            }
-//        }
-//        return stack.empty();
-        //3).
         return num > 0 && (num & (num - 1)) == 0 && (num - 1) % 3 == 0;
-        //4).
-//        return ((num & (num-1)) == 0) && num > 0 && ((num  & 0x55555555) != 0);
     }
 
     //231
@@ -2077,7 +2023,6 @@ public class Solution {
 
     public int isRight(List<Character> list1, List<Character> list2) {
         int alen = list1.size();
-//        int blen = b.length;
         int i = 0;
         while (i < alen) {
             if (list1.get(i) < list2.get(i)) {
@@ -3280,7 +3225,6 @@ public class Solution {
             return false;
         }
         Map<Character, String> map = new HashMap<>();
-//        Set<String> set = new HashSet<>();
         for (int i = 0; i < cs.length; i++) {
             if (map.containsKey(cs[i])) {
                 if (!map.get(cs[i]).equals(sts[i])) {
@@ -3290,7 +3234,6 @@ public class Solution {
                 return false;
             } else {
                 map.put(cs[i], sts[i]);
-//                set.add(sts[i]);
             }
         }
         return true;
@@ -3416,6 +3359,9 @@ public class Solution {
                     }
                     break;
                 }
+                default: {
+                    continue;
+                }
             }
         }
         return -1;
@@ -3505,10 +3451,6 @@ public class Solution {
         int end = cs.length;
         int k = 0;
         int m = -1;
-//        if(map.get(cs[0]).size() == 1){
-//            res.add(1);
-//            m++;
-//        }
         while (n < end) {
             List<Integer> l = map.get(cs[n]);
             int kk = l.get(l.size() - 1);
@@ -3666,6 +3608,9 @@ public class Solution {
                     x++;
                     break;
                 }
+                default: {
+                    continue;
+                }
             }
             dir = (dir + 1) % 4;
         }
@@ -3685,7 +3630,7 @@ public class Solution {
             }
             map.put(numbers[i], i);
         }
-        return null;
+        return new int[]{};
     }
 
     public int[] twoSum(int[] numbers, int target) {
@@ -6361,6 +6306,9 @@ public class Solution {
                     }
                     break;
                 }
+                default: {
+                    continue;
+                }
             }
             if (have[0] < 0) {
                 return false;
@@ -6373,10 +6321,6 @@ public class Solution {
     //执行用时 : 64 ms, 在Gas Station的Java提交中击败了40.25% 的用户
     //内存消耗 : 36.9 MB, 在Gas Station的Java提交中击败了88.09% 的用户
     public int canCompleteCircuit0(int[] gas, int[] cost) {
-//        int[] status = new int[gas.length];
-//        for(int i = 0;i < gas.length;i++){
-//            status[i] = gas[i] - cost[i];
-//        }
         int len = gas.length;
         for (int i = 0; i < len; i++) {
             int j = i;
@@ -6639,14 +6583,12 @@ public class Solution {
     //执行用时 : 9 ms, 在Find the Duplicate Number的Java提交中击败了21.53% 的用户
     //内存消耗 : 41.7 MB, 在Find the Duplicate Number的Java提交中击败了5.13% 的用户
     public int findDuplicate0(int[] nums) {
-//        int res = 0;
-        Set set = new HashSet();
+        Set<Integer> set = new HashSet<>();
         for (int i : nums) {
             if (set.contains(i)) {
                 return i;
             }
             set.add(i);
-//            res = res & i;
         }
         return 0;
     }
@@ -7073,12 +7015,7 @@ public class Solution {
         for (int i = 0; i < n; ++i) {
             tmp.add(new int[]{nums[i], i});
         }
-        Comparator<int[]> c = new Comparator<int[]>() {
-            @Override
-            public int compare(int[] o1, int[] o2) {
-                return o1[0] - o2[0];
-            }
-        };
+        Comparator<int[]> c = (o1, o2) -> o1[0] - o2[0];
         tmp.sort(c);
         int preKey = tmp.get(0)[0];
         int preNum = 0;
@@ -7464,8 +7401,9 @@ public class Solution {
      * 我们定义 m 天中做题时间最多的一天耗时为 T（小杨完成的题目不计入做题总时间）。请你帮小张求出最小的 T是多少。
      * 执行用时：9 ms, 在所有 Java 提交中击败了87.01% 的用户
      * 内存消耗：47.6 MB, 在所有 Java 提交中击败了100.00% 的用户
+     *
      * @param time time[i] 的时间完成编号 i 的题目
-     * @param m  m 天
+     * @param m    m 天
      * @return 最小的 T是多少
      */
     public int minTime(int[] time, int m) {
@@ -9868,7 +9806,7 @@ public class Solution {
         int max = arr.length - 1, min = 0;
         for (int i = brr.length - 1; i >= 0; i--) {
             map.putIfAbsent(brr[i], new LinkedList<>());
-            List list = map.get(brr[i]);
+            List<Integer> list = map.get(brr[i]);
             if (arr[max] > brr[i]) {
                 list.add(arr[max--]);
             } else {
@@ -10223,15 +10161,15 @@ public class Solution {
      */
     public int sumRootToLeaf(TreeNode root) {
         preVisitNode(root, "");
-        return sum;
+        return sumRootToLeafSum;
     }
 
-    private int sum = 0;
+    private int sumRootToLeafSum = 0;
 
     public void preVisitNode(TreeNode root, String pre) {
         if (root.left == null && root.right == null) {
             pre = pre + root.val;
-            sum += Biannary2Decimal(pre);
+            sumRootToLeafSum += Biannary2Decimal(pre);
             return;
         }
         pre = pre + root.val;
@@ -10241,7 +10179,6 @@ public class Solution {
         if (root.right != null) {
             preVisitNode(root.right, pre);
         }
-        return;
     }
 
     /**
@@ -10424,6 +10361,7 @@ public class Solution {
      * 120. 三角形最小路径和
      * 执行用时：2 ms, 在所有 Java 提交中击败了96.02%的用户
      * 内存消耗：39.7 MB, 在所有 Java 提交中击败了8.70%的用户
+     *
      * @param triangle 三角形数组
      * @return 三角形最小路径和
      */
@@ -10600,8 +10538,6 @@ public class Solution {
         if (N <= 1) {
             return false;
         }
-//        int[][] dp = new int[N][2];
-//        dp[0][0] = N;
         int[] f = new int[N + 1];
         f[1] = 0;
         f[2] = 1;
@@ -10887,8 +10823,6 @@ public class Solution {
         if (stones[1] != 1) {
             return false;
         }
-//        int[] step = new int[len];
-//        step[0] = 1;
         Stack<int[]> stack = new Stack<>();
         int[] st1 = new int[2];
         st1[0] = 1;
@@ -11944,17 +11878,17 @@ public class Solution {
      * @return 是否可以学完
      */
     int[] learned;
-    List<List<Integer>> pre = new ArrayList<>();
+    List<List<Integer>> canFinishPre = new ArrayList<>();
     boolean canFinish = true;
 
     public boolean canFinish(int numCourses, int[][] prerequisites) {
         learned = new int[numCourses];
         for (int i : learned) {
             List<Integer> tmp = new ArrayList<>();
-            pre.add(tmp);
+            canFinishPre.add(tmp);
         }
         for (int[] p : prerequisites) {
-            pre.get(p[1]).add(p[0]);
+            canFinishPre.get(p[1]).add(p[0]);
         }
         for (int i = 0; i < numCourses; i++) {
             canFinishDFS(i);
@@ -11967,7 +11901,7 @@ public class Solution {
 
     public void canFinishDFS(int key) {
         learned[key] = 1;
-        for (int k : pre.get(key)) {
+        for (int k : canFinishPre.get(key)) {
             if (!canFinish) {
                 break;
             }
@@ -12036,11 +11970,11 @@ public class Solution {
      */
     public int rob0(TreeNode root) {
         dfs(root);
-        return Math.max(f.getOrDefault(root, 0), g.getOrDefault(root, 0));
+        return Math.max(robF.getOrDefault(root, 0), robG.getOrDefault(root, 0));
     }
 
-    Map<TreeNode, Integer> f = new HashMap<TreeNode, Integer>();
-    Map<TreeNode, Integer> g = new HashMap<TreeNode, Integer>();
+    Map<TreeNode, Integer> robF = new HashMap();
+    Map<TreeNode, Integer> robG = new HashMap();
 
     public void dfs(TreeNode node) {
         if (node == null) {
@@ -12048,8 +11982,9 @@ public class Solution {
         }
         dfs(node.left);
         dfs(node.right);
-        f.put(node, node.val + g.getOrDefault(node.left, 0) + g.getOrDefault(node.right, 0));
-        g.put(node, Math.max(f.getOrDefault(node.left, 0), g.getOrDefault(node.left, 0)) + Math.max(f.getOrDefault(node.right, 0), g.getOrDefault(node.right, 0)));
+        robF.put(node, node.val + robG.getOrDefault(node.left, 0) + robG.getOrDefault(node.right, 0));
+        robG.put(node, Math.max(robF.getOrDefault(node.left, 0), robG.getOrDefault(node.left, 0))
+                + Math.max(robF.getOrDefault(node.right, 0), robG.getOrDefault(node.right, 0)));
     }
 
     public List<List<Integer>> palindromePairs(String[] words) {
@@ -12163,11 +12098,11 @@ public class Solution {
         return;
     }
 
-    private int[][] dir = new int[][]{{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+    private int[][] solveDir = new int[][]{{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
     private int solveM = 0, solveN = 0;
 
     public void solveDfs(char[][] board, int x, int y) {
-        for (int[] d : dir) {
+        for (int[] d : solveDir) {
             int tx = x + d[0];
             int ty = y + d[1];
             if (tx < 0 || tx >= solveM || ty < 0 || ty >= solveN) {
@@ -12774,8 +12709,8 @@ public class Solution {
             }
         }
         List<List<String>> res = new ArrayList<>();
-        for (String key : map.keySet()) {
-            res.add(map.get(key));
+        for (Map.Entry<String, List<String>> entry : map.entrySet()) {
+            res.add(entry.getValue());
         }
         return res;
     }
@@ -12830,10 +12765,8 @@ public class Solution {
                 } else {
                     dp[0][j] = 0;
                 }
-            } else if (dp[0][j - 1] == 1) {
-                if ('*' == ps[j]) {
-                    dp[0][j] = 3;
-                }
+            } else if (dp[0][j - 1] == 1 && '*' == ps[j]) {
+                dp[0][j] = 3;
             }
         }
         for (int i = 1; i < sLen; i++) {
@@ -13289,13 +13222,13 @@ public class Solution {
     public boolean canVisitAllRooms(List<List<Integer>> rooms) {
         int len = rooms.size();
         boolean[] visited = new boolean[len];
-        Stack<Integer> stack = new Stack<>();
+        Deque<Integer> stack = new ArrayDeque<>();
         for (int i : rooms.get(0)) {
             stack.push(i);
         }
         int nums = 1;
         visited[0] = true;
-        while (!stack.empty()) {
+        while (!stack.isEmpty()) {
             int tmp = stack.pop();
             if (visited[tmp]) {
                 continue;
@@ -13367,15 +13300,10 @@ public class Solution {
             map.putIfAbsent(n, 1);
             map.put(n, map.get(n) + 1);
         }
-        Comparator<int[]> comparator = new Comparator<int[]>() {
-            @Override
-            public int compare(int[] o1, int[] o2) {
-                return o2[0] - o1[0];
-            }
-        };
-        PriorityQueue<int[]> p = new PriorityQueue<int[]>(comparator);
-        for (int key : map.keySet()) {
-            int[] tmp = new int[]{map.get(key), key};
+        Comparator<int[]> comparator = (o1, o2) -> o2[0] - o1[0];
+        PriorityQueue<int[]> p = new PriorityQueue<>(comparator);
+        for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+            int[] tmp = new int[]{(int) entry.getValue(), (int) entry.getKey()};
             p.add(tmp);
         }
         int[] res = new int[k];
@@ -13576,6 +13504,8 @@ public class Solution {
                             } else {
                                 chars[i] = (char) (chars[i + 1] + 1);
                             }
+                        } else {
+                            continue;
                         }
                     }
                 } else {
@@ -13733,7 +13663,7 @@ public class Solution {
      * @return 是否全包含
      */
     public boolean hasAllCodes(String s, int k) {
-        HashSet<String> set = new HashSet();
+        HashSet<String> set = new HashSet<>();
         for (int i = 0; i <= s.length() - k; i++) {
             set.add(s.substring(i, i + k));
         }
@@ -13929,12 +13859,13 @@ public class Solution {
      * 给定一个无重复元素的数组 candidates 和一个目标数 target ，找出 candidates 中所有可以使数字和为 target 的组合。
      * candidates 中的数字可以无限制重复被选取。
      * 说明：
-     *     所有数字（包括 target）都是正整数。
-     *     解集不能包含重复的组合。
+     * 所有数字（包括 target）都是正整数。
+     * 解集不能包含重复的组合。
      * 执行用时：4 ms, 在所有 Java 提交中击败了55.43% 的用户
      * 内存消耗：40.2 MB, 在所有 Java 提交中击败了27.43% 的用户
+     *
      * @param candidates 无重复元素的数组 candidates
-     * @param target 目标数 target
+     * @param target     目标数 target
      * @return candidates 中所有可以使数字和为 target 的组合
      */
     public List<List<Integer>> combinationSum0(int[] candidates, int target) {
@@ -13963,88 +13894,6 @@ public class Solution {
         }
     }
 
-
-    public static void main(String[] args) {
-        Solution solution = new Solution();
-
-        //ListNode
-        int[] listNodeValue = {1, 2, 2, 4, 5, 3, 2, 1};
-        int listNodeLen = listNodeValue.length;
-        ListNode head = new ListNode(listNodeValue[0]);
-        ListNode listNodeTmp = head;
-        for (int i = 1; i < listNodeLen; i++) {
-            listNodeTmp.next = new ListNode(listNodeValue[i]);
-            listNodeTmp = listNodeTmp.next;
-        }
-
-        //TreeNode -1 is null TreeNode;
-        int[] treeNodeValue = {3, 2, -1, 3, 1, 3, -1, 2};
-        int treeNodeLen = treeNodeValue.length;
-        Stack<TreeNode> createTreeNodeStack = new Stack<>();
-        TreeNode root = new TreeNode(treeNodeValue[0]);
-        createTreeNodeStack.add(root);
-        for (int i = 1; i < listNodeLen; i++) {
-            TreeNode tmp = createTreeNodeStack.pop();
-            if (tmp == null) {
-                i++;
-                continue;
-            }
-            if (treeNodeValue[i] == -1) {
-                tmp.left = null;
-            } else {
-                tmp.left = new TreeNode(treeNodeValue[i]);
-            }
-            createTreeNodeStack.add(tmp.left);
-            i++;
-            if (treeNodeValue[i] == -1) {
-                tmp.right = null;
-            } else {
-                tmp.right = new TreeNode(treeNodeValue[i]);
-            }
-            createTreeNodeStack.add(tmp.right);
-        }
-
-
-        //Arrays
-        String[] oneDimensionalStringArray = {"5", "2", "C", "D", "+"};
-        int[] oneDimensionalArrayA = {1, 2, 3, 3};
-        int[] oneDimensionalArrayB = {5, 2, 2, 5, 3, 5};
-        int[][] twoDimensionalArrayA = {{1, 3,}, {0, 2}, {1, 3}, {0, 2}};
-        int[][] twoDimensionalArrayB = {
-                {0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0},
-                {0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0},
-                {0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0},
-                {0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0},
-                {0, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0},
-                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0},
-                {0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0},
-                {0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0}
-        };
-        char[] oneDimensionalCharArray = {'A', 'B'};
-        char[][] twoDimensionalCharArray = {
-                {'A', 'B', 'C', 'E'},
-                {'S', 'F', 'C', 'S'},
-                {'A', 'D', 'E', 'E'}
-        };
-
-        //List<List<Integer>>
-        int[][] listListIntegerArray = {{4, 14, 24, 34, 40}, {12, 14, 25, 38, 41}, {9, 19, 20, 26, 50}};
-        List<List<Integer>> integerListList = new LinkedList();
-        for (int[] listIntegerArray : listListIntegerArray) {
-            List<Integer> collect = Arrays.stream(listIntegerArray).boxed().collect(Collectors.toList());
-            integerListList.add(collect);
-        }
-
-        //List<List<String>>
-        String[][] listListStringArray = {{"JFK", "SFO"}, {"JFK", "ATL"}, {"SFO", "ATL"}, {"ATL", "JFK"}, {"ATL", "SFO"}};
-        List<List<String>> stringListList = new LinkedList();
-        for (String[] listStringArray : listListStringArray) {
-            List<String> collect = Arrays.stream(listStringArray).collect(Collectors.toList());
-            stringListList.add(collect);
-        }
-
-        System.out.print(solution.minTime(oneDimensionalArrayA, 2));
-    }
 
     class Pair implements Comparable<Pair> {
         public int x, y, val;
