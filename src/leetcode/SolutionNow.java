@@ -299,4 +299,33 @@ public class SolutionNow {
         paths.forEach(x -> to.remove(x.get(0)));
         return to.isEmpty() ? paths.get(0).get(0) : to.get(0);
     }
+
+    /**
+     * 1437. 是否所有 1 都至少相隔 k 个元素
+     * 给你一个由若干 0 和 1 组成的数组 nums 以及整数 k。如果所有 1 都至少相隔 k 个元素，则返回 True ；否则，返回 False 。
+     * <p>
+     * 执行用时：1 ms, 在所有 Java 提交中击败了99.77% 的用户
+     * 内存消耗：49.7 MB, 在所有 Java 提交中击败了69.50% 的用户
+     *
+     * @param nums 数组 nums
+     * @param k 整数 k
+     * @return 是否所有 1 都至少相隔 k 个元素
+     */
+    public boolean kLengthApart(int[] nums, int k) {
+        if (k == 0) {
+            return true;
+        }
+        int now = k;
+        for (int n : nums) {
+            if (n == 0) {
+                now++;
+            } else {
+                if (now < k) {
+                    return false;
+                }
+                now = 0;
+            }
+        }
+        return true;
+    }
 }
