@@ -243,11 +243,12 @@ public class SolutionNow {
      * 216. 组合总和 III
      * 找出所有相加之和为 n 的 k 个数的组合。组合中只允许含有 1 - 9 的正整数，并且每种组合中不存在重复的数字。
      * 说明：
-     *     所有数字都是正整数。
-     *     解集不能包含重复的组合
-     *
+     * 所有数字都是正整数。
+     * 解集不能包含重复的组合
+     * <p>
      * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
      * 内存消耗：37.4 MB, 在所有 Java 提交中击败了11.10% 的用户
+     *
      * @param k 数
      * @param n 数
      * @return 所有相加之和为 n 的 k 个数的组合
@@ -280,4 +281,22 @@ public class SolutionNow {
         }
     }
 
+
+    /**
+     * 1436. 旅行终点站
+     * 给你一份旅游线路图，该线路图中的旅行线路用数组 paths 表示，其中 paths[i] = [cityAi, cityBi] 表示该线路将会从 cityAi 直接前往 cityBi 。请你找出这次旅行的终点站，即没有任何可以通往其他城市的线路的城市。
+     * 题目数据保证线路图会形成一条不存在循环的线路，因此只会有一个旅行终点站。
+     * <p>
+     * 执行用时：3 ms, 在所有 Java 提交中击败了62.26% 的用户
+     * 内存消耗：39.4 MB, 在所有 Java 提交中击败了56.07% 的用户
+     *
+     * @param paths 旅行线路
+     * @return 旅行终点站
+     */
+    public String destCity(List<List<String>> paths) {
+        List<String> to = new ArrayList<>();
+        paths.forEach(x -> to.add(x.get(1)));
+        paths.forEach(x -> to.remove(x.get(0)));
+        return to.isEmpty() ? paths.get(0).get(0) : to.get(0);
+    }
 }
