@@ -239,5 +239,45 @@ public class SolutionNow {
         return b;
     }
 
+    /**
+     * 216. 组合总和 III
+     * 找出所有相加之和为 n 的 k 个数的组合。组合中只允许含有 1 - 9 的正整数，并且每种组合中不存在重复的数字。
+     * 说明：
+     *     所有数字都是正整数。
+     *     解集不能包含重复的组合
+     *
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：37.4 MB, 在所有 Java 提交中击败了11.10% 的用户
+     * @param k 数
+     * @param n 数
+     * @return 所有相加之和为 n 的 k 个数的组合
+     */
+    public List<List<Integer>> combinationSum3(int k, int n) {
+        if (k > 0 && k < 10 && n <= (19 - k) * k / 2 && n >= (k + 1) * k / 2) {
+            combinationSum3Dfs(new ArrayList<>(), 1, n, k);
+        }
+        return combinationSum3Result;
+    }
+
+    List<List<Integer>> combinationSum3Result = new ArrayList<>();
+
+    public void combinationSum3Dfs(List<Integer> now, int nowKey, int nowValue, int p) {
+        if (now.size() == p - 1) {
+            if (nowValue >= nowKey && nowValue <= 9) {
+                List<Integer> tmp = new ArrayList<>(now);
+                tmp.add(nowValue);
+                combinationSum3Result.add(tmp);
+            }
+            return;
+        }
+        for (int i = nowKey; i < 10; i++) {
+            if (nowValue <= i) {
+                break;
+            }
+            now.add(i);
+            combinationSum3Dfs(now, i + 1, nowValue - i, p);
+            now.remove(now.size() - 1);
+        }
+    }
 
 }
