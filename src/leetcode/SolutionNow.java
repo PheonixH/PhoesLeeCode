@@ -336,12 +336,13 @@ public class SolutionNow {
      * 公司总负责人想要向公司所有员工通告一条紧急消息。他将会首先通知他的直属下属们，然后由这些下属通知他们的下属，直到所有的员工都得知这条紧急消息。
      * 第 i 名员工需要 informTime[i] 分钟来通知它的所有直属下属（也就是说在 informTime[i] 分钟后，他的所有直属下属都可以开始传播这一消息）。
      * 返回通知所有员工这一紧急消息所需要的 分钟数 。
-     *
+     * <p>
      * 执行用时：288 ms, 在所有 Java 提交中击败了14.48% 的用户
      * 内存消耗：53.3 MB, 在所有 Java 提交中击败了72.65% 的用户
-     * @param n n名员工
-     * @param headID 总负责人
-     * @param manager 数组
+     *
+     * @param n          n名员工
+     * @param headID     总负责人
+     * @param manager    数组
      * @param informTime 数组
      * @return 通知所有员工所需的时间
      */
@@ -361,4 +362,46 @@ public class SolutionNow {
         }
         return max;
     }
+
+    /**
+     * 1424. 对角线遍历 II
+     * 给你一个列表 nums ，里面每一个元素都是一个整数列表。请你依照下面各图的规则，按顺序返回 nums 中对角线上的整数。
+     * <p>
+     * 执行用时：170 ms, 在所有 Java 提交中击败了11.83% 的用户
+     * 内存消耗：64.1 MB, 在所有 Java 提交中击败了83.09% 的用户
+     *
+     * @param nums 列表
+     * @return 按顺序返回 nums 中对角线上的整数
+     */
+    public int[] findDiagonalOrder(List<List<Integer>> nums) {
+        int len = 0;
+        Map<Integer, List<Integer>> map = new TreeMap<>();
+        for (int i = 0; i < nums.size(); i++) {
+            // 获取最后要返回的数组的长度，即元素个数
+            len += nums.get(i).size();
+            for (int j = 0; j < nums.get(i).size(); j++) {
+                if (map.containsKey(i + j)) {
+                    map.get(i + j).add(nums.get(i).get(j));
+                } else {
+                    List<Integer> list = new ArrayList<>();
+                    list.add(nums.get(i).get(j));
+                    map.put(i + j, list);
+                }
+            }
+        }
+        int[] ans = new int[len];
+        int index = 0;
+        // 遍历map
+        for (int key : map.keySet()) {
+            List<Integer> list = map.get(key);
+            // 根据题目的输出要求确定生成数组中元素的顺序
+            for (int j = list.size() - 1; j >= 0; j--) {
+                ans[index] = list.get(j);
+                index++;
+            }
+        }
+        return ans;
+    }
+
+
 }
