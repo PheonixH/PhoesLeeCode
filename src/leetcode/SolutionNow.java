@@ -403,79 +403,88 @@ public class SolutionNow {
         return ans;
     }
 
+    /**
+     * 1405. 最长快乐字符串
+     * 如果字符串中不含有任何 'aaa'，'bbb' 或 'ccc' 这样的字符串作为子串，那么该字符串就是一个「快乐字符串」。
+     * 给你三个整数 a，b ，c，请你返回 任意一个 满足下列全部条件的字符串 s：
+     *     s 是一个尽可能长的快乐字符串。
+     *     s 中 最多 有a 个字母 'a'、b 个字母 'b'、c 个字母 'c' 。
+     *     s 中只含有 'a'、'b' 、'c' 三种字母。
+     *
+     * 如果不存在这样的字符串 s ，请返回一个空字符串 ""。
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：36.6 MB, 在所有 Java 提交中击败了93.39% 的用户
+     * @param a a个'a'
+     * @param b b个'b'
+     * @param c c个'c'
+     * @return 最长快乐字符串
+     */
     public String longestDiverseString(int a, int b, int c) {
         StringBuilder sb = new StringBuilder();
-        Map<String, Integer> map = new HashMap<>();
-        map.put("a", a);
-        map.put("b", b);
-        map.put("c", c);
-        int na = map.get("a");
-        int nb = map.get("b");
-        int nc = map.get("c");
-        while (na != 0 || nb != 0 || nc != 0) {
-            na = map.get("a");
-            nb = map.get("b");
-            nc = map.get("c");
-            if (na >= nb && na >= nc) {
-                if (na == 1) {
-                    sb.append("a");
-                    map.put("a", 0);
-                } else {
-                    sb.append("aa");
-                    map.put("a", map.get("a") - 2);
-                }
-                if (nb >= nc) {
-                    if (nb == 0) {
+        longestDiverseStringArr[0] = a;
+        longestDiverseStringArr[1] = b;
+        longestDiverseStringArr[2] = c;
+        char pre = 'd';
+        int preNum = 0;
+        while (longestDiverseStringArr[0] != 0 || longestDiverseStringArr[1] != 0 || longestDiverseStringArr[2] != 0) {
+            if (preNum == 2) {
+                int t = longestDiverseStringMax(longestDiverseStringArr);
+                char tmp = (char) (t + 'a');
+                if (pre == tmp) {
+                    int tt = longestDiverseStringBigger(longestDiverseStringArr, t);
+                    longestDiverseStringArr[tt]--;
+                    if (longestDiverseStringArr[tt] < 0) {
                         break;
-                    } else {
-                        sb.append("b");
-                        map.put("b", map.get("b") - 1);
                     }
+                    pre = (char) (tt + 'a');
+                    sb.append(pre);
+                    preNum = 1;
                 } else {
-                    sb.append("c");
-                    map.put("c", map.get("c") - 1);
-                }
-            } else if (nb >= na && nb >= nc) {
-                if (nb == 1) {
-                    sb.append("b");
-                    map.put("b", 0);
-                } else {
-                    sb.append("bb");
-                    map.put("b", map.get("b") - 2);
-                }
-                if (na >= nc) {
-                    if (na == 0) {
+                    longestDiverseStringArr[t]--;
+                    if (longestDiverseStringArr[t] < 0) {
                         break;
-                    } else {
-                        sb.append("a");
-                        map.put("a", map.get("a") - 1);
                     }
-                } else {
-                    sb.append("c");
-                    map.put("c", map.get("c") - 1);
+                    sb.append(tmp);
+                    preNum = 1;
                 }
             } else {
-                if (nc == 1) {
-                    sb.append("c");
-                    map.put("c", 0);
-                } else {
-                    sb.append("cc");
-                    map.put("c", map.get("c") - 2);
+                int t = longestDiverseStringMax(longestDiverseStringArr);
+                char tmp = (char) (t + 'a');
+                longestDiverseStringArr[t]--;
+                if (longestDiverseStringArr[t] < 0) {
+                    break;
                 }
-                if (na >= nb) {
-                    if (na == 0) {
-                        break;
-                    } else {
-                        sb.append("a");
-                        map.put("a", map.get("a") - 1);
-                    }
-                } else {
-                    sb.append("b");
-                    map.put("b", map.get("b") - 1);
+                sb.append(tmp);
+                if (pre != tmp) {
+                    preNum = 0;
+                    pre = tmp;
                 }
+                preNum++;
             }
         }
         return sb.toString();
+    }
+
+    private int[] longestDiverseStringArr = new int[3];
+
+    private int longestDiverseStringMax(int[] arr) {
+        if (arr[0] >= arr[1] && arr[0] >= arr[2]) {
+            return 0;
+        } else if (arr[1] >= arr[2]) {
+            return 1;
+        } else {
+            return 2;
+        }
+    }
+
+    private int longestDiverseStringBigger(int[] arr, int t) {
+        if (t == 0) {
+            return arr[1] >= arr[2] ? 1 : 2;
+        } else if (t == 1) {
+            return arr[0] >= arr[2] ? 0 : 2;
+        } else {
+            return arr[1] >= arr[0] ? 1 : 0;
+        }
     }
 
 
