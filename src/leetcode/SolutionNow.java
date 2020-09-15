@@ -403,5 +403,141 @@ public class SolutionNow {
         return ans;
     }
 
+    public String longestDiverseString(int a, int b, int c) {
+        StringBuilder sb = new StringBuilder();
+        Map<String, Integer> map = new HashMap<>();
+        map.put("a", a);
+        map.put("b", b);
+        map.put("c", c);
+        int na = map.get("a");
+        int nb = map.get("b");
+        int nc = map.get("c");
+        while (na != 0 || nb != 0 || nc != 0) {
+            na = map.get("a");
+            nb = map.get("b");
+            nc = map.get("c");
+            if (na >= nb && na >= nc) {
+                if (na == 1) {
+                    sb.append("a");
+                    map.put("a", 0);
+                } else {
+                    sb.append("aa");
+                    map.put("a", map.get("a") - 2);
+                }
+                if (nb >= nc) {
+                    if (nb == 0) {
+                        break;
+                    } else {
+                        sb.append("b");
+                        map.put("b", map.get("b") - 1);
+                    }
+                } else {
+                    sb.append("c");
+                    map.put("c", map.get("c") - 1);
+                }
+            } else if (nb >= na && nb >= nc) {
+                if (nb == 1) {
+                    sb.append("b");
+                    map.put("b", 0);
+                } else {
+                    sb.append("bb");
+                    map.put("b", map.get("b") - 2);
+                }
+                if (na >= nc) {
+                    if (na == 0) {
+                        break;
+                    } else {
+                        sb.append("a");
+                        map.put("a", map.get("a") - 1);
+                    }
+                } else {
+                    sb.append("c");
+                    map.put("c", map.get("c") - 1);
+                }
+            } else {
+                if (nc == 1) {
+                    sb.append("c");
+                    map.put("c", 0);
+                } else {
+                    sb.append("cc");
+                    map.put("c", map.get("c") - 2);
+                }
+                if (na >= nb) {
+                    if (na == 0) {
+                        break;
+                    } else {
+                        sb.append("a");
+                        map.put("a", map.get("a") - 1);
+                    }
+                } else {
+                    sb.append("b");
+                    map.put("b", map.get("b") - 1);
+                }
+            }
+        }
+        return sb.toString();
+    }
+
+
+    /**
+     * 37. 解数独
+     * 编写一个程序，通过已填充的空格来解决数独问题。
+     * 一个数独的解法需遵循如下规则：
+     * 数字 1-9 在每一行只能出现一次。
+     * 数字 1-9 在每一列只能出现一次。
+     * 数字 1-9 在每一个以粗实线分隔的 3x3 宫内只能出现一次。
+     * 空白格用 '.' 表示。
+     * <p>
+     * 执行用时：4 ms, 在所有 Java 提交中击败了74.85% 的用户
+     * 内存消耗：36.7 MB, 在所有 Java 提交中击败了99.44% 的用户
+     *
+     * @param board 数组
+     */
+    public void solveSudoku(char[][] board) {
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                if ('.' != board[i][j]) {
+                    int t = board[i][j] - '1';
+                    solveSudokuX[i][t] = true;
+                    solveSudokuY[j][t] = true;
+                    solveSudokuZ[i / 3][j / 3][t] = true;
+                } else {
+                    solveSudokuL.add(new int[]{i, j});
+                }
+            }
+        }
+        solveSudokuDfs(0, board);
+    }
+
+    boolean[][] solveSudokuX = new boolean[9][9];
+    boolean[][] solveSudokuY = new boolean[9][9];
+    boolean[][][] solveSudokuZ = new boolean[3][3][9];
+    List<int[]> solveSudokuL = new ArrayList<>();
+
+    public boolean solveSudokuDfs(int p, char[][] board) {
+        if (solveSudokuL.size() == p) {
+            return true;
+        }
+        int[] tmp = solveSudokuL.get(p);
+        int xx = tmp[0];
+        int yy = tmp[1];
+        for (int t = 0; t < 9; t++) {
+            if (!solveSudokuX[xx][t] && !solveSudokuY[yy][t] && !solveSudokuZ[xx / 3][yy / 3][t]) {
+                solveSudokuX[xx][t] = true;
+                solveSudokuY[yy][t] = true;
+                solveSudokuZ[xx / 3][yy / 3][t] = true;
+                board[xx][yy] = (char) (t + '1');
+                if (!solveSudokuDfs(p + 1, board)) {
+                    solveSudokuX[xx][t] = false;
+                    solveSudokuY[yy][t] = false;
+                    solveSudokuZ[xx / 3][yy / 3][t] = false;
+                    board[xx][yy] = '.';
+                } else {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
 }
