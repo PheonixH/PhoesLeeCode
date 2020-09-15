@@ -678,4 +678,36 @@ public class SolutionNow {
         }
         return null;
     }
+
+    /**
+     * 面试题 02.08. 环路检测
+     * 给定一个链表，如果它是有环链表，实现一个算法返回环路的开头节点。
+     * 有环链表的定义：在链表中某个节点的next元素指向在它前面出现过的节点，则表明该链表存在环路。
+     * <p>
+     * 解析：要理解的是，当快慢指针相遇时，快指针比慢指针多走了环长度的整数倍，而且快指针比慢指针多走的和慢指针走的一样，
+     * 所以慢指针走的步数也是环长度的整数倍！此时让快指针再从头走，速度和慢指针一样，两指针肯定会在环入口相遇
+     * <p>
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：40.2 MB, 在所有 Java 提交中击败了16.99% 的用户
+     *
+     * @param head 指针
+     * @return 环路检测结果
+     */
+    public ListNode detectCycle(ListNode head) {
+        ListNode slow = head, fast = head;
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+            if (slow == fast) {
+                fast = head;
+                while (slow != fast) {
+                    slow = slow.next;
+                    fast = fast.next;
+                }
+                return slow;
+            }
+        }
+        return null;
+    }
+
 }
