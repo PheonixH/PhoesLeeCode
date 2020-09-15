@@ -710,4 +710,32 @@ public class SolutionNow {
         return null;
     }
 
+    /**
+     * 面试题 04.04. 检查平衡性
+     * 实现一个函数，检查二叉树是否平衡。在这个问题中，平衡树的定义如下：任意一个节点，其两棵子树的高度差不超过 1。
+     * <p>
+     * 执行用时：1 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：39.7 MB, 在所有 Java 提交中击败了64.06% 的用户
+     *
+     * @param root 二叉树
+     * @return 二叉树是否平衡
+     */
+    public boolean isBalanced(TreeNode root) {
+        isBalancedLen(root);
+        return isBalancedFlag;
+    }
+
+    private boolean isBalancedFlag = true;
+
+    public int isBalancedLen(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        int l = isBalancedLen(root.left) + 1;
+        int r = isBalancedLen(root.right) + 1;
+        if (Math.abs(l - r) > 1) {
+            isBalancedFlag = false;
+        }
+        return Math.max(l, r);
+    }
 }
