@@ -556,9 +556,10 @@ public class SolutionNow {
      * 给定两个用链表表示的整数，每个节点包含一个数位。
      * 这些数位是反向存放的，也就是个位排在链表首部。
      * 编写函数对这两个整数求和，并用链表形式返回结果。
-     *
+     * <p>
      * 执行用时：2 ms, 在所有 Java 提交中击败了100.00% 的用户
      * 内存消耗：39.5 MB, 在所有 Java 提交中击败了93.50% 的用户
+     *
      * @param l1 链表1
      * @param l2 链表2
      * @return 链表求和
@@ -593,11 +594,48 @@ public class SolutionNow {
             p = p.next;
             l2 = l2.next;
         }
-        if(tmp!=0){
+        if (tmp != 0) {
             ListNode ll = new ListNode(tmp);
             p.next = ll;
         }
         return res.next;
+    }
+
+    /**
+     * 面试题 02.06. 回文链表
+     * 编写一个函数，检查输入的链表是否是回文的。
+     * <p>
+     * 执行用时：1 ms, 在所有 Java 提交中击败了99.97% 的用户
+     * 内存消耗：42.1 MB, 在所有 Java 提交中击败了94.35% 的用户
+     *
+     * @param head 链表
+     * @return 是否是回文链表
+     */
+    public boolean isPalindrome(ListNode head) {
+        if (head == null || head.next == null) {
+            return true;
+        }
+        ListNode fast = head, slow = head;
+        while (fast.next != null && fast.next.next != null) {
+            fast = fast.next.next;
+            slow = slow.next;
+        }
+        ListNode p = slow.next;
+        ListNode q = null;
+        while (p != null) {
+            ListNode pp = p.next;
+            p.next = q;
+            q = p;
+            p = pp;
+        }
+        while (head != null && q != null) {
+            if (head.val != q.val) {
+                return false;
+            }
+            q = q.next;
+            head = head.next;
+        }
+        return true;
     }
 
 }
