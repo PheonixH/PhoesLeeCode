@@ -1,5 +1,6 @@
 package leetcode;
 
+import leetcode.datestruct.ListNode;
 import leetcode.datestruct.TreeNode;
 
 import java.util.*;
@@ -407,13 +408,14 @@ public class SolutionNow {
      * 1405. 最长快乐字符串
      * 如果字符串中不含有任何 'aaa'，'bbb' 或 'ccc' 这样的字符串作为子串，那么该字符串就是一个「快乐字符串」。
      * 给你三个整数 a，b ，c，请你返回 任意一个 满足下列全部条件的字符串 s：
-     *     s 是一个尽可能长的快乐字符串。
-     *     s 中 最多 有a 个字母 'a'、b 个字母 'b'、c 个字母 'c' 。
-     *     s 中只含有 'a'、'b' 、'c' 三种字母。
-     *
+     * s 是一个尽可能长的快乐字符串。
+     * s 中 最多 有a 个字母 'a'、b 个字母 'b'、c 个字母 'c' 。
+     * s 中只含有 'a'、'b' 、'c' 三种字母。
+     * <p>
      * 如果不存在这样的字符串 s ，请返回一个空字符串 ""。
      * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
      * 内存消耗：36.6 MB, 在所有 Java 提交中击败了93.39% 的用户
+     *
      * @param a a个'a'
      * @param b b个'b'
      * @param c c个'c'
@@ -547,6 +549,55 @@ public class SolutionNow {
             }
         }
         return false;
+    }
+
+    /**
+     * 面试题 02.05. 链表求和
+     * 给定两个用链表表示的整数，每个节点包含一个数位。
+     * 这些数位是反向存放的，也就是个位排在链表首部。
+     * 编写函数对这两个整数求和，并用链表形式返回结果。
+     *
+     * 执行用时：2 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：39.5 MB, 在所有 Java 提交中击败了93.50% 的用户
+     * @param l1 链表1
+     * @param l2 链表2
+     * @return 链表求和
+     */
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        ListNode res = new ListNode(0);
+        int tmp = 0;
+        ListNode p = res;
+        while (l1 != null && l2 != null) {
+            int a = l1.val;
+            int b = l2.val;
+            ListNode ll = new ListNode((a + b + tmp) % 10);
+            p.next = ll;
+            p = p.next;
+            tmp = (a + b + tmp) / 10;
+            l1 = l1.next;
+            l2 = l2.next;
+        }
+        while (l1 != null) {
+            int a = l1.val;
+            ListNode ll = new ListNode((a + tmp) % 10);
+            tmp = (a + tmp) / 10;
+            p.next = ll;
+            p = p.next;
+            l1 = l1.next;
+        }
+        while (l2 != null) {
+            int a = l2.val;
+            ListNode ll = new ListNode((a + tmp) % 10);
+            tmp = (a + tmp) / 10;
+            p.next = ll;
+            p = p.next;
+            l2 = l2.next;
+        }
+        if(tmp!=0){
+            ListNode ll = new ListNode(tmp);
+            p.next = ll;
+        }
+        return res.next;
     }
 
 }
