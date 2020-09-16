@@ -1,5 +1,6 @@
 package leetcode;
 
+import com.sun.source.tree.Tree;
 import leetcode.datestruct.ListNode;
 import leetcode.datestruct.TreeNode;
 
@@ -793,11 +794,12 @@ public class SolutionNow {
      * 面试题 04.06. 后继者
      * 设计一个算法，找出二叉搜索树中指定节点的“下一个”节点（也即中序后继）。
      * 如果指定节点没有对应的“下一个”节点，则返回null。
-     *
+     * <p>
      * 执行用时：4 ms, 在所有 Java 提交中击败了38.00% 的用户
      * 内存消耗：39.7 MB, 在所有 Java 提交中击败了32.46% 的用户
+     *
      * @param root 树
-     * @param p 节点
+     * @param p    节点
      * @return 节点的后继者
      */
     public TreeNode inorderSuccessor(TreeNode root, TreeNode p) {
@@ -811,7 +813,7 @@ public class SolutionNow {
         }
         if (p.val < root.val) {
             inorderSuccessorRes = inorderSuccessor(root.left, p);
-            if(inorderSuccessorRes == null){
+            if (inorderSuccessorRes == null) {
                 inorderSuccessorRes = root;
             }
         } else {
@@ -823,4 +825,58 @@ public class SolutionNow {
     private TreeNode inorderSuccessorRes = null;
 
 
+    /**
+     * 面试题 04.08. 首个共同祖先
+     * 设计并实现一个算法，找出二叉树中某两个节点的第一个共同祖先。不得将其他的节点存储在另外的数据结构中。注意：这不一定是二叉搜索树。
+     * <p>
+     * 执行用时：9 ms, 在所有 Java 提交中击败了28.55% 的用户
+     * 内存消耗：40.6 MB, 在所有 Java 提交中击败了96.80% 的用户
+     *
+     * @param root 二叉树
+     * @param p    节点1
+     * @param q    节点2
+     * @return 节点的首个共同祖先
+     */
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        List<TreeNode> pParents = new ArrayList<>();
+        List<TreeNode> qParents = new ArrayList<>();
+        lowestCommonAncestorDfs(root, p, pParents);
+        lowestCommonAncestorDfs(root, q, qParents);
+        int pLen = pParents.size() - 1;
+        int qLen = qParents.size() - 1;
+        while (pLen > qLen) {
+            pParents.remove(pLen--);
+        }
+        while (pLen < qLen) {
+            qParents.remove(qLen--);
+        }
+        while (!pParents.isEmpty()) {
+            TreeNode tmp = pParents.remove(pLen);
+            if (tmp.equals(qParents.remove(pLen--))) {
+                return tmp;
+            }
+        }
+        return root;
+    }
+
+    public boolean lowestCommonAncestorDfs(TreeNode root, TreeNode child, List<TreeNode> parents) {
+        if (root.equals(child)) {
+            return true;
+        }
+        if (root.left != null) {
+            parents.add(root.left);
+            if (lowestCommonAncestorDfs(root.left, child, parents)) {
+                return true;
+            }
+            parents.remove(parents.size() - 1);
+        }
+        if (root.right != null) {
+            parents.add(root.right);
+            if (lowestCommonAncestorDfs(root.right, child, parents)) {
+                return true;
+            }
+            parents.remove(parents.size() - 1);
+        }
+        return false;
+    }
 }
