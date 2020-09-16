@@ -21,7 +21,7 @@ public class Main {
     public static void main(String[] args) {
 
         //ListNode
-        int[] listNodeValue = {1, 2, 3, 4, 5};
+        int[] listNodeValue = {1, 2, 3, 3, 2, 1};
         int listNodeLen = listNodeValue.length;
         ListNode head = new ListNode(listNodeValue[0]);
         ListNode listNodeTmp = head;
@@ -32,11 +32,11 @@ public class Main {
 
         //TreeNode
         //-1 is null
-        int[] treeNodeValue = {2, -1, 3, -1, 4, -1, 5, -1, 6};
+        int[] treeNodeValue = {6, 2, 8, 0, 4, 7, 9, -1, -1, 3, 5};
         List<TreeNode> createTreeNodeStack = new ArrayList<>();
         TreeNode root = new TreeNode(treeNodeValue[0]);
         createTreeNodeStack.add(root);
-        for (int i = 1; i < listNodeLen; i++) {
+        for (int i = 1; i < treeNodeValue.length; i++) {
             TreeNode tmp = createTreeNodeStack.remove(0);
             if (tmp == null) {
                 i++;
@@ -60,7 +60,7 @@ public class Main {
 
         //Arrays
         String[] oneDimensionalStringArray = {"eat", "tea", "tan", "ate", "nat", "bat"};
-        int[] oneDimensionalArrayA = {5, 6, 7, 3, 4, 6, 7, 4, 8};
+        int[] oneDimensionalArrayA = {1, 0, 0, 0, 1, 0, 0, 1};
         int[] oneDimensionalArrayB = {5, 2, 2, 5, 3, 5};
         int[][] twoDimensionalArrayA = {{0, 1}};
         int[][] twoDimensionalArrayB = {
@@ -85,7 +85,7 @@ public class Main {
 
 
         //List<List<Integer>>
-        int[][] listListIntegerArray = {{0, 8, 7, 10, 9, 10, 0, 9, 6}, {8, 7, 10, 8, 7, 4, 9, 6, 10}, {8, 1, 1, 5, 1, 5, 5, 1, 2}, {9, 4, 10, 8, 8, 1, 9, 5, 0}, {4, 3, 6, 10, 9, 2, 4, 8, 10}, {7, 3, 2, 8, 3, 3, 5, 9, 8}, {1, 2, 6, 5, 6, 2, 0, 10, 0}};
+        int[][] listListIntegerArray = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
         List<List<Integer>> integerListList = new LinkedList<>();
         for (int[] listIntegerArray : listListIntegerArray) {
             List<Integer> collect = Arrays.stream(listIntegerArray).boxed().collect(Collectors.toList());
@@ -102,9 +102,9 @@ public class Main {
 
 
         SolutionNow solution = new SolutionNow();
-        System.out.println(solution.largestNumber(oneDimensionalArrayA, 29));
+        System.out.println(solution.inorderSuccessor(root, root.left));
 
         Games games = new Games();
-        System.out.println(games.addToArrayForm(oneDimensionalArrayA, 29));
+//        System.out.println(games.addToArrayForm(oneDimensionalArrayA, 29));
     }
 }
