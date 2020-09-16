@@ -787,4 +787,40 @@ public class SolutionNow {
         }
         return isValidBSTAss(root.left, min, root.val) && isValidBSTAss(root.right, root.val, max);
     }
+
+
+    /**
+     * 面试题 04.06. 后继者
+     * 设计一个算法，找出二叉搜索树中指定节点的“下一个”节点（也即中序后继）。
+     * 如果指定节点没有对应的“下一个”节点，则返回null。
+     *
+     * 执行用时：4 ms, 在所有 Java 提交中击败了38.00% 的用户
+     * 内存消耗：39.7 MB, 在所有 Java 提交中击败了32.46% 的用户
+     * @param root 树
+     * @param p 节点
+     * @return 节点的后继者
+     */
+    public TreeNode inorderSuccessor(TreeNode root, TreeNode p) {
+        if (p.equals(root)) {
+            //TODO
+            TreeNode tmp = root.right;
+            while (tmp != null && tmp.left != null) {
+                tmp = tmp.left;
+            }
+            return tmp == null ? inorderSuccessorRes : tmp;
+        }
+        if (p.val < root.val) {
+            inorderSuccessorRes = inorderSuccessor(root.left, p);
+            if(inorderSuccessorRes == null){
+                inorderSuccessorRes = root;
+            }
+        } else {
+            inorderSuccessorRes = inorderSuccessor(root.right, p);
+        }
+        return inorderSuccessorRes;
+    }
+
+    private TreeNode inorderSuccessorRes = null;
+
+
 }
