@@ -879,4 +879,81 @@ public class SolutionNow {
         }
         return false;
     }
+
+
+    /**
+     * 685. 冗余连接 II
+     * 在本问题中，有根树指满足以下条件的有向图。该树只有一个根节点，所有其他节点都是该根节点的后继。每一个节点只有一个父节点，除了根节点没有父节点。
+     * 输入一个有向图，该图由一个有着N个节点 (节点值不重复1, 2, ..., N) 的树及一条附加的边构成。附加的边的两个顶点包含在1到N中间，这条附加的边不属于树中已存在的边。
+     * 结果图是一个以边组成的二维数组。 每一个边 的元素是一对 [u, v]，用以表示有向图中连接顶点 u 和顶点 v 的边，其中 u 是 v 的一个父节点。
+     * 返回一条能删除的边，使得剩下的图是有N个节点的有根树。若有多个答案，返回最后出现在给定二维数组的答案。
+     * <p>
+     * 执行用时：1 ms, 在所有 Java 提交中击败了99.70% 的用户
+     * 内存消耗：39.1 MB, 在所有 Java 提交中击败了38.76% 的用户
+     *
+     * @param edges 边集合
+     * @return 冗余边
+     */
+    public int[] findRedundantDirectedConnection(int[][] edges) {
+        findRedundantDirectedConnectionHadRoot = new int[edges.length + 1];
+        int[] father = new int[edges.length + 1];
+        for (int i = 0; i < father.length; i++) {
+            father[i] = i;
+        }
+
+        for (int[] edge : edges) {
+            findRedundantDirectedConnectionHadRoot[edge[1]]++;
+            if (findRedundantDirectedConnectionHadRoot[edge[1]] == 2) {
+                findRedundantDirectedConnectionDoubleRoot = edge[1];
+                findRedundantDirectedConnectionRootResult[1] = edge;
+            } else {
+                union(father, edge[1], edge[0]);
+            }
+        }
+        if (findRedundantDirectedConnectionDoubleRoot != 0) {
+            for (int[] edge : edges) {
+                if (edge[1] == findRedundantDirectedConnectionDoubleRoot) {
+                    findRedundantDirectedConnectionRootResult[0] = edge;
+                    break;
+                }
+            }
+            int root = 0;
+            for (int i = 1; i < father.length; i++) {
+                if (root == 0) {
+                    root = findXFather(father, i);
+                }
+                if (root != findXFather(father, i)) {
+                    return findRedundantDirectedConnectionRootResult[0];
+                }
+            }
+            return findRedundantDirectedConnectionRootResult[1];
+        }
+        return findRedundantDirectedConnectionResult;
+    }
+
+
+    int[] findRedundantDirectedConnectionResult = new int[2];
+    int findRedundantDirectedConnectionDoubleRoot = 0;
+    int[] findRedundantDirectedConnectionHadRoot;
+    int[][] findRedundantDirectedConnectionRootResult = new int[2][2];
+
+
+    public int findXFather(int[] father, int x) {
+        while (father[x] != x) {
+            father[x] = father[father[x]];
+            x = father[x];
+        }
+        return x;
+    }
+
+    public void union(int[] father, int x, int y) {
+        int xFather = findXFather(father, x);
+        int yFather = findXFather(father, y);
+        if (xFather != yFather) {
+            father[xFather] = yFather;
+        } else {
+            findRedundantDirectedConnectionResult[0] = y;
+            findRedundantDirectedConnectionResult[1] = x;
+        }
+    }
 }
