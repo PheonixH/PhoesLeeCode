@@ -1,4 +1,4 @@
-package 高并发;
+package 高并发.Java高并发编程详解多线程架构设计.ThreadApi;
 
 /**
  * @program: PhoesLeeCode
@@ -7,7 +7,7 @@ package 高并发;
  * @author: lov.moran
  * @date 2020-09-16 11:28
  */
-public class ThreadNormalFunction {
+public class ThreadApiYield {
     public static void main(String[] args) {
         Thread thread1 = new Thread(() -> {
             for (int i = 0; i < 5; i++) {
