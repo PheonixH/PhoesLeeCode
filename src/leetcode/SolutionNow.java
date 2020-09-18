@@ -9,9 +9,9 @@ import java.util.*;
 /**
  * @ProjectName: PhoesLeeCode
  * @Package: PACKAGE_NAME
- * @ClassName: LeetCode.Solution2
+ * @ClassName: leetcode.SolutionNow
  * @Description:
- * @Author: Pheonix
+ * @Author: pheonix
  * @CreateDate: 2019/4/25 15:05
  * @Version: 1.0
  */
@@ -75,14 +75,14 @@ public class SolutionNow {
      */
     public List<List<Integer>> combinationSum2(int[] candidates, int target) {
         Arrays.sort(candidates);
-        combinationsum2Dfs(new ArrayList<>(), candidates, target, 0, 0);
+        combinationSum2Dfs(new ArrayList<>(), candidates, target, 0, 0);
         return combinationSum2Result;
     }
 
     Set<String> combinationSum2Set = new HashSet<>();
     List<List<Integer>> combinationSum2Result = new ArrayList<>();
 
-    public void combinationsum2Dfs(List<Integer> now, int[] candidates, int target, int sum, int k) {
+    public void combinationSum2Dfs(List<Integer> now, int[] candidates, int target, int sum, int k) {
         if (target == sum) {
             StringBuilder stringBuilder = new StringBuilder();
             now.forEach(x -> stringBuilder.append(x).append(","));
@@ -96,7 +96,7 @@ public class SolutionNow {
                 break;
             }
             now.add(candidates[i]);
-            combinationsum2Dfs(now, candidates, target, sum + candidates[i], i + 1);
+            combinationSum2Dfs(now, candidates, target, sum + candidates[i], i + 1);
             now.remove(now.size() - 1);
         }
     }
@@ -954,6 +954,48 @@ public class SolutionNow {
         } else {
             findRedundantDirectedConnectionResult[0] = y;
             findRedundantDirectedConnectionResult[1] = x;
+        }
+    }
+
+    /**
+     * 47. 全排列 II
+     * 给定一个可包含重复数字的序列，返回所有不重复的全排列。
+     * <p>
+     * 执行用时：88 ms, 在所有 Java 提交中击败了9.48% 的用户
+     * 内存消耗：39.7 MB, 在所有 Java 提交中击败了21.92% 的用户
+     *
+     * @param nums
+     * @return
+     */
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        permuteUniqueTaked = new boolean[nums.length];
+        permuteUnique(nums, new ArrayList<>());
+        return permuteUniqueRes;
+    }
+
+    List<List<Integer>> permuteUniqueRes = new ArrayList<>();
+    boolean[] permuteUniqueTaked;
+    Set<String> permuteUniqueSet = new HashSet<>();
+
+    public void permuteUnique(int[] nums, List<Integer> arr) {
+        if (arr.size() == nums.length) {
+            StringBuilder stringBuilder = new StringBuilder();
+            arr.forEach(x -> stringBuilder.append(x));
+            if (!permuteUniqueSet.contains(stringBuilder.toString())) {
+                permuteUniqueRes.add(new ArrayList<>(arr));
+                permuteUniqueSet.add(stringBuilder.toString());
+            }
+            return;
+        }
+        for (int i = 0; i < nums.length; i++) {
+            if (permuteUniqueTaked[i]) {
+                continue;
+            }
+            permuteUniqueTaked[i] = true;
+            arr.add(nums[i]);
+            permuteUnique(nums, arr);
+            arr.remove(arr.size() - 1);
+            permuteUniqueTaked[i] = false;
         }
     }
 }
