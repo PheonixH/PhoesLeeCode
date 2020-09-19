@@ -998,4 +998,39 @@ public class SolutionNow {
             permuteUniqueTaked[i] = false;
         }
     }
+
+
+    /**
+     * 404. 左叶子之和
+     * 计算给定二叉树的所有左叶子之和。
+     * <p>
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：36.9 MB, 在所有 Java 提交中击败了36.56% 的用户
+     *
+     * @param root 二叉树
+     * @return 二叉树的左叶子之和
+     */
+    public int sumOfLeftLeaves(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        sumOfLeftLeavesAss(root, false);
+        return sumOfLeftLeavesRes;
+    }
+
+    private int sumOfLeftLeavesRes = 0;
+
+    public void sumOfLeftLeavesAss(TreeNode root, boolean isLeft) {
+        if (root.left == null && root.right == null) {
+            sumOfLeftLeavesRes += isLeft ? root.val : 0;
+            return;
+        }
+        if (root.left != null) {
+            sumOfLeftLeavesAss(root.left, true);
+        }
+        if (root.right != null) {
+            sumOfLeftLeavesAss(root.right, false);
+        }
+    }
+
 }
