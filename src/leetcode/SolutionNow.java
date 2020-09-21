@@ -956,4 +956,35 @@ public class SolutionNow {
             findRedundantDirectedConnectionResult[1] = x;
         }
     }
+
+    /**
+     * 538. 把二叉搜索树转换为累加树
+     * 给定一个二叉搜索树（Binary Search Tree），把它转换成为累加树（Greater Tree)，使得每个节点的值是原来的节点值加上所有大于它的节点值之和。
+     * <p>
+     * 执行用时：1 ms, 在所有 Java 提交中击败了97.82% 的用户
+     * 内存消耗：39 MB, 在所有 Java 提交中击败了48.48% 的用户
+     *
+     * @param root 二叉搜索树
+     * @return 累加树
+     */
+    public TreeNode convertBST(TreeNode root) {
+        if (root == null) {
+            return root;
+        }
+        convertBSTAss(root);
+        return root;
+    }
+
+    private int convertBSTSum = 0;
+
+    public void convertBSTAss(TreeNode root) {
+        if (root.right != null) {
+            convertBSTAss(root.right);
+        }
+        root.val += convertBSTSum;
+        convertBSTSum = root.val;
+        if (root.left != null) {
+            convertBSTAss(root.left);
+        }
+    }
 }
