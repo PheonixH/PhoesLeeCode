@@ -958,6 +958,109 @@ public class SolutionNow {
     }
 
     /**
+     * 47. 全排列 II
+     * 给定一个可包含重复数字的序列，返回所有不重复的全排列。
+     * <p>
+     * 执行用时：88 ms, 在所有 Java 提交中击败了9.48% 的用户
+     * 内存消耗：39.7 MB, 在所有 Java 提交中击败了21.92% 的用户
+     *
+     * @param nums
+     * @return
+     */
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        permuteUniqueTaked = new boolean[nums.length];
+        permuteUnique(nums, new ArrayList<>());
+        return permuteUniqueRes;
+    }
+
+    List<List<Integer>> permuteUniqueRes = new ArrayList<>();
+    boolean[] permuteUniqueTaked;
+    Set<String> permuteUniqueSet = new HashSet<>();
+
+    public void permuteUnique(int[] nums, List<Integer> arr) {
+        if (arr.size() == nums.length) {
+            StringBuilder stringBuilder = new StringBuilder();
+            arr.forEach(x -> stringBuilder.append(x));
+            if (!permuteUniqueSet.contains(stringBuilder.toString())) {
+                permuteUniqueRes.add(new ArrayList<>(arr));
+                permuteUniqueSet.add(stringBuilder.toString());
+            }
+            return;
+        }
+        for (int i = 0; i < nums.length; i++) {
+            if (permuteUniqueTaked[i]) {
+                continue;
+            }
+            permuteUniqueTaked[i] = true;
+            arr.add(nums[i]);
+            permuteUnique(nums, arr);
+            arr.remove(arr.size() - 1);
+            permuteUniqueTaked[i] = false;
+        }
+    }
+
+
+    /**
+     * 404. 左叶子之和
+     * 计算给定二叉树的所有左叶子之和。
+     * <p>
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：36.9 MB, 在所有 Java 提交中击败了36.56% 的用户
+     *
+     * @param root 二叉树
+     * @return 二叉树的左叶子之和
+     */
+    public int sumOfLeftLeaves(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        sumOfLeftLeavesAss(root, false);
+        return sumOfLeftLeavesRes;
+    }
+
+    private int sumOfLeftLeavesRes = 0;
+
+    public void sumOfLeftLeavesAss(TreeNode root, boolean isLeft) {
+        if (root.left == null && root.right == null) {
+            sumOfLeftLeavesRes += isLeft ? root.val : 0;
+            return;
+        }
+        if (root.left != null) {
+            sumOfLeftLeavesAss(root.left, true);
+        }
+        if (root.right != null) {
+            sumOfLeftLeavesAss(root.right, false);
+        }
+    }
+
+    /**
+     * 78. 子集
+     * 给定一组不含重复元素的整数数组 nums，返回该数组所有可能的子集（幂集）。
+     * 说明：解集不能包含重复的子集。
+     * <p>
+     * 执行用时：1 ms, 在所有 Java 提交中击败了99.39% 的用户
+     * 内存消耗：39.1 MB, 在所有 Java 提交中击败了55.59% 的用户
+     *
+     * @param nums 整数数组 nums
+     * @return 该数组所有可能的子集
+     */
+    public List<List<Integer>> subsets(int[] nums) {
+        subsetsAss(nums, new ArrayList<>(), 0);
+        return subsetsResList;
+    }
+
+    private List<List<Integer>> subsetsResList = new ArrayList<>();
+
+    public void subsetsAss(int[] nums, List<Integer> list, int t) {
+        for (int i = t; i < nums.length; i++) {
+            list.add(nums[i]);
+            subsetsAss(nums, list, i + 1);
+            list.remove(list.size() - 1);
+        }
+        subsetsResList.add(new ArrayList<>(list));
+    }
+
+    /**
      * 538. 把二叉搜索树转换为累加树
      * 给定一个二叉搜索树（Binary Search Tree），把它转换成为累加树（Greater Tree)，使得每个节点的值是原来的节点值加上所有大于它的节点值之和。
      * <p>
