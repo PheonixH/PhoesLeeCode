@@ -1090,4 +1090,55 @@ public class SolutionNow {
             convertBSTAss(root.left);
         }
     }
+
+    /**
+     * 968. 监控二叉树
+     * 给定一个二叉树，我们在树的节点上安装摄像头。
+     * 节点上的每个摄影头都可以监视其父对象、自身及其直接子对象。
+     * 计算监控树的所有节点所需的最小摄像头数量。
+     * <p>
+     * 执行用时：1 ms, 在所有 Java 提交中击败了55.79% 的用户
+     * 内存消耗：38.4 MB, 在所有 Java 提交中击败了85.08% 的用户
+     *
+     * @param root 二叉树
+     * @return 最小摄像头数量
+     */
+    public int minCameraCover(TreeNode root) {
+        int tmp = minCameraCoverDfs(root);
+        if (tmp != 3) {
+            minCameraCoverMonitors.add(root);
+        }
+        return minCameraCoverMonitors.size();
+    }
+
+    private Set<TreeNode> minCameraCoverMonitors = new HashSet<>();
+
+    public int minCameraCoverDfs(TreeNode root) {
+        if (root.left == null && root.right == null) {
+            // 子节点是叶子节点,非监控但是需要被监控
+            return 1;
+        }
+        boolean isMonitor = false;
+        int l = 0;
+        if (root.left != null) {
+            l = minCameraCoverDfs(root.left);
+        }
+        int r = 0;
+        if (root.right != null) {
+            r = minCameraCoverDfs(root.right);
+        }
+        if (r == 1 || l == 1) {
+            // 子节点非监控但是需要被监控
+            minCameraCoverMonitors.add(root);
+            return 2;
+        } else if (l == 2 || r == 2) {
+            // 2子节点是监控
+            return 3;
+        } else {
+            // 子节点非监控但是不需要被监控
+            return 1;
+        }
+    }
+
+
 }
