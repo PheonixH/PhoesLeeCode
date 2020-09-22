@@ -3,10 +3,7 @@ package leetcode;
 import leetcode.datestruct.ListNode;
 import leetcode.datestruct.TreeNode;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -36,7 +33,7 @@ public class Main {
         List<TreeNode> createTreeNodeStack = new ArrayList<>();
         TreeNode root = new TreeNode(treeNodeValue[0]);
         createTreeNodeStack.add(root);
-        for (int i = 1; i < treeNodeValue.length; i++) {
+        for (int i = 1; i < treeNodeValue.length; ) {
             TreeNode tmp = createTreeNodeStack.remove(0);
             if (tmp == null) {
                 i++;
@@ -82,16 +79,9 @@ public class Main {
 
         //Arrays
         String[] oneDimensionalStringArray = {"eat", "tea", "tan", "ate", "nat", "bat"};
-        int[] oneDimensionalArrayA = {1, 0, 0, 0, 1, 0, 0, 1};
+        int[] oneDimensionalArrayA = {0, 0, 0};
         int[] oneDimensionalArrayB = {5, 2, 2, 5, 3, 5};
-        int[][] twoDimensionalArray = {
-                {0, 8, 7, 10, 9, 10, 0, 9, 6},
-                {8, 7, 10, 8, 7, 4, 9, 6, 10},
-                {8, 1, 1, 5, 1, 5, 5, 1, 2},
-                {9, 4, 10, 8, 8, 1, 9, 5, 0},
-                {4, 3, 6, 10, 9, 2, 4, 8, 10},
-                {7, 3, 2, 8, 3, 3, 5, 9, 8},
-                {1, 2, 6, 5, 6, 2, 0, 10, 0}};
+        int[][] twoDimensionalArray = {{1, 2}, {1, 3}, {2, 3}};
         char[] oneDimensionalCharArray = {'A', 'B'};
         char[][] twoDimensionalCharArray = {
                 {'5', '3', '.', '.', '7', '.', '.', '.', '.'},
@@ -116,11 +106,19 @@ public class Main {
         int[] listNodeValue = {1, 2, 3, 3, 2, 1};
         ListNode head = createListNode(listNodeValue);
 
-        int[] treeNodeValue = {6, 2, 8, 0, 4, 7, 9, -1, -1, 3, 5};
+        int[] treeNodeValue = {0, -1, 0, -1, 0, -1, 0};
         TreeNode root = createTreeNode(treeNodeValue);
 
+        // 手动输入数组 ---  测试数据太长了
+//        Scanner sc = new Scanner(System.in);
+//        String string = sc.next();
+//        String[] arr = string.split(",");
+//        int[] brr = new int[arr.length];
+//        for (int i = 0; i < arr.length; i++) {
+//            brr[i] = Integer.valueOf(arr[i]);
+//        }
         SolutionNow solution = new SolutionNow();
-        System.out.println(solution.inorderSuccessor(root, root.left));
+        System.out.println(solution.threeEqualParts(oneDimensionalArrayA));
 
         Games games = new Games();
 //        System.out.println(games.addToArrayForm(oneDimensionalArrayA, 29));
