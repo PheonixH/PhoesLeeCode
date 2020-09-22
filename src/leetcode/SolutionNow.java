@@ -1140,5 +1140,85 @@ public class SolutionNow {
         }
     }
 
+    /**
+     * 927. 三等分
+     * 给定一个由 0 和 1 组成的数组 arr，将数组分成 3 个非空的部分，使得所有这些部分表示相同的二进制值。
+     * 如果可以做到，请返回任何 [i, j]，其中 i+1 < j，这样一来：
+     *     A[0], A[1], ..., A[i] 组成第一部分；
+     *     A[i+1], A[i+2], ..., A[j-1] 作为第二部分；
+     *     A[j], A[j+1], ..., A[A.length - 1] 是第三部分。
+     *     这三个部分所表示的二进制值相等。
+     * 如果无法做到，就返回 [-1, -1]。
+     * 注意，在考虑每个部分所表示的二进制时，应当将其看作一个整体。例如，[1,1,0] 表示十进制中的 6，而不会是 3。此外，前导零也是被允许的，所以 [0,1,1] 和 [1,1] 表示相同的值。
+     *
+     * 执行用时：239 ms, 在所有 Java 提交中击败了5.88% 的用户
+     * 内存消耗：46.5 MB, 在所有 Java 提交中击败了6.25% 的用户
+     * @param arr  0 和 1 组成的数组
+     * @return 三等分
+     */
+    public int[] threeEqualParts(int[] arr) {
+        int numOfOne = 0;
+        for (int a : arr) {
+            if (a == 1) {
+                numOfOne++;
+            }
+        }
+        if (numOfOne % 3 != 0) {
+            return new int[]{-1, -1};
+        }
+        if (numOfOne == 0) {
+            return new int[]{0, 2};
+        }
+        int tmp = numOfOne / 3;
+        StringBuilder key = new StringBuilder();
+        int i = 0;
+        int n = 0;
+        boolean begin = false;
+        // 寻找key前半部分
+        while (n < tmp) {
+            if (!begin && arr[i] == 0) {
 
+            } else {
+                key.append(arr[i]);
+                begin = true;
+            }
+            if (arr[i++] == 1) {
+                n++;
+            }
+        }
+        // 寻找key后半部分
+        int j = arr.length - 1;
+        while (arr[j] == 0) {
+            j--;
+            if (arr[i] == 1) {
+                return new int[]{-1, -1};
+            }
+            key.append(arr[i++]);
+        }
+        StringBuilder value = new StringBuilder();
+        int t = 0;
+        int resI = i - 1;
+        begin = false;
+        for (; i < arr.length; i++) {
+            if (!begin && arr[i] == 0) {
+
+            } else {
+                value.append(arr[i]);
+                begin = true;
+            }
+            if (value.toString().equals(key.toString())) {
+                if (t == 0) {
+                    j = i + 1;
+                }
+                value = new StringBuilder();
+                begin = false;
+                t++;
+            }
+        }
+        if (t == 2) {
+            return new int[]{resI, j};
+        } else {
+            return new int[]{-1, -1};
+        }
+    }
 }
