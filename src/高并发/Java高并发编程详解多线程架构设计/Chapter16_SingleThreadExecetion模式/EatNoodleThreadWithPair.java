@@ -49,4 +49,3 @@ public class EatNoodleThreadWithPair extends Thread {
         new EatNoodleThreadWithPair("Tom", tablewarePair).start();
     }
 }
-z
