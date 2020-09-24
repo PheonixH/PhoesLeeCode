@@ -39,7 +39,7 @@ public class Main {
                 i++;
                 continue;
             }
-            if(i >= treeNodeValue.length){
+            if (i >= treeNodeValue.length) {
                 break;
             }
             if (treeNodeValue[i] == -1) {
@@ -49,7 +49,7 @@ public class Main {
             }
             createTreeNodeStack.add(tmp.left);
             i++;
-            if(i >= treeNodeValue.length){
+            if (i >= treeNodeValue.length) {
                 break;
             }
             if (treeNodeValue[i] == -1) {
@@ -85,7 +85,7 @@ public class Main {
 
         //Arrays
         String[] oneDimensionalStringArray = {"eat", "tea", "tan", "ate", "nat", "bat"};
-        int[] oneDimensionalArrayA = {0, 0, 0};
+        int[] oneDimensionalArrayA = {3, 5, 2, 1, 6, 4};
         int[] oneDimensionalArrayB = {5, 2, 2, 5, 3, 5};
         int[][] twoDimensionalArray = {{1, 2}, {1, 3}, {2, 3}};
         char[] oneDimensionalCharArray = {'A', 'B'};
@@ -124,7 +124,8 @@ public class Main {
 //            brr[i] = Integer.valueOf(arr[i]);
 //        }
         SolutionNow solution = new SolutionNow();
-        System.out.println(solution.trailingZeroes(125));
+        solution.wiggleSort(oneDimensionalArrayA);
+//        System.out.println(solution.wiggleSort(oneDimensionalArrayA));
 
         Games games = new Games();
 //        System.out.println(games.addToArrayForm(oneDimensionalArrayA, 29));
