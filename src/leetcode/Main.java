@@ -39,6 +39,9 @@ public class Main {
                 i++;
                 continue;
             }
+            if(i >= treeNodeValue.length){
+                break;
+            }
             if (treeNodeValue[i] == -1) {
                 tmp.left = null;
             } else {
@@ -46,6 +49,9 @@ public class Main {
             }
             createTreeNodeStack.add(tmp.left);
             i++;
+            if(i >= treeNodeValue.length){
+                break;
+            }
             if (treeNodeValue[i] == -1) {
                 tmp.right = null;
             } else {
@@ -106,7 +112,7 @@ public class Main {
         int[] listNodeValue = {1, 2, 3, 3, 2, 1};
         ListNode head = createListNode(listNodeValue);
 
-        int[] treeNodeValue = {0, -1, 0, -1, 0, -1, 0};
+        int[] treeNodeValue = {2, 1, 3, 1, 2, 2, 3};
         TreeNode root = createTreeNode(treeNodeValue);
 
         // 手动输入数组 ---  测试数据太长了
@@ -118,7 +124,7 @@ public class Main {
 //            brr[i] = Integer.valueOf(arr[i]);
 //        }
         SolutionNow solution = new SolutionNow();
-        System.out.println(solution.threeEqualParts(oneDimensionalArrayA));
+//        System.out.println(solution.convertBSTAss(root));
 
         Games games = new Games();
 //        System.out.println(games.addToArrayForm(oneDimensionalArrayA, 29));
