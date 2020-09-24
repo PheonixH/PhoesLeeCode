@@ -6,6 +6,6 @@ package 高并发.javaConcurrency.chapter22;
 public class BalkingTest {
 
     public static void main(String[] args){
-        new DocumentEditThread("D:\\studyProject\\java-concurrency\\src\\高并发.javaConcurrency.chapter22","document.txt").start();
+        new DocumentEditThread("E:\\Code\\PhoesLeeCode\\src\\高并发\\javaConcurrency\\chapter22\\","document.txt").start();
     }
 }
