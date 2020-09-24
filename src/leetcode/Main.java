@@ -124,7 +124,7 @@ public class Main {
 //            brr[i] = Integer.valueOf(arr[i]);
 //        }
         SolutionNow solution = new SolutionNow();
-//        System.out.println(solution.convertBSTAss(root));
+        System.out.println(solution.trailingZeroes(125));
 
         Games games = new Games();
 //        System.out.println(games.addToArrayForm(oneDimensionalArrayA, 29));

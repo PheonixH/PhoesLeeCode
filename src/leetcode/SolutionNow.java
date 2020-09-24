@@ -1282,9 +1282,10 @@ public class SolutionNow {
     /**
      * 面试题 16.01. 交换数字
      * 编写一个函数，不用临时变量，直接交换numbers = [a, b]中a与b的值。
-     *
+     * <p>
      * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
      * 内存消耗：36.6 MB, 在所有 Java 提交中击败了75.86% 的用户
+     *
      * @param numbers 数组
      * @return 交换数字之后的数组
      */
@@ -1293,5 +1294,28 @@ public class SolutionNow {
         numbers[1] ^= numbers[0];
         numbers[0] ^= numbers[1];
         return numbers;
+    }
+
+
+    /**
+     * 面试题 16.05. 阶乘尾数
+     * 设计一个算法，算出 n 阶乘有多少个尾随零。
+     *
+     * 执行用时：1 ms, 在所有 Java 提交中击败了99.35% 的用户
+     * 内存消耗：36 MB, 在所有 Java 提交中击败了28.25% 的用户
+     * @param n 数字
+     * @return 阶乘尾数
+     */
+    public int trailingZeroes(int n) {
+        if (n == 0) {
+            return 0;
+        }
+        int a = 0;
+        while (n > 0) {
+            n = n / 5;
+            a += n;
+        }
+        return a;
+
     }
 }
