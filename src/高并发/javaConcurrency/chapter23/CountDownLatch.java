@@ -8,12 +8,14 @@ import java.util.concurrent.TimeUnit;
  */
 public class CountDownLatch extends Latch {
 
-    //回调任务，所有子任务完成后执行后续的任务
+    /**
+     * 回调任务，所有子任务完成后执行后续的任务
+     */
     private final Runnable runnable;
 
-    public CountDownLatch(int limit,Runnable runnable) {
+    public CountDownLatch(int limit, Runnable runnable) {
         super(limit);
-        this.runnable=runnable;
+        this.runnable = runnable;
     }
 
     @Override
@@ -24,7 +26,7 @@ public class CountDownLatch extends Latch {
                 this.wait();
             }
         }
-        if(null!=runnable){
+        if (null != runnable) {
             runnable.run();
         }
     }
@@ -49,7 +51,7 @@ public class CountDownLatch extends Latch {
                 remainingNanos = endNanos - System.nanoTime();
             }
         }
-        if(null!=runnable){
+        if (null != runnable) {
             runnable.run();
         }
     }
