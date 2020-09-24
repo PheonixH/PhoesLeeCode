@@ -1277,4 +1277,21 @@ public class SolutionNow {
         }
         return res;
     }
+
+
+    /**
+     * 面试题 16.01. 交换数字
+     * 编写一个函数，不用临时变量，直接交换numbers = [a, b]中a与b的值。
+     *
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：36.6 MB, 在所有 Java 提交中击败了75.86% 的用户
+     * @param numbers 数组
+     * @return 交换数字之后的数组
+     */
+    public int[] swapNumbers(int[] numbers) {
+        numbers[0] ^= numbers[1];
+        numbers[1] ^= numbers[0];
+        numbers[0] ^= numbers[1];
+        return numbers;
+    }
 }
