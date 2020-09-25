@@ -1342,10 +1342,11 @@ public class SolutionNow {
     /**
      * 106. 从中序与后序遍历序列构造二叉树
      * 根据一棵树的中序遍历与后序遍历构造二叉树。
-     *
+     * <p>
      * 执行用时：5 ms, 在所有 Java 提交中击败了27.13% 的用户
      * 内存消耗：39.2 MB, 在所有 Java 提交中击败了41.77% 的用户
-     * @param inorder 中序遍历
+     *
+     * @param inorder   中序遍历
      * @param postorder 后序遍历
      * @return 构造二叉树
      */
@@ -1374,5 +1375,39 @@ public class SolutionNow {
         treeNode.right = buildTree(inorder, postorder, i + 1, inorderR,
                 postorderR + i - inorderR, postorderR - 1);
         return treeNode;
+    }
+
+    /**
+     * 剑指 Offer 32 - I. 从上到下打印二叉树
+     * 从上到下打印出二叉树的每个节点，同一层的节点按照从左到右的顺序打印。
+     * <p>
+     * 执行用时：4 ms, 在所有 Java 提交中击败了14.89% 的用户
+     * 内存消耗：39 MB, 在所有 Java 提交中击败了35.71% 的用户
+     *
+     * @param root 二叉树
+     * @return 打印出二叉树的每个节点
+     */
+    public int[] levelOrder(TreeNode root) {
+        if (root == null) {
+            return new int[]{};
+        }
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.add(root);
+        List<Integer> res = new LinkedList<>();
+        while (!queue.isEmpty()) {
+            TreeNode tmp = queue.poll();
+            res.add(tmp.val);
+            if (tmp.left != null) {
+                queue.add(tmp.left);
+            }
+            if (tmp.right != null) {
+                queue.add(tmp.right);
+            }
+        }
+        int[] re = new int[res.size()];
+        for (int i = 0; i < res.size(); i++) {
+            re[i] = res.get(i);
+        }
+        return re;
     }
 }
