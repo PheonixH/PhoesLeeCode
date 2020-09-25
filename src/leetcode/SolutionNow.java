@@ -1339,4 +1339,40 @@ public class SolutionNow {
         }
     }
 
+    /**
+     * 106. 从中序与后序遍历序列构造二叉树
+     * 根据一棵树的中序遍历与后序遍历构造二叉树。
+     *
+     * 执行用时：5 ms, 在所有 Java 提交中击败了27.13% 的用户
+     * 内存消耗：39.2 MB, 在所有 Java 提交中击败了41.77% 的用户
+     * @param inorder 中序遍历
+     * @param postorder 后序遍历
+     * @return 构造二叉树
+     */
+    public TreeNode buildTree(int[] inorder, int[] postorder) {
+        return buildTree(inorder, postorder, 0, inorder.length - 1,
+                0, postorder.length - 1);
+    }
+
+    public TreeNode buildTree(int[] inorder, int[] postorder, int inorderL, int inorderR,
+                              int postorderL, int postorderR) {
+        if (inorderL > inorderR) {
+            return null;
+        }
+        if (inorderL == inorderR) {
+            return new TreeNode(inorder[inorderL]);
+        }
+        int i = inorderL;
+        for (; i <= inorderR; i++) {
+            if (inorder[i] == postorder[postorderR]) {
+                break;
+            }
+        }
+        TreeNode treeNode = new TreeNode(postorder[postorderR]);
+        treeNode.left = buildTree(inorder, postorder, inorderL, i - 1,
+                postorderL, postorderL + i - inorderL - 1);
+        treeNode.right = buildTree(inorder, postorder, i + 1, inorderR,
+                postorderR + i - inorderR, postorderR - 1);
+        return treeNode;
+    }
 }

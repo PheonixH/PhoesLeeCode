@@ -85,8 +85,8 @@ public class Main {
 
         //Arrays
         String[] oneDimensionalStringArray = {"eat", "tea", "tan", "ate", "nat", "bat"};
-        int[] oneDimensionalArrayA = {3, 5, 2, 1, 6, 4};
-        int[] oneDimensionalArrayB = {5, 2, 2, 5, 3, 5};
+        int[] oneDimensionalArrayA = {3, 2, 1};
+        int[] oneDimensionalArrayB = {3, 2, 1};
         int[][] twoDimensionalArray = {{1, 2}, {1, 3}, {2, 3}};
         char[] oneDimensionalCharArray = {'A', 'B'};
         char[][] twoDimensionalCharArray = {
@@ -124,8 +124,7 @@ public class Main {
 //            brr[i] = Integer.valueOf(arr[i]);
 //        }
         SolutionNow solution = new SolutionNow();
-        solution.wiggleSort(oneDimensionalArrayA);
-//        System.out.println(solution.wiggleSort(oneDimensionalArrayA));
+        System.out.println(solution.buildTree(oneDimensionalArrayA, oneDimensionalArrayB));
 
         Games games = new Games();
 //        System.out.println(games.addToArrayForm(oneDimensionalArrayA, 29));
