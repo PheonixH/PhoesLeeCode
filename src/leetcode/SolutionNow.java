@@ -1410,4 +1410,19 @@ public class SolutionNow {
         }
         return re;
     }
+
+    /**
+     * 面试题 01.09. 字符串轮转
+     * 字符串轮转。给定两个字符串s1和s2，请编写代码检查s2是否为s1旋转而成（比如，waterbottle是erbottlewat旋转后的字符串）。
+     * <p>
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：39 MB, 在所有 Java 提交中击败了23.05% 的用户
+     *
+     * @param s1 字符串1
+     * @param s2 字符串2
+     * @return s2是否为s1旋转而成
+     */
+    public boolean isFlipedString(String s1, String s2) {
+        return s1.length() == s2.length() && (s1 + s1).contains(s2);
+    }
 }
