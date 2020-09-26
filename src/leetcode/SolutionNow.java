@@ -1425,4 +1425,49 @@ public class SolutionNow {
     public boolean isFlipedString(String s1, String s2) {
         return s1.length() == s2.length() && (s1 + s1).contains(s2);
     }
+
+
+    /**
+     * 113. 路径总和 II
+     * 给定一个二叉树和一个目标和，找到所有从根节点到叶子节点路径总和等于给定目标和的路径。
+     * 说明: 叶子节点是指没有子节点的节点。
+     * <p>
+     * 执行用时：1 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：39.8 MB, 在所有 Java 提交中击败了9.55% 的用户
+     *
+     * @param root 二叉树
+     * @param sum  目标和
+     * @return 所有从根节点到叶子节点路径总和等于给定目标和的路径s
+     */
+    public List<List<Integer>> pathSum(TreeNode root, int sum) {
+        if (root == null) {
+            return pathSumRes;
+        }
+        pathSumAss(root, 0, new ArrayList<>(), sum);
+        return pathSumRes;
+    }
+
+    private List<List<Integer>> pathSumRes = new ArrayList<>();
+
+    public void pathSumAss(TreeNode root, int sum, List<Integer> list, int target) {
+        if (root.left == null && root.right == null) {
+            if (sum + root.val == target) {
+                List<Integer> newList = new ArrayList<>(list);
+                newList.add(root.val);
+                pathSumRes.add(newList);
+            }
+            return;
+        }
+        list.add(root.val);
+        sum += root.val;
+        if (root.left != null) {
+            pathSumAss(root.left, sum, list, target);
+        }
+        if (root.right != null) {
+            pathSumAss(root.right, sum, list, target);
+        }
+
+        list.remove(list.size() - 1);
+        sum -= root.val;
+    }
 }
