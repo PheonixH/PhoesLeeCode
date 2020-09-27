@@ -836,7 +836,7 @@ public class SolutionNow {
      * @param q    节点2
      * @return 节点的首个共同祖先
      */
-    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+    public TreeNode lowestCommonAncestor2(TreeNode root, TreeNode p, TreeNode q) {
         List<TreeNode> pParents = new ArrayList<>();
         List<TreeNode> qParents = new ArrayList<>();
         lowestCommonAncestorDfs(root, p, pParents);

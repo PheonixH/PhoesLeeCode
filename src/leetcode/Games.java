@@ -207,4 +207,81 @@ public class Games {
         }
         return res;
     }
+
+
+    public int minOperations(String[] logs) {
+        int deep = 0;
+        for (String str : logs) {
+            if ("../".equals(str)) {
+                deep = Math.max(deep - 1, 0);
+            } else if ("./".equals(str)) {
+                continue;
+            } else {
+                deep++;
+            }
+        }
+        return deep;
+    }
+
+    public int minOperationsMaxProfit(int[] customers, int boardingCost, int runningCost) {
+        int max = 0;
+        int maxI = -1;
+        int now = 0;
+        int tmp = 0;
+        int i = 0;
+        while (now > 0 || i < customers.length) {
+            if (i < customers.length) {
+                now += customers[i];
+            }
+            tmp = tmp - runningCost;
+            if (now >= 4) {
+                tmp += 4 * boardingCost;
+                now -= 4;
+            } else {
+                tmp += now * boardingCost;
+                now = 0;
+            }
+            if (tmp > max) {
+                max = tmp;
+                maxI = i + 1;
+            }
+            i++;
+        }
+        return maxI;
+    }
+
+    public int maximumRequests(int n, int[][] requests) {
+        int[] change = new int[n];
+        int len = requests.length;
+        List<Map<Integer, Integer>> lists = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            lists.add(new HashMap<>());
+        }
+        for (int i = 0; i < len; i++) {
+            int[] tmp = requests[i];
+            change[tmp[0]]--;
+            change[tmp[1]]++;
+            Map<Integer, Integer> map = lists.get(0);
+            map.putIfAbsent(tmp[1], 0);
+            int t = map.get(tmp[1]) + 1;
+            map.put(tmp[1], t);
+        }
+        boolean[] visited = new boolean[len];
+        for (int i = 0; i < len; i++) {
+            if (change[i] == 0) {
+                continue;
+            }
+            Stack<int[]> stack = new Stack<>();
+            int p = i;
+            while (true) {
+                Map<Integer, Integer> map = lists.get(i);
+                for (int j : map.keySet()) {
+                    if (change[i] > 0) {
+                    }
+                }
+            }
+        }
+        return 0;
+    }
+
 }

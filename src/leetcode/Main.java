@@ -85,7 +85,7 @@ public class Main {
 
         //Arrays
         String[] oneDimensionalStringArray = {"eat", "tea", "tan", "ate", "nat", "bat"};
-        int[] oneDimensionalArrayA = {3, 2, 1};
+        int[] oneDimensionalArrayA = {10, 9, 6};
         int[] oneDimensionalArrayB = {3, 2, 1};
         int[][] twoDimensionalArray = {{1, 2}, {1, 3}, {2, 3}};
         char[] oneDimensionalCharArray = {'A', 'B'};
@@ -124,9 +124,9 @@ public class Main {
 //            brr[i] = Integer.valueOf(arr[i]);
 //        }
         SolutionNow solution = new SolutionNow();
-        System.out.println(solution.buildTree(oneDimensionalArrayA, oneDimensionalArrayB));
+//        System.out.println(solution.buildTree(oneDimensionalArrayA, oneDimensionalArrayB));
 
         Games games = new Games();
-//        System.out.println(games.addToArrayForm(oneDimensionalArrayA, 29));
+        System.out.println(games.minOperationsMaxProfit(oneDimensionalArrayA, 6, 4));
     }
 }
