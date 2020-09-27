@@ -4,6 +4,7 @@ import leetcode.datestruct.ListNode;
 import leetcode.datestruct.TreeNode;
 
 import java.util.*;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.stream.Collectors;
 
 /**
@@ -30,24 +31,23 @@ public class Main {
     public static TreeNode createTreeNode(int[] treeNodeValue) {
         //TreeNode
         //-1 is null
-        List<TreeNode> createTreeNodeStack = new ArrayList<>();
+        Queue<TreeNode> createTreeNodeStack = new LinkedList<>();
+        if (treeNodeValue.length <= 0 || -1 == treeNodeValue[0]) {
+            return null;
+        }
         TreeNode root = new TreeNode(treeNodeValue[0]);
         createTreeNodeStack.add(root);
-        for (int i = 1; i < treeNodeValue.length; ) {
-            TreeNode tmp = createTreeNodeStack.remove(0);
-            if (tmp == null) {
-                i++;
-                continue;
-            }
-            if (i >= treeNodeValue.length) {
+        for (int i = 1; i < treeNodeValue.length; i++) {
+            if (createTreeNodeStack.isEmpty()) {
                 break;
             }
+            TreeNode tmp = createTreeNodeStack.poll();
             if (treeNodeValue[i] == -1) {
                 tmp.left = null;
             } else {
                 tmp.left = new TreeNode(treeNodeValue[i]);
+                createTreeNodeStack.add(tmp.left);
             }
-            createTreeNodeStack.add(tmp.left);
             i++;
             if (i >= treeNodeValue.length) {
                 break;
@@ -56,9 +56,10 @@ public class Main {
                 tmp.right = null;
             } else {
                 tmp.right = new TreeNode(treeNodeValue[i]);
+                createTreeNodeStack.add(tmp.right);
             }
-            createTreeNodeStack.add(tmp.right);
         }
+
         return root;
     }
 
@@ -85,7 +86,7 @@ public class Main {
 
         //Arrays
         String[] oneDimensionalStringArray = {"eat", "tea", "tan", "ate", "nat", "bat"};
-        int[] oneDimensionalArrayA = {10, 9, 6};
+        int[] oneDimensionalArrayA = {3, 2, 1};
         int[] oneDimensionalArrayB = {3, 2, 1};
         int[][] twoDimensionalArray = {{1, 2}, {1, 3}, {2, 3}};
         char[] oneDimensionalCharArray = {'A', 'B'};
@@ -112,7 +113,7 @@ public class Main {
         int[] listNodeValue = {1, 2, 3, 3, 2, 1};
         ListNode head = createListNode(listNodeValue);
 
-        int[] treeNodeValue = {2, 1, 3, 1, 2, 2, 3};
+        int[] treeNodeValue = {5, 4, 8, 11, -1, 13, 4, 7, 2, -1, -1, 5, 1};
         TreeNode root = createTreeNode(treeNodeValue);
 
         // 手动输入数组 ---  测试数据太长了
@@ -124,9 +125,9 @@ public class Main {
 //            brr[i] = Integer.valueOf(arr[i]);
 //        }
         SolutionNow solution = new SolutionNow();
-//        System.out.println(solution.buildTree(oneDimensionalArrayA, oneDimensionalArrayB));
+        System.out.println(solution.pathSum(root, 22));
 
         Games games = new Games();
-        System.out.println(games.minOperationsMaxProfit(oneDimensionalArrayA, 6, 4));
+//        System.out.println(games.addToArrayForm(oneDimensionalArrayA, 29));
     }
 }
