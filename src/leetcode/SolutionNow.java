@@ -1559,4 +1559,90 @@ public class SolutionNow {
             }
         }
     }
+
+    /**
+     * 面试题 17.07. 婴儿名字
+     * 每年，政府都会公布一万个最常见的婴儿名字和它们出现的频率，也就是同名婴儿的数量。有些名字有多种拼法，
+     * 例如，John 和 Jon 本质上是相同的名字，但被当成了两个名字公布出来。
+     * 给定两个列表，一个是名字及对应的频率，另一个是本质相同的名字对。设计一个算法打印出每个真实名字的实际频率。
+     * 注意，如果 John 和 Jon 是相同的，并且 Jon 和 Johnny 相同，则 John 与 Johnny 也相同，即它们有传递和对称性。
+     * 在结果列表中，选择字典序最小的名字作为真实名字。
+     *
+     * 执行用时：223 ms, 在所有 Java 提交中击败了14.79% 的用户
+     * 内存消耗：47.6 MB, 在所有 Java 提交中击败了28.15% 的用户
+     * @param names 字及对应的频率
+     * @param synonyms 本质相同的名字对
+     * @return 每个真实名字的实际频率
+     */
+    public String[] trulyMostPopular(String[] names, String[] synonyms) {
+        Arrays.sort(synonyms);
+
+        //并查集
+        Map<String, String> map = new HashMap<>();
+        for (String str : synonyms) {
+            String[] strings = str.substring(1, str.length() - 1).split(",");
+            if (!map.containsKey(strings[0]) && !map.containsKey(strings[1])) {
+                if (strings[0].compareTo(strings[1]) < 0) {
+                    map.put(strings[0], strings[0]);
+                    map.put(strings[1], strings[0]);
+                } else {
+                    map.put(strings[0], strings[1]);
+                    map.put(strings[1], strings[1]);
+                }
+            } else if (!map.containsKey(strings[0])) {
+                String top = trulyMostPopularFindTop(map, strings[1]);
+                if (top.compareTo(strings[0]) < 0) {
+                    map.put(strings[0], top);
+                } else {
+                    map.put(strings[0], strings[0]);
+                    map.put(top, strings[0]);
+                }
+            } else if (!map.containsKey(strings[1])) {
+                String top = trulyMostPopularFindTop(map, strings[0]);
+                if (top.compareTo(strings[1]) < 0) {
+                    map.put(strings[1], top);
+                } else {
+                    map.put(strings[1], strings[1]);
+                    map.put(top, strings[1]);
+                }
+            } else {
+                String top0 = trulyMostPopularFindTop(map, strings[0]);
+                String top1 = trulyMostPopularFindTop(map, strings[1]);
+                if (top0.compareTo(top1) <= 0) {
+                    map.put(top1, top0);
+                } else {
+                    map.put(top0, top1);
+                }
+            }
+        }
+
+
+        Map<String, Integer> statistics = new HashMap<>();
+        for (String na : names) {
+            String[] strings = na.split("\\(");
+            int t = Integer.parseInt(strings[1].substring(0, strings[1].length() - 1));
+            String top = trulyMostPopularFindTop(map, strings[0]);
+            statistics.putIfAbsent(top, 0);
+            t += statistics.get(top);
+            statistics.put(top, t);
+        }
+
+        String[] res = new String[statistics.size()];
+        int j = 0;
+        for (String na : names) {
+            String i = na.split("\\(")[0];
+            if (statistics.containsKey(i)) {
+                res[j++] = i + "(" + statistics.get(i) + ")";
+            }
+        }
+        return res;
+    }
+
+    public String trulyMostPopularFindTop(Map<String, String> map, String name) {
+        while (map.containsKey(name) && !map.get(name).equals(name)) {
+            name = map.get(name);
+        }
+        return name;
+    }
+
 }
