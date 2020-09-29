@@ -1470,4 +1470,93 @@ public class SolutionNow {
         list.remove(list.size() - 1);
         sum -= root.val;
     }
+
+
+    /**
+     * 1568. 使陆地分离的最少天数
+     * 给你一个由若干 0 和 1 组成的二维网格 grid ，其中 0 表示水，而 1 表示陆地。岛屿由水平方向或竖直方向上相邻的 1 （陆地）连接形成。
+     * 如果 恰好只有一座岛屿 ，则认为陆地是 连通的 ；否则，陆地就是 分离的 。
+     * 一天内，可以将任何单个陆地单元（1）更改为水单元（0）。
+     * 返回使陆地分离的最少天数。
+     * <p>
+     * 执行用时：911 ms, 在所有 Java 提交中击败了5.15% 的用户
+     * 内存消耗：39.9 MB, 在所有 Java 提交中击败了5.18% 的用户
+     *
+     * @param grid 二维网格
+     * @return 使陆地分离的最少天数
+     */
+    public int minDays(int[][] grid) {
+        int m = grid.length;
+        int n = grid[0].length;
+        int numOfOne = 0;
+        int testI = -1;
+        int testJ = -1;
+        Set<String> set = new HashSet<>();
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] == 1) {
+                    set.add(i + "," + j);
+                    numOfOne++;
+                    testI = i;
+                    testJ = j;
+                }
+            }
+        }
+        if (numOfOne <= 1) {
+            return numOfOne;
+        }
+        minDaysDFS(testI, testJ, new HashSet<>(), grid);
+        if (minDaysNum != numOfOne) {
+            return 0;
+        }
+        int tesI = testI;
+        int tesJ = testJ;
+        for (String str : set) {
+            String[] strings = str.split(",");
+            tesI = Integer.parseInt(strings[0]);
+            tesJ = Integer.parseInt(strings[1]);
+            if (tesI != testI || tesJ != testJ) {
+                break;
+            }
+        }
+        for (String str : set) {
+            String[] strings = str.split(",");
+            int i = Integer.valueOf(strings[0]);
+            int j = Integer.valueOf(strings[1]);
+            grid[i][j] = 0;
+            minDaysNum = 1;
+            if (i != testI || j != testJ) {
+                minDaysDFS(testI, testJ, new HashSet<>(), grid);
+            } else {
+                minDaysDFS(tesI, tesJ, new HashSet<>(), grid);
+            }
+            grid[i][j] = 1;
+            if (minDaysNum != numOfOne - 1) {
+                return 1;
+            }
+        }
+        return 2;
+    }
+
+    private int[][] minDaysDir = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+
+    private int minDaysNum = 1;
+
+    public void minDaysDFS(int beginI, int beginJ, Set<String> visit, int[][] grid) {
+        visit.add(beginI + "," + beginJ);
+        for (int i = 0; i < 4; i++) {
+            int nowI = beginI + minDaysDir[i][0];
+            int nowJ = beginJ + minDaysDir[i][1];
+            if (nowI < 0 || nowI >= grid.length || nowJ < 0 || nowJ >= grid[0].length) {
+                continue;
+            }
+            if (grid[nowI][nowJ] == 0) {
+                continue;
+            }
+            if (visit.add(nowI + "," + nowJ)) {
+                minDaysNum++;
+                minDaysDFS(nowI, nowJ, visit, grid);
+            }
+        }
+    }
 }
