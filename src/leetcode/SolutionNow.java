@@ -1654,11 +1654,12 @@ public class SolutionNow {
      * 输入数据保证，新值和原始二叉搜索树中的任意节点值都不同。
      * 注意，可能存在多种有效的插入方式，只要树在插入后仍保持为二叉搜索树即可。
      * 你可以返回任意有效的结果。
-     *
+     * <p>
      * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
      * 内存消耗：39.5 MB, 在所有 Java 提交中击败了36.78% 的用户
+     *
      * @param root 二叉搜索树
-     * @param val 待插入值
+     * @param val  待插入值
      * @return 二叉搜索树
      */
     public TreeNode insertIntoBST(TreeNode root, int val) {
@@ -1672,4 +1673,80 @@ public class SolutionNow {
         }
         return root;
     }
+
+
+    /**
+     * 面试题 16.03. 交点
+     * 给定两条线段（表示为起点start = {X1, Y1}和终点end = {X2, Y2}），如果它们有交点，请计算其交点，没有交点则返回空值。
+     * 要求浮点型误差不超过10^-6。若有多个交点（线段重叠）则返回 X 值最小的点，X 坐标相同则返回 Y 值最小的点。
+     *
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：38 MB, 在所有 Java 提交中击败了13.09% 的用户
+     *
+     * @param start1 线段1端点
+     * @param end1 线段1端点
+     * @param start2 线段2端点
+     * @param end2 线段2端点
+     * @return 线段交点
+     */
+    public double[] intersection(int[] start1, int[] end1, int[] start2, int[] end2) {
+        int x1 = start1[0], y1 = start1[1];
+        int x2 = end1[0], y2 = end1[1];
+        int x3 = start2[0], y3 = start2[1];
+        int x4 = end2[0], y4 = end2[1];
+
+        // 判断 (x1, y1)~(x2, y2) 和 (x3, y3)~(x4, y4) 是否平行
+        if ((y4 - y3) * (x2 - x1) == (y2 - y1) * (x4 - x3)) {
+            // 若平行，则判断 (x3, y3) 是否在「直线」(x1, y1)~(x2, y2) 上
+            if ((y2 - y1) * (x3 - x1) == (y3 - y1) * (x2 - x1)) {
+                // 判断 (x3, y3) 是否在「线段」(x1, y1)~(x2, y2) 上
+                if (inside(x1, y1, x2, y2, x3, y3)) {
+                    update(x3, y3);
+                }
+                // 判断 (x4, y4) 是否在「线段」(x1, y1)~(x2, y2) 上
+                if (inside(x1, y1, x2, y2, x4, y4)) {
+                    update(x4, y4);
+                }
+                // 判断 (x1, y1) 是否在「线段」(x3, y3)~(x4, y4) 上
+                if (inside(x3, y3, x4, y4, x1, y1)) {
+                    update(x1, y1);
+                }
+                // 判断 (x2, y2) 是否在「线段」(x3, y3)~(x4, y4) 上
+                if (inside(x3, y3, x4, y4, x2, y2)) {
+                    update(x2, y2);
+                }
+            }
+            // 在平行时，其余的所有情况都不会有交点
+        } else {
+            // 联立方程得到 t1 和 t2 的值
+            double t1 = (double) (x3 * (y4 - y3) + y1 * (x4 - x3) - y3 * (x4 - x3) - x1 * (y4 - y3)) / ((x2 - x1) * (y4 - y3) - (x4 - x3) * (y2 - y1));
+            double t2 = (double) (x1 * (y2 - y1) + y3 * (x2 - x1) - y1 * (x2 - x1) - x3 * (y2 - y1)) / ((x4 - x3) * (y2 - y1) - (x2 - x1) * (y4 - y3));
+            // 判断 t1 和 t2 是否均在 [0, 1] 之间
+            if (t1 >= 0.0 && t1 <= 1.0 && t2 >= 0.0 && t2 <= 1.0) {
+                intersectionAns = new double[]{x1 + t1 * (x2 - x1), y1 + t1 * (y2 - y1)};
+            }
+        }
+        return intersectionAns;
+    }
+
+    double[] intersectionAns = new double[0];
+
+
+    // 判断 (xk, yk) 是否在「线段」(x1, y1)~(x2, y2) 上
+    // 这里的前提是 (xk, yk) 一定在「直线」(x1, y1)~(x2, y2) 上
+    public boolean inside(int x1, int y1, int x2, int y2, int xk, int yk) {
+        // 若与 x 轴平行，只需要判断 x 的部分
+        // 若与 y 轴平行，只需要判断 y 的部分
+        // 若为普通线段，则都要判断
+        return (x1 == x2 || (Math.min(x1, x2) <= xk && xk <= Math.max(x1, x2))) && (y1 == y2 || (Math.min(y1, y2) <= yk && yk <= Math.max(y1, y2)));
+    }
+
+    public void update(double xk, double yk) {
+        // 将一个交点与当前 ans 中的结果进行比较
+        // 若更优则替换
+        if (intersectionAns.length == 0 || xk < intersectionAns[0] || (xk == intersectionAns[0] && yk < intersectionAns[1])) {
+            intersectionAns = new double[]{xk, yk};
+        }
+    }
+
 }
