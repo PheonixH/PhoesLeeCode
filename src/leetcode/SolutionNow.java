@@ -836,7 +836,7 @@ public class SolutionNow {
      * @param q    节点2
      * @return 节点的首个共同祖先
      */
-    public TreeNode lowestCommonAncestor2(TreeNode root, TreeNode p, TreeNode q) {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
         List<TreeNode> pParents = new ArrayList<>();
         List<TreeNode> qParents = new ArrayList<>();
         lowestCommonAncestorDfs(root, p, pParents);
@@ -1471,6 +1471,48 @@ public class SolutionNow {
         sum -= root.val;
     }
 
+    public int minimumOperations(String leaves) {
+        int n = leaves.length();
+        int[][] f = new int[n][3];
+        f[0][0] = leaves.charAt(0) == 'y' ? 1 : 0;
+        f[0][1] = f[0][2] = f[1][2] = Integer.MAX_VALUE;
+        for (int i = 1; i < n; ++i) {
+            int isRed = leaves.charAt(i) == 'r' ? 1 : 0;
+            int isYellow = leaves.charAt(i) == 'y' ? 1 : 0;
+            f[i][0] = f[i - 1][0] + isYellow;
+            f[i][1] = Math.min(f[i - 1][0], f[i - 1][1]) + isRed;
+            if (i >= 2) {
+                f[i][2] = Math.min(f[i - 1][1], f[i - 1][2]) + isYellow;
+            }
+        }
+        return f[n - 1][2];
+    }
+
+    /**
+     * 771. 宝石与石头
+     *  给定字符串J 代表石头中宝石的类型，和字符串 S代表你拥有的石头。 S 中每个字符代表了一种你拥有的石头的类型，你想知道你拥有的石头中有多少是宝石。
+     * J 中的字母不重复，J 和 S中的所有字符都是字母。字母区分大小写，因此"a"和"A"是不同类型的石头。
+     *
+     * 执行用时：1 ms, 在所有 Java 提交中击败了99.67% 的用户
+     * 内存消耗：36.9 MB, 在所有 Java 提交中击败了90.90% 的用户
+     * @param J 宝石
+     * @param S 石头
+     * @return 石头中的宝石数量
+     */
+    public int numJewelsInStones(String J, String S) {
+        boolean[] isJewels = new boolean[58];
+        for (char c : J.toCharArray()) {
+            isJewels[c - 'A'] = true;
+        }
+        int num = 0;
+        for (char c : S.toCharArray()) {
+            if(isJewels[c - 'A']){
+                num++;
+            }
+        }
+        return num;
+    }
+
 
     /**
      * 1568. 使陆地分离的最少天数
@@ -1679,14 +1721,14 @@ public class SolutionNow {
      * 面试题 16.03. 交点
      * 给定两条线段（表示为起点start = {X1, Y1}和终点end = {X2, Y2}），如果它们有交点，请计算其交点，没有交点则返回空值。
      * 要求浮点型误差不超过10^-6。若有多个交点（线段重叠）则返回 X 值最小的点，X 坐标相同则返回 Y 值最小的点。
-     *
+     * <p>
      * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
      * 内存消耗：38 MB, 在所有 Java 提交中击败了13.09% 的用户
      *
      * @param start1 线段1端点
-     * @param end1 线段1端点
+     * @param end1   线段1端点
      * @param start2 线段2端点
-     * @param end2 线段2端点
+     * @param end2   线段2端点
      * @return 线段交点
      */
     public double[] intersection(int[] start1, int[] end1, int[] start2, int[] end2) {

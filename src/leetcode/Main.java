@@ -125,7 +125,7 @@ public class Main {
 //            brr[i] = Integer.valueOf(arr[i]);
 //        }
         SolutionNow solution = new SolutionNow();
-        System.out.println(solution.pathSum(root, 22));
+        System.out.println(solution.numJewelsInStones("Az","abbbZZAz"));
 
         Games games = new Games();
 //        System.out.println(games.addToArrayForm(oneDimensionalArrayA, 29));
