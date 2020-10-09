@@ -86,7 +86,7 @@ public class Main {
 
         //Arrays
         String[] oneDimensionalStringArray = {"eat", "tea", "tan", "ate", "nat", "bat"};
-        int[] oneDimensionalArrayA = {3, 2, 1};
+        int[] oneDimensionalArrayA = {0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1};
         int[] oneDimensionalArrayB = {3, 2, 1};
         int[][] twoDimensionalArray = {{1, 2}, {1, 3}, {2, 3}};
         char[] oneDimensionalCharArray = {'A', 'B'};
@@ -125,7 +125,7 @@ public class Main {
 //            brr[i] = Integer.valueOf(arr[i]);
 //        }
         SolutionNow solution = new SolutionNow();
-//        System.out.println(solution.numJewelsInStones("Az","abbbZZAz"));
+        System.out.println(solution.trap(oneDimensionalArrayA));
 
         Games games = new Games();
 //        System.out.println(games.addToArrayForm(oneDimensionalArrayA, 29));
