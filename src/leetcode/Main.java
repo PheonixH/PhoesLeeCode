@@ -124,8 +124,14 @@ public class Main {
 //        for (int i = 0; i < arr.length; i++) {
 //            brr[i] = Integer.valueOf(arr[i]);
 //        }
+        String[] arr = {"hot", "dot", "dog"};
+        List<String> list = new ArrayList<>();
+        for (String a : arr) {
+            list.add(a);
+        }
+
         SolutionNow solution = new SolutionNow();
-        System.out.println(solution.trap(oneDimensionalArrayA));
+        System.out.println(solution.findLadders("hot", "dog", list));
 
         Games games = new Games();
 //        System.out.println(games.addToArrayForm(oneDimensionalArrayA, 29));
