@@ -69,8 +69,8 @@ public class SolutionNow {
      * 执行用时：1 ms, 在所有 Java 提交中击败了27.15% 的用户
      * 内存消耗：39 MB, 在所有 Java 提交中击败了58.84% 的用户
      *
-     * @param head
-     * @return
+     * @param head 链表
+     * @return 链表是否有环
      */
     public boolean hasCycle(ListNode head) {
         if (head == null) {
@@ -85,5 +85,39 @@ public class SolutionNow {
             slow = slow.next;
         }
         return false;
+    }
+
+    /**
+     * 142. 环形链表 II
+     * 给定一个链表，返回链表开始入环的第一个节点。 如果链表无环，则返回 null。
+     * 为了表示给定链表中的环，我们使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。
+     * 如果 pos 是 -1，则在该链表中没有环。
+     * 说明：不允许修改给定的链表。
+     *
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：38.9 MB, 在所有 Java 提交中击败了65.84% 的用户
+     * @param head 链表
+     * @return 链表中的环的入口
+     */
+    public ListNode detectCycle(ListNode head) {
+        ListNode fast = head, slow = head;
+        boolean isFind = false;
+        while (fast != null && fast.next != null) {
+            fast = fast.next.next;
+            slow = slow.next;
+            if (fast == slow) {
+                isFind = true;
+                break;
+            }
+        }
+        if (!isFind) {
+            return null;
+        }
+        slow = head;
+        while (fast != slow) {
+            fast = fast.next;
+            slow = slow.next;
+        }
+        return fast;
     }
 }
