@@ -86,7 +86,7 @@ public class Main {
 
         //Arrays
         String[] oneDimensionalStringArray = {"eat", "tea", "tan", "ate", "nat", "bat"};
-        int[] oneDimensionalArrayA = {0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1};
+        int[] oneDimensionalArrayA = {0, 0};
         int[] oneDimensionalArrayB = {3, 2, 1};
         int[][] twoDimensionalArray = {{1, 2}, {1, 3}, {2, 3}};
         char[] oneDimensionalCharArray = {'A', 'B'};
@@ -131,7 +131,7 @@ public class Main {
         }
 
         SolutionNow solution = new SolutionNow();
-        System.out.println(solution.findLadders("hot", "dog", list));
+        System.out.println(solution.checkSubarraySum(oneDimensionalArrayA, -1));
 
         Games games = new Games();
 //        System.out.println(games.addToArrayForm(oneDimensionalArrayA, 29));

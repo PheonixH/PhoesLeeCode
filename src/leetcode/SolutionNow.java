@@ -375,4 +375,51 @@ public class SolutionNow {
         successors.get(currentWord).add(nextWord);
     }
 
+
+    /**
+     * 523. 连续的子数组和
+     *
+     * 给定一个包含 非负数 的数组和一个目标 整数 k，编写一个函数来判断该数组是否含有连续的子数组，其大小至少为 2，
+     * 且总和为 k 的倍数，即总和为 n*k，其中 n 也是一个整数。
+     * 执行用时：3 ms, 在所有 Java 提交中击败了98.84% 的用户
+     * 内存消耗：39.5 MB, 在所有 Java 提交中击败了46.22% 的用户
+     * @param nums 数组
+     * @param k 关键整数
+     * @return 是否满足条件
+     */
+    public boolean checkSubarraySum(int[] nums, int k) {
+        int len = nums.length;
+        if (len < 2) {
+            return false;
+        }
+        if (k == 0) {
+            int time = 0;
+            for (int i = 0; i < len; i++) {
+                if (nums[i] == 0) {
+                    time++;
+                } else {
+                    time = 0;
+                }
+                if (time >= 2) {
+                    return true;
+                }
+            }
+        } else {
+            Map<Integer, Integer> map = new HashMap<>();
+//            int[] arr = new int[Math.abs(k)];
+//            Arrays.fill(arr, -1);
+            int now = 0;
+            for (int i = 0; i < len; i++) {
+                now = (now + nums[i]) % k;
+                if (now == 0 && i >= 1) {
+                    return true;
+                } else if (!map.containsKey(now)) {
+                    map.put(now, i);
+                } else if (i - map.get(now) >= 2) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }
