@@ -378,13 +378,14 @@ public class SolutionNow {
 
     /**
      * 523. 连续的子数组和
-     *
+     * <p>
      * 给定一个包含 非负数 的数组和一个目标 整数 k，编写一个函数来判断该数组是否含有连续的子数组，其大小至少为 2，
      * 且总和为 k 的倍数，即总和为 n*k，其中 n 也是一个整数。
      * 执行用时：3 ms, 在所有 Java 提交中击败了98.84% 的用户
      * 内存消耗：39.5 MB, 在所有 Java 提交中击败了46.22% 的用户
+     *
      * @param nums 数组
-     * @param k 关键整数
+     * @param k    关键整数
      * @return 是否满足条件
      */
     public boolean checkSubarraySum(int[] nums, int k) {
@@ -421,5 +422,29 @@ public class SolutionNow {
             }
         }
         return false;
+    }
+
+
+    /**
+     * 24. 两两交换链表中的节点
+     * 给定一个链表，两两交换其中相邻的节点，并返回交换后的链表。
+     * 你不能只是单纯的改变节点内部的值，而是需要实际的进行节点交换。
+     * <p>
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：36.5 MB, 在所有 Java 提交中击败了63.84% 的用户
+     *
+     * @param head 链表
+     * @return 两两交换之后的链表
+     */
+    public ListNode swapPairs(ListNode head) {
+        if (head != null && head.next != null) {
+            ListNode fir = head;
+            ListNode sec = head.next;
+            fir.next = sec.next;
+            sec.next = fir;
+            fir.next = swapPairs(fir.next);
+            head = sec;
+        }
+        return head;
     }
 }

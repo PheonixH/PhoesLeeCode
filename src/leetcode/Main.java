@@ -110,7 +110,7 @@ public class Main {
         String[][] listListStringArray = {{"JFK", "SFO"}, {"JFK", "ATL"}, {"SFO", "ATL"}, {"ATL", "JFK"}, {"ATL", "SFO"}};
         List<List<String>> stringListList = createListList(listListStringArray);
 
-        int[] listNodeValue = {1, 2, 3, 3, 2, 1};
+        int[] listNodeValue = {1, 2, 3, 4};
         ListNode head = createListNode(listNodeValue);
 
         int[] treeNodeValue = {5, 4, 8, 11, -1, 13, 4, 7, 2, -1, -1, 5, 1};
@@ -131,7 +131,7 @@ public class Main {
         }
 
         SolutionNow solution = new SolutionNow();
-        System.out.println(solution.checkSubarraySum(oneDimensionalArrayA, -1));
+        System.out.println(solution.swapPairs(head));
 
         Games games = new Games();
 //        System.out.println(games.addToArrayForm(oneDimensionalArrayA, 29));
