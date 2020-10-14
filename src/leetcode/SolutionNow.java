@@ -447,4 +447,68 @@ public class SolutionNow {
         }
         return head;
     }
+
+    /**
+     * 1002. 查找常用字符
+     * 给定仅有小写字母组成的字符串数组 A，返回列表中的每个字符串中都显示的全部字符（包括重复字符）组成的列表。例如，如果一个字符在每个字符串中出现 3 次，但不是 4 次，则需要在最终答案中包含该字符 3 次。
+     * 你可以按任意顺序返回答案。
+     * <p>
+     * 执行用时：3 ms, 在所有 Java 提交中击败了98.36% 的用户
+     * 内存消耗：38.3 MB, 在所有 Java 提交中击败了100.00% 的用户
+     *
+     * @param arr 数组
+     * @return 查找常用字符
+     */
+    public List<String> commonChars(String[] arr) {
+        int[] chars = new int[26];
+        for (char c : arr[0].toCharArray()) {
+            chars[c - 'a']++;
+        }
+        for (int i = 1; i < arr.length; i++) {
+            int[] tmp = new int[26];
+            for (char c : arr[i].toCharArray()) {
+                tmp[c - 'a']++;
+            }
+            for (int j = 0; j < 26; j++) {
+                chars[j] = Math.min(chars[j], tmp[j]);
+            }
+        }
+        List<String> list = new ArrayList<>();
+        for (int i = 0; i < 26; i++) {
+            char c = (char) ('a' + i);
+            for (int j = 0; j < chars[i]; j++) {
+                list.add(String.valueOf(c));
+            }
+        }
+        return list;
+    }
+
+    /**
+     * 1003. 检查替换后的词是否有效
+     * 给定有效字符串 "abc"。
+     * 对于任何有效的字符串 V，我们可以将 V 分成两个部分 X 和 Y，使得 X + Y（X 与 Y 连接）等于 V。（X 或 Y 可以为空。）那么，X + "abc" + Y 也同样是有效的。
+     * 例如，如果 S = "abc"，则有效字符串的示例是："abc"，"aabcbc"，"abcabc"，"abcabcababcc"。无效字符串的示例是："abccba"，"ab"，"cababc"，"bac"。
+     * 如果给定字符串 S 有效，则返回 true；否则，返回 false。
+     * <p>
+     * 执行用时：23 ms, 在所有 Java 提交中击败了28.02% 的用户
+     * 内存消耗：38.8 MB, 在所有 Java 提交中击败了95.72% 的用户
+     *
+     * @param s 字符串
+     * @return 字符串是否有效
+     */
+    public boolean isValid(String s) {
+        if ("".equals(s)) {
+            return true;
+        }
+        if (s.length() % 3 != 0) {
+            return false;
+        }
+        int len = s.length();
+        s = s.replaceAll("abc", "");
+        int newlen = s.length();
+        if (len == newlen) {
+            return false;
+        }
+        return isValid(s);
+    }
 }

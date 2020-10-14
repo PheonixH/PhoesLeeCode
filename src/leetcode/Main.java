@@ -5,7 +5,11 @@ import leetcode.datestruct.TreeNode;
 
 import java.util.*;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+import static java.util.regex.Pattern.compile;
 
 /**
  * @program: PhoesLeeCode
@@ -85,7 +89,7 @@ public class Main {
     public static void main(String[] args) {
 
         //Arrays
-        String[] oneDimensionalStringArray = {"eat", "tea", "tan", "ate", "nat", "bat"};
+        String[] oneDimensionalStringArray = {"bella", "label", "roller"};
         int[] oneDimensionalArrayA = {0, 0};
         int[] oneDimensionalArrayB = {3, 2, 1};
         int[][] twoDimensionalArray = {{1, 2}, {1, 3}, {2, 3}};
@@ -131,7 +135,7 @@ public class Main {
         }
 
         SolutionNow solution = new SolutionNow();
-        System.out.println(solution.swapPairs(head));
+        System.out.println(solution.isValid("aabcbc"));
 
         Games games = new Games();
 //        System.out.println(games.addToArrayForm(oneDimensionalArrayA, 29));
