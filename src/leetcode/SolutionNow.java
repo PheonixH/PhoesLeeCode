@@ -511,4 +511,134 @@ public class SolutionNow {
         }
         return isValid(s);
     }
+
+    public int longestOnes(int[] A, int K) {
+        int len = A.length;
+        List<int[]> list = new ArrayList<>();
+        int now = 0;
+        int isOne = A[0];
+        int one = 0;
+        for (int i = 0; i < len; i++) {
+            if ((A[i] == 0 && isOne == 0) || (A[i] == 1 && isOne == 1)) {
+                now++;
+            } else {
+                list.add(new int[]{isOne, now});
+                now = 1;
+                isOne = A[i];
+            }
+            if (A[i] == 1) {
+                one++;
+            }
+        }
+        if (K + one >= len) {
+            return len;
+        }
+        int[] dp = new int[list.size()];
+        int max = 0;
+        for (int i = 0; i < list.size(); i++) {
+            int[] arr = list.get(i);
+            if (arr[0] == 1) {
+                int tmp = K;
+                dp[i] = arr[1];
+                for (int j = i - 1; j >= 0; j = j - 2) {
+                    if (list.get(j)[1] <= tmp) {
+                        dp[i] += list.get(j)[1];
+                        if (j >= 0) {
+                            dp[i] += list.get(j - 1)[1];
+                        }
+                        tmp -= list.get(j)[1];
+                    }
+                }
+                dp[i] += tmp;
+                max = Math.max(dp[i], max);
+            }
+        }
+        return Math.min(max, K);
+    }
+
+    /**
+     * 116. 填充每个节点的下一个右侧节点指针
+     * 给定一个完美二叉树，其所有叶子节点都在同一层，每个父节点都有两个子节点。二叉树定义如下：
+     * struct Node {
+     * int val;
+     * Node *left;
+     * Node *right;
+     * Node *next;
+     * }
+     * 填充它的每个 next 指针，让这个指针指向其下一个右侧节点。如果找不到下一个右侧节点，则将 next 指针设置为 NULL。
+     * 初始状态下，所有 next 指针都被设置为 NULL。
+     * <p>
+     * 执行用时：3 ms, 在所有 Java 提交中击败了45.62% 的用户
+     * 内存消耗：38.9 MB, 在所有 Java 提交中击败了90.61% 的用户
+     *
+     * @param root 完美二叉树
+     * @return 完美二叉树
+     */
+    public Node connect(Node root) {
+        if (root != null) {
+            Queue<Node> queue = new LinkedList<>();
+            queue.add(root);
+            while (!queue.isEmpty()) {
+                int len = queue.size();
+                Node tmp = queue.poll();
+                while (len > 0) {
+                    if (tmp.left != null) {
+                        queue.add(tmp.left);
+                    }
+                    if (tmp.right != null) {
+                        queue.add(tmp.right);
+                    }
+                    if (len > 1) {
+                        tmp.next = queue.peek();
+                        tmp = queue.poll();
+                    } else {
+                        tmp.next = null;
+                    }
+                    len--;
+                }
+            }
+        }
+        return root;
+    }
+
+    /**
+     * 面试题 17.04. 消失的数字
+     * 数组nums包含从0到n的所有整数，但其中缺了一个。请编写代码找出那个缺失的整数。你有办法在O(n)时间内完成吗？
+     * <p>
+     * 执行用时：6 ms, 在所有 Java 提交中击败了14.63% 的用户
+     * 内存消耗：39.1 MB, 在所有 Java 提交中击败了88.02% 的用户
+     *
+     * @param nums
+     * @return
+     */
+    public int missingNumber(int[] nums) {
+        Arrays.sort(nums);
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] != i) {
+                return i;
+            }
+        }
+        return nums.length;
+    }
 }
+
+class Node {
+    public int val;
+    public Node left;
+    public Node right;
+    public Node next;
+
+    public Node() {
+    }
+
+    public Node(int _val) {
+        val = _val;
+    }
+
+    public Node(int _val, Node _left, Node _right, Node _next) {
+        val = _val;
+        left = _left;
+        right = _right;
+        next = _next;
+    }
+};
