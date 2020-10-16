@@ -620,6 +620,66 @@ public class SolutionNow {
         }
         return nums.length;
     }
+
+
+    /**
+     * 401. 二进制手表
+     * 二进制手表顶部有 4 个 LED 代表 小时（0-11），底部的 6 个 LED 代表 分钟（0-59）。
+     * 每个 LED 代表一个 0 或 1，最低位在右侧。
+     * <p>
+     * 执行用时：20 ms, 在所有 Java 提交中击败了10.32% 的用户
+     * 内存消耗：38.5 MB, 在所有 Java 提交中击败了46.58% 的用户
+     *
+     * @param num 数组
+     * @return 时间
+     */
+    public List<String> readBinaryWatch(int num) {
+        readBinaryWatch(0, num, new boolean[10]);
+        return readBinaryWatchRes;
+    }
+
+    private List<String> readBinaryWatchRes = new ArrayList();
+    private Set<String> readBinaryWatchSet = new HashSet<>();
+
+
+    private void readBinaryWatch(int left, int now, boolean[] brr) {
+        if (now == 0) {
+            //
+            int hour = 0;
+            for (int i = 0; i < 4; i++) {
+                int tmp = brr[i] ? 1 : 0;
+                hour = hour * 2 + tmp;
+            }
+            if (hour >= 12) {
+                return;
+            }
+            int minute = 0;
+            for (int i = 4; i < 10; i++) {
+                int tmp = brr[i] ? 1 : 0;
+                minute = minute * 2 + tmp;
+            }
+            String str = hour + ":";
+            if (minute >= 60) {
+                return;
+            } else if (minute < 10) {
+                str += "0";
+            }
+            str += minute;
+            if (readBinaryWatchSet.add(str)) {
+                readBinaryWatchRes.add(str);
+            }
+            return;
+        }
+        for (
+                int i = left;
+                i < 10; i++) {
+            brr[i] = true;
+            readBinaryWatch(i + 1, now - 1, brr);
+            brr[i] = false;
+            readBinaryWatch(i + 1, now, brr);
+        }
+    }
+
 }
 
 class Node {
