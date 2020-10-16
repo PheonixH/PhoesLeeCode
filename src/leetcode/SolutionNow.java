@@ -680,6 +680,28 @@ public class SolutionNow {
         }
     }
 
+    /**
+     * 977. 有序数组的平方
+     * <p>
+     * 给定一个按非递减顺序排序的整数数组 A，返回每个数字的平方组成的新数组，要求也按非递减顺序排序。
+     * <p>
+     * 执行用时：30 ms, 在所有 Java 提交中击败了6.70% 的用户
+     * 内存消耗：41 MB, 在所有 Java 提交中击败了5.03% 的用户
+     *
+     * @param A 数组
+     * @return 结果
+     */
+    public int[] sortedSquares(int[] A) {
+        PriorityQueue<Integer> priorityQueue = new PriorityQueue<>();
+        for (int a : A) {
+            priorityQueue.add(a * a);
+        }
+        for (int i = 0; i < A.length; i++) {
+            A[i] = priorityQueue.poll();
+        }
+        return A;
+    }
+
 }
 
 class Node {
