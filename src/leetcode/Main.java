@@ -90,8 +90,8 @@ public class Main {
 
         //Arrays
         String[] oneDimensionalStringArray = {"bella", "label", "roller"};
-        int[] oneDimensionalArrayA = {0, 0};
-        int[] oneDimensionalArrayB = {1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0};
+        int[] oneDimensionalArrayA = {4};
+        int[] oneDimensionalArrayB = {2};
         int[][] twoDimensionalArray = {{1, 2}, {1, 3}, {2, 3}};
         char[] oneDimensionalCharArray = {'A', 'B'};
         char[][] twoDimensionalCharArray = {
@@ -135,9 +135,9 @@ public class Main {
         }
 
         SolutionNow solution = new SolutionNow();
-        System.out.println(solution.totalNQueens(4));
+//        System.out.println(solution.totalNQueens(4));
 
         Games games = new Games();
-//        System.out.println(games.addToArrayForm(oneDimensionalArrayA, 29));
+        System.out.println(games.bestTeamScore(oneDimensionalArrayA, oneDimensionalArrayB));
     }
 }

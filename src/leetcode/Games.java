@@ -284,4 +284,62 @@ public class Games {
         return 0;
     }
 
+    /**
+     * 5545. 无矛盾的最佳球队
+     * 假设你是球队的经理。对于即将到来的锦标赛，你想组合一支总体得分最高的球队。球队的得分是球队中所有球员的分数 总和 。
+     * 然而，球队中的矛盾会限制球员的发挥，所以必须选出一支 没有矛盾 的球队。如果一名年龄较小球员的分数 严格大于 一名年龄较大的球员，则存在矛盾。同龄球员之间不会发生矛盾。
+     * 给你两个列表 scores 和 ages，其中每组 scores[i] 和 ages[i] 表示第 i 名球员的分数和年龄。请你返回 所有可能的无矛盾球队中得分最高那支的分数 。
+     *
+     * 执行用时：63 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：38.5 MB, 在所有 Java 提交中击败了100.00% 的用户
+     * @param scores 分数
+     * @param ages 年龄
+     * @return 最高值
+     */
+    public int bestTeamScore(int[] scores, int[] ages) {
+        int len = scores.length;
+        Comparator<int[]> comparator = new Comparator<int[]>() {
+            @Override
+            public int compare(int[] o1, int[] o2) {
+                if (o1[0] == o2[0]) {
+                    return o1[1] - o2[1];
+                }
+                return o1[0] - o2[0];
+            }
+        };
+
+        PriorityQueue<int[]> priorityQueue = new PriorityQueue<>(comparator);
+        for (int i = 0; i < len; i++) {
+            priorityQueue.add(new int[]{ages[i], scores[i]});
+        }
+
+        int[][] data = new int[len + 1][2];
+        for (int i = 1; i < len + 1; i++) {
+            data[i] = priorityQueue.poll();
+        }
+
+        //0: pick, 1: unpick
+        int[] dp = new int[len + 1];
+        dp[1] = data[1][1];
+
+        int ans = data[1][0];
+
+        for (int i = 2; i <= len; i++) {
+            int j = i;
+            int tmp = 0;
+            while (j > 0) {
+                j--;
+                if (data[i][0] > data[j][0] && data[i][1] < data[j][1]) {
+                    continue;
+                }
+                tmp = Math.max(tmp, dp[j]);
+            }
+            dp[i] = tmp + data[i][1];
+            ans = Math.max(ans, dp[i]);
+        }
+
+        return ans;
+    }
+
+
 }

@@ -702,7 +702,6 @@ public class SolutionNow {
         return A;
     }
 
-}
 
     /**
      * 52. N皇后 II
