@@ -749,6 +749,35 @@ public class SolutionNow {
             }
         }
     }
+
+    /**
+     * 300. 最长上升子序列
+     * <p>
+     * 给定一个无序的整数数组，找到其中最长上升子序列的长度。
+     * <p>
+     * 执行用时：19 ms, 在所有 Java 提交中击败了11.99% 的用户
+     * 内存消耗：36.4 MB, 在所有 Java 提交中击败了96.41% 的用户
+     *
+     * @param nums 数组
+     * @return 最长子数组长度
+     */
+    public int lengthOfLIS(int[] nums) {
+        if (nums.length <= 1) {
+            return nums.length;
+        }
+        int len = nums.length;
+        int[] dp = new int[len];
+        int ans = -1;
+        for (int i = 1; i < len; i++) {
+            for (int j = i - 1; j >= 0; j--) {
+                if (nums[j] < nums[i]) {
+                    dp[i] = Math.max(dp[j] + 1, dp[i]);
+                }
+            }
+            ans = Math.max(ans, dp[i]);
+        }
+        return ans + 1;
+    }
 }
 
 //class Node {
