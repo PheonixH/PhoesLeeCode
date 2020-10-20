@@ -357,55 +357,6 @@ public class Games {
         return String.valueOf(min);
     }
 
-    public int bestTeamScore(int[] scores, int[] ages) {
-        Comparator<int[]> comparator = new Comparator<int[]>() {
-            @Override
-            public int compare(int[] o1, int[] o2) {
-                if (o1[1] != o2[1]) {
-                    return o1[1] - o2[1];
-                } else {
-                    return o1[0] - o2[0];
-                }
-            }
-        };
-        PriorityQueue<int[]> priorityQueue = new PriorityQueue<>(comparator);
-
-        int len = ages.length;
-
-        for (int i = 0; i < ages.length; i++) {
-            int[] tmp = new int[]{scores[i], ages[i]};
-            priorityQueue.add(tmp);
-        }
-
-        int[][] arr = new int[ages.length][2];
-        for (int i = 0; i < ages.length; i++) {
-            arr[i] = priorityQueue.poll();
-        }
-
-        boolean[][] booleans = new boolean[len][len];
-        for (int i = len - 1; i >= 0; i--) {
-//            booleans[i][i] = true;
-            for (int j = 0; j < i; j++) {
-                if (arr[j][0] >= arr[i][0] && arr[j][1] < arr[i][1]) {
-                    booleans[i][j] = true;
-                    booleans[j][i] = true;
-                }
-            }
-        }
-
-        int max = 0;
-        for (int i = 0; i < len; i++) {
-            int tmp = 0;
-            for (int j = 0; j < len; j++) {
-                if (booleans[i][j]) {
-                    tmp += arr[j][0];
-                }
-            }
-            max = Math.max(max, tmp);
-        }
-
-        return max;
-    }
     /**
      * 5545. 无矛盾的最佳球队
      * 假设你是球队的经理。对于即将到来的锦标赛，你想组合一支总体得分最高的球队。球队的得分是球队中所有球员的分数 总和 。
