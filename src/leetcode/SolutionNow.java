@@ -621,6 +621,88 @@ public class SolutionNow {
         return nums.length;
     }
 
+
+    /**
+     * 401. 二进制手表
+     * 二进制手表顶部有 4 个 LED 代表 小时（0-11），底部的 6 个 LED 代表 分钟（0-59）。
+     * 每个 LED 代表一个 0 或 1，最低位在右侧。
+     * <p>
+     * 执行用时：20 ms, 在所有 Java 提交中击败了10.32% 的用户
+     * 内存消耗：38.5 MB, 在所有 Java 提交中击败了46.58% 的用户
+     *
+     * @param num 数组
+     * @return 时间
+     */
+    public List<String> readBinaryWatch(int num) {
+        readBinaryWatch(0, num, new boolean[10]);
+        return readBinaryWatchRes;
+    }
+
+    private List<String> readBinaryWatchRes = new ArrayList();
+    private Set<String> readBinaryWatchSet = new HashSet<>();
+
+
+    private void readBinaryWatch(int left, int now, boolean[] brr) {
+        if (now == 0) {
+            //
+            int hour = 0;
+            for (int i = 0; i < 4; i++) {
+                int tmp = brr[i] ? 1 : 0;
+                hour = hour * 2 + tmp;
+            }
+            if (hour >= 12) {
+                return;
+            }
+            int minute = 0;
+            for (int i = 4; i < 10; i++) {
+                int tmp = brr[i] ? 1 : 0;
+                minute = minute * 2 + tmp;
+            }
+            String str = hour + ":";
+            if (minute >= 60) {
+                return;
+            } else if (minute < 10) {
+                str += "0";
+            }
+            str += minute;
+            if (readBinaryWatchSet.add(str)) {
+                readBinaryWatchRes.add(str);
+            }
+            return;
+        }
+        for (
+                int i = left;
+                i < 10; i++) {
+            brr[i] = true;
+            readBinaryWatch(i + 1, now - 1, brr);
+            brr[i] = false;
+            readBinaryWatch(i + 1, now, brr);
+        }
+    }
+
+    /**
+     * 977. 有序数组的平方
+     * <p>
+     * 给定一个按非递减顺序排序的整数数组 A，返回每个数字的平方组成的新数组，要求也按非递减顺序排序。
+     * <p>
+     * 执行用时：30 ms, 在所有 Java 提交中击败了6.70% 的用户
+     * 内存消耗：41 MB, 在所有 Java 提交中击败了5.03% 的用户
+     *
+     * @param A 数组
+     * @return 结果
+     */
+    public int[] sortedSquares(int[] A) {
+        PriorityQueue<Integer> priorityQueue = new PriorityQueue<>();
+        for (int a : A) {
+            priorityQueue.add(a * a);
+        }
+        for (int i = 0; i < A.length; i++) {
+            A[i] = priorityQueue.poll();
+        }
+        return A;
+    }
+
+
     /**
      * 52. N皇后 II
      * n 皇后问题研究的是如何将 n 个皇后放置在 n×n 的棋盘上，并且使皇后彼此之间不能相互攻击。
@@ -666,6 +748,81 @@ public class SolutionNow {
                 }
             }
         }
+    }
+
+    /**
+     * 300. 最长上升子序列
+     * <p>
+     * 给定一个无序的整数数组，找到其中最长上升子序列的长度。
+     * <p>
+     * 执行用时：19 ms, 在所有 Java 提交中击败了11.99% 的用户
+     * 内存消耗：36.4 MB, 在所有 Java 提交中击败了96.41% 的用户
+     *
+     * @param nums 数组
+     * @return 最长子数组长度
+     */
+    public int lengthOfLIS(int[] nums) {
+        if (nums.length <= 1) {
+            return nums.length;
+        }
+        int len = nums.length;
+        int[] dp = new int[len];
+        int ans = -1;
+        for (int i = 1; i < len; i++) {
+            for (int j = i - 1; j >= 0; j--) {
+                if (nums[j] < nums[i]) {
+                    dp[i] = Math.max(dp[j] + 1, dp[i]);
+                }
+            }
+            ans = Math.max(ans, dp[i]);
+        }
+        return ans + 1;
+    }
+
+    public int numberOfSets(int n, int k) {
+        // length: 0 - x, k:
+        // 0: 0,1 + (1-x, k-1)
+        // 1: 0,2 + (1-x, k-1)
+        // ...
+        int[][] dp = new int[n + 1][k + 1];
+        for (int j = 1; j <= k; j++) {
+            for (int i = 0; i <= n; i++) {
+                if (i < j || i == 0) {
+                    dp[i][j] = 0;
+                } else if (i == j || j == 1) {
+                    dp[i][j] = 1;
+                } else {
+                    for (int x = 0; x < i; x++) {
+                        dp[i][j] = (dp[i][j] + dp[i - x][j - 1]) % 1000000007;
+                    }
+                }
+            }
+        }
+        return dp[n - 1][k];
+    }
+
+
+    /**
+     * 执行用时：514 ms, 在所有 Java 提交中击败了5.21% 的用户
+     * 内存消耗：42 MB, 在所有 Java 提交中击败了24.02% 的用户
+     * @param head
+     */
+    public void reorderList(ListNode head) {
+        if (head == null || head.next == null) {
+            return;
+        }
+        ListNode lastPre = head;
+        while (lastPre.next != null && lastPre.next.next != null) {
+            lastPre = lastPre.next;
+        }
+        if (lastPre.equals(head)) {
+            return;
+        }
+        ListNode headBehind = head.next;
+        head.next = lastPre.next;
+        lastPre.next.next = headBehind;
+        lastPre.next = null;
+        reorderList(headBehind);
     }
 }
 
