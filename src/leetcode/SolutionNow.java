@@ -778,6 +778,52 @@ public class SolutionNow {
         }
         return ans + 1;
     }
+
+    public int numberOfSets(int n, int k) {
+        // length: 0 - x, k:
+        // 0: 0,1 + (1-x, k-1)
+        // 1: 0,2 + (1-x, k-1)
+        // ...
+        int[][] dp = new int[n + 1][k + 1];
+        for (int j = 1; j <= k; j++) {
+            for (int i = 0; i <= n; i++) {
+                if (i < j || i == 0) {
+                    dp[i][j] = 0;
+                } else if (i == j || j == 1) {
+                    dp[i][j] = 1;
+                } else {
+                    for (int x = 0; x < i; x++) {
+                        dp[i][j] = (dp[i][j] + dp[i - x][j - 1]) % 1000000007;
+                    }
+                }
+            }
+        }
+        return dp[n - 1][k];
+    }
+
+
+    /**
+     * 执行用时：514 ms, 在所有 Java 提交中击败了5.21% 的用户
+     * 内存消耗：42 MB, 在所有 Java 提交中击败了24.02% 的用户
+     * @param head
+     */
+    public void reorderList(ListNode head) {
+        if (head == null || head.next == null) {
+            return;
+        }
+        ListNode lastPre = head;
+        while (lastPre.next != null && lastPre.next.next != null) {
+            lastPre = lastPre.next;
+        }
+        if (lastPre.equals(head)) {
+            return;
+        }
+        ListNode headBehind = head.next;
+        head.next = lastPre.next;
+        lastPre.next.next = headBehind;
+        lastPre.next = null;
+        reorderList(headBehind);
+    }
 }
 
 //class Node {
