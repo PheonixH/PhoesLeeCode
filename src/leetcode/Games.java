@@ -284,4 +284,126 @@ public class Games {
         return 0;
     }
 
+    // 2020-10-18 第211周赛
+    public int maxLengthBetweenEqualCharacters(String s) {
+        char[] chars = s.toCharArray();
+        int max = 0;
+        int len = chars.length;
+        for (int i = 0; i < len; i++) {
+            for (int j = len - 1; j > i; j--) {
+                if (chars[i] == chars[j]) {
+                    max = Math.max(max, j - i - 1);
+                    break;
+                }
+            }
+        }
+        return max;
+    }
+
+    public String findLexSmallestString(String s, int a, int b) {
+        char[] chars = s.toCharArray();
+        int len = s.length();
+        int[] charsValue = new int[len];
+        if (b % 2 == 0) {
+            for (int i = 0; i < len; i++) {
+                if (i % 2 == 0) {
+                    charsValue[i] = chars[i] - '0';
+                } else {
+                    boolean[] booleans = new boolean[10];
+                    int min = chars[i] - '0';
+                    int tmp = chars[i] - '0';
+                    while (!booleans[tmp]) {
+                        booleans[tmp] = true;
+                        tmp = (tmp + a) % 10;
+                        min = Math.min(tmp, min);
+                    }
+                    charsValue[i] = min;
+                }
+            }
+        } else {
+            for (int i = 0; i < len; i++) {
+                boolean[] booleans = new boolean[10];
+                int min = chars[i] - '0';
+                int tmp = chars[i] - '0';
+                while (!booleans[tmp]) {
+                    booleans[tmp] = true;
+                    tmp = (tmp + a) % 10;
+                    min = Math.min(tmp, min);
+                }
+                charsValue[i] = min;
+            }
+        }
+        int min = Integer.MAX_VALUE;
+        String res = "";
+        Set<Integer> set = new HashSet<>();
+        for (int i = 0; i < len; i = i + b) {
+            int tmp = 0;
+            String str = "";
+            int key = i;
+            int time = 0;
+            while (time < len) {
+                str = str + charsValue[key];
+                tmp = tmp * 10 + charsValue[key];
+                key = (key + 1) % len;
+                time++;
+            }
+            if (set.add(tmp)) {
+                if (min > tmp) {
+                    min = tmp;
+                    res = str;
+                }
+            }
+        }
+        return String.valueOf(min);
+    }
+
+    public int bestTeamScore(int[] scores, int[] ages) {
+        Comparator<int[]> comparator = new Comparator<int[]>() {
+            @Override
+            public int compare(int[] o1, int[] o2) {
+                if (o1[1] != o2[1]) {
+                    return o1[1] - o2[1];
+                } else {
+                    return o1[0] - o2[0];
+                }
+            }
+        };
+        PriorityQueue<int[]> priorityQueue = new PriorityQueue<>(comparator);
+
+        int len = ages.length;
+
+        for (int i = 0; i < ages.length; i++) {
+            int[] tmp = new int[]{scores[i], ages[i]};
+            priorityQueue.add(tmp);
+        }
+
+        int[][] arr = new int[ages.length][2];
+        for (int i = 0; i < ages.length; i++) {
+            arr[i] = priorityQueue.poll();
+        }
+
+        boolean[][] booleans = new boolean[len][len];
+        for (int i = len - 1; i >= 0; i--) {
+//            booleans[i][i] = true;
+            for (int j = 0; j < i; j++) {
+                if (arr[j][0] >= arr[i][0] && arr[j][1] < arr[i][1]) {
+                    booleans[i][j] = true;
+                    booleans[j][i] = true;
+                }
+            }
+        }
+
+        int max = 0;
+        for (int i = 0; i < len; i++) {
+            int tmp = 0;
+            for (int j = 0; j < len; j++) {
+                if (booleans[i][j]) {
+                    tmp += arr[j][0];
+                }
+            }
+            max = Math.max(max, tmp);
+        }
+
+        return max;
+    }
 }
