@@ -805,6 +805,7 @@ public class SolutionNow {
     /**
      * 执行用时：514 ms, 在所有 Java 提交中击败了5.21% 的用户
      * 内存消耗：42 MB, 在所有 Java 提交中击败了24.02% 的用户
+     *
      * @param head
      */
     public void reorderList(ListNode head) {
@@ -824,6 +825,55 @@ public class SolutionNow {
         lastPre.next = null;
         reorderList(headBehind);
     }
+
+    /**
+     * 925. 长按键入
+     * 你的朋友正在使用键盘输入他的名字 name。偶尔，在键入字符 c 时，按键可能会被长按，而字符可能被输入 1 次或多次。
+     * 你将会检查键盘输入的字符 typed。如果它对应的可能是你的朋友的名字（其中一些字符可能被长按），那么就返回 True。
+     *
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：36.3 MB, 在所有 Java 提交中击败了98.29% 的用户
+     * @param name 他的名字
+     * @param typed 键盘输入的名字
+     * @return 是否是长按键入
+     */
+    public boolean isLongPressedName(String name, String typed) {
+        if (name.equals(typed)) {
+            return true;
+        }
+        int n = name.length();
+        int m = typed.length();
+        if (n > m || n == 0) {
+            return false;
+        }
+        int t = 0;
+        char[] names = name.toCharArray();
+        char[] typeds = typed.toCharArray();
+        int i = 0;
+        char pre = '~';
+        while (i < n) {
+            if (names[i] != typeds[i + t]) {
+                if (pre != typeds[i + t]) {
+                    return false;
+                }
+                t++;
+                if (t + n > m) {
+                    return false;
+                }
+            } else {
+                pre = names[i];
+                i++;
+            }
+        }
+        while (i + t < m) {
+            if (typeds[i + t] != names[n - 1]) {
+                return false;
+            }
+            t++;
+        }
+        return true;
+    }
+
 }
 
 //class Node {

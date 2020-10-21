@@ -135,7 +135,7 @@ public class Main {
         }
 
         SolutionNow solution = new SolutionNow();
-        solution.reorderList(head);
+        solution.isLongPressedName("", "");
 //        System.out.println(solution.reorderList(head));
 
         Games games = new Games();
