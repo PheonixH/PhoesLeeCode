@@ -90,7 +90,7 @@ public class Main {
 
         //Arrays
         String[] oneDimensionalStringArray = {"bella", "label", "roller"};
-        int[] oneDimensionalArrayA = {-2, -1};
+        int[] oneDimensionalArrayA = {2, 5};
         int[] oneDimensionalArrayB = {1, 2, 3, 4};
         int[][] twoDimensionalArray = {{1, 2}, {1, 3}, {2, 3}};
         char[] oneDimensionalCharArray = {'A', 'B'};
@@ -135,7 +135,7 @@ public class Main {
         }
 
         SolutionNow solution = new SolutionNow();
-        System.out.println(solution.totalNQueens(4));
+        System.out.println(solution.coinChange(oneDimensionalArrayA, 3));
 
         Games games = new Games();
 //        System.out.println(games.addToArrayForm(oneDimensionalArrayA, 29));

@@ -830,10 +830,11 @@ public class SolutionNow {
      * 925. 长按键入
      * 你的朋友正在使用键盘输入他的名字 name。偶尔，在键入字符 c 时，按键可能会被长按，而字符可能被输入 1 次或多次。
      * 你将会检查键盘输入的字符 typed。如果它对应的可能是你的朋友的名字（其中一些字符可能被长按），那么就返回 True。
-     *
+     * <p>
      * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
      * 内存消耗：36.3 MB, 在所有 Java 提交中击败了98.29% 的用户
-     * @param name 他的名字
+     *
+     * @param name  他的名字
      * @param typed 键盘输入的名字
      * @return 是否是长按键入
      */
@@ -874,6 +875,44 @@ public class SolutionNow {
         return true;
     }
 
+    /**
+     * 322. 零钱兑换
+     *
+     * 给定不同面额的硬币 coins 和一个总金额 amount。编写一个函数来计算可以凑成总金额所需的最少的硬币个数。
+     * 如果没有任何一种硬币组合能组成总金额，返回 -1。
+     * 你可以认为每种硬币的数量是无限的。
+     *
+     * 执行用时：16 ms, 在所有 Java 提交中击败了52.62% 的用户
+     * 内存消耗：38 MB, 在所有 Java 提交中击败了90.18% 的用户
+     * @param coins 不同面额的硬币
+     * @param amount 总金额
+     * @return 凑成总金额所需的最少的硬币个数
+     */
+    public int coinChange(int[] coins, int amount) {
+        if (amount == 0) {
+            return amount;
+        }
+        int[] dp = new int[10001];
+        for (int coin : coins) {
+            if (coin < 10001) {
+                dp[coin]++;
+            }
+        }
+        for (int i = 1; i <= amount; i++) {
+            int tmp = 10002;
+            for (int coin : coins) {
+                if (i > coin && dp[i - coin] != 0 && dp[i - coin] != -1) {
+                    tmp = Math.min(tmp, dp[i - coin] + 1);
+                }
+            }
+            if (dp[i] == 0) {
+                dp[i] = tmp == 10002 ? -1 : tmp;
+            } else {
+                dp[i] = Math.min(dp[i], tmp);
+            }
+        }
+        return dp[amount];
+    }
 }
 
 //class Node {
