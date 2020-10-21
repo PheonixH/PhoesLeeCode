@@ -135,10 +135,9 @@ public class Main {
         }
 
         SolutionNow solution = new SolutionNow();
-        solution.isLongPressedName("", "");
-//        System.out.println(solution.reorderList(head));
+        System.out.println(solution.totalNQueens(4));
 
         Games games = new Games();
-//        System.out.println(games.bestTeamScore(oneDimensionalArrayA, oneDimensionalArrayB));
+//        System.out.println(games.addToArrayForm(oneDimensionalArrayA, 29));
     }
 }

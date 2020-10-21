@@ -284,6 +284,79 @@ public class Games {
         return 0;
     }
 
+    // 2020-10-18 第211周赛
+    public int maxLengthBetweenEqualCharacters(String s) {
+        char[] chars = s.toCharArray();
+        int max = 0;
+        int len = chars.length;
+        for (int i = 0; i < len; i++) {
+            for (int j = len - 1; j > i; j--) {
+                if (chars[i] == chars[j]) {
+                    max = Math.max(max, j - i - 1);
+                    break;
+                }
+            }
+        }
+        return max;
+    }
+
+    public String findLexSmallestString(String s, int a, int b) {
+        char[] chars = s.toCharArray();
+        int len = s.length();
+        int[] charsValue = new int[len];
+        if (b % 2 == 0) {
+            for (int i = 0; i < len; i++) {
+                if (i % 2 == 0) {
+                    charsValue[i] = chars[i] - '0';
+                } else {
+                    boolean[] booleans = new boolean[10];
+                    int min = chars[i] - '0';
+                    int tmp = chars[i] - '0';
+                    while (!booleans[tmp]) {
+                        booleans[tmp] = true;
+                        tmp = (tmp + a) % 10;
+                        min = Math.min(tmp, min);
+                    }
+                    charsValue[i] = min;
+                }
+            }
+        } else {
+            for (int i = 0; i < len; i++) {
+                boolean[] booleans = new boolean[10];
+                int min = chars[i] - '0';
+                int tmp = chars[i] - '0';
+                while (!booleans[tmp]) {
+                    booleans[tmp] = true;
+                    tmp = (tmp + a) % 10;
+                    min = Math.min(tmp, min);
+                }
+                charsValue[i] = min;
+            }
+        }
+        int min = Integer.MAX_VALUE;
+        String res = "";
+        Set<Integer> set = new HashSet<>();
+        for (int i = 0; i < len; i = i + b) {
+            int tmp = 0;
+            String str = "";
+            int key = i;
+            int time = 0;
+            while (time < len) {
+                str = str + charsValue[key];
+                tmp = tmp * 10 + charsValue[key];
+                key = (key + 1) % len;
+                time++;
+            }
+            if (set.add(tmp)) {
+                if (min > tmp) {
+                    min = tmp;
+                    res = str;
+                }
+            }
+        }
+        return String.valueOf(min);
+    }
+
     /**
      * 5545. 无矛盾的最佳球队
      * 假设你是球队的经理。对于即将到来的锦标赛，你想组合一支总体得分最高的球队。球队的得分是球队中所有球员的分数 总和 。
