@@ -135,7 +135,8 @@ public class Main {
         }
 
         SolutionNow solution = new SolutionNow();
-        System.out.println(solution.smallestSubsequence("bcabc"));
+        System.out.println(solution.minCost("aaabbbabbbb"
+                , new int[]{3, 5, 10, 7, 5, 3, 5, 5, 4, 8, 1}));
 
         Games games = new Games();
 //        System.out.println(games.addToArrayForm(oneDimensionalArrayA, 29));
