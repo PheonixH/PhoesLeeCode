@@ -1064,10 +1064,11 @@ public class SolutionNow {
      * 给你一个字符串 s 和一个整数数组 cost ，其中 cost[i] 是从 s 中删除字符 i 的代价。
      * 返回使字符串任意相邻两个字母不相同的最小删除成本。
      * 请注意，删除一个字符后，删除其他字符的成本不会改变。
-     *
+     * <p>
      * 执行用时：7 ms, 在所有 Java 提交中击败了87.56% 的用户
      * 内存消耗：47.1 MB, 在所有 Java 提交中击败了99.16% 的用户
-     * @param s 字符串
+     *
+     * @param s    字符串
      * @param cost 整数数组
      * @return 避免重复字母的最小删除成本
      */
@@ -1082,6 +1083,52 @@ public class SolutionNow {
             }
         }
         return sumCost;
+    }
+
+    /**
+     * 1577. 数的平方等于两数乘积的方法数
+     * 给你两个整数数组 nums1 和 nums2 ，请你返回根据以下规则形成的三元组的数目（类型 1 和类型 2 ）：*
+     *     类型 1：三元组 (i, j, k) ，如果 nums1[i]2 == nums2[j] * nums2[k] 其中 0 <= i < nums1.length 且 0 <= j < k < nums2.length
+     *     类型 2：三元组 (i, j, k) ，如果 nums2[i]2 == nums1[j] * nums1[k] 其中 0 <= i < nums2.length 且 0 <= j < k < nums1.length
+     *
+     * 执行用时：60 ms, 在所有 Java 提交中击败了59.97% 的用户
+     * 内存消耗：37.8 MB, 在所有 Java 提交中击败了99.83% 的用户
+     * @param nums1 整数数组
+     * @param nums2 整数数组
+     * @return 数的平方等于两数乘积的方法数
+     */
+    public int numTriplets(int[] nums1, int[] nums2) {
+        Map<Integer, Integer> map1 = new HashMap<>();
+        for (int n : nums1) {
+            map1.put(n, map1.getOrDefault(n, 0) + 1);
+        }
+
+        Map<Integer, Integer> map2 = new HashMap<>();
+        for (int n : nums2) {
+            map2.put(n, map2.getOrDefault(n, 0) + 1);
+        }
+        int res = 0;
+
+        int n = nums1.length;
+        int m = nums2.length;
+        for (int i = 0; i < n; i++) {
+            for (int j = i + 1; j < n; j++) {
+                double tmp = Math.sqrt((long)nums1[i] * (long)nums1[j]);
+                if (tmp % 1 == 0) {
+                    res += map2.getOrDefault((int) tmp, 0);
+                }
+            }
+        }
+        for (int i = 0; i < m; i++) {
+            for (int j = i + 1; j < m; j++) {
+                double tmp = Math.sqrt((long)nums2[i] * (long)nums2[j]);
+                if (tmp % 1 == 0) {
+                    res += map1.getOrDefault((int) tmp, 0);
+                }
+            }
+        }
+
+        return res;
     }
 }
 
