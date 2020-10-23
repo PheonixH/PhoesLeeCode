@@ -135,7 +135,7 @@ public class Main {
         }
 
         SolutionNow solution = new SolutionNow();
-        System.out.println(solution.coinChange(oneDimensionalArrayA, 3));
+        System.out.println(solution.smallestSubsequence("bcabc"));
 
         Games games = new Games();
 //        System.out.println(games.addToArrayForm(oneDimensionalArrayA, 29));

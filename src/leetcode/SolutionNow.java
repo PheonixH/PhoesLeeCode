@@ -877,14 +877,15 @@ public class SolutionNow {
 
     /**
      * 322. 零钱兑换
-     *
+     * <p>
      * 给定不同面额的硬币 coins 和一个总金额 amount。编写一个函数来计算可以凑成总金额所需的最少的硬币个数。
      * 如果没有任何一种硬币组合能组成总金额，返回 -1。
      * 你可以认为每种硬币的数量是无限的。
-     *
+     * <p>
      * 执行用时：16 ms, 在所有 Java 提交中击败了52.62% 的用户
      * 内存消耗：38 MB, 在所有 Java 提交中击败了90.18% 的用户
-     * @param coins 不同面额的硬币
+     *
+     * @param coins  不同面额的硬币
      * @param amount 总金额
      * @return 凑成总金额所需的最少的硬币个数
      */
@@ -912,6 +913,149 @@ public class SolutionNow {
             }
         }
         return dp[amount];
+    }
+
+    public int[] maxNumber(int[] nums1, int[] nums2, int k) {
+        int n = nums1.length;
+        int m = nums2.length;
+
+        int[] dp = new int[k];
+
+        Map<String, int[]> map = new HashMap<>();
+        for (int t = 1; t < n && t < k; t++) {
+            int[] value = new int[t];
+            int pre = 0;
+            int tmp = t;
+            while (tmp > 0) {
+                pre = findMaxValue(nums1, pre, n + 1 - t);
+                value[t - tmp] = nums1[pre];
+                tmp--;
+            }
+            map.put("1-" + t, value);
+        }
+
+        for (int t = 1; t < m && t < k; t++) {
+            int[] value = new int[t];
+            int pre = 0;
+            int tmp = t;
+            while (tmp > 0) {
+                pre = findMaxValue(nums2, pre, m + 1 - t);
+                value[t - tmp] = nums2[pre];
+                tmp--;
+            }
+            map.put("2-" + t, value);
+        }
+
+        int max = 0;
+        for (int i = 0; i < k; i++) {
+            if (i < n && k - i < m) {
+                int[] arr = map.get("1-" + i);
+                int[] brr = map.get("2-" + i);
+                max = Math.max(max, findMaxNumber(arr, brr));
+            }
+        }
+
+        int[] res = new int[k];
+        for (int i = 0; i < k; i++) {
+            res[k - i] = max % 10;
+            max = max / 10;
+        }
+
+        return res;
+    }
+
+    private int findMaxValue(int[] arr, int l, int r) {
+        int key = 0, value = 0;
+        for (int i = l; i < r; i++) {
+            if (arr[i] == 9) {
+                return i;
+            } else if (arr[i] > key) {
+                value = i;
+            }
+        }
+        return value;
+    }
+
+    private int findMaxNumber(int[] arr, int[] brr) {
+        int tmp = 0;
+        int[][] dp = new int[arr.length + 1][brr.length + 1];
+        // 选i-1个arr
+        for (int i = 1; i <= arr.length; i++) {
+            // 选j-1个brr
+            for (int j = 1; j <= brr.length; j++) {
+                if (j == 1) {
+                    dp[i][j] = dp[i - 1][j] * 10 + arr[i];
+                } else if (i == 1) {
+                    dp[i][j] = dp[i][j - 1] * 10 + brr[j];
+                } else {
+                    dp[i][j] = Math.max(dp[i - 1][j] * 10 + arr[i], dp[i][j - 1] * 10 + brr[j]);
+                }
+            }
+        }
+        return dp[arr.length][brr.length];
+    }
+
+    public List<Integer> partitionLabels(String S) {
+        Map<Character, int[]> map = new HashMap<>();
+        char[] chars = S.toCharArray();
+        int n = S.length();
+        for (int i = 0; i < n; i++) {
+            if (map.containsKey(chars[i])) {
+                map.get(chars[i])[1] = i;
+            } else {
+                map.put(chars[i], new int[]{i, i});
+            }
+        }
+        List<Integer> list = new ArrayList<>();
+        int t = 0;
+        int pre = 0;
+        while (t < n) {
+            int max = map.get(chars[t])[1];
+            while (t <= max) {
+                max = Math.max(map.get(chars[t])[1], max);
+                t++;
+            }
+            list.add(t - pre);
+            pre = t;
+        }
+//        int[] array = list.stream().mapToInt(i->i).toArray();
+        return list;
+    }
+
+    /**
+     * 234. 回文链表
+     * 请判断一个链表是否为回文链表。
+     *
+     * 执行用时：4 ms, 在所有 Java 提交中击败了28.12% 的用户
+     * 内存消耗：41.8 MB, 在所有 Java 提交中击败了44.91% 的用户
+     * @param head 链表
+     * @return 是否是回文链表
+     */
+    public boolean isPalindrome(ListNode head) {
+        if (head == null || head.next == null) {
+            return true;
+        }
+        ListNode fast = head.next;
+        Stack<ListNode> stack = new Stack<>();
+        Queue<ListNode> queue = new LinkedList<>();
+        stack.add(head);
+        queue.add(fast);
+        while (fast.next != null) {
+            fast = fast.next;
+            ListNode tmp = queue.poll();
+            queue.add(fast);
+            if (fast.next != null) {
+                fast = fast.next;
+                stack.add(tmp);
+                queue.add(fast);
+            }
+        }
+        while (!stack.empty()) {
+            if (stack.pop().val != queue.poll().val) {
+                return false;
+            }
+        }
+        return true;
     }
 }
 
