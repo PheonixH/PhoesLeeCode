@@ -362,11 +362,12 @@ public class Games {
      * 假设你是球队的经理。对于即将到来的锦标赛，你想组合一支总体得分最高的球队。球队的得分是球队中所有球员的分数 总和 。
      * 然而，球队中的矛盾会限制球员的发挥，所以必须选出一支 没有矛盾 的球队。如果一名年龄较小球员的分数 严格大于 一名年龄较大的球员，则存在矛盾。同龄球员之间不会发生矛盾。
      * 给你两个列表 scores 和 ages，其中每组 scores[i] 和 ages[i] 表示第 i 名球员的分数和年龄。请你返回 所有可能的无矛盾球队中得分最高那支的分数 。
-     *
+     * <p>
      * 执行用时：63 ms, 在所有 Java 提交中击败了100.00% 的用户
      * 内存消耗：38.5 MB, 在所有 Java 提交中击败了100.00% 的用户
+     *
      * @param scores 分数
-     * @param ages 年龄
+     * @param ages   年龄
      * @return 最高值
      */
     public int bestTeamScore(int[] scores, int[] ages) {
@@ -414,5 +415,144 @@ public class Games {
         return ans;
     }
 
+    public char slowestKey(int[] releaseTimes, String keysPressed) {
+        int[] arr = new int[26];
+        char[] chars = keysPressed.toCharArray();
+        int pre = 0;
+        int maxI = 0;
+        char maxKey = chars[0];
+        for (int i = 0; i < releaseTimes.length; i++) {
+            arr[chars[i] - 'a'] = Math.max(arr[chars[i] - 'a'], releaseTimes[i] - pre);
+            pre = releaseTimes[i];
+            if (arr[maxI] < arr[chars[i] - 'a']) {
+                maxI = chars[i] - 'a';
+                maxKey = chars[i];
+            } else if (arr[maxI] == arr[chars[i] - 'a']) {
+                maxKey = maxI < (chars[i] - 'a') ? chars[i] : maxKey;
+            }
+        }
+        return maxKey;
+    }
 
+    public List<Boolean> checkArithmeticSubarrays(int[] nums, int[] l, int[] r) {
+        int n = nums.length;
+        int m = l.length;
+        List<Boolean> res = new ArrayList<>();
+        for (int j = 0; j < m; j++) {
+            if (l[j] == r[j] - 1) {
+                res.add(true);
+                continue;
+            }
+            int[] arr = Arrays.copyOfRange(nums, l[j], r[j] + 1);
+            Arrays.sort(arr);
+            boolean b = true;
+            int k = arr[1] - arr[0];
+            for (int i = 1; i < arr.length; i++) {
+                if (arr[i] != arr[i - 1] + k) {
+                    b = false;
+                    break;
+                }
+            }
+            res.add(b);
+        }
+        return res;
+    }
+
+    public int minimumEffortPath(int[][] heights) {
+        minimumEffortPathSet.add("0,0");
+        minimumEffortPathBFS(heights, 0, 0, 0);
+        return minimumEffortPathRes;
+    }
+
+    int minimumEffortPathRes = Integer.MAX_VALUE;
+    int[][] minimumEffortPathDirs = new int[][]{{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+
+    Set<String> minimumEffortPathSet = new HashSet<>();
+
+    private void minimumEffortPathBFS(int[][] heights, int x, int y, int now) {
+        if (x == heights.length - 1 && y == heights[0].length - 1) {
+            minimumEffortPathRes = Math.min(minimumEffortPathRes, now);
+            return;
+        }
+        for (int[] arr : minimumEffortPathDirs) {
+            int newX = arr[0] + x;
+            int newY = arr[1] + y;
+            if (newX >= heights.length || newX < 0 || newY >= heights[0].length || newY < 0) {
+                continue;
+            }
+            String key = newX + "," + newY;
+            if (minimumEffortPathSet.contains(key)) {
+                continue;
+            }
+            int newNow = Math.abs(heights[newX][newY] - heights[x][y]);
+            if (newNow > minimumEffortPathRes) {
+                continue;
+            }
+            newNow = Math.max(now, newNow);
+
+            minimumEffortPathSet.add(key);
+            minimumEffortPathBFS(heights, newX, newY, newNow);
+            minimumEffortPathSet.remove(key);
+        }
+    }
+
+    public int[][] matrixRankTransform(int[][] matrix) {
+        Map<Integer, List<int[]>> map = new TreeMap<>();
+        int n = matrix.length;
+        int m = matrix[0].length;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (map.containsKey(matrix[i][j])) {
+                    List<int[]> tmpList = map.get(matrix[i][j]);
+                    tmpList.add(new int[]{i, j});
+                } else {
+                    List<int[]> tmpList = new ArrayList<>();
+                    tmpList.add(new int[]{i, j});
+                    map.put(matrix[i][j], tmpList);
+                }
+            }
+        }
+
+        int[][] res = new int[n][m];
+        int[] row = new int[n];
+        int[] rowMax = new int[n];
+        Arrays.fill(rowMax, -1);
+        int[] col = new int[m];
+        int[] colMax = new int[n];
+        Arrays.fill(colMax, -1);
+
+        Iterator iterator = map.keySet().iterator();
+        while (iterator.hasNext()) {
+            int key = (Integer) iterator.next();
+            List<int[]> tmpList = map.get(key);
+            for (int[] point : tmpList) {
+                int x = point[0];
+                int y = point[1];
+                int max = 0;
+                if (rowMax[x] != -1 && matrix[x][rowMax[x]] < matrix[x][y]) {
+                    max = Math.max(max, row[x] + 1);
+                } else {
+                    max = Math.max(max, row[x]);
+                }
+                if (colMax[y] != -1 && matrix[colMax[y]][y] < matrix[x][y]) {
+                    max = Math.max(max, col[y] + 1);
+                } else {
+                    max = Math.max(max, col[y]);
+                }
+                if (max == 0) {
+                    max = 1;
+                }
+                res[x][y] = max;
+                if (row[x] < max) {
+                    row[x] = max;
+                    rowMax[x] = y;
+                }
+                if (col[y] < max) {
+                    col[y] = max;
+                    colMax[y] = x;
+                }
+            }
+        }
+        return res;
+    }
 }
