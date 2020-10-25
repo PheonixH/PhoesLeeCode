@@ -90,8 +90,8 @@ public class Main {
 
         //Arrays
         String[] oneDimensionalStringArray = {"bella", "label", "roller"};
-        int[] oneDimensionalArrayA = {-2, -1};
-        int[] oneDimensionalArrayB = {1, 2, 3, 4};
+        int[] oneDimensionalArrayA = {43024,99908};
+        int[] oneDimensionalArrayB = {1864};
         int[][] twoDimensionalArray = {{1, 2}, {1, 3}, {2, 3}};
         char[] oneDimensionalCharArray = {'A', 'B'};
         char[][] twoDimensionalCharArray = {
@@ -135,7 +135,7 @@ public class Main {
         }
 
         SolutionNow solution = new SolutionNow();
-        System.out.println(solution.totalNQueens(4));
+        System.out.println(solution.numTriplets(oneDimensionalArrayA, oneDimensionalArrayB));
 
         Games games = new Games();
         System.out.println(games.matrixRankTransform(new int[][]{{-37,-50,-3,44},{-37,46,13,-32},{47,-42,-3,-40},{-17,-22,-39,24}}));
