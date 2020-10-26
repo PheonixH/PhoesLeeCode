@@ -4,6 +4,8 @@ import leetcode.datestruct.ListNode;
 import leetcode.datestruct.TreeNode;
 
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * @ProjectName: PhoesLeeCode
@@ -1088,11 +1090,12 @@ public class SolutionNow {
     /**
      * 1577. 数的平方等于两数乘积的方法数
      * 给你两个整数数组 nums1 和 nums2 ，请你返回根据以下规则形成的三元组的数目（类型 1 和类型 2 ）：*
-     *     类型 1：三元组 (i, j, k) ，如果 nums1[i]2 == nums2[j] * nums2[k] 其中 0 <= i < nums1.length 且 0 <= j < k < nums2.length
-     *     类型 2：三元组 (i, j, k) ，如果 nums2[i]2 == nums1[j] * nums1[k] 其中 0 <= i < nums2.length 且 0 <= j < k < nums1.length
-     *
+     * 类型 1：三元组 (i, j, k) ，如果 nums1[i]2 == nums2[j] * nums2[k] 其中 0 <= i < nums1.length 且 0 <= j < k < nums2.length
+     * 类型 2：三元组 (i, j, k) ，如果 nums2[i]2 == nums1[j] * nums1[k] 其中 0 <= i < nums2.length 且 0 <= j < k < nums1.length
+     * <p>
      * 执行用时：60 ms, 在所有 Java 提交中击败了59.97% 的用户
      * 内存消耗：37.8 MB, 在所有 Java 提交中击败了99.83% 的用户
+     *
      * @param nums1 整数数组
      * @param nums2 整数数组
      * @return 数的平方等于两数乘积的方法数
@@ -1111,9 +1114,9 @@ public class SolutionNow {
 
         int n = nums1.length;
         int m = nums2.length;
-        for (int i = 0; i < n; i++) {
-            for (int j = i + 1; j < n; j++) {
-                double tmp = Math.sqrt((long)nums1[i] * (long)nums1[j]);
+        for (int i = 0; i < n; i += 1) {
+            for (int j = i + 1; j < n; j += 1) {
+                double tmp = Math.sqrt((long) nums1[i] * (long) nums1[j]);
                 if (tmp % 1 == 0) {
                     res += map2.getOrDefault((int) tmp, 0);
                 }
@@ -1121,7 +1124,7 @@ public class SolutionNow {
         }
         for (int i = 0; i < m; i++) {
             for (int j = i + 1; j < m; j++) {
-                double tmp = Math.sqrt((long)nums2[i] * (long)nums2[j]);
+                double tmp = Math.sqrt((long) nums2[i] * (long) nums2[j]);
                 if (tmp % 1 == 0) {
                     res += map1.getOrDefault((int) tmp, 0);
                 }
@@ -1130,8 +1133,66 @@ public class SolutionNow {
 
         return res;
     }
-}
 
+    public List<String> watchedVideosByFriends(List<List<String>> watchedVideos, int[][] friends, int id, int level) {
+        Queue<Integer> queue = new LinkedList<>();
+        int[] visited = new int[friends.length];
+        queue.offer(id);
+        visited[id] = 1;
+        List<String> ans = new ArrayList<>();
+        while (!queue.isEmpty()) {
+            if (level == 0) {
+                int size = queue.size();
+                for (int i = 0; i < size; i++) {
+                    int tmp = queue.poll();
+                    ans.addAll(watchedVideos.get(tmp));
+                }
+                break;
+            }
+            int size = queue.size();
+            for (int i = 0; i < size; i++) {
+                int tmp = queue.poll();
+                for (int friend : friends[tmp]) {
+                    if (visited[friend] == 0) {
+                        queue.offer(friend);
+                        visited[friend] = 1;
+                    }
+
+                }
+            }
+            level--;
+        }
+        List<String> res = new ArrayList<>();
+        ans.stream().collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
+                .entrySet().stream().sorted(Map.Entry.comparingByKey()).sorted(Map.Entry.comparingByValue()).forEachOrdered(e -> res.add(e.getKey()));
+        return res;
+
+    }
+
+    public int[] smallerNumbersThanCurrent(int[] nums) {
+    // 统计出现频率 frequency
+        int[] freq = new int[101]; // 索引即数值
+        for (int num : nums) {
+            freq[num]++;
+        }
+
+        // 对频率(而非对原数组nums)从前到后累加
+        for (int i = 1; i < freq.length; i++) {
+            freq[i] = freq[i] + freq[i - 1];
+        }
+
+        // 输出结果
+        int[] res = new int[nums.length];
+        for (int i = 0; i < res.length; i++) {
+            if (nums[i] > 0) {
+                res[i] = freq[nums[i] - 1];
+            }
+        }
+        return res;
+
+    }
+
+}
 //class Node {
 //    public int val;
 //    public Node left;
