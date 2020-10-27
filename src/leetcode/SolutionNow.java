@@ -1170,7 +1170,7 @@ public class SolutionNow {
     }
 
     public int[] smallerNumbersThanCurrent(int[] nums) {
-    // 统计出现频率 frequency
+        // 统计出现频率 frequency
         int[] freq = new int[101]; // 索引即数值
         for (int num : nums) {
             freq[num]++;
@@ -1192,6 +1192,33 @@ public class SolutionNow {
 
     }
 
+    /**
+     * 144. 二叉树的前序遍历
+     *
+     * 给定一个二叉树，返回它的 前序 遍历。
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：36.4 MB, 在所有 Java 提交中击败了97.74% 的用户
+     * @param root 二叉树
+     * @return 前序 遍历
+     */
+    public List<Integer> preorderTraversal(TreeNode root) {
+        List<Integer> list = new ArrayList<>();
+        preorderTraversal(root, list);
+        return list;
+    }
+
+    private void preorderTraversal(TreeNode treeNode, List<Integer> list) {
+        if (treeNode == null) {
+            return;
+        }
+        list.add(treeNode.val);
+        if (treeNode.left != null) {
+            preorderTraversal(treeNode.left, list);
+        }
+        if (treeNode.right != null) {
+            preorderTraversal(treeNode.right, list);
+        }
+    }
 }
 //class Node {
 //    public int val;
