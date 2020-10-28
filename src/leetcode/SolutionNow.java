@@ -1225,9 +1225,10 @@ public class SolutionNow {
      * 1207. 独一无二的出现次数
      * 给你一个整数数组 arr，请你帮忙统计数组中每个数的出现次数。
      * 如果每个数的出现次数都是独一无二的，就返回 true；否则返回 false。
-     *
+     * <p>
      * 执行用时：2 ms, 在所有 Java 提交中击败了91.43% 的用户
      * 内存消耗：36 MB, 在所有 Java 提交中击败了98.25% 的用户
+     *
      * @param arr 数组
      * @return 如果每个数的出现次数都是独一无二的，就返回 true；否则返回 false。
      */
@@ -1249,6 +1250,42 @@ public class SolutionNow {
 //            }
 //        });
         return true;
+    }
+
+
+    /**
+     * 799. 香槟塔
+     * 我们把玻璃杯摆成金字塔的形状，其中第一层有1个玻璃杯，第二层有2个，依次类推到第100层，每个玻璃杯(250ml)将盛有香槟。
+     * 从顶层的第一个玻璃杯开始倾倒一些香槟，当顶层的杯子满了，任何溢出的香槟都会立刻等流量的流向左右两侧的玻璃杯。
+     * 当左右两边的杯子也满了，就会等流量的流向它们左右两边的杯子，依次类推。（当最底层的玻璃杯满了，香槟会流到地板上）
+     * 例如，在倾倒一杯香槟后，最顶层的玻璃杯满了。倾倒了两杯香槟后，第二层的两个玻璃杯各自盛放一半的香槟。在倒三杯香槟后，
+     * 第二层的香槟满了 - 此时总共有三个满的玻璃杯。在倒第四杯后，第三层中间的玻璃杯盛放了一半的香槟，他两边的玻璃杯各自盛放了四分之一的香槟，
+     * 现在当倾倒了非负整数杯香槟后，返回第 i 行 j 个玻璃杯所盛放的香槟占玻璃杯容积的比例（i 和 j都从0开始）。
+     * 执行用时：10 ms, 在所有 Java 提交中击败了10.00% 的用户
+     * 内存消耗：39.5 MB, 在所有 Java 提交中击败了5.97% 的用户
+     * @param poured  倾倒一些香槟
+     * @param query_row 第 i 行
+     * @param query_glass 第 j 个
+     * @return 第 i 行 j 个玻璃杯所盛放的香槟占玻璃杯容积的比例（i 和 j都从0开始）
+     */
+    public double champagneTower(int poured, int query_row, int query_glass) {
+        List<Double> list = new ArrayList<>();
+        list.add((double) poured);
+        for (int i = 0; i < query_row; i++) {
+            List<Double> newList = new ArrayList<>();
+            double pre = 0;
+            for (int j = 0; j < list.size(); j++) {
+                double tmp = (list.get(j) - 1.0) / 2;
+                if (tmp < 0.0) {
+                    tmp = 0.0;
+                }
+                newList.add(tmp + pre);
+                pre = tmp;
+            }
+            newList.add(pre);
+            list = newList;
+        }
+        return list.get(query_glass) > 1.0 ? 1.0 : list.get(query_glass);
     }
 }
 //class Node {
