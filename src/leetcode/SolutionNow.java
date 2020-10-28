@@ -1263,8 +1263,9 @@ public class SolutionNow {
      * 现在当倾倒了非负整数杯香槟后，返回第 i 行 j 个玻璃杯所盛放的香槟占玻璃杯容积的比例（i 和 j都从0开始）。
      * 执行用时：10 ms, 在所有 Java 提交中击败了10.00% 的用户
      * 内存消耗：39.5 MB, 在所有 Java 提交中击败了5.97% 的用户
-     * @param poured  倾倒一些香槟
-     * @param query_row 第 i 行
+     *
+     * @param poured      倾倒一些香槟
+     * @param query_row   第 i 行
      * @param query_glass 第 j 个
      * @return 第 i 行 j 个玻璃杯所盛放的香槟占玻璃杯容积的比例（i 和 j都从0开始）
      */
@@ -1286,6 +1287,44 @@ public class SolutionNow {
             list = newList;
         }
         return list.get(query_glass) > 1.0 ? 1.0 : list.get(query_glass);
+    }
+
+    /**
+     * 1306. 跳跃游戏 III
+     * 这里有一个非负整数数组 arr，你最开始位于该数组的起始下标 start 处。当你位于下标 i 处时，你可以跳到 i + arr[i] 或者 i - arr[i]。
+     * 请你判断自己是否能够跳到对应元素值为 0 的 任一 下标处。
+     * 注意，不管是什么情况下，你都无法跳到数组之外。
+     *
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：46 MB, 在所有 Java 提交中击败了85.38% 的用户
+     * @param arr 非负整数数组 arr
+     * @param start 起始下标
+     * @return 是否能够跳到对应元素值为 0 的 任一 下标处
+     */
+    public boolean canReach(int[] arr, int start) {
+        int n = arr.length;
+        boolean[] visited = new boolean[n];
+        canReach(arr, start, visited);
+        return canReachRes3;
+    }
+
+    private boolean canReachRes3 = false;
+
+    private void canReach(int[] arr, int now, boolean[] visited) {
+        if (visited[now]) {
+            return;
+        }
+        visited[now] = true;
+        if (arr[now] == 0) {
+            canReachRes3 = true;
+            return;
+        }
+        if (now + arr[now] < arr.length) {
+            canReach(arr, now + arr[now], visited);
+        }
+        if (now >= arr[now]) {
+            canReach(arr, now - arr[now], visited);
+        }
     }
 }
 //class Node {
