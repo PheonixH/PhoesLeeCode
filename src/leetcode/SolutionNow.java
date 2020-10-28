@@ -1194,10 +1194,11 @@ public class SolutionNow {
 
     /**
      * 144. 二叉树的前序遍历
-     *
+     * <p>
      * 给定一个二叉树，返回它的 前序 遍历。
      * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
      * 内存消耗：36.4 MB, 在所有 Java 提交中击败了97.74% 的用户
+     *
      * @param root 二叉树
      * @return 前序 遍历
      */
@@ -1218,6 +1219,36 @@ public class SolutionNow {
         if (treeNode.right != null) {
             preorderTraversal(treeNode.right, list);
         }
+    }
+
+    /**
+     * 1207. 独一无二的出现次数
+     * 给你一个整数数组 arr，请你帮忙统计数组中每个数的出现次数。
+     * 如果每个数的出现次数都是独一无二的，就返回 true；否则返回 false。
+     *
+     * 执行用时：2 ms, 在所有 Java 提交中击败了91.43% 的用户
+     * 内存消耗：36 MB, 在所有 Java 提交中击败了98.25% 的用户
+     * @param arr 数组
+     * @return 如果每个数的出现次数都是独一无二的，就返回 true；否则返回 false。
+     */
+    public boolean uniqueOccurrences(int[] arr) {
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int a : arr) {
+            int tmp = map.getOrDefault(a, 0);
+            map.put(a, tmp + 1);
+        }
+        Set<Integer> set = new HashSet<>();
+        for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+            if (!set.add(entry.getValue())) {
+                return false;
+            }
+        }
+//        map.entrySet().parallelStream().forEach((entry) -> {
+//            if (!set.add(entry.getValue())) {
+//                return;
+//            }
+//        });
+        return true;
     }
 }
 //class Node {
