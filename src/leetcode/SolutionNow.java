@@ -1370,14 +1370,15 @@ public class SolutionNow {
 
     /**
      * 463. 岛屿的周长
-     *
+     * <p>
      * 给定一个包含 0 和 1 的二维网格地图，其中 1 表示陆地 0 表示水域。
      * 网格中的格子水平和垂直方向相连（对角线方向不相连）。整个网格被水完全包围，但其中恰好有一个岛屿（或者说，一个或多个表示陆地的格子相连组成的岛屿）。
      * 岛屿中没有“湖”（“湖” 指水域在岛屿内部且不和岛屿周围的水相连）。
      * 格子是边长为 1 的正方形。网格为长方形，且宽度和高度均不超过 100 。计算这个岛屿的周长。
-     *
+     * <p>
      * 执行用时：9 ms, 在所有 Java 提交中击败了56.99% 的用户
      * 内存消耗：39.6 MB, 在所有 Java 提交中击败了63.42% 的用户
+     *
      * @param grid 网格地图
      * @return 岛屿周长
      */
@@ -1406,6 +1407,27 @@ public class SolutionNow {
             }
         }
         return ans;
+    }
+
+    /**
+     * 908. 最小差值 I
+     * 给你一个整数数组 A，请你给数组中的每个元素 A[i] 都加上一个任意数字 x （-K <= x <= K），从而得到一个新数组 B 。
+     * 返回数组 B 的最大值和最小值之间可能存在的最小差值。
+     *
+     * 执行用时：3 ms, 在所有 Java 提交中击败了68.41% 的用户
+     * 内存消耗：39 MB, 在所有 Java 提交中击败了82.78% 的用户
+     * @param A 整数数组
+     * @param K 任意数字
+     * @return 最小差值 I
+     */
+    public int smallestRangeI(int[] A, int K) {
+        int max = A[0], min = A[0];
+        for (int i : A) {
+            max = Math.max(max, i);
+            min = Math.min(min, i);
+        }
+        int res = max - min - 2 * A.length;
+        return Math.max(res, 0);
     }
 }
 //class Node {
