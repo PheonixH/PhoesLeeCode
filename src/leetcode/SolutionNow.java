@@ -1294,10 +1294,11 @@ public class SolutionNow {
      * 这里有一个非负整数数组 arr，你最开始位于该数组的起始下标 start 处。当你位于下标 i 处时，你可以跳到 i + arr[i] 或者 i - arr[i]。
      * 请你判断自己是否能够跳到对应元素值为 0 的 任一 下标处。
      * 注意，不管是什么情况下，你都无法跳到数组之外。
-     *
+     * <p>
      * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
      * 内存消耗：46 MB, 在所有 Java 提交中击败了85.38% 的用户
-     * @param arr 非负整数数组 arr
+     *
+     * @param arr   非负整数数组 arr
      * @param start 起始下标
      * @return 是否能够跳到对应元素值为 0 的 任一 下标处
      */
@@ -1325,6 +1326,86 @@ public class SolutionNow {
         if (now >= arr[now]) {
             canReach(arr, now - arr[now], visited);
         }
+    }
+
+    public int minJumps(int[] arr) {
+        int n = arr.length;
+        Map<Integer, List<Integer>> map = new HashMap<>();
+        for (int i = 0; i < n; i++) {
+            List<Integer> tmp = map.getOrDefault(arr[i], new ArrayList<>());
+            tmp.add(i);
+            map.put(arr[i], tmp);
+        }
+        boolean[] visited = new boolean[n];
+        visited[0] = true;
+        Queue<Integer> queue = new LinkedList<>();
+        queue.add(0);
+        int move = 0;
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            for (int i = 0; i < size; i++) {
+                int tmp = queue.poll();
+                if (tmp == n - 1) {
+                    return move;
+                }
+                for (int j : map.get(arr[tmp])) {
+                    if (!visited[j]) {
+                        visited[j] = true;
+                        queue.add(j);
+                    }
+                }
+                if (tmp + 1 < n && !visited[tmp + 1]) {
+                    visited[tmp + 1] = true;
+                    queue.add(tmp + 1);
+                }
+                if (tmp - 1 > 0 && !visited[tmp - 1]) {
+                    visited[tmp - 1] = true;
+                    queue.add(tmp - 1);
+                }
+            }
+            move++;
+        }
+        return 0;
+    }
+
+    /**
+     * 463. 岛屿的周长
+     *
+     * 给定一个包含 0 和 1 的二维网格地图，其中 1 表示陆地 0 表示水域。
+     * 网格中的格子水平和垂直方向相连（对角线方向不相连）。整个网格被水完全包围，但其中恰好有一个岛屿（或者说，一个或多个表示陆地的格子相连组成的岛屿）。
+     * 岛屿中没有“湖”（“湖” 指水域在岛屿内部且不和岛屿周围的水相连）。
+     * 格子是边长为 1 的正方形。网格为长方形，且宽度和高度均不超过 100 。计算这个岛屿的周长。
+     *
+     * 执行用时：9 ms, 在所有 Java 提交中击败了56.99% 的用户
+     * 内存消耗：39.6 MB, 在所有 Java 提交中击败了63.42% 的用户
+     * @param grid 网格地图
+     * @return 岛屿周长
+     */
+    public int islandPerimeter(int[][] grid) {
+        int n = grid.length;
+        if (n == 0) {
+            return 0;
+        }
+        int m = grid[0].length;
+        int ans = 0;
+        int[][] dir = new int[][]{{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (grid[i][j] == 1) {
+                    for (int[] d : dir) {
+                        int newI = d[0] + i;
+                        int newJ = d[1] + j;
+                        if (newI < 0 || newI >= n || newJ < 0 || newJ >= m) {
+                            ans++;
+                        } else if (grid[newI][newJ] == 0) {
+                            ans++;
+                        }
+
+                    }
+                }
+            }
+        }
+        return ans;
     }
 }
 //class Node {
