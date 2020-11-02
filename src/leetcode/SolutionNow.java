@@ -1436,6 +1436,7 @@ public class SolutionNow {
      * 给定两个数组，编写一个函数来计算它们的交集。
      * 执行用时：11 ms, 在所有 Java 提交中击败了7.55% 的用户
      * 内存消耗：39 MB, 在所有 Java 提交中击败了43.60% 的用户
+     *
      * @param nums1 数组
      * @param nums2 数组
      * @return 数组的交集
@@ -1459,6 +1460,58 @@ public class SolutionNow {
         }
         return list.stream().mapToInt(Integer::valueOf).toArray();
     }
+
+
+    /**
+     * 1301. 最大得分的路径数目
+     * 给你一个正方形字符数组 board ，你从数组最右下方的字符 'S' 出发。
+     * 你的目标是到达数组最左上角的字符 'E' ，数组剩余的部分为数字字符 1, 2, ..., 9 或者障碍 'X'。在每一步移动中，你可以向上、向左或者左上方移动，可以移动的前提是到达的格子没有障碍。
+     * 一条路径的 「得分」 定义为：路径上所有数字的和。
+     * 请你返回一个列表，包含两个整数：第一个整数是 「得分」 的最大值，第二个整数是得到最大得分的方案数，请把结果对 10^9 + 7 取余。
+     * 如果没有任何路径可以到达终点，请返回 [0, 0] 。
+     * <p>
+     * 执行用时：15 ms, 在所有 Java 提交中击败了69.62% 的用户
+     * 内存消耗：38.6 MB, 在所有 Java 提交中击败了94.67% 的用户
+     *
+     * @param board 正方形字符数组
+     * @return 最大得分的路径数目
+     */
+    public int[] pathsWithMaxScore(List<String> board) {
+        int row = board.size();
+        if (row == 0) {
+            return new int[]{0, 0};
+        }
+        int modNum = 1000000007;
+        int col = board.get(0).length();
+        int[][] dpScore = new int[row + 1][col + 1];
+        int[][] dpPath = new int[row + 1][col + 1];
+        //从右下角开始走，初始路径为1条
+        dpPath[row - 1][col - 1] = 1;
+        for (int i = row - 1; i >= 0; i--) {
+            for (int j = col - 1; j >= 0; j--) {
+                //如果board[i][j] == 'X', 即为障碍
+                //如果dpPath[i+1][j],dpPath[i][j+1]和dpPath[i+1][j+1]都等于0，就是路径被障碍'X'封死了
+                if (board.get(i).charAt(j) != 'X' &&
+                        (dpPath[i + 1][j] != 0 || dpPath[i][j + 1] != 0 || dpPath[i + 1][j + 1] != 0)) {
+                    int maxScore = Math.max(Math.max(dpScore[i + 1][j], dpScore[i][j + 1]), dpScore[i + 1][j + 1]);
+                    dpScore[i][j] = maxScore + board.get(i).charAt(j) - '0';
+                    if (dpScore[i + 1][j] == maxScore) {
+                        dpPath[i][j] = (dpPath[i][j] + dpPath[i + 1][j]) % modNum;
+                    }
+                    if (dpScore[i][j + 1] == maxScore) {
+                        dpPath[i][j] = (dpPath[i][j] + dpPath[i][j + 1]) % modNum;
+                    }
+                    if (dpScore[i + 1][j + 1] == maxScore) {
+                        dpPath[i][j] = (dpPath[i][j] + dpPath[i + 1][j + 1]) % modNum;
+                    }
+                }
+            }
+        }
+        //dpScore[0][0] - ('E' - '0'),是因为结束时候为'E'，上面加了，所以要减去
+        int maxScore = dpScore[0][0] == 0 ? 0 : dpScore[0][0] - ('E' - '0');
+        return new int[]{maxScore, dpPath[0][0]};
+    }
+
 }
 //class Node {
 //    public int val;

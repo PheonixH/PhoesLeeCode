@@ -135,9 +135,8 @@ public class Main {
         }
 
         SolutionNow solution = new SolutionNow();
-        System.out.println(solution.islandPerimeter(twoDimensionalArray));
+        System.out.println(solution.pathsWithMaxScore(Arrays.asList(new String[]{"E23", "2X2", "12S"})));
 
         Games games = new Games();
-        System.out.println(games.matrixRankTransform(new int[][]{{-37, -50, -3, 44}, {-37, 46, 13, -32}, {47, -42, -3, -40}, {-17, -22, -39, 24}}));
     }
 }
