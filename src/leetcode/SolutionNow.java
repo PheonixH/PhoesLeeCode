@@ -1413,9 +1413,10 @@ public class SolutionNow {
      * 908. 最小差值 I
      * 给你一个整数数组 A，请你给数组中的每个元素 A[i] 都加上一个任意数字 x （-K <= x <= K），从而得到一个新数组 B 。
      * 返回数组 B 的最大值和最小值之间可能存在的最小差值。
-     *
+     * <p>
      * 执行用时：3 ms, 在所有 Java 提交中击败了68.41% 的用户
      * 内存消耗：39 MB, 在所有 Java 提交中击败了82.78% 的用户
+     *
      * @param A 整数数组
      * @param K 任意数字
      * @return 最小差值 I
@@ -1428,6 +1429,35 @@ public class SolutionNow {
         }
         int res = max - min - 2 * A.length;
         return Math.max(res, 0);
+    }
+
+    /**
+     * 349. 两个数组的交集
+     * 给定两个数组，编写一个函数来计算它们的交集。
+     * 执行用时：11 ms, 在所有 Java 提交中击败了7.55% 的用户
+     * 内存消耗：39 MB, 在所有 Java 提交中击败了43.60% 的用户
+     * @param nums1 数组
+     * @param nums2 数组
+     * @return 数组的交集
+     */
+    public int[] intersection(int[] nums1, int[] nums2) {
+        Arrays.sort(nums1);
+
+        Set<Integer> set = new TreeSet<>();
+        for (int i : nums2) {
+            set.add(i);
+        }
+
+        List<Integer> list = new ArrayList<>();
+        for (int i = 0; i < nums1.length; i++) {
+            if (i > 0 && nums1[i - 1] == nums1[i]) {
+                continue;
+            }
+            if (set.contains(nums1[i])) {
+                list.add(nums1[i]);
+            }
+        }
+        return list.stream().mapToInt(Integer::valueOf).toArray();
     }
 }
 //class Node {
