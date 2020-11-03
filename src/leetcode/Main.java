@@ -135,7 +135,7 @@ public class Main {
         }
 
         SolutionNow solution = new SolutionNow();
-        System.out.println(solution.pathsWithMaxScore(Arrays.asList(new String[]{"E23", "2X2", "12S"})));
+        System.out.println(solution.isPrefixOfWord("i love eating burger","burg"));
 
         Games games = new Games();
     }

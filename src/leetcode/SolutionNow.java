@@ -1512,6 +1512,81 @@ public class SolutionNow {
         return new int[]{maxScore, dpPath[0][0]};
     }
 
+    /**
+     * 941. 有效的山脉数组
+     * <p>
+     * 给定一个整数数组 A，如果它是有效的山脉数组就返回 true，否则返回 false。
+     * <p>
+     * 让我们回顾一下，如果 A 满足下述条件，那么它是一个山脉数组：
+     * <p>
+     * A.length >= 3
+     * 在 0 < i < A.length - 1 条件下，存在 i 使得：
+     * A[0] < A[1] < ... A[i-1] < A[i]
+     * A[i] > A[i+1] > ... > A[A.length - 1]
+     * <p>
+     * 执行用时：1 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：39.6 MB, 在所有 Java 提交中击败了48.70% 的用户
+     *
+     * @param A 数组
+     * @return 是否是有效的山脉数组
+     */
+    public boolean validMountainArray(int[] A) {
+        int n = A.length;
+        if (n < 3) {
+            return false;
+        }
+        int left = 0;
+        while (left < n - 1) {
+            if (A[left] >= A[left + 1]) {
+                break;
+            }
+            left++;
+        }
+        int right = n - 1;
+        while (right > 0) {
+            if (A[right - 1] <= A[right]) {
+                break;
+            }
+            right--;
+        }
+        return left == right && left != 0 && left != n - 1;
+    }
+
+
+    /**
+     * 1455. 检查单词是否为句中其他单词的前缀
+     *
+     * 给你一个字符串 sentence 作为句子并指定检索词为 searchWord ，其中句子由若干用 单个空格 分隔的单词组成。
+     *
+     * 请你检查检索词 searchWord 是否为句子 sentence 中任意单词的前缀。
+     *
+     *     如果 searchWord 是某一个单词的前缀，则返回句子 sentence 中该单词所对应的下标（下标从 1 开始）。
+     *     如果 searchWord 是多个单词的前缀，则返回匹配的第一个单词的下标（最小下标）。
+     *     如果 searchWord 不是任何单词的前缀，则返回 -1 。
+     *
+     * 字符串 S 的 「前缀」是 S 的任何前导连续子字符串。
+     *
+     * 执行用时：1 ms, 在所有 Java 提交中击败了16.72% 的用户
+     * 内存消耗：36.4 MB, 在所有 Java 提交中击败了75.96% 的用户
+     * @param sentence 字符串 sentence
+     * @param searchWord 检索词 searchWord
+     * @return 检查单词是否为句中其他单词的前缀
+     */
+    public int isPrefixOfWord(String sentence, String searchWord) {
+        String[] strings = sentence.split(" ");
+        int n = searchWord.length();
+        for (int i = 0; i < strings.length; i++) {
+            String tmp = strings[i];
+            if (tmp.length() < n) {
+                continue;
+            }
+            tmp = tmp.substring(0, n);
+            if (tmp.equals(searchWord)) {
+                return i + 1;
+            }
+        }
+        return -1;
+    }
 }
 //class Node {
 //    public int val;
