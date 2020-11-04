@@ -1555,20 +1555,21 @@ public class SolutionNow {
 
     /**
      * 1455. 检查单词是否为句中其他单词的前缀
-     *
+     * <p>
      * 给你一个字符串 sentence 作为句子并指定检索词为 searchWord ，其中句子由若干用 单个空格 分隔的单词组成。
-     *
+     * <p>
      * 请你检查检索词 searchWord 是否为句子 sentence 中任意单词的前缀。
-     *
-     *     如果 searchWord 是某一个单词的前缀，则返回句子 sentence 中该单词所对应的下标（下标从 1 开始）。
-     *     如果 searchWord 是多个单词的前缀，则返回匹配的第一个单词的下标（最小下标）。
-     *     如果 searchWord 不是任何单词的前缀，则返回 -1 。
-     *
+     * <p>
+     * 如果 searchWord 是某一个单词的前缀，则返回句子 sentence 中该单词所对应的下标（下标从 1 开始）。
+     * 如果 searchWord 是多个单词的前缀，则返回匹配的第一个单词的下标（最小下标）。
+     * 如果 searchWord 不是任何单词的前缀，则返回 -1 。
+     * <p>
      * 字符串 S 的 「前缀」是 S 的任何前导连续子字符串。
-     *
+     * <p>
      * 执行用时：1 ms, 在所有 Java 提交中击败了16.72% 的用户
      * 内存消耗：36.4 MB, 在所有 Java 提交中击败了75.96% 的用户
-     * @param sentence 字符串 sentence
+     *
+     * @param sentence   字符串 sentence
      * @param searchWord 检索词 searchWord
      * @return 检查单词是否为句中其他单词的前缀
      */
@@ -1586,6 +1587,62 @@ public class SolutionNow {
             }
         }
         return -1;
+    }
+
+
+    /**
+     * 57. 插入区间
+     *
+     * 给出一个无重叠的 ，按照区间起始端点排序的区间列表。
+     *
+     * 在列表中插入一个新的区间，你需要确保列表中的区间仍然有序且不重叠（如果有必要的话，可以合并区间）。
+     *
+     * 执行用时：1 ms, 在所有 Java 提交中击败了99.65% 的用户
+     * 内存消耗：41 MB, 在所有 Java 提交中击败了60.86% 的用户
+     * @param intervals 区间列表
+     * @param newInterval 新的区间
+     * @return 插入新的区间之后的列表
+     */
+    public int[][] insert(int[][] intervals, int[] newInterval) {
+        int n = intervals.length;
+        List<int[]> res = new ArrayList<>();
+        boolean f = false;
+        for (int i = 0; i < n; i++) {
+            if (f) {
+                res.add(intervals[i]);
+                continue;
+            }
+            int[] interval = intervals[i];
+            if (newInterval[0] <= interval[1]) {
+                if (newInterval[1] < interval[0]) {
+                    res.add(newInterval);
+                    f = true;
+                    while (i < n) {
+                        res.add(intervals[i++]);
+                    }
+                    break;
+                } else {
+                    int[] newTmp = new int[2];
+                    newTmp[0] = Math.min(newInterval[0], interval[0]);
+                    newTmp[1] = Math.max(newInterval[1], interval[1]);
+                    while (i < n && intervals[i][0] <= newTmp[1]) {
+                        newTmp[1] = Math.max(newTmp[1], intervals[i][1]);
+                        i++;
+                    }
+                    res.add(newTmp);
+                    if (i < n) {
+                        res.add(intervals[i]);
+                    }
+                    f = true;
+                }
+            } else {
+                res.add(interval);
+            }
+        }
+        if (!f) {
+            res.add(newInterval);
+        }
+        return res.toArray(new int[0][]);
     }
 }
 //class Node {

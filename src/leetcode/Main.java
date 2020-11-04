@@ -135,7 +135,7 @@ public class Main {
         }
 
         SolutionNow solution = new SolutionNow();
-        System.out.println(solution.isPrefixOfWord("i love eating burger","burg"));
+        System.out.println(solution.insert(new int[][]{{1,2}}, new int[]{4, 6}));
 
         Games games = new Games();
     }
