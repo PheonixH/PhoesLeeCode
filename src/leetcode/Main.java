@@ -90,7 +90,7 @@ public class Main {
 
         //Arrays
         String[] oneDimensionalStringArray = {"bella", "label", "roller"};
-        int[] oneDimensionalArrayA = {43024,99908};
+        int[] oneDimensionalArrayA = {1, 1, 2, 2, 2, 3};
         int[] oneDimensionalArrayB = {1864};
         int[][] twoDimensionalArray = {{1, 2}, {1, 3}, {2, 3}};
         char[] oneDimensionalCharArray = {'A', 'B'};
@@ -128,7 +128,7 @@ public class Main {
 //        for (int i = 0; i < arr.length; i++) {
 //            brr[i] = Integer.valueOf(arr[i]);
 //        }
-        String[] arr = {"hot", "dot", "dog"};
+        String[] arr = {"hot", "dot", "dog", "lot", "log", "cog"};
         List<String> list = new ArrayList<>();
         for (String a : arr) {
             list.add(a);
@@ -138,6 +138,6 @@ public class Main {
         System.out.println(solution.numTriplets(oneDimensionalArrayA, oneDimensionalArrayB));
 
         Games games = new Games();
-        System.out.println(games.matrixRankTransform(new int[][]{{-37,-50,-3,44},{-37,46,13,-32},{47,-42,-3,-40},{-17,-22,-39,24}}));
+        System.out.println(games.ladderLength("hit", "cog", list));
     }
 }

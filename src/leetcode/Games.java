@@ -555,4 +555,204 @@ public class Games {
         }
         return res;
     }
+
+    public int[] frequencySort(int[] nums) {
+        int len = nums.length;
+        Comparator<int[]> comparator = new Comparator<int[]>() {
+            @Override
+            public int compare(int[] o1, int[] o2) {
+                if (o1[1] == o2[1]) {
+                    return o2[0] - o1[0];
+                }
+                return o1[1] - o2[1];
+            }
+        };
+        PriorityQueue<int[]> priorityQueue = new PriorityQueue<>(comparator);
+
+        Map<Integer, int[]> map = new HashMap<>();
+        for (int n : nums) {
+            map.putIfAbsent(n, new int[]{n, 1});
+            int[] tmp = map.get(n);
+            tmp[1]++;
+            map.put(n, tmp);
+        }
+
+        for (int k : map.keySet()) {
+            priorityQueue.add(map.get(k));
+        }
+
+        int[] res = new int[len];
+        int i = 0;
+        while (i < len) {
+            int[] tmp = priorityQueue.poll();
+            int j = 0;
+            while (j < tmp[1]) {
+                res[i++] = tmp[0];
+                j++;
+            }
+        }
+        return res;
+    }
+
+    public int maxWidthOfVerticalArea(int[][] points) {
+        PriorityQueue<Integer> priorityQueue = new PriorityQueue<>();
+        for (int[] p : points) {
+            priorityQueue.add(p[0]);
+        }
+
+        int max = 0;
+        int pre = priorityQueue.poll();
+        while (!priorityQueue.isEmpty()) {
+            int r = priorityQueue.poll();
+            max = Math.max(max, r - pre);
+            pre = r;
+        }
+        return max;
+    }
+
+    public int numWays(String[] words, String target) {
+        int n = words[0].length();
+        int m = target.length();
+        if (n < m) {
+            return 0;
+        }
+        int[][] arr = new int[n][26];
+        for (String word : words) {
+            char[] chars = word.toCharArray();
+            for (int j = 0; j < n; j++) {
+                arr[j][chars[j] - 'a']++;
+            }
+        }
+        char[] chars = target.toCharArray();
+        numWaysDFS(arr, chars, 0, 0, 1);
+        return numWaysRes;
+    }
+
+    private int numWaysRes = 0;
+
+    private void numWaysDFS(int[][] arr, char[] chars, int now, int nowChars, long s) {
+        if (nowChars >= chars.length) {
+            numWaysRes = (numWaysRes + (int) s) % 1000000007;
+            return;
+        }
+        if (chars.length - nowChars > arr.length - now) {
+            return;
+        }
+        int key = chars[nowChars] - 'a';
+        for (int i = now; i < arr.length; i++) {
+            if (arr[i][key] > 0) {
+                numWaysDFS(arr, chars, i + 1, nowChars + 1, s * arr[i][key] % 1000000007);
+            }
+            if (chars.length - nowChars > arr.length - i) {
+                return;
+            }
+        }
+    }
+
+
+
+    /**
+     * 127. 单词接龙
+     *
+     * 给定两个单词（beginWord 和 endWord）和一个字典，找到从 beginWord 到 endWord 的最短转换序列的长度。转换需遵循如下规则：
+     *     每次转换只能改变一个字母。
+     *     转换过程中的中间单词必须是字典中的单词。
+     *
+     * 说明:
+     *     如果不存在这样的转换序列，返回 0。
+     *     所有单词具有相同的长度。
+     *     所有单词只由小写字母组成。
+     *     字典中不存在重复的单词。
+     *     你可以假设 beginWord 和 endWord 是非空的，且二者不相同。
+     *
+     * 执行用时：28 ms, 在所有 Java 提交中击败了87.03% 的用户
+     * 内存消耗：46.4 MB, 在所有 Java 提交中击败了17.96% 的用户
+     * @param beginWord 单词
+     * @param endWord 单词
+     * @param wordList 字典
+     * @return 找到从 beginWord 到 endWord 的最短转换序列的长度
+     */
+    public int ladderLength(String beginWord, String endWord, List<String> wordList) {
+        for (String word : wordList) {
+            addEdge(word);
+        }
+        addEdge(beginWord);
+        if (!wordId.containsKey(endWord)) {
+            return 0;
+        }
+
+        int[] disBegin = new int[nodeNum];
+        Arrays.fill(disBegin, Integer.MAX_VALUE);
+        int beginId = wordId.get(beginWord);
+        disBegin[beginId] = 0;
+        Queue<Integer> queBegin = new LinkedList<Integer>();
+        queBegin.offer(beginId);
+
+        int[] disEnd = new int[nodeNum];
+        Arrays.fill(disEnd, Integer.MAX_VALUE);
+        int endId = wordId.get(endWord);
+        disEnd[endId] = 0;
+        Queue<Integer> queEnd = new LinkedList<Integer>();
+        queEnd.offer(endId);
+
+        while (!queBegin.isEmpty() && !queEnd.isEmpty()) {
+            int queBeginSize = queBegin.size();
+            for (int i = 0; i < queBeginSize; ++i) {
+                int nodeBegin = queBegin.poll();
+                if (disEnd[nodeBegin] != Integer.MAX_VALUE) {
+                    return (disBegin[nodeBegin] + disEnd[nodeBegin]) / 2 + 1;
+                }
+                for (int it : edge.get(nodeBegin)) {
+                    if (disBegin[it] == Integer.MAX_VALUE) {
+                        disBegin[it] = disBegin[nodeBegin] + 1;
+                        queBegin.offer(it);
+                    }
+                }
+            }
+
+            int queEndSize = queEnd.size();
+            for (int i = 0; i < queEndSize; ++i) {
+                int nodeEnd = queEnd.poll();
+                if (disBegin[nodeEnd] != Integer.MAX_VALUE) {
+                    return (disBegin[nodeEnd] + disEnd[nodeEnd]) / 2 + 1;
+                }
+                for (int it : edge.get(nodeEnd)) {
+                    if (disEnd[it] == Integer.MAX_VALUE) {
+                        disEnd[it] = disEnd[nodeEnd] + 1;
+                        queEnd.offer(it);
+                    }
+                }
+            }
+        }
+        return 0;
+    }
+
+    Map<String, Integer> wordId = new HashMap<String, Integer>();
+    List<List<Integer>> edge = new ArrayList<List<Integer>>();
+    int nodeNum = 0;
+
+    public void addEdge(String word) {
+        addWord(word);
+        int id1 = wordId.get(word);
+        char[] array = word.toCharArray();
+        int length = array.length;
+        for (int i = 0; i < length; ++i) {
+            char tmp = array[i];
+            array[i] = '*';
+            String newWord = new String(array);
+            addWord(newWord);
+            int id2 = wordId.get(newWord);
+            edge.get(id1).add(id2);
+            edge.get(id2).add(id1);
+            array[i] = tmp;
+        }
+    }
+
+    public void addWord(String word) {
+        if (!wordId.containsKey(word)) {
+            wordId.put(word, nodeNum++);
+            edge.add(new ArrayList<Integer>());
+        }
+    }
+
 }
