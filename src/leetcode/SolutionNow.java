@@ -4,6 +4,8 @@ import leetcode.datestruct.ListNode;
 import leetcode.datestruct.TreeNode;
 
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * @ProjectName: PhoesLeeCode
@@ -1088,11 +1090,12 @@ public class SolutionNow {
     /**
      * 1577. 数的平方等于两数乘积的方法数
      * 给你两个整数数组 nums1 和 nums2 ，请你返回根据以下规则形成的三元组的数目（类型 1 和类型 2 ）：*
-     *     类型 1：三元组 (i, j, k) ，如果 nums1[i]2 == nums2[j] * nums2[k] 其中 0 <= i < nums1.length 且 0 <= j < k < nums2.length
-     *     类型 2：三元组 (i, j, k) ，如果 nums2[i]2 == nums1[j] * nums1[k] 其中 0 <= i < nums2.length 且 0 <= j < k < nums1.length
-     *
+     * 类型 1：三元组 (i, j, k) ，如果 nums1[i]2 == nums2[j] * nums2[k] 其中 0 <= i < nums1.length 且 0 <= j < k < nums2.length
+     * 类型 2：三元组 (i, j, k) ，如果 nums2[i]2 == nums1[j] * nums1[k] 其中 0 <= i < nums2.length 且 0 <= j < k < nums1.length
+     * <p>
      * 执行用时：60 ms, 在所有 Java 提交中击败了59.97% 的用户
      * 内存消耗：37.8 MB, 在所有 Java 提交中击败了99.83% 的用户
+     *
      * @param nums1 整数数组
      * @param nums2 整数数组
      * @return 数的平方等于两数乘积的方法数
@@ -1111,9 +1114,9 @@ public class SolutionNow {
 
         int n = nums1.length;
         int m = nums2.length;
-        for (int i = 0; i < n; i++) {
-            for (int j = i + 1; j < n; j++) {
-                double tmp = Math.sqrt((long)nums1[i] * (long)nums1[j]);
+        for (int i = 0; i < n; i += 1) {
+            for (int j = i + 1; j < n; j += 1) {
+                double tmp = Math.sqrt((long) nums1[i] * (long) nums1[j]);
                 if (tmp % 1 == 0) {
                     res += map2.getOrDefault((int) tmp, 0);
                 }
@@ -1121,7 +1124,7 @@ public class SolutionNow {
         }
         for (int i = 0; i < m; i++) {
             for (int j = i + 1; j < m; j++) {
-                double tmp = Math.sqrt((long)nums2[i] * (long)nums2[j]);
+                double tmp = Math.sqrt((long) nums2[i] * (long) nums2[j]);
                 if (tmp % 1 == 0) {
                     res += map1.getOrDefault((int) tmp, 0);
                 }
@@ -1130,8 +1133,518 @@ public class SolutionNow {
 
         return res;
     }
-}
 
+    public List<String> watchedVideosByFriends(List<List<String>> watchedVideos, int[][] friends, int id, int level) {
+        Queue<Integer> queue = new LinkedList<>();
+        int[] visited = new int[friends.length];
+        queue.offer(id);
+        visited[id] = 1;
+        List<String> ans = new ArrayList<>();
+        while (!queue.isEmpty()) {
+            if (level == 0) {
+                int size = queue.size();
+                for (int i = 0; i < size; i++) {
+                    int tmp = queue.poll();
+                    ans.addAll(watchedVideos.get(tmp));
+                }
+                break;
+            }
+            int size = queue.size();
+            for (int i = 0; i < size; i++) {
+                int tmp = queue.poll();
+                for (int friend : friends[tmp]) {
+                    if (visited[friend] == 0) {
+                        queue.offer(friend);
+                        visited[friend] = 1;
+                    }
+
+                }
+            }
+            level--;
+        }
+        List<String> res = new ArrayList<>();
+        ans.stream().collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
+                .entrySet().stream().sorted(Map.Entry.comparingByKey()).sorted(Map.Entry.comparingByValue()).forEachOrdered(e -> res.add(e.getKey()));
+        return res;
+
+    }
+
+    public int[] smallerNumbersThanCurrent(int[] nums) {
+        // 统计出现频率 frequency
+        int[] freq = new int[101]; // 索引即数值
+        for (int num : nums) {
+            freq[num]++;
+        }
+
+        // 对频率(而非对原数组nums)从前到后累加
+        for (int i = 1; i < freq.length; i++) {
+            freq[i] = freq[i] + freq[i - 1];
+        }
+
+        // 输出结果
+        int[] res = new int[nums.length];
+        for (int i = 0; i < res.length; i++) {
+            if (nums[i] > 0) {
+                res[i] = freq[nums[i] - 1];
+            }
+        }
+        return res;
+
+    }
+
+    /**
+     * 144. 二叉树的前序遍历
+     * <p>
+     * 给定一个二叉树，返回它的 前序 遍历。
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：36.4 MB, 在所有 Java 提交中击败了97.74% 的用户
+     *
+     * @param root 二叉树
+     * @return 前序 遍历
+     */
+    public List<Integer> preorderTraversal(TreeNode root) {
+        List<Integer> list = new ArrayList<>();
+        preorderTraversal(root, list);
+        return list;
+    }
+
+    private void preorderTraversal(TreeNode treeNode, List<Integer> list) {
+        if (treeNode == null) {
+            return;
+        }
+        list.add(treeNode.val);
+        if (treeNode.left != null) {
+            preorderTraversal(treeNode.left, list);
+        }
+        if (treeNode.right != null) {
+            preorderTraversal(treeNode.right, list);
+        }
+    }
+
+    /**
+     * 1207. 独一无二的出现次数
+     * 给你一个整数数组 arr，请你帮忙统计数组中每个数的出现次数。
+     * 如果每个数的出现次数都是独一无二的，就返回 true；否则返回 false。
+     * <p>
+     * 执行用时：2 ms, 在所有 Java 提交中击败了91.43% 的用户
+     * 内存消耗：36 MB, 在所有 Java 提交中击败了98.25% 的用户
+     *
+     * @param arr 数组
+     * @return 如果每个数的出现次数都是独一无二的，就返回 true；否则返回 false。
+     */
+    public boolean uniqueOccurrences(int[] arr) {
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int a : arr) {
+            int tmp = map.getOrDefault(a, 0);
+            map.put(a, tmp + 1);
+        }
+        Set<Integer> set = new HashSet<>();
+        for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+            if (!set.add(entry.getValue())) {
+                return false;
+            }
+        }
+//        map.entrySet().parallelStream().forEach((entry) -> {
+//            if (!set.add(entry.getValue())) {
+//                return;
+//            }
+//        });
+        return true;
+    }
+
+
+    /**
+     * 799. 香槟塔
+     * 我们把玻璃杯摆成金字塔的形状，其中第一层有1个玻璃杯，第二层有2个，依次类推到第100层，每个玻璃杯(250ml)将盛有香槟。
+     * 从顶层的第一个玻璃杯开始倾倒一些香槟，当顶层的杯子满了，任何溢出的香槟都会立刻等流量的流向左右两侧的玻璃杯。
+     * 当左右两边的杯子也满了，就会等流量的流向它们左右两边的杯子，依次类推。（当最底层的玻璃杯满了，香槟会流到地板上）
+     * 例如，在倾倒一杯香槟后，最顶层的玻璃杯满了。倾倒了两杯香槟后，第二层的两个玻璃杯各自盛放一半的香槟。在倒三杯香槟后，
+     * 第二层的香槟满了 - 此时总共有三个满的玻璃杯。在倒第四杯后，第三层中间的玻璃杯盛放了一半的香槟，他两边的玻璃杯各自盛放了四分之一的香槟，
+     * 现在当倾倒了非负整数杯香槟后，返回第 i 行 j 个玻璃杯所盛放的香槟占玻璃杯容积的比例（i 和 j都从0开始）。
+     * 执行用时：10 ms, 在所有 Java 提交中击败了10.00% 的用户
+     * 内存消耗：39.5 MB, 在所有 Java 提交中击败了5.97% 的用户
+     *
+     * @param poured      倾倒一些香槟
+     * @param query_row   第 i 行
+     * @param query_glass 第 j 个
+     * @return 第 i 行 j 个玻璃杯所盛放的香槟占玻璃杯容积的比例（i 和 j都从0开始）
+     */
+    public double champagneTower(int poured, int query_row, int query_glass) {
+        List<Double> list = new ArrayList<>();
+        list.add((double) poured);
+        for (int i = 0; i < query_row; i++) {
+            List<Double> newList = new ArrayList<>();
+            double pre = 0;
+            for (int j = 0; j < list.size(); j++) {
+                double tmp = (list.get(j) - 1.0) / 2;
+                if (tmp < 0.0) {
+                    tmp = 0.0;
+                }
+                newList.add(tmp + pre);
+                pre = tmp;
+            }
+            newList.add(pre);
+            list = newList;
+        }
+        return list.get(query_glass) > 1.0 ? 1.0 : list.get(query_glass);
+    }
+
+    /**
+     * 1306. 跳跃游戏 III
+     * 这里有一个非负整数数组 arr，你最开始位于该数组的起始下标 start 处。当你位于下标 i 处时，你可以跳到 i + arr[i] 或者 i - arr[i]。
+     * 请你判断自己是否能够跳到对应元素值为 0 的 任一 下标处。
+     * 注意，不管是什么情况下，你都无法跳到数组之外。
+     * <p>
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：46 MB, 在所有 Java 提交中击败了85.38% 的用户
+     *
+     * @param arr   非负整数数组 arr
+     * @param start 起始下标
+     * @return 是否能够跳到对应元素值为 0 的 任一 下标处
+     */
+    public boolean canReach(int[] arr, int start) {
+        int n = arr.length;
+        boolean[] visited = new boolean[n];
+        canReach(arr, start, visited);
+        return canReachRes3;
+    }
+
+    private boolean canReachRes3 = false;
+
+    private void canReach(int[] arr, int now, boolean[] visited) {
+        if (visited[now]) {
+            return;
+        }
+        visited[now] = true;
+        if (arr[now] == 0) {
+            canReachRes3 = true;
+            return;
+        }
+        if (now + arr[now] < arr.length) {
+            canReach(arr, now + arr[now], visited);
+        }
+        if (now >= arr[now]) {
+            canReach(arr, now - arr[now], visited);
+        }
+    }
+
+    public int minJumps(int[] arr) {
+        int n = arr.length;
+        Map<Integer, List<Integer>> map = new HashMap<>();
+        for (int i = 0; i < n; i++) {
+            List<Integer> tmp = map.getOrDefault(arr[i], new ArrayList<>());
+            tmp.add(i);
+            map.put(arr[i], tmp);
+        }
+        boolean[] visited = new boolean[n];
+        visited[0] = true;
+        Queue<Integer> queue = new LinkedList<>();
+        queue.add(0);
+        int move = 0;
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            for (int i = 0; i < size; i++) {
+                int tmp = queue.poll();
+                if (tmp == n - 1) {
+                    return move;
+                }
+                for (int j : map.get(arr[tmp])) {
+                    if (!visited[j]) {
+                        visited[j] = true;
+                        queue.add(j);
+                    }
+                }
+                if (tmp + 1 < n && !visited[tmp + 1]) {
+                    visited[tmp + 1] = true;
+                    queue.add(tmp + 1);
+                }
+                if (tmp - 1 > 0 && !visited[tmp - 1]) {
+                    visited[tmp - 1] = true;
+                    queue.add(tmp - 1);
+                }
+            }
+            move++;
+        }
+        return 0;
+    }
+
+    /**
+     * 463. 岛屿的周长
+     * <p>
+     * 给定一个包含 0 和 1 的二维网格地图，其中 1 表示陆地 0 表示水域。
+     * 网格中的格子水平和垂直方向相连（对角线方向不相连）。整个网格被水完全包围，但其中恰好有一个岛屿（或者说，一个或多个表示陆地的格子相连组成的岛屿）。
+     * 岛屿中没有“湖”（“湖” 指水域在岛屿内部且不和岛屿周围的水相连）。
+     * 格子是边长为 1 的正方形。网格为长方形，且宽度和高度均不超过 100 。计算这个岛屿的周长。
+     * <p>
+     * 执行用时：9 ms, 在所有 Java 提交中击败了56.99% 的用户
+     * 内存消耗：39.6 MB, 在所有 Java 提交中击败了63.42% 的用户
+     *
+     * @param grid 网格地图
+     * @return 岛屿周长
+     */
+    public int islandPerimeter(int[][] grid) {
+        int n = grid.length;
+        if (n == 0) {
+            return 0;
+        }
+        int m = grid[0].length;
+        int ans = 0;
+        int[][] dir = new int[][]{{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (grid[i][j] == 1) {
+                    for (int[] d : dir) {
+                        int newI = d[0] + i;
+                        int newJ = d[1] + j;
+                        if (newI < 0 || newI >= n || newJ < 0 || newJ >= m) {
+                            ans++;
+                        } else if (grid[newI][newJ] == 0) {
+                            ans++;
+                        }
+
+                    }
+                }
+            }
+        }
+        return ans;
+    }
+
+    /**
+     * 908. 最小差值 I
+     * 给你一个整数数组 A，请你给数组中的每个元素 A[i] 都加上一个任意数字 x （-K <= x <= K），从而得到一个新数组 B 。
+     * 返回数组 B 的最大值和最小值之间可能存在的最小差值。
+     * <p>
+     * 执行用时：3 ms, 在所有 Java 提交中击败了68.41% 的用户
+     * 内存消耗：39 MB, 在所有 Java 提交中击败了82.78% 的用户
+     *
+     * @param A 整数数组
+     * @param K 任意数字
+     * @return 最小差值 I
+     */
+    public int smallestRangeI(int[] A, int K) {
+        int max = A[0], min = A[0];
+        for (int i : A) {
+            max = Math.max(max, i);
+            min = Math.min(min, i);
+        }
+        int res = max - min - 2 * A.length;
+        return Math.max(res, 0);
+    }
+
+    /**
+     * 349. 两个数组的交集
+     * 给定两个数组，编写一个函数来计算它们的交集。
+     * 执行用时：11 ms, 在所有 Java 提交中击败了7.55% 的用户
+     * 内存消耗：39 MB, 在所有 Java 提交中击败了43.60% 的用户
+     *
+     * @param nums1 数组
+     * @param nums2 数组
+     * @return 数组的交集
+     */
+    public int[] intersection(int[] nums1, int[] nums2) {
+        Arrays.sort(nums1);
+
+        Set<Integer> set = new TreeSet<>();
+        for (int i : nums2) {
+            set.add(i);
+        }
+
+        List<Integer> list = new ArrayList<>();
+        for (int i = 0; i < nums1.length; i++) {
+            if (i > 0 && nums1[i - 1] == nums1[i]) {
+                continue;
+            }
+            if (set.contains(nums1[i])) {
+                list.add(nums1[i]);
+            }
+        }
+        return list.stream().mapToInt(Integer::valueOf).toArray();
+    }
+
+
+    /**
+     * 1301. 最大得分的路径数目
+     * 给你一个正方形字符数组 board ，你从数组最右下方的字符 'S' 出发。
+     * 你的目标是到达数组最左上角的字符 'E' ，数组剩余的部分为数字字符 1, 2, ..., 9 或者障碍 'X'。在每一步移动中，你可以向上、向左或者左上方移动，可以移动的前提是到达的格子没有障碍。
+     * 一条路径的 「得分」 定义为：路径上所有数字的和。
+     * 请你返回一个列表，包含两个整数：第一个整数是 「得分」 的最大值，第二个整数是得到最大得分的方案数，请把结果对 10^9 + 7 取余。
+     * 如果没有任何路径可以到达终点，请返回 [0, 0] 。
+     * <p>
+     * 执行用时：15 ms, 在所有 Java 提交中击败了69.62% 的用户
+     * 内存消耗：38.6 MB, 在所有 Java 提交中击败了94.67% 的用户
+     *
+     * @param board 正方形字符数组
+     * @return 最大得分的路径数目
+     */
+    public int[] pathsWithMaxScore(List<String> board) {
+        int row = board.size();
+        if (row == 0) {
+            return new int[]{0, 0};
+        }
+        int modNum = 1000000007;
+        int col = board.get(0).length();
+        int[][] dpScore = new int[row + 1][col + 1];
+        int[][] dpPath = new int[row + 1][col + 1];
+        //从右下角开始走，初始路径为1条
+        dpPath[row - 1][col - 1] = 1;
+        for (int i = row - 1; i >= 0; i--) {
+            for (int j = col - 1; j >= 0; j--) {
+                //如果board[i][j] == 'X', 即为障碍
+                //如果dpPath[i+1][j],dpPath[i][j+1]和dpPath[i+1][j+1]都等于0，就是路径被障碍'X'封死了
+                if (board.get(i).charAt(j) != 'X' &&
+                        (dpPath[i + 1][j] != 0 || dpPath[i][j + 1] != 0 || dpPath[i + 1][j + 1] != 0)) {
+                    int maxScore = Math.max(Math.max(dpScore[i + 1][j], dpScore[i][j + 1]), dpScore[i + 1][j + 1]);
+                    dpScore[i][j] = maxScore + board.get(i).charAt(j) - '0';
+                    if (dpScore[i + 1][j] == maxScore) {
+                        dpPath[i][j] = (dpPath[i][j] + dpPath[i + 1][j]) % modNum;
+                    }
+                    if (dpScore[i][j + 1] == maxScore) {
+                        dpPath[i][j] = (dpPath[i][j] + dpPath[i][j + 1]) % modNum;
+                    }
+                    if (dpScore[i + 1][j + 1] == maxScore) {
+                        dpPath[i][j] = (dpPath[i][j] + dpPath[i + 1][j + 1]) % modNum;
+                    }
+                }
+            }
+        }
+        //dpScore[0][0] - ('E' - '0'),是因为结束时候为'E'，上面加了，所以要减去
+        int maxScore = dpScore[0][0] == 0 ? 0 : dpScore[0][0] - ('E' - '0');
+        return new int[]{maxScore, dpPath[0][0]};
+    }
+
+    /**
+     * 941. 有效的山脉数组
+     * <p>
+     * 给定一个整数数组 A，如果它是有效的山脉数组就返回 true，否则返回 false。
+     * <p>
+     * 让我们回顾一下，如果 A 满足下述条件，那么它是一个山脉数组：
+     * <p>
+     * A.length >= 3
+     * 在 0 < i < A.length - 1 条件下，存在 i 使得：
+     * A[0] < A[1] < ... A[i-1] < A[i]
+     * A[i] > A[i+1] > ... > A[A.length - 1]
+     * <p>
+     * 执行用时：1 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：39.6 MB, 在所有 Java 提交中击败了48.70% 的用户
+     *
+     * @param A 数组
+     * @return 是否是有效的山脉数组
+     */
+    public boolean validMountainArray(int[] A) {
+        int n = A.length;
+        if (n < 3) {
+            return false;
+        }
+        int left = 0;
+        while (left < n - 1) {
+            if (A[left] >= A[left + 1]) {
+                break;
+            }
+            left++;
+        }
+        int right = n - 1;
+        while (right > 0) {
+            if (A[right - 1] <= A[right]) {
+                break;
+            }
+            right--;
+        }
+        return left == right && left != 0 && left != n - 1;
+    }
+
+
+    /**
+     * 1455. 检查单词是否为句中其他单词的前缀
+     * <p>
+     * 给你一个字符串 sentence 作为句子并指定检索词为 searchWord ，其中句子由若干用 单个空格 分隔的单词组成。
+     * <p>
+     * 请你检查检索词 searchWord 是否为句子 sentence 中任意单词的前缀。
+     * <p>
+     * 如果 searchWord 是某一个单词的前缀，则返回句子 sentence 中该单词所对应的下标（下标从 1 开始）。
+     * 如果 searchWord 是多个单词的前缀，则返回匹配的第一个单词的下标（最小下标）。
+     * 如果 searchWord 不是任何单词的前缀，则返回 -1 。
+     * <p>
+     * 字符串 S 的 「前缀」是 S 的任何前导连续子字符串。
+     * <p>
+     * 执行用时：1 ms, 在所有 Java 提交中击败了16.72% 的用户
+     * 内存消耗：36.4 MB, 在所有 Java 提交中击败了75.96% 的用户
+     *
+     * @param sentence   字符串 sentence
+     * @param searchWord 检索词 searchWord
+     * @return 检查单词是否为句中其他单词的前缀
+     */
+    public int isPrefixOfWord(String sentence, String searchWord) {
+        String[] strings = sentence.split(" ");
+        int n = searchWord.length();
+        for (int i = 0; i < strings.length; i++) {
+            String tmp = strings[i];
+            if (tmp.length() < n) {
+                continue;
+            }
+            tmp = tmp.substring(0, n);
+            if (tmp.equals(searchWord)) {
+                return i + 1;
+            }
+        }
+        return -1;
+    }
+
+
+    /**
+     * 57. 插入区间
+     *
+     * 给出一个无重叠的 ，按照区间起始端点排序的区间列表。
+     *
+     * 在列表中插入一个新的区间，你需要确保列表中的区间仍然有序且不重叠（如果有必要的话，可以合并区间）。
+     *
+     * 执行用时：1 ms, 在所有 Java 提交中击败了99.65% 的用户
+     * 内存消耗：41 MB, 在所有 Java 提交中击败了60.86% 的用户
+     * @param intervals 区间列表
+     * @param newInterval 新的区间
+     * @return 插入新的区间之后的列表
+     */
+    public int[][] insert(int[][] intervals, int[] newInterval) {
+        int n = intervals.length;
+        List<int[]> res = new ArrayList<>();
+        boolean f = false;
+        for (int i = 0; i < n; i++) {
+            if (f) {
+                res.add(intervals[i]);
+                continue;
+            }
+            int[] interval = intervals[i];
+            if (newInterval[0] <= interval[1]) {
+                if (newInterval[1] < interval[0]) {
+                    res.add(newInterval);
+                    f = true;
+                    while (i < n) {
+                        res.add(intervals[i++]);
+                    }
+                    break;
+                } else {
+                    int[] newTmp = new int[2];
+                    newTmp[0] = Math.min(newInterval[0], interval[0]);
+                    newTmp[1] = Math.max(newInterval[1], interval[1]);
+                    while (i < n && intervals[i][0] <= newTmp[1]) {
+                        newTmp[1] = Math.max(newTmp[1], intervals[i][1]);
+                        i++;
+                    }
+                    res.add(newTmp);
+                    if (i < n) {
+                        res.add(intervals[i]);
+                    }
+                    f = true;
+                }
+            } else {
+                res.add(interval);
+            }
+        }
+        if (!f) {
+            res.add(newInterval);
+        }
+        return res.toArray(new int[0][]);
+    }
+}
 //class Node {
 //    public int val;
 //    public Node left;

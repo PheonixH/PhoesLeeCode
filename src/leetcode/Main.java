@@ -90,9 +90,9 @@ public class Main {
 
         //Arrays
         String[] oneDimensionalStringArray = {"bella", "label", "roller"};
-        int[] oneDimensionalArrayA = {1, 1, 2, 2, 2, 3};
+        int[] oneDimensionalArrayA = {43024, 99908};
         int[] oneDimensionalArrayB = {1864};
-        int[][] twoDimensionalArray = {{1, 2}, {1, 3}, {2, 3}};
+        int[][] twoDimensionalArray = {{0, 1, 0, 0}, {1, 1, 1, 0}, {0, 1, 0, 0}, {1, 1, 0, 0}};
         char[] oneDimensionalCharArray = {'A', 'B'};
         char[][] twoDimensionalCharArray = {
                 {'5', '3', '.', '.', '7', '.', '.', '.', '.'},
@@ -128,16 +128,15 @@ public class Main {
 //        for (int i = 0; i < arr.length; i++) {
 //            brr[i] = Integer.valueOf(arr[i]);
 //        }
-        String[] arr = {"hot", "dot", "dog", "lot", "log", "cog"};
+        String[] arr = {"hot", "dot", "dog"};
         List<String> list = new ArrayList<>();
         for (String a : arr) {
             list.add(a);
         }
 
         SolutionNow solution = new SolutionNow();
-        System.out.println(solution.numTriplets(oneDimensionalArrayA, oneDimensionalArrayB));
+        System.out.println(solution.insert(new int[][]{{1,2}}, new int[]{4, 6}));
 
         Games games = new Games();
-        System.out.println(games.ladderLength("hit", "cog", list));
     }
 }
