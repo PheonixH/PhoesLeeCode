@@ -2073,6 +2073,7 @@ x = (a[7]b[7]) (a[6]b[6]) ... (a[1]b[1]) (a[0]b[0])
      * 1374. 生成每种字符都是奇数个的字符串
      * 执行用时：1 ms, 在所有 Java 提交中击败了99.12%的用户
      * 内存消耗：37.1 MB, 在所有 Java 提交中击败了100.00%的用户
+     *
      * @param n int n
      * @return String
      */
@@ -2091,22 +2092,37 @@ x = (a[7]b[7]) (a[6]b[6]) ... (a[1]b[1]) (a[0]b[0])
     }
 
 
-    public static void main(String[] args) {
-        TreeNode root = new TreeNode(1);
-        TreeNode r1 = new TreeNode(2);
-        TreeNode r2 = new TreeNode(3);
-        TreeNode r3 = new TreeNode(4);
-        TreeNode r4 = new TreeNode(5);
-        root.left = r1;
-        r1.left = r2;
-        r2.left = r3;
-        r3.left = r4;
-        SolitionUbuntu solution = new SolitionUbuntu();
-        String[] strings = {"9", "3", "4", "#", "#", "1", "#", "#,", "#", "6", "#", "#"};
-        int[] array0 = {1, 3, 4, 6};
-        int[] array1 = {1, 2, 4, 5};
-        ListNode listNode1 = createListNode(array0);
-        ListNode listNode2 = createListNode(array1);
-        System.out.println(solution.numTrees(3));
+    /**
+     * 327. 区间和的个数
+     *
+     * 给定一个整数数组 nums，返回区间和在 [lower, upper] 之间的个数，包含 lower 和 upper。
+     * 区间和 S(i, j) 表示在 nums 中，位置从 i 到 j 的元素之和，包含 i 和 j (i ≤ j)。
+     *
+     * 执行用时：188 ms, 在所有 Java 提交中击败了15.33% 的用户
+     * 内存消耗：38.3 MB, 在所有 Java 提交中击败了97.00% 的用户
+     * @param nums 整数数组 nums
+     * @param lower 最小边界
+     * @param upper 最大边界
+     * @return 区间和在 [lower, upper] 之间的个数
+     */
+    public int countRangeSum(int[] nums, int lower, int upper) {
+        int n = nums.length;
+        if (n <= 0) {
+            return 0;
+        }
+        int num = 0;
+        long[] pre = new long[n + 1];
+        for (int i = 1; i < n + 1; i++) {
+            pre[i] = pre[i - 1] + nums[i - 1];
+        }
+        for (int i = 0; i < n + 1; i++) {
+            for (int j = i + 1; j < n + 1; j++) {
+                long tmp = pre[j] - pre[i];
+                if (tmp >= lower && tmp <= upper) {
+                    num++;
+                }
+            }
+        }
+        return num;
     }
 }

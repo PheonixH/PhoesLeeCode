@@ -134,9 +134,10 @@ public class Main {
             list.add(a);
         }
 
-        SolutionNow solution = new SolutionNow();
-        System.out.println(solution.insert(new int[][]{{1,2}}, new int[]{4, 6}));
+        SolitionUbuntu solution = new SolitionUbuntu();
+        System.out.println(solution.countRangeSum(new int[]{-2,2}, -1,1));
 
         Games games = new Games();
     }
+
 }
