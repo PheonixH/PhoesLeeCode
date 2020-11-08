@@ -2094,13 +2094,14 @@ x = (a[7]b[7]) (a[6]b[6]) ... (a[1]b[1]) (a[0]b[0])
 
     /**
      * 327. 区间和的个数
-     *
+     * <p>
      * 给定一个整数数组 nums，返回区间和在 [lower, upper] 之间的个数，包含 lower 和 upper。
      * 区间和 S(i, j) 表示在 nums 中，位置从 i 到 j 的元素之和，包含 i 和 j (i ≤ j)。
-     *
+     * <p>
      * 执行用时：188 ms, 在所有 Java 提交中击败了15.33% 的用户
      * 内存消耗：38.3 MB, 在所有 Java 提交中击败了97.00% 的用户
-     * @param nums 整数数组 nums
+     *
+     * @param nums  整数数组 nums
      * @param lower 最小边界
      * @param upper 最大边界
      * @return 区间和在 [lower, upper] 之间的个数
@@ -2124,5 +2125,17 @@ x = (a[7]b[7]) (a[6]b[6]) ... (a[1]b[1]) (a[0]b[0])
             }
         }
         return num;
+    }
+
+    public int maxProfit(int[] prices) {
+        int n = prices.length;
+        int[][] dp = new int[n][2];
+        dp[0][0] = -prices[0];
+        dp[0][1] = 0;
+        for (int i = 1; i < n; i++) {
+            dp[i][0] = Math.max(dp[i - 1][0], dp[i - 1][1] - prices[i]);
+            dp[i][1] = Math.max(dp[i - 1][1], dp[i - 1][0] + prices[i]);
+        }
+        return dp[n - 1][1];
     }
 }
