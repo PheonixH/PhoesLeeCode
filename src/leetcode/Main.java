@@ -134,8 +134,8 @@ public class Main {
             list.add(a);
         }
 
-        SolitionUbuntu solution = new SolitionUbuntu();
-        System.out.println(solution.countRangeSum(new int[]{-2,2}, -1,1));
+        SolutionNow solution = new SolutionNow();
+        System.out.println(solution.kClosest(new int[][]{{1, 3}, {-2, 2}}, 1));
 
         Games games = new Games();
     }

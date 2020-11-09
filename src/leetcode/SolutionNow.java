@@ -1592,14 +1592,15 @@ public class SolutionNow {
 
     /**
      * 57. 插入区间
-     *
+     * <p>
      * 给出一个无重叠的 ，按照区间起始端点排序的区间列表。
-     *
+     * <p>
      * 在列表中插入一个新的区间，你需要确保列表中的区间仍然有序且不重叠（如果有必要的话，可以合并区间）。
-     *
+     * <p>
      * 执行用时：1 ms, 在所有 Java 提交中击败了99.65% 的用户
      * 内存消耗：41 MB, 在所有 Java 提交中击败了60.86% 的用户
-     * @param intervals 区间列表
+     *
+     * @param intervals   区间列表
      * @param newInterval 新的区间
      * @return 插入新的区间之后的列表
      */
@@ -1643,6 +1644,41 @@ public class SolutionNow {
             res.add(newInterval);
         }
         return res.toArray(new int[0][]);
+    }
+
+    /**
+     * 973. 最接近原点的 K 个点
+     * 我们有一个由平面上的点组成的列表 points。需要从中找出 K 个距离原点 (0, 0) 最近的点。
+     * （这里，平面上两点之间的距离是欧几里德距离。）
+     *
+     * 执行用时：42 ms, 在所有 Java 提交中击败了24.10% 的用户
+     * 内存消耗：47.2 MB, 在所有 Java 提交中击败了53.81% 的用户
+     * @param points 平面上的点组成的列表
+     * @param K K 个
+     * @return K 个距离原点 (0, 0) 最近的点
+     */
+    public int[][] kClosest(int[][] points, int K) {
+        if(K >= points.length){
+            return points;
+        }
+        Comparator<int[]> nearlier = new Comparator<int[]>() {
+            @Override
+            public int compare(int[] o1, int[] o2) {
+                double a = Math.pow(o1[0], 2) + Math.pow(o1[1], 2);
+                double b = Math.pow(o2[0], 2) + Math.pow(o2[1], 2);
+                return (int) (a - b);
+            }
+        };
+
+        PriorityQueue<int[]> priorityQueue = new PriorityQueue<>(nearlier);
+        for (int[] point : points) {
+            priorityQueue.add(point);
+        }
+        int[][] res = new int[K][2];
+        for (int i = 0; i < K; i++) {
+            res[i] = priorityQueue.poll();
+        }
+        return res;
     }
 }
 //class Node {
