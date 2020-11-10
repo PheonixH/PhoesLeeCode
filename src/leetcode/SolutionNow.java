@@ -1650,15 +1650,16 @@ public class SolutionNow {
      * 973. 最接近原点的 K 个点
      * 我们有一个由平面上的点组成的列表 points。需要从中找出 K 个距离原点 (0, 0) 最近的点。
      * （这里，平面上两点之间的距离是欧几里德距离。）
-     *
+     * <p>
      * 执行用时：42 ms, 在所有 Java 提交中击败了24.10% 的用户
      * 内存消耗：47.2 MB, 在所有 Java 提交中击败了53.81% 的用户
+     *
      * @param points 平面上的点组成的列表
-     * @param K K 个
+     * @param K      K 个
      * @return K 个距离原点 (0, 0) 最近的点
      */
     public int[][] kClosest(int[][] points, int K) {
-        if(K >= points.length){
+        if (K >= points.length) {
             return points;
         }
         Comparator<int[]> nearlier = new Comparator<int[]>() {
@@ -1679,6 +1680,47 @@ public class SolutionNow {
             res[i] = priorityQueue.poll();
         }
         return res;
+    }
+
+    /**
+     * 31. 下一个排列
+     * <p>
+     * 实现获取下一个排列的函数，算法需要将给定数字序列重新排列成字典序中下一个更大的排列。
+     * 如果不存在下一个更大的排列，则将数字重新排列成最小的排列（即升序排列）。
+     * 必须原地修改，只允许使用额外常数空间。
+     * 以下是一些例子，输入位于左侧列，其相应输出位于右侧列。
+     * 1,2,3 → 1,3,2
+     * 3,2,1 → 1,2,3
+     * 1,1,5 → 1,5,1
+     * <p>
+     * 执行用时：1 ms, 在所有 Java 提交中击败了98.72% 的用户
+     * 内存消耗：38.5 MB, 在所有 Java 提交中击败了91.05% 的用户
+     *
+     * @param nums 数字序列
+     */
+    public void nextPermutation(int[] nums) {
+        int n = nums.length;
+        if (n <= 1) {
+            return;
+        }
+        int max = n - 1;
+        int t = max - 1;
+        while (t >= 0) {
+            if (nums[t] < nums[max]) {
+                for (int j = t + 1; j < n; j++) {
+                    if (nums[j] < nums[max] && nums[j] > nums[t]) {
+                        max = j;
+                    }
+                }
+                nums[t] = nums[max] ^ nums[t];
+                nums[max] = nums[max] ^ nums[t];
+                nums[t] = nums[max] ^ nums[t];
+                break;
+            }
+            max = t;
+            t--;
+        }
+        Arrays.sort(nums, t + 1, n);
     }
 }
 //class Node {

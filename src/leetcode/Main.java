@@ -135,7 +135,7 @@ public class Main {
         }
 
         SolutionNow solution = new SolutionNow();
-        System.out.println(solution.kClosest(new int[][]{{1, 3}, {-2, 2}}, 1));
+        solution.nextPermutation(new int[]{1, 5, 3, 4, 2});
 
         Games games = new Games();
     }
