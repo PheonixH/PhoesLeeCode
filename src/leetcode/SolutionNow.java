@@ -1722,6 +1722,38 @@ public class SolutionNow {
         }
         Arrays.sort(nums, t + 1, n);
     }
+
+    /**
+     * 922. 按奇偶排序数组 II
+     *
+     * 给定一个非负整数数组 A， A 中一半整数是奇数，一半整数是偶数。
+     * 对数组进行排序，以便当 A[i] 为奇数时，i 也是奇数；当 A[i] 为偶数时， i 也是偶数。
+     * 你可以返回任何满足上述条件的数组作为答案。
+     *
+     * 执行用时：3 ms, 在所有 Java 提交中击败了78.68% 的用户
+     * 内存消耗：39.6 MB, 在所有 Java 提交中击败了93.56% 的用户
+     *
+     * @param A 非负整数数组
+     * @return 按奇偶排序数组
+     */
+    public int[] sortArrayByParityII(int[] A) {
+        int n = A.length;
+        int a = 0, b = 1;
+        while (a < n && b < n) {
+            while (a < n && A[a] % 2 == 0) {
+                a += 2;
+            }
+            while (b < n && A[b] % 2 == 1) {
+                b += 2;
+            }
+            if (a < n && b < n) {
+                A[a] = A[a] ^ A[b];
+                A[b] = A[a] ^ A[b];
+                A[a] = A[a] ^ A[b];
+            }
+        }
+        return A;
+    }
 }
 //class Node {
 //    public int val;
