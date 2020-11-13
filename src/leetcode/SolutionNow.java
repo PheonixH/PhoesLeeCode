@@ -1725,11 +1725,11 @@ public class SolutionNow {
 
     /**
      * 922. 按奇偶排序数组 II
-     *
+     * <p>
      * 给定一个非负整数数组 A， A 中一半整数是奇数，一半整数是偶数。
      * 对数组进行排序，以便当 A[i] 为奇数时，i 也是奇数；当 A[i] 为偶数时， i 也是偶数。
      * 你可以返回任何满足上述条件的数组作为答案。
-     *
+     * <p>
      * 执行用时：3 ms, 在所有 Java 提交中击败了78.68% 的用户
      * 内存消耗：39.6 MB, 在所有 Java 提交中击败了93.56% 的用户
      *
@@ -1753,6 +1753,38 @@ public class SolutionNow {
             }
         }
         return A;
+    }
+
+    /**
+     * 328. 奇偶链表
+     * 给定一个单链表，把所有的奇数节点和偶数节点分别排在一起。请注意，这里的奇数节点和偶数节点指的是节点编号的奇偶性，而不是节点的值的奇偶性。
+     * 请尝试使用原地算法完成。你的算法的空间复杂度应为 O(1)，时间复杂度应为 O(nodes)，nodes 为节点总数。
+     *
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：38.2 MB, 在所有 Java 提交中击败了78.40% 的用户
+     * @param head 单链表
+     * @return 有的奇数节点和偶数节点分别排在一起之后的单链表
+     */
+    public ListNode oddEvenList(ListNode head) {
+        ListNode one = head;
+        if (one == null) {
+            return head;
+        }
+        ListNode o = one;
+        ListNode two = head.next;
+        ListNode t = two;
+        while (one != null && two != null) {
+            one.next = two.next;
+            if (one.next == null) {
+                two.next = null;
+                break;
+            }
+            one = one.next;
+            two.next = one.next;
+            two = two.next;
+        }
+        one.next = t;
+        return o;
     }
 }
 //class Node {
