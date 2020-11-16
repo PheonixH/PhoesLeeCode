@@ -92,7 +92,7 @@ public class Main {
         String[] oneDimensionalStringArray = {"bella", "label", "roller"};
         int[] oneDimensionalArrayA = {43024, 99908};
         int[] oneDimensionalArrayB = {1864};
-        int[][] twoDimensionalArray = {{0, 1, 0, 0}, {1, 1, 1, 0}, {0, 1, 0, 0}, {1, 1, 0, 0}};
+        int[][] twoDimensionalArray = {{7, 0}, {4, 4}, {7, 1}, {5, 0}, {6, 1}, {5, 2}};
         char[] oneDimensionalCharArray = {'A', 'B'};
         char[][] twoDimensionalCharArray = {
                 {'5', '3', '.', '.', '7', '.', '.', '.', '.'},
@@ -135,7 +135,7 @@ public class Main {
         }
 
         SolutionNow solution = new SolutionNow();
-        solution.nextPermutation(new int[]{1, 5, 3, 4, 2});
+        solution.reconstructQueue(twoDimensionalArray);
 
         Games games = new Games();
     }

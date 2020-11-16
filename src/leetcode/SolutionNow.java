@@ -1759,9 +1759,10 @@ public class SolutionNow {
      * 328. 奇偶链表
      * 给定一个单链表，把所有的奇数节点和偶数节点分别排在一起。请注意，这里的奇数节点和偶数节点指的是节点编号的奇偶性，而不是节点的值的奇偶性。
      * 请尝试使用原地算法完成。你的算法的空间复杂度应为 O(1)，时间复杂度应为 O(nodes)，nodes 为节点总数。
-     *
+     * <p>
      * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
      * 内存消耗：38.2 MB, 在所有 Java 提交中击败了78.40% 的用户
+     *
      * @param head 单链表
      * @return 有的奇数节点和偶数节点分别排在一起之后的单链表
      */
@@ -1785,6 +1786,62 @@ public class SolutionNow {
         }
         one.next = t;
         return o;
+    }
+
+    /**
+     * 406. 根据身高重建队列
+     * 假设有打乱顺序的一群人站成一个队列。 每个人由一个整数对(h, k)表示，其中h是这个人的身高，k是排在这个人前面且身高大于或等于h的人数。 编写一个算法来重建这个队列。
+     * 注意：
+     * 总人数少于1100人。
+     * <p>
+     * 执行用时：24 ms, 在所有 Java 提交中击败了8.49% 的用户
+     * 内存消耗：39.6 MB, 在所有 Java 提交中击败了61.92% 的用户
+     *
+     * @param people 一群人
+     * @return 根据身高重建队列
+     */
+    public int[][] reconstructQueue(int[][] people) {
+        Comparator<int[]> comparator = new Comparator<int[]>() {
+            @Override
+            public int compare(int[] o1, int[] o2) {
+                if (o1[0] == o2[0]) {
+                    return o1[1] - o2[1];
+                }
+                return o1[0] - o2[0];
+            }
+        };
+        PriorityQueue<int[]> priorityQueue = new PriorityQueue<>(comparator);
+
+        for (int[] p : people) {
+            priorityQueue.add(p);
+        }
+        int[][] res = new int[people.length][2];
+        boolean[] booleans = new boolean[people.length];
+        int pre = 0;
+        int preKey = -1;
+        while (!priorityQueue.isEmpty()) {
+            int[] tmp = priorityQueue.poll();
+            if (preKey < tmp[0]) {
+                preKey = tmp[0];
+                pre = 0;
+            }
+            int t = 0;
+            int tt = 0;
+            while (t < tmp[1] - pre) {
+                if (booleans[tt++]) {
+                    continue;
+                }
+                t++;
+            }
+            while (booleans[tt]) {
+                tt++;
+            }
+            res[tt] = tmp;
+            booleans[tt] = true;
+            pre++;
+        }
+
+        return res;
     }
 }
 //class Node {
