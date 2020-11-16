@@ -1810,17 +1810,20 @@ public class SolutionNow {
                 return o1[0] - o2[0];
             }
         };
-        PriorityQueue<int[]> priorityQueue = new PriorityQueue<>(comparator);
+//        PriorityQueue<int[]> priorityQueue = new PriorityQueue<>(comparator);
+//
+//        for (int[] p : people) {
+//            priorityQueue.add(p);
+//        }
 
-        for (int[] p : people) {
-            priorityQueue.add(p);
-        }
+        Arrays.sort(people, comparator);
         int[][] res = new int[people.length][2];
         boolean[] booleans = new boolean[people.length];
         int pre = 0;
         int preKey = -1;
-        while (!priorityQueue.isEmpty()) {
-            int[] tmp = priorityQueue.poll();
+//        while (!priorityQueue.isEmpty()) {
+//            int[] tmp = priorityQueue.poll();
+        for (int[] tmp : people) {
             if (preKey < tmp[0]) {
                 preKey = tmp[0];
                 pre = 0;
