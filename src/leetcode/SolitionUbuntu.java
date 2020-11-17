@@ -2,6 +2,7 @@ package leetcode;//import jdk.nashorn.api.tree.Tree;
 
 import leetcode.datestruct.Nodes;
 
+import java.text.Collator;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -2138,4 +2139,46 @@ x = (a[7]b[7]) (a[6]b[6]) ... (a[1]b[1]) (a[0]b[0])
         }
         return dp[n - 1][1];
     }
+
+    /**
+     * 1122. 数组的相对排序
+     * 给你两个数组，arr1 和 arr2，
+     * arr2 中的元素各不相同
+     * arr2 中的每个元素都出现在 arr1 中
+     * 对 arr1 中的元素进行排序，使 arr1 中项的相对顺序和 arr2 中的相对顺序相同。
+     * 未在 arr2 中出现过的元素需要按照升序放在 arr1 的末尾。
+     * <p>
+     * 执行用时：3 ms, 在所有 Java 提交中击败了39.49% 的用户
+     * 内存消耗：38.9 MB, 在所有 Java 提交中击败了19.69% 的用户
+     *
+     * @param arr1 数组
+     * @param arr2 数组
+     * @return 数组的相对排序
+     */
+    public int[] relativeSortArray(int[] arr1, int[] arr2) {
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int a : arr2) {
+            map.put(a, 0);
+        }
+        PriorityQueue<Integer> list = new PriorityQueue<>();
+        for (int a : arr1) {
+            if (map.containsKey(a)) {
+                map.put(a, map.get(a) + 1);
+            } else {
+                list.add(a);
+            }
+        }
+        int t = 0;
+        for (int i = 0; i < arr2.length; i++) {
+            int tmp = map.get(arr2[i]);
+            for (int j = 0; j < tmp; j++) {
+                arr1[t++] = arr2[i];
+            }
+        }
+        while (!list.isEmpty()) {
+            arr1[t++] = list.poll();
+        }
+        return arr1;
+    }
+
 }
