@@ -1857,8 +1857,8 @@ public class SolutionNow {
      * 执行用时：14 ms, 在所有 Java 提交中击败了73.79% 的用户
      * 内存消耗：41.1 MB, 在所有 Java 提交中击败了18.54% 的用户
      *
-     * @param R R行
-     * @param C C列
+     * @param R  R行
+     * @param C  C列
      * @param r0 坐标为 (r0, c0) 的单元格
      * @param c0 坐标为 (r0, c0) 的单元格
      * @return 返回矩阵中的所有单元格的坐标，并按到 (r0, c0) 的距离从最小到最大的顺序排
@@ -1878,6 +1878,47 @@ public class SolutionNow {
         });
         return ret;
 
+    }
+
+    /**
+     * 34. 加油站
+     *
+     * 在一条环路上有 N 个加油站，其中第 i 个加油站有汽油 gas[i] 升。
+     * 你有一辆油箱容量无限的的汽车，从第 i 个加油站开往第 i+1 个加油站需要消耗汽油 cost[i] 升。你从其中的一个加油站出发，开始时油箱为空。
+     * 如果你可以绕环路行驶一周，则返回出发时加油站的编号，否则返回 -1。
+     * 说明:
+     *     如果题目有解，该答案即为唯一答案。
+     *     输入数组均为非空数组，且长度相同。
+     *     输入数组中的元素均为非负数。
+     *
+     * 执行用时：64 ms, 在所有 Java 提交中击败了23.24% 的用户
+     * 内存消耗：38.5 MB, 在所有 Java 提交中击败了93.32% 的用户
+     * @param gas 加油站有汽油 gas[i]
+     * @param cost 需要消耗汽油 cost[i]
+     * @return 如果你可以绕环路行驶一周，则返回出发时加油站的编号，否则返回 -1
+     */
+    public int canCompleteCircuit(int[] gas, int[] cost) {
+        int n = gas.length;
+        for (int i = 0; i < n; i++) {
+            if (gas[i] - cost[i] < 0) {
+                continue;
+            }
+            int tmp = 0;
+            int t = 0;
+            boolean right = true;
+            while (t < n) {
+                tmp += gas[(t + i) % n] - cost[(t + i) % n];
+                if (tmp <= 0 && t != n - 1) {
+                    right = false;
+                    break;
+                }
+                t++;
+            }
+            if (right && tmp >= 0) {
+                return i;
+            }
+        }
+        return -1;
     }
 }
 //class Node {
