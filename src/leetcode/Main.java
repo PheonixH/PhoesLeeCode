@@ -90,7 +90,7 @@ public class Main {
 
         //Arrays
         String[] oneDimensionalStringArray = {"bella", "label", "roller"};
-        int[] oneDimensionalArrayA = {4};
+        int[] oneDimensionalArrayA = {0, 1, 0, 3, 12};
         int[] oneDimensionalArrayB = {4};
         int[][] twoDimensionalArray = {{7, 0}, {4, 4}, {7, 1}, {5, 0}, {6, 1}, {5, 2}};
         char[] oneDimensionalCharArray = {'A', 'B'};
@@ -135,7 +135,7 @@ public class Main {
         }
 
         SolutionNow solution = new SolutionNow();
-        solution.canCompleteCircuit(oneDimensionalArrayA, oneDimensionalArrayB);
+        solution.moveZeroes(oneDimensionalArrayA);
 
         Games games = new Games();
     }
