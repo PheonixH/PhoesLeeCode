@@ -90,7 +90,7 @@ public class Main {
 
         //Arrays
         String[] oneDimensionalStringArray = {"bella", "label", "roller"};
-        int[] oneDimensionalArrayA = {0, 1, 0, 3, 12};
+        int[] oneDimensionalArrayA = {-1, 5, 3, 4, 0};
         int[] oneDimensionalArrayB = {4};
         int[][] twoDimensionalArray = {{7, 0}, {4, 4}, {7, 1}, {5, 0}, {6, 1}, {5, 2}};
         char[] oneDimensionalCharArray = {'A', 'B'};
@@ -114,7 +114,7 @@ public class Main {
         String[][] listListStringArray = {{"JFK", "SFO"}, {"JFK", "ATL"}, {"SFO", "ATL"}, {"ATL", "JFK"}, {"ATL", "SFO"}};
         List<List<String>> stringListList = createListList(listListStringArray);
 
-        int[] listNodeValue = {1, 2, 3, 4};
+        int[] listNodeValue = {-1, 5, 3, 4, 0};
         ListNode head = createListNode(listNodeValue);
 
         int[] treeNodeValue = {5, 4, 8, 11, -1, 13, 4, 7, 2, -1, -1, 5, 1};
@@ -135,7 +135,7 @@ public class Main {
         }
 
         SolutionNow solution = new SolutionNow();
-        solution.moveZeroes(oneDimensionalArrayA);
+        solution.insertionSortList(head);
 
         Games games = new Games();
     }

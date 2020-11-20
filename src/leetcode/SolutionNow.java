@@ -1925,9 +1925,10 @@ public class SolutionNow {
     /**
      * 283. 移动零
      * 给定一个数组 nums，编写一个函数将所有 0 移动到数组的末尾，同时保持非零元素的相对顺序。
-     *
+     * <p>
      * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
      * 内存消耗：38.8 MB, 在所有 Java 提交中击败了77.96% 的用户
+     *
      * @param nums 数组
      */
     public void moveZeroes(int[] nums) {
@@ -1941,6 +1942,49 @@ public class SolutionNow {
             }
         }
     }
+
+    /**
+     * 147. 对链表进行插入排序
+     *
+     * 对链表进行插入排序。
+     *
+     * 执行用时：3 ms, 在所有 Java 提交中击败了98.81% 的用户
+     * 内存消耗：38 MB, 在所有 Java 提交中击败了91.02% 的用户
+     * @param head 链表
+     * @return 排序之后的链表
+     */
+    public ListNode insertionSortList(ListNode head) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+        ListNode p = head.next;
+        ListNode pre = head;
+        while (p != null) {
+            ListNode next = p.next;
+            if (p.val >= pre.val) {
+                pre = p;
+                p = next;
+                continue;
+            }
+            ListNode tmp = head;
+            if (tmp.val >= p.val) {
+                p.next = tmp;
+                head = p;
+                pre.next = next;
+                p = next;
+                continue;
+            }
+            while (tmp.next != null && tmp.next.val < p.val) {
+                tmp = tmp.next;
+            }
+            p.next = tmp.next;
+            tmp.next = p;
+            pre.next = next;
+            p = next;
+        }
+        return head;
+    }
+
 }
 //class Node {
 //    public int val;
