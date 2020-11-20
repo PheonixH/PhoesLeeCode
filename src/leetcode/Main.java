@@ -92,7 +92,7 @@ public class Main {
         String[] oneDimensionalStringArray = {"bella", "label", "roller"};
         int[] oneDimensionalArrayA = {-1, 5, 3, 4, 0};
         int[] oneDimensionalArrayB = {4};
-        int[][] twoDimensionalArray = {{7, 0}, {4, 4}, {7, 1}, {5, 0}, {6, 1}, {5, 2}};
+        int[][] twoDimensionalArray = {{1, 2}, {2, 3}};
         char[] oneDimensionalCharArray = {'A', 'B'};
         char[][] twoDimensionalCharArray = {
                 {'5', '3', '.', '.', '7', '.', '.', '.', '.'},
@@ -135,7 +135,7 @@ public class Main {
         }
 
         SolutionNow solution = new SolutionNow();
-        solution.insertionSortList(head);
+        solution.frogPosition(3, twoDimensionalArray, 1, 2);
 
         Games games = new Games();
     }

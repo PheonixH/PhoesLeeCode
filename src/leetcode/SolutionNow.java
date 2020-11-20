@@ -1945,11 +1945,12 @@ public class SolutionNow {
 
     /**
      * 147. 对链表进行插入排序
-     *
+     * <p>
      * 对链表进行插入排序。
-     *
+     * <p>
      * 执行用时：3 ms, 在所有 Java 提交中击败了98.81% 的用户
      * 内存消耗：38 MB, 在所有 Java 提交中击败了91.02% 的用户
+     *
      * @param head 链表
      * @return 排序之后的链表
      */
@@ -1985,7 +1986,64 @@ public class SolutionNow {
         return head;
     }
 
+    /**
+     * 1377. T 秒后青蛙的位置
+     * 给你一棵由 n 个顶点组成的无向树，顶点编号从 1 到 n。青蛙从 顶点 1 开始起跳。规则如下：
+     * 在一秒内，青蛙从它所在的当前顶点跳到另一个 未访问 过的顶点（如果它们直接相连）。
+     * 青蛙无法跳回已经访问过的顶点。
+     * 如果青蛙可以跳到多个不同顶点，那么它跳到其中任意一个顶点上的机率都相同。
+     * 如果青蛙不能跳到任何未访问过的顶点上，那么它每次跳跃都会停留在原地。
+     * 无向树的边用数组 edges 描述，其中 edges[i] = [fromi, toi] 意味着存在一条直接连通 fromi 和 toi 两个顶点的边。
+     * 返回青蛙在 t 秒后位于目标顶点 target 上的概率。
+     * <p>
+     * 执行用时：5 ms, 在所有 Java 提交中击败了74.44% 的用户
+     * 内存消耗：39.5 MB, 在所有 Java 提交中击败了15.57% 的用户
+     *
+     * @param n      由 n 个顶点组成的无向树
+     * @param edges  由 n 个顶点组成的无向树的边集
+     * @param t      t 秒后
+     * @param target 目标顶点
+     * @return 返回青蛙在 t 秒后位于目标顶点 target 上的概率
+     */
+    public double frogPosition(int n, int[][] edges, int t, int target) {
+        double[] drr = new double[n];
+        int[][] arr = new int[n][n + 1];
+        for (int[] edge : edges) {
+            arr[edge[0] - 1][edge[1] - 1] = 1;
+            arr[edge[1] - 1][edge[0] - 1] = 1;
+            arr[edge[0] - 1][n]++;
+            arr[edge[1] - 1][n]++;
+        }
+        drr[0] = 1.0;
+        Stack<int[]> stack = new Stack<>();
+        stack.push(new int[]{0, 0});
+        while (!stack.empty()) {
+            int[] tm = stack.pop();
+            if (tm[1] >= t) {
+                continue;
+            }
+            int tmp = tm[0];
+            double v = arr[tmp][n] == 0 ? 0.0 : 1 / (double) arr[tmp][n];
+            if (v == 0.0) {
+                continue;
+            }
+            for (int i = 0; i < n; i++) {
+                if (arr[i][tmp] == 1) {
+                    arr[i][tmp] = 0;
+                    arr[tmp][i] = 0;
+                    arr[i][n]--;
+                    arr[tmp][n]--;
+                    stack.push(new int[]{i, tm[1] + 1});
+                    drr[i] = v * drr[tmp];
+                }
+            }
+            drr[tmp] = 0;
+        }
+        return drr[target - 1];
+    }
 }
+
+
 //class Node {
 //    public int val;
 //    public Node left;
