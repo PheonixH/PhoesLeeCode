@@ -2212,4 +2212,113 @@ x = (a[7]b[7]) (a[6]b[6]) ... (a[1]b[1]) (a[0]b[0])
         }
         return sum;
     }
+
+    public boolean uniqueOccurrences(int[] arr) {
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int a : arr) {
+            int t = map.getOrDefault(a, 0) + 1;
+            map.put(a, t);
+        }
+        Set<Integer> set = new HashSet<>();
+        for (Map.Entry<Integer, Integer> m : map.entrySet()) {
+            if (!set.add(m.getValue())) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public List<List<Integer>> pathSum(TreeNode root, int sum) {
+        pathSumDFS(root, sum, 0, new ArrayList<>());
+        return pathSumResult;
+    }
+
+    List<List<Integer>> pathSumResult = new ArrayList<>();
+
+    private void pathSumDFS(TreeNode root, int target, int now, List<Integer> list) {
+        if (root == null) {
+            return;
+        }
+        if (root.val + now == target) {
+            if (root.left == null && root.right == null) {
+                List<Integer> cop = new ArrayList<>(List.copyOf(list));
+                cop.add(root.val);
+                pathSumResult.add(cop);
+                return;
+            }
+        }
+        now = root.val + now;
+        list.add(root.val);
+        pathSumDFS(root.left, target, now, list);
+        pathSumDFS(root.right, target, now, list);
+        list.remove(list.size() - 1);
+    }
+
+    public int largestIsland(int[][] grid) {
+        int key = 10;
+        Map<Integer, Integer> area = new HashMap<>();
+        int n = grid.length;
+        int m = grid[0].length;
+        int max = 0;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (grid[i][j] == 1) {
+                    int a = largestIslandAres(grid, new int[]{i, j}, key);
+                    area.put(key, a);
+                    key++;
+                    max = Math.max(a, max);
+                }
+            }
+        }
+        int[][] dir = new int[][]{{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (grid[i][j] == 0) {
+                    int tmp = 1;
+                    Set<Integer> set = new HashSet<>();
+                    for (int[] d : dir) {
+                        int nx = d[0] + i;
+                        int ny = d[1] + j;
+                        if (nx < 0 || nx >= grid.length || ny < 0 || ny >= grid[0].length) {
+                            continue;
+                        }
+                        if (area.containsKey(grid[nx][ny]) && !set.contains(grid[nx][ny])) {
+                            set.add(grid[nx][ny]);
+                            tmp += area.get(grid[nx][ny]);
+                        }
+                    }
+                    max = Math.max(max, tmp);
+                }
+            }
+        }
+        return max;
+    }
+
+    private int largestIslandAres(int[][] grid, int[] begin, int key) {
+        int[][] dir = new int[][]{{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+        Stack<int[]> stack = new Stack<>();
+        stack.push(begin);
+        int area = 0;
+        while (!stack.isEmpty()) {
+            int[] tmp = stack.pop();
+            int x = tmp[0];
+            int y = tmp[1];
+            if (grid[x][y] != 1) {
+                continue;
+            }
+            grid[x][y] = key;
+            area++;
+            for (int[] d : dir) {
+                int nx = x + d[0];
+                int ny = y + d[1];
+                if (nx < 0 || nx >= grid.length || ny < 0 || ny >= grid[0].length) {
+                    continue;
+                }
+                if (grid[nx][ny] == 1) {
+                    stack.push(new int[]{nx, ny});
+                }
+            }
+        }
+        return area;
+    }
 }
