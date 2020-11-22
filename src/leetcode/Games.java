@@ -1,5 +1,6 @@
 package leetcode;
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 import leetcode.datestruct.TreeNode;
@@ -650,26 +651,26 @@ public class Games {
     }
 
 
-
     /**
      * 127. 单词接龙
-     *
+     * <p>
      * 给定两个单词（beginWord 和 endWord）和一个字典，找到从 beginWord 到 endWord 的最短转换序列的长度。转换需遵循如下规则：
-     *     每次转换只能改变一个字母。
-     *     转换过程中的中间单词必须是字典中的单词。
-     *
+     * 每次转换只能改变一个字母。
+     * 转换过程中的中间单词必须是字典中的单词。
+     * <p>
      * 说明:
-     *     如果不存在这样的转换序列，返回 0。
-     *     所有单词具有相同的长度。
-     *     所有单词只由小写字母组成。
-     *     字典中不存在重复的单词。
-     *     你可以假设 beginWord 和 endWord 是非空的，且二者不相同。
-     *
+     * 如果不存在这样的转换序列，返回 0。
+     * 所有单词具有相同的长度。
+     * 所有单词只由小写字母组成。
+     * 字典中不存在重复的单词。
+     * 你可以假设 beginWord 和 endWord 是非空的，且二者不相同。
+     * <p>
      * 执行用时：28 ms, 在所有 Java 提交中击败了87.03% 的用户
      * 内存消耗：46.4 MB, 在所有 Java 提交中击败了17.96% 的用户
+     *
      * @param beginWord 单词
-     * @param endWord 单词
-     * @param wordList 字典
+     * @param endWord   单词
+     * @param wordList  字典
      * @return 找到从 beginWord 到 endWord 的最短转换序列的长度
      */
     public int ladderLength(String beginWord, String endWord, List<String> wordList) {
@@ -755,4 +756,276 @@ public class Games {
         }
     }
 
+    public boolean closeStrings(String word1, String word2) {
+        int n = word1.length();
+        int n2 = word2.length();
+        if (n != n2) {
+            return false;
+        }
+
+        boolean[] booleans = new boolean[26];
+        boolean[] booleans2 = new boolean[26];
+        char[] chars1 = word1.toCharArray();
+        char[] chars2 = word2.toCharArray();
+        int[] nums = new int[26];
+        int[] nums2 = new int[26];
+        for (int i = 0; i < n; i++) {
+            booleans[chars1[i] - 'a'] = true;
+            booleans2[chars2[i] - 'a'] = true;
+            nums[chars1[i] - 'a']++;
+            nums2[chars2[i] - 'a']++;
+        }
+        Arrays.sort(nums);
+        Arrays.sort(nums2);
+
+        for (int i = 0; i < 26; i++) {
+            if (booleans[i] ^ booleans2[i]) {
+                return false;
+            }
+            if (nums[i] != nums2[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+    public int minOperations(int[] nums, int x) {
+        int l = 0, r = nums.length - 1;
+        minOperationsDFS(nums, x, l, r, 0);
+        String tmp = l + "," + r;
+        if (map.containsKey(tmp)) {
+            int t = map.get(tmp);
+            return t > Integer.MAX_VALUE / 3 ? -1 : t;
+        }
+        return -1;
+    }
+
+    private Map<String, Integer> map = new HashMap<>();
+//    private int minOperationsRes = Integer.MAX_VALUE / 3;
+
+    public int minOperationsDFS(int[] nums, int x, int l, int r, int now) {
+        if (nums[l] > x && nums[r] > x) {
+            map.put(l + "," + r, -1);
+            return -1;
+        }
+        if (nums[l] == x || nums[r] == x) {
+            map.put(l + "," + r, 1);
+//            minOperationsRes = Math.min(now + 1, minOperationsRes);
+            return 1;
+        }
+        int tt = Integer.MAX_VALUE / 3;
+        if (l < r && x > nums[l]) {
+            String tmp = (l + 1) + "," + r;
+            if (map.containsKey(tmp) && map.get(tmp) > 0) {
+                int t = map.get(tmp);
+//                minOperationsRes = Math.min(now + t, minOperationsRes);
+
+                if (t > -1) {
+                    tt = t + 1;
+                }
+            } else {
+                int t = minOperationsDFS(nums, x - nums[l], l + 1, r, now + 1);
+                if (t >= 0) {
+                    tt = t + 1;
+                }
+            }
+        }
+        if (l < r && x > nums[r]) {
+            String tmp = l + "," + (r - 1);
+            if (map.containsKey(tmp) && map.get(tmp) > 0) {
+                int t = map.get(tmp);
+//                minOperationsRes = Math.min(now + t, minOperationsRes);
+                if (t > -1) {
+                    tt = Math.min(tt, t + 1);
+                }
+            } else {
+                int t = minOperationsDFS(nums, x - nums[r], l, r - 1, now + 1);
+                if (t >= 0) {
+                    tt = Math.min(tt, t + 1);
+                }
+            }
+        }
+        if (tt == Integer.MAX_VALUE / 3) {
+            tt = -1;
+        }
+        map.put(l + "," + r, tt);
+        return tt;
+    }
+
+    public int minOperations2(int[] nums, int x) {
+        int n = nums.length;
+        int[][] dp = new int[n][n];
+        dp[0][n - 1] = x;
+        int min = -1;
+        for (int i = 0; i < n; i++) {
+            if (i != 0) {
+                dp[i][n - 1] = dp[i - 1][n - 1] - nums[i - 1];
+            }
+            for (int j = n - 2; j > i; j--) {
+                dp[i][j] = dp[i][j + 1] - nums[j + 1];
+                if (dp[i][j] < 0) {
+                    break;
+                } else if (dp[i][j] == 0) {
+                    min = Math.max(j - i + 1, min);
+                }
+            }
+        }
+        return min == -1 ? -1 : n - min;
+    }
+
+    public String removeKdigits(String num, int k) {
+        char[] chars = num.toCharArray();
+        int n = num.length();
+        if (n <= k) {
+            return "0";
+        }
+        StringBuilder stringBuilder = new StringBuilder();
+        int j = 0;
+        boolean f = true;
+        for (int i = 1; i < n; i++) {
+            if (f && chars[i] == '0' && chars[j] == '0') {
+                i++;
+                continue;
+            } else if (f && chars[i] == '0') {
+                chars[j] = '#';
+                j = i;
+                k--;
+                continue;
+            }
+            if (chars[i] < chars[j]) {
+                chars[j] = '#';
+                j = i;
+                k--;
+                f = false;
+            } else if (chars[i] > chars[j]) {
+                chars[i] = '#';
+                k--;
+                f = false;
+            }
+            if (k <= 0) {
+                break;
+            }
+        }
+        for (int i = 0; i < n; i++) {
+            if (chars[i] == '#') {
+                continue;
+            }
+            if (k > 0) {
+                k--;
+                continue;
+            }
+            if (stringBuilder.length() == 0 && chars[i] == '0') {
+                continue;
+            }
+            stringBuilder.append(chars[i]);
+        }
+        return stringBuilder.toString();
+    }
+
+    // 周赛 216
+    public boolean arrayStringsAreEqual(String[] word1, String[] word2) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (String s : word1) {
+            stringBuilder.append(s);
+        }
+        StringBuilder stringBuilder2 = new StringBuilder();
+        for (String s : word2) {
+            stringBuilder2.append(s);
+        }
+        return stringBuilder.toString().equals(stringBuilder2.toString());
+    }
+
+    public String getSmallestString(int n, int k) {
+        StringBuilder stringBuilder = new StringBuilder();
+        while (k >= n && n > 0) {
+            // 3 27
+            int p = k - 26 >= n - 1 ? 26 : k - n + 1;
+            char c = (char) ('a' + p - 1);
+            stringBuilder.append(c);
+            k -= p;
+            n--;
+        }
+        return stringBuilder.reverse().toString();
+    }
+
+    public int waysToMakeFair(int[] nums) {
+        int n = nums.length;
+        int[][] pre = new int[n][2];
+        pre[0][0] = nums[0];
+        pre[0][1] = 0;
+        for (int i = 1; i < n; i++) {
+            if (i % 2 == 0) {
+                pre[i][0] = pre[i - 1][0] + nums[i];
+                pre[i][1] = pre[i - 1][1];
+            } else {
+                pre[i][0] = pre[i - 1][0];
+                pre[i][1] = pre[i - 1][1] + nums[i];
+            }
+        }
+        int res = 0;
+        for (int i = 0; i < n; i++) {
+            int l0 = 0;
+            int l1 = 0;
+            if (i > 0) {
+                l0 = pre[i - 1][0];
+                l1 = pre[i - 1][1];
+            }
+            int r0 = 0;
+            int r1 = 0;
+            if (i < n - 1) {
+                r0 = pre[n - 1][0] - pre[i][0];
+                r1 = pre[n - 1][1] - pre[i][1];
+            }
+            if (l0 + r1 == l1 + r0) {
+                res++;
+            }
+        }
+        return res;
+    }
+
+    public int minimumEffort(int[][] tasks) {
+        Comparator<int[]> comparator = new Comparator<int[]>() {
+            @Override
+            public int compare(int[] o1, int[] o2) {
+                if (o1[1] == o2[1]) {
+                    return o1[0] - o2[0];
+                }
+                return o2[1] - o1[1];
+            }
+        };
+
+        Comparator<int[]> comparator2 = new Comparator<int[]>() {
+            @Override
+            public int compare(int[] o1, int[] o2) {
+                int a = o1[0] + o2[1];
+                int b = o1[1] + o2[0];
+                if (a != b) {
+                    return a - b;
+                }
+                if (o1[1] == o2[1]) {
+                    return o1[0] - o2[0];
+                }
+                return o2[1] - o1[1];
+            }
+        };
+
+        Arrays.sort(tasks, comparator2);
+
+
+        int sum = 0;
+        for (int[] task : tasks) {
+            sum += task[0];
+        }
+        int need = 0;
+        int now = sum;
+        for (int[] task : tasks) {
+            if (now < task[1]) {
+                need += task[1] - now;
+                now = task[1];
+            }
+            now = now - task[0];
+        }
+        return sum + need;
+    }
 }
