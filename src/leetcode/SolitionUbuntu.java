@@ -2181,4 +2181,35 @@ x = (a[7]b[7]) (a[6]b[6]) ... (a[1]b[1]) (a[0]b[0])
         return arr1;
     }
 
+
+    /**
+     * 1402. 做菜顺序
+     * <p>
+     * 一个厨师收集了他 n 道菜的满意程度 satisfaction ，这个厨师做出每道菜的时间都是 1 单位时间。
+     * 一道菜的 「喜爱时间」系数定义为烹饪这道菜以及之前每道菜所花费的时间乘以这道菜的满意程度，也就是 time[i]*satisfaction[i] 。
+     * 请你返回做完所有菜 「喜爱时间」总和的最大值为多少。
+     * 你可以按 任意 顺序安排做菜的顺序，你也可以选择放弃做某些菜来获得更大的总和。
+     * <p>
+     * 执行用时：1 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：36.4 MB, 在所有 Java 提交中击败了82.45% 的用户
+     *
+     * @param satisfaction n 道菜的满意程度 satisfaction
+     * @return 返回做完所有菜 「喜爱时间」总和的最大值为多少
+     */
+    public int maxSatisfaction(int[] satisfaction) {
+        Arrays.sort(satisfaction);
+        int sum = 0;
+        int done = 0;
+        int n = satisfaction.length;
+        for (int i = n - 1; i >= 0; i--) {
+            int tmp = sum + done + satisfaction[i];
+            if (tmp >= sum) {
+                done += satisfaction[i];
+                sum = tmp;
+            } else {
+                break;
+            }
+        }
+        return sum;
+    }
 }

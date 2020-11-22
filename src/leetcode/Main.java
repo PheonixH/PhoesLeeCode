@@ -137,6 +137,9 @@ public class Main {
         SolutionNow solution = new SolutionNow();
 //        solution.nextPermutation(new int[]{1, 5, 3, 4, 2});
 
+        SolitionUbuntu solitionUbuntu = new SolitionUbuntu();
+        solitionUbuntu.maxSatisfaction(new int[]{4, 3, 2});
+
         Games games = new Games();
         games.minimumEffort(twoDimensionalArray);
     }
