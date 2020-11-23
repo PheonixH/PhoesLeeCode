@@ -90,9 +90,9 @@ public class Main {
 
         //Arrays
         String[] oneDimensionalStringArray = {"bella", "label", "roller"};
-        int[] oneDimensionalArrayA = {-1, 5, 3, 4, 0};
-        int[] oneDimensionalArrayB = {4};
-        int[][] twoDimensionalArray = {{1, 2}, {2, 3}};
+        int[] oneDimensionalArrayA = {43024, 99908};
+        int[] oneDimensionalArrayB = {1864};
+        int[][] twoDimensionalArray = {{1, 3}, {2, 4}, {10, 11}, {10, 12}, {8, 9}};
         char[] oneDimensionalCharArray = {'A', 'B'};
         char[][] twoDimensionalCharArray = {
                 {'5', '3', '.', '.', '7', '.', '.', '.', '.'},
@@ -114,7 +114,7 @@ public class Main {
         String[][] listListStringArray = {{"JFK", "SFO"}, {"JFK", "ATL"}, {"SFO", "ATL"}, {"ATL", "JFK"}, {"ATL", "SFO"}};
         List<List<String>> stringListList = createListList(listListStringArray);
 
-        int[] listNodeValue = {-1, 5, 3, 4, 0};
+        int[] listNodeValue = {1, 2, 3, 4};
         ListNode head = createListNode(listNodeValue);
 
         int[] treeNodeValue = {5, 4, 8, 11, -1, 13, 4, 7, 2, -1, -1, 5, 1};
@@ -135,9 +135,10 @@ public class Main {
         }
 
         SolutionNow solution = new SolutionNow();
-        solution.frogPosition(3, twoDimensionalArray, 1, 2);
+//        solution.nextPermutation(new int[]{1, 5, 3, 4, 2});
 
         Games games = new Games();
+        games.minimumEffort(twoDimensionalArray);
     }
 
 }
