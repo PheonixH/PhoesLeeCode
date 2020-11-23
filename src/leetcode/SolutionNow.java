@@ -1857,8 +1857,8 @@ public class SolutionNow {
      * 执行用时：14 ms, 在所有 Java 提交中击败了73.79% 的用户
      * 内存消耗：41.1 MB, 在所有 Java 提交中击败了18.54% 的用户
      *
-     * @param R R行
-     * @param C C列
+     * @param R  R行
+     * @param C  C列
      * @param r0 坐标为 (r0, c0) 的单元格
      * @param c0 坐标为 (r0, c0) 的单元格
      * @return 返回矩阵中的所有单元格的坐标，并按到 (r0, c0) 的距离从最小到最大的顺序排
@@ -1879,7 +1879,244 @@ public class SolutionNow {
         return ret;
 
     }
+
+    /**
+     * 34. 加油站
+     * <p>
+     * 在一条环路上有 N 个加油站，其中第 i 个加油站有汽油 gas[i] 升。
+     * 你有一辆油箱容量无限的的汽车，从第 i 个加油站开往第 i+1 个加油站需要消耗汽油 cost[i] 升。你从其中的一个加油站出发，开始时油箱为空。
+     * 如果你可以绕环路行驶一周，则返回出发时加油站的编号，否则返回 -1。
+     * 说明:
+     * 如果题目有解，该答案即为唯一答案。
+     * 输入数组均为非空数组，且长度相同。
+     * 输入数组中的元素均为非负数。
+     * <p>
+     * 执行用时：64 ms, 在所有 Java 提交中击败了23.24% 的用户
+     * 内存消耗：38.5 MB, 在所有 Java 提交中击败了93.32% 的用户
+     *
+     * @param gas  加油站有汽油 gas[i]
+     * @param cost 需要消耗汽油 cost[i]
+     * @return 如果你可以绕环路行驶一周，则返回出发时加油站的编号，否则返回 -1
+     */
+    public int canCompleteCircuit(int[] gas, int[] cost) {
+        int n = gas.length;
+        for (int i = 0; i < n; i++) {
+            if (gas[i] - cost[i] < 0) {
+                continue;
+            }
+            int tmp = 0;
+            int t = 0;
+            boolean right = true;
+            while (t < n) {
+                tmp += gas[(t + i) % n] - cost[(t + i) % n];
+                if (tmp <= 0 && t != n - 1) {
+                    right = false;
+                    break;
+                }
+                t++;
+            }
+            if (right && tmp >= 0) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * 283. 移动零
+     * 给定一个数组 nums，编写一个函数将所有 0 移动到数组的末尾，同时保持非零元素的相对顺序。
+     * <p>
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：38.8 MB, 在所有 Java 提交中击败了77.96% 的用户
+     *
+     * @param nums 数组
+     */
+    public void moveZeroes(int[] nums) {
+        int n = nums.length;
+        int[] arr = Arrays.copyOf(nums, n);
+        Arrays.fill(nums, 0);
+        int t = 0;
+        for (int num : arr) {
+            if (num != 0) {
+                nums[t++] = num;
+            }
+        }
+    }
+
+    /**
+     * 147. 对链表进行插入排序
+     * <p>
+     * 对链表进行插入排序。
+     * <p>
+     * 执行用时：3 ms, 在所有 Java 提交中击败了98.81% 的用户
+     * 内存消耗：38 MB, 在所有 Java 提交中击败了91.02% 的用户
+     *
+     * @param head 链表
+     * @return 排序之后的链表
+     */
+    public ListNode insertionSortList(ListNode head) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+        ListNode p = head.next;
+        ListNode pre = head;
+        while (p != null) {
+            ListNode next = p.next;
+            if (p.val >= pre.val) {
+                pre = p;
+                p = next;
+                continue;
+            }
+            ListNode tmp = head;
+            if (tmp.val >= p.val) {
+                p.next = tmp;
+                head = p;
+                pre.next = next;
+                p = next;
+                continue;
+            }
+            while (tmp.next != null && tmp.next.val < p.val) {
+                tmp = tmp.next;
+            }
+            p.next = tmp.next;
+            tmp.next = p;
+            pre.next = next;
+            p = next;
+        }
+        return head;
+    }
+
+    /**
+     * 1377. T 秒后青蛙的位置
+     * 给你一棵由 n 个顶点组成的无向树，顶点编号从 1 到 n。青蛙从 顶点 1 开始起跳。规则如下：
+     * 在一秒内，青蛙从它所在的当前顶点跳到另一个 未访问 过的顶点（如果它们直接相连）。
+     * 青蛙无法跳回已经访问过的顶点。
+     * 如果青蛙可以跳到多个不同顶点，那么它跳到其中任意一个顶点上的机率都相同。
+     * 如果青蛙不能跳到任何未访问过的顶点上，那么它每次跳跃都会停留在原地。
+     * 无向树的边用数组 edges 描述，其中 edges[i] = [fromi, toi] 意味着存在一条直接连通 fromi 和 toi 两个顶点的边。
+     * 返回青蛙在 t 秒后位于目标顶点 target 上的概率。
+     * <p>
+     * 执行用时：5 ms, 在所有 Java 提交中击败了74.44% 的用户
+     * 内存消耗：39.5 MB, 在所有 Java 提交中击败了15.57% 的用户
+     *
+     * @param n      由 n 个顶点组成的无向树
+     * @param edges  由 n 个顶点组成的无向树的边集
+     * @param t      t 秒后
+     * @param target 目标顶点
+     * @return 返回青蛙在 t 秒后位于目标顶点 target 上的概率
+     */
+    public double frogPosition(int n, int[][] edges, int t, int target) {
+        double[] drr = new double[n];
+        int[][] arr = new int[n][n + 1];
+        for (int[] edge : edges) {
+            arr[edge[0] - 1][edge[1] - 1] = 1;
+            arr[edge[1] - 1][edge[0] - 1] = 1;
+            arr[edge[0] - 1][n]++;
+            arr[edge[1] - 1][n]++;
+        }
+        drr[0] = 1.0;
+        Stack<int[]> stack = new Stack<>();
+        stack.push(new int[]{0, 0});
+        while (!stack.empty()) {
+            int[] tm = stack.pop();
+            if (tm[1] >= t) {
+                continue;
+            }
+            int tmp = tm[0];
+            double v = arr[tmp][n] == 0 ? 0.0 : 1 / (double) arr[tmp][n];
+            if (v == 0.0) {
+                continue;
+            }
+            for (int i = 0; i < n; i++) {
+                if (arr[i][tmp] == 1) {
+                    arr[i][tmp] = 0;
+                    arr[tmp][i] = 0;
+                    arr[i][n]--;
+                    arr[tmp][n]--;
+                    stack.push(new int[]{i, tm[1] + 1});
+                    drr[i] = v * drr[tmp];
+                }
+            }
+            drr[tmp] = 0;
+        }
+        return drr[target - 1];
+    }
+
+
+    /**
+     * 452. 用最少数量的箭引爆气球
+     * <p>
+     * 在二维空间中有许多球形的气球。对于每个气球，提供的输入是水平方向上，气球直径的开始和结束坐标。由于它是水平的，所以纵坐标并不重要，因此只要知道开始和结束的横坐标就足够了。开始坐标总是小于结束坐标。
+     * 一支弓箭可以沿着 x 轴从不同点完全垂直地射出。在坐标 x 处射出一支箭，若有一个气球的直径的开始和结束坐标为 xstart，xend， 且满足  xstart ≤ x ≤ xend，则该气球会被引爆。可以射出的弓箭的数量没有限制。 弓箭一旦被射出之后，可以无限地前进。我们想找到使得所有气球全部被引爆，所需的弓箭的最小数量。
+     * 给你一个数组 points ，其中 points [i] = [xstart,xend] ，返回引爆所有气球所必须射出的最小弓箭数。
+     * <p>
+     * 执行用时：21 ms, 在所有 Java 提交中击败了76.19% 的用户
+     * 内存消耗：46 MB, 在所有 Java 提交中击败了83.36% 的用户
+     *
+     * @param points 气球
+     * @return 最少数量的箭引爆气球
+     */
+    public int findMinArrowShots(int[][] points) {
+        Comparator<int[]> comparator = new Comparator<int[]>() {
+            @Override
+            public int compare(int[] o1, int[] o2) {
+                if (o1[0] == o2[0]) {
+                    if (o1[1] < o2[1]) {
+                        return -1;
+                    } else {
+                        return 1;
+                    }
+                } else {
+                    if (o1[0] < o2[0]) {
+                        return -1;
+                    } else {
+                        return 1;
+                    }
+                }
+            }
+        };
+
+        Arrays.sort(points, comparator);
+
+        int ans = 1;
+        int n = points.length;
+        if (n == 0) {
+            return 0;
+        }
+        boolean[] broken = new boolean[n];
+        int x = points[0][1];
+        for (int i = 1; i < n; i++) {
+            if (x >= points[i][0]) {
+                x = Math.min(x, points[i][1]);
+            } else {
+                ans++;
+                x = points[i][1];
+            }
+        }
+        return ans;
+    }
+
+    /**
+     * 1290. 二进制链表转整数
+     * 给你一个单链表的引用结点 head。链表中每个结点的值不是 0 就是 1。已知此链表是一个整数数字的二进制表示形式。
+     * 请你返回该链表所表示数字的 十进制值 。
+     *
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：35.6 MB, 在所有 Java 提交中击败了95.81% 的用户
+     * @param head 单链表的引用结点
+     * @return 二进制链表转整数
+     */
+    public int getDecimalValue(ListNode head) {
+        int ans = 0;
+        while (head != null) {
+            ans = ans * 2 + head.val;
+            head = head.next;
+        }
+        return ans;
+    }
 }
+
+
 //class Node {
 //    public int val;
 //    public Node left;
