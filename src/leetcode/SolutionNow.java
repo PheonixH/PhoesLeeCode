@@ -2045,13 +2045,14 @@ public class SolutionNow {
 
     /**
      * 452. 用最少数量的箭引爆气球
-     *
+     * <p>
      * 在二维空间中有许多球形的气球。对于每个气球，提供的输入是水平方向上，气球直径的开始和结束坐标。由于它是水平的，所以纵坐标并不重要，因此只要知道开始和结束的横坐标就足够了。开始坐标总是小于结束坐标。
      * 一支弓箭可以沿着 x 轴从不同点完全垂直地射出。在坐标 x 处射出一支箭，若有一个气球的直径的开始和结束坐标为 xstart，xend， 且满足  xstart ≤ x ≤ xend，则该气球会被引爆。可以射出的弓箭的数量没有限制。 弓箭一旦被射出之后，可以无限地前进。我们想找到使得所有气球全部被引爆，所需的弓箭的最小数量。
      * 给你一个数组 points ，其中 points [i] = [xstart,xend] ，返回引爆所有气球所必须射出的最小弓箭数。
-     *
+     * <p>
      * 执行用时：21 ms, 在所有 Java 提交中击败了76.19% 的用户
      * 内存消耗：46 MB, 在所有 Java 提交中击败了83.36% 的用户
+     *
      * @param points 气球
      * @return 最少数量的箭引爆气球
      */
@@ -2066,7 +2067,7 @@ public class SolutionNow {
                         return 1;
                     }
                 } else {
-                    if(o1[0] < o2[0]){
+                    if (o1[0] < o2[0]) {
                         return -1;
                     } else {
                         return 1;
@@ -2091,6 +2092,25 @@ public class SolutionNow {
                 ans++;
                 x = points[i][1];
             }
+        }
+        return ans;
+    }
+
+    /**
+     * 1290. 二进制链表转整数
+     * 给你一个单链表的引用结点 head。链表中每个结点的值不是 0 就是 1。已知此链表是一个整数数字的二进制表示形式。
+     * 请你返回该链表所表示数字的 十进制值 。
+     *
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：35.6 MB, 在所有 Java 提交中击败了95.81% 的用户
+     * @param head 单链表的引用结点
+     * @return 二进制链表转整数
+     */
+    public int getDecimalValue(ListNode head) {
+        int ans = 0;
+        while (head != null) {
+            ans = ans * 2 + head.val;
+            head = head.next;
         }
         return ans;
     }
