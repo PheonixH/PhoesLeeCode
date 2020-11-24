@@ -2100,9 +2100,10 @@ public class SolutionNow {
      * 1290. 二进制链表转整数
      * 给你一个单链表的引用结点 head。链表中每个结点的值不是 0 就是 1。已知此链表是一个整数数字的二进制表示形式。
      * 请你返回该链表所表示数字的 十进制值 。
-     *
+     * <p>
      * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
      * 内存消耗：35.6 MB, 在所有 Java 提交中击败了95.81% 的用户
+     *
      * @param head 单链表的引用结点
      * @return 二进制链表转整数
      */
@@ -2113,6 +2114,61 @@ public class SolutionNow {
             head = head.next;
         }
         return ans;
+    }
+
+    /**
+     * 222. 完全二叉树的节点个数
+     * <p>
+     * 给出一个完全二叉树，求出该树的节点个数。
+     * 说明：
+     * 完全二叉树的定义如下：在完全二叉树中，除了最底层节点可能没填满外，其余每层节点数都达到最大值，
+     * 并且最下面一层的节点都集中在该层最左边的若干位置。若最底层为第 h 层，则该层包含 1~ 2h 个节点。
+     * <p>
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：40.7 MB, 在所有 Java 提交中击败了94.88% 的用户
+     *
+     * @param root 完全二叉树
+     * @return 完全二叉树的节点个数
+     */
+    public int countNodes(TreeNode root) {
+        countNodesDFS(root);
+        return countNodesNum;
+    }
+
+    private int countNodesNum = 0;
+
+    private void countNodesDFS(TreeNode root) {
+        if (root != null) {
+            countNodesNum++;
+            countNodesDFS(root.left);
+            countNodesDFS(root.right);
+        }
+    }
+
+    /**
+     * 386. 字典序排数
+     *
+     * 给定一个整数 n, 返回从 1 到 n 的字典顺序。
+     * 例如，
+     * 给定 n =1 3，返回 [1,10,11,12,13,2,3,4,5,6,7,8,9] 。
+     * 请尽可能的优化算法的时间复杂度和空间复杂度。 输入的数据 n 小于等于 5,000,000。
+     *
+     * 执行用时：23 ms, 在所有 Java 提交中击败了21.47% 的用户
+     * 内存消耗：46.7 MB, 在所有 Java 提交中击败了5.18% 的用户
+     * @param n 整数 n
+     * @return 字典序排数
+     */
+    public List<Integer> lexicalOrder(int n) {
+        String[] strings = new String[n];
+        for (int i = 1; i <= n; i++) {
+            strings[i] = String.valueOf(i);
+        }
+        Arrays.sort(strings);
+        List<Integer> integers = new LinkedList<>();
+        for (String s : strings) {
+            integers.add(Integer.valueOf(s));
+        }
+        return integers;
     }
 }
 
