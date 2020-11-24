@@ -2147,14 +2147,15 @@ public class SolutionNow {
 
     /**
      * 386. 字典序排数
-     *
+     * <p>
      * 给定一个整数 n, 返回从 1 到 n 的字典顺序。
      * 例如，
      * 给定 n =1 3，返回 [1,10,11,12,13,2,3,4,5,6,7,8,9] 。
      * 请尽可能的优化算法的时间复杂度和空间复杂度。 输入的数据 n 小于等于 5,000,000。
-     *
+     * <p>
      * 执行用时：23 ms, 在所有 Java 提交中击败了21.47% 的用户
      * 内存消耗：46.7 MB, 在所有 Java 提交中击败了5.18% 的用户
+     *
      * @param n 整数 n
      * @return 字典序排数
      */
@@ -2169,6 +2170,42 @@ public class SolutionNow {
             integers.add(Integer.valueOf(s));
         }
         return integers;
+    }
+
+    /**
+     * 1433. 检查一个字符串是否可以打破另一个字符串
+     *
+     * 给你两个字符串 s1 和 s2 ，它们长度相等，请你检查是否存在一个 s1  的排列可以打破 s2 的一个排列，或者是否存在一个 s2 的排列可以打破 s1 的一个排列。
+     * 字符串 x 可以打破字符串 y （两者长度都为 n ）需满足对于所有 i（在 0 到 n - 1 之间）都有 x[i] >= y[i]（字典序意义下的顺序）。
+     *
+     * 执行用时：9 ms, 在所有 Java 提交中击败了72.43% 的用户
+     * 内存消耗：39.4 MB, 在所有 Java 提交中击败了80.83% 的用户
+     * @param s1 字符串
+     * @param s2 字符串
+     * @return 一个字符串是否可以打破另一个字符串
+     */
+    public boolean checkIfCanBreak(String s1, String s2) {
+        char[] chars1 = s1.toCharArray();
+        Arrays.sort(chars1);
+        char[] chars2 = s2.toCharArray();
+        Arrays.sort(chars2);
+        int n = s1.length();
+        boolean b1 = true;
+        boolean b2 = true;
+        for (int i = 0; i < n; i++) {
+            if (chars1[i] > chars2[i]) {
+                b2 = false;
+                if (!b1) {
+                    return false;
+                }
+            } else if (chars1[i] < chars2[i]) {
+                b1 = false;
+                if (!b2) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }
 
