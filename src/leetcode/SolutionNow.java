@@ -2174,12 +2174,13 @@ public class SolutionNow {
 
     /**
      * 1433. 检查一个字符串是否可以打破另一个字符串
-     *
+     * <p>
      * 给你两个字符串 s1 和 s2 ，它们长度相等，请你检查是否存在一个 s1  的排列可以打破 s2 的一个排列，或者是否存在一个 s2 的排列可以打破 s1 的一个排列。
      * 字符串 x 可以打破字符串 y （两者长度都为 n ）需满足对于所有 i（在 0 到 n - 1 之间）都有 x[i] >= y[i]（字典序意义下的顺序）。
-     *
+     * <p>
      * 执行用时：9 ms, 在所有 Java 提交中击败了72.43% 的用户
      * 内存消耗：39.4 MB, 在所有 Java 提交中击败了80.83% 的用户
+     *
      * @param s1 字符串
      * @param s2 字符串
      * @return 一个字符串是否可以打破另一个字符串
@@ -2206,6 +2207,75 @@ public class SolutionNow {
             }
         }
         return true;
+    }
+
+    /**
+     * 1442. 形成两个异或相等数组的三元组数目
+     * <p>
+     * 给你一个整数数组 arr 。
+     * 现需要从数组中取三个下标 i、j 和 k ，其中 (0 <= i < j <= k < arr.length) 。
+     * a 和 b 定义如下：
+     * a = arr[i] ^ arr[i + 1] ^ ... ^ arr[j - 1]
+     * b = arr[j] ^ arr[j + 1] ^ ... ^ arr[k]
+     * 注意：^ 表示 按位异或 操作。
+     * 请返回能够令 a == b 成立的三元组 (i, j , k) 的数目。
+     * <p>
+     * 执行用时：40 ms, 在所有 Java 提交中击败了17.05% 的用户
+     * 内存消耗：35.9 MB, 在所有 Java 提交中击败了91.59% 的用户
+     *
+     * @param arr 整数数组
+     * @return 形成两个异或相等数组的三元组数目
+     */
+    public int countTriplets(int[] arr) {
+        int ans = 0;
+        int n = arr.length;
+        int[] pre = new int[n + 1];
+        pre[0] = 0;
+        for (int i = 0; i < n; i++) {
+            pre[i + 1] = pre[i] ^ arr[i];
+        }
+        for (int i = 0; i <= n; i++) {
+            for (int j = i + 1; j <= n; j++) {
+                for (int k = j + 1; k <= n; k++) {
+                    if ((pre[j] ^ pre[i]) == (pre[k] ^ pre[j])) {
+                        ans++;
+                    }
+                }
+            }
+        }
+        return ans;
+    }
+
+    /**
+     * 1442. 形成两个异或相等数组的三元组数目
+     * <p>
+     * 给你一个整数数组 arr 。
+     * 现需要从数组中取三个下标 i、j 和 k ，其中 (0 <= i < j <= k < arr.length) 。
+     * a 和 b 定义如下：
+     * a = arr[i] ^ arr[i + 1] ^ ... ^ arr[j - 1]
+     * b = arr[j] ^ arr[j + 1] ^ ... ^ arr[k]
+     * 注意：^ 表示 按位异或 操作。
+     * 请返回能够令 a == b 成立的三元组 (i, j , k) 的数目。
+     * <p>
+     * 执行用时：1 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：35.9 MB, 在所有 Java 提交中击败了90.19% 的用户
+     *
+     * @param arr 整数数组
+     * @return 形成两个异或相等数组的三元组数目
+     */
+    public int countTriplets2(int[] arr) {
+        int ans = 0;
+        int n = arr.length;
+        for (int i = 0; i < n; i++) {
+            int tmp = arr[i];
+            for (int j = i + 1; j <= n; j++) {
+                tmp = tmp ^ arr[j];
+                if (tmp == 0) {
+                    ans += j - i;
+                }
+            }
+        }
+        return ans;
     }
 }
 

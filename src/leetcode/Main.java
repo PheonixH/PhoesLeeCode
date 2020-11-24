@@ -90,7 +90,7 @@ public class Main {
 
         //Arrays
         String[] oneDimensionalStringArray = {"bella", "label", "roller"};
-        int[] oneDimensionalArrayA = {43024, 99908};
+        int[] oneDimensionalArrayA = {2, 3, 1, 6, 7};
         int[] oneDimensionalArrayB = {1864};
         int[][] twoDimensionalArray = {{-2147483646, -2147483645}, {2147483646, 2147483647}};
         char[] oneDimensionalCharArray = {'A', 'B'};
@@ -135,7 +135,7 @@ public class Main {
         }
 
         SolutionNow solution = new SolutionNow();
-        solution.findMinArrowShots(twoDimensionalArray);
+        solution.countTriplets(oneDimensionalArrayA);
 
         Games games = new Games();
         games.minimumEffort(twoDimensionalArray);
