@@ -34,9 +34,9 @@ public class Main {
 
     public static TreeNode createTreeNode(int[] treeNodeValue) {
         //TreeNode
-        //-1 is null
+        //-101 is null
         Queue<TreeNode> createTreeNodeStack = new LinkedList<>();
-        if (treeNodeValue.length <= 0 || -1 == treeNodeValue[0]) {
+        if (treeNodeValue.length <= 0 || -101 == treeNodeValue[0]) {
             return null;
         }
         TreeNode root = new TreeNode(treeNodeValue[0]);
@@ -90,9 +90,9 @@ public class Main {
 
         //Arrays
         String[] oneDimensionalStringArray = {"bella", "label", "roller"};
-        int[] oneDimensionalArrayA = {2, 3, 1, 6, 7};
+        int[] oneDimensionalArrayA = {43024, 99908};
         int[] oneDimensionalArrayB = {1864};
-        int[][] twoDimensionalArray = {{-2147483646, -2147483645}, {2147483646, 2147483647}};
+        int[][] twoDimensionalArray = {{1, 1}, {1, 1}};
         char[] oneDimensionalCharArray = {'A', 'B'};
         char[][] twoDimensionalCharArray = {
                 {'5', '3', '.', '.', '7', '.', '.', '.', '.'},
@@ -117,7 +117,7 @@ public class Main {
         int[] listNodeValue = {1, 2, 3, 4};
         ListNode head = createListNode(listNodeValue);
 
-        int[] treeNodeValue = {5, 4, 8, 11, -1, 13, 4, 7, 2, -1, -1, 5, 1};
+        int[] treeNodeValue = {1, -2, -3, 1, 3, -2, -101, -1};
         TreeNode root = createTreeNode(treeNodeValue);
 
         // 手动输入数组 ---  测试数据太长了
@@ -135,7 +135,10 @@ public class Main {
         }
 
         SolutionNow solution = new SolutionNow();
-        solution.countTriplets(oneDimensionalArrayA);
+//        solution.nextPermutation(new int[]{1, 5, 3, 4, 2});
+
+        SolitionUbuntu solitionUbuntu = new SolitionUbuntu();
+        solitionUbuntu.largestIsland(twoDimensionalArray);
 
         Games games = new Games();
         games.minimumEffort(twoDimensionalArray);
