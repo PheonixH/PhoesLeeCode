@@ -2341,6 +2341,65 @@ public class SolutionNow {
         }
         return stringBuilder.toString();
     }
+
+    /**
+     * 剑指 Offer 52. 两个链表的第一个公共节点
+     * 输入两个链表，找出它们的第一个公共节点。
+     * <p>
+     * 执行用时：12 ms, 在所有 Java 提交中击败了6.91% 的用户
+     * 内存消耗：42.4 MB, 在所有 Java 提交中击败了5.00% 的用户
+     *
+     * @param headA 链表1
+     * @param headB 链表2
+     * @return 两个链表的第一个公共节点
+     */
+    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+        Set<ListNode> set = new HashSet<>();
+        ListNode ha = headA;
+        while (ha != null) {
+            set.add(ha);
+            ha = ha.next;
+        }
+        ListNode hb = headB;
+        while (hb != null) {
+            if (set.contains(hb)) {
+                return hb;
+            }
+            hb = hb.next;
+        }
+        return null;
+    }
+
+    /**
+     * 剑指 Offer 52. 两个链表的第一个公共节点
+     * 输入两个链表，找出它们的第一个公共节点。
+     * <p>
+     * 执行用时：1 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：41.2 MB, 在所有 Java 提交中击败了88.40% 的用户
+     *
+     * @param headA 链表1
+     * @param headB 链表2
+     * @return 两个链表的第一个公共节点
+     */
+    public ListNode getIntersectionNode2(ListNode headA, ListNode headB) {
+        ListNode ha = headA;
+        ListNode hb = headB;
+        while (true) {
+            if (ha == hb) {
+                return ha;
+            }
+            if (ha == null) {
+                ha = headB;
+            } else {
+                ha = ha.next;
+            }
+            if (hb == null) {
+                hb = headA;
+            } else {
+                hb = hb.next;
+            }
+        }
+    }
 }
 
 
