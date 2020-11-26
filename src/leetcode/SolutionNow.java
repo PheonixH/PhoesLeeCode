@@ -2400,6 +2400,31 @@ public class SolutionNow {
             }
         }
     }
+
+    /**
+     * 164. 最大间距
+     *
+     * 给定一个无序的数组，找出数组在排序之后，相邻元素之间最大的差值。
+     * 如果数组元素个数小于 2，则返回 0。
+     *
+     * 执行用时：2 ms, 在所有 Java 提交中击败了99.72% 的用户
+     * 内存消耗：38.6 MB, 在所有 Java 提交中击败了81.51% 的用户
+     * @param nums 无序数组
+     * @return 最大间距
+     */
+    public int maximumGap(int[] nums) {
+        int n = nums.length;
+        if (n <= 1) {
+            return 0;
+        }
+        Arrays.sort(nums);
+        int di = nums[1] - nums[0];
+        for (int i = 2; i < n; i++) {
+            di = Math.max(di, nums[i] - nums[i - 1]);
+        }
+        return di;
+    }
+
 }
 
 
