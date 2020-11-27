@@ -2515,9 +2515,10 @@ public class SolutionNow {
     /**
      * 剑指 Offer 48. 最长不含重复字符的子字符串
      * 请从字符串中找出一个最长的不包含重复字符的子字符串，计算该最长子字符串的长度。
-     *
+     * <p>
      * 执行用时：5 ms, 在所有 Java 提交中击败了91.09% 的用户
      * 内存消耗：38.8 MB, 在所有 Java 提交中击败了60.18% 的用户
+     *
      * @param s 字符串
      * @return 最长不含重复字符的子字符串
      */
@@ -2567,6 +2568,37 @@ public class SolutionNow {
             res += arr[i] * (LeftOdd * RightOdd + LeftEven * RightEven);
         }
         return res;
+    }
+
+    /**
+     * 1184. 公交站间的距离
+     * 环形公交路线上有 n 个站，按次序从 0 到 n - 1 进行编号。我们已知每一对相邻公交站之间的距离，distance[i] 表示编号为 i 的车站和编号为 (i + 1) % n 的车站之间的距离。
+     * 环线上的公交车都可以按顺时针和逆时针的方向行驶。
+     * 返回乘客从出发点 start 到目的地 destination 之间的最短距离。
+     *
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：38.1 MB, 在所有 Java 提交中击败了89.57% 的用户
+     * @param distance 相邻公交站之间的距离
+     * @param start 出发点
+     * @param destination 目的地
+     * @return 公交站间的距离
+     */
+    public int distanceBetweenBusStops(int[] distance, int start, int destination) {
+        if (start > destination) {
+            start = start ^ destination;
+            destination = start ^ destination;
+            start = start ^ destination;
+        }
+        int tmp = 0;
+        int other = 0;
+        for (int i = 0; i < distance.length; i++) {
+            if (i >= start && i < destination) {
+                tmp += distance[i];
+            } else {
+                other += distance[i];
+            }
+        }
+        return Math.min(tmp, other);
     }
 }
 
