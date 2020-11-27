@@ -95,15 +95,15 @@ public class Main {
         int[][] twoDimensionalArray = {{1, 1}, {1, 1}};
         char[] oneDimensionalCharArray = {'A', 'B'};
         char[][] twoDimensionalCharArray = {
-                {'5', '3', '.', '.', '7', '.', '.', '.', '.'},
-                {'6', '.', '.', '1', '9', '5', '.', '.', '.'},
-                {'.', '9', '8', '.', '.', '.', '.', '6', '.'},
-                {'8', '.', '.', '.', '6', '.', '.', '.', '3'},
-                {'4', '.', '.', '8', '.', '3', '.', '.', '1'},
-                {'7', '.', '.', '.', '2', '.', '.', '.', '6'},
-                {'.', '6', '.', '.', '.', '.', '2', '8', '.'},
-                {'.', '.', '.', '4', '1', '9', '.', '.', '5'},
-                {'.', '.', '.', '.', '8', '.', '.', '7', '9'}};
+                {'X', '.', '.', '.', '.', '.', '.', '.', '.'},
+                {'X', '.', '.', 'X', 'X', 'X', '.', '.', '.'},
+                {'.', 'X', 'X', '.', '.', '.', '.', 'X', '.'},
+                {'X', '.', '.', '.', 'X', '.', '.', '.', 'X'},
+                {'X', '.', '.', '.', '.', 'X', '.', '.', 'X'},
+                {'X', '.', '.', '.', 'X', '.', '.', '.', 'X'},
+                {'.', 'X', '.', '.', '.', '.', 'X', 'X', '.'},
+                {'.', '.', '.', 'X', 'X', 'X', '.', '.', 'X'},
+                {'.', '.', '.', '.', '.', '.', '.', '.', 'X'}};
 
 
         //List<List<Integer>>
@@ -135,8 +135,7 @@ public class Main {
         }
 
         SolutionNow solution = new SolutionNow();
-        solution.fourSumCount(new int[]{1, 2}, new int[]{-2, -1}, new int[]{-1, 2}, new int[]{0, 2});
-
+        solution.countBattleships(twoDimensionalCharArray);
         SolitionUbuntu solitionUbuntu = new SolitionUbuntu();
         solitionUbuntu.largestIsland(twoDimensionalArray);
 
