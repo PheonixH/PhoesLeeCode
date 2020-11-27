@@ -2513,6 +2513,40 @@ public class SolutionNow {
     }
 
     /**
+     * 剑指 Offer 48. 最长不含重复字符的子字符串
+     * 请从字符串中找出一个最长的不包含重复字符的子字符串，计算该最长子字符串的长度。
+     *
+     * 执行用时：5 ms, 在所有 Java 提交中击败了91.09% 的用户
+     * 内存消耗：38.8 MB, 在所有 Java 提交中击败了60.18% 的用户
+     * @param s 字符串
+     * @return 最长不含重复字符的子字符串
+     */
+    public int lengthOfLongestSubstring(String s) {
+        int n = s.length();
+        if (n <= 1) {
+            return n;
+        }
+        int l = 0, r = 1;
+        Set<Character> set = new HashSet<>();
+        set.add(s.charAt(l));
+        int ans = 0;
+        while (l < r && r < n) {
+            while (r < n && set.add(s.charAt(r))) {
+                r++;
+            }
+            ans = Math.max(set.size(), ans);
+            while (l <= r && r < n && s.charAt(l) != s.charAt(r)) {
+                set.remove(s.charAt(l));
+                l++;
+            }
+            l++;
+            r++;
+        }
+        return ans;
+    }
+
+
+    /**
      * 1588. 所有奇数长度子数组的和
      * <p>
      * 给你一个正整数数组 arr ，请你计算所有可能的奇数长度子数组的和。
