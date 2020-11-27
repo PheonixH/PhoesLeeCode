@@ -2575,11 +2575,12 @@ public class SolutionNow {
      * 环形公交路线上有 n 个站，按次序从 0 到 n - 1 进行编号。我们已知每一对相邻公交站之间的距离，distance[i] 表示编号为 i 的车站和编号为 (i + 1) % n 的车站之间的距离。
      * 环线上的公交车都可以按顺时针和逆时针的方向行驶。
      * 返回乘客从出发点 start 到目的地 destination 之间的最短距离。
-     *
+     * <p>
      * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
      * 内存消耗：38.1 MB, 在所有 Java 提交中击败了89.57% 的用户
-     * @param distance 相邻公交站之间的距离
-     * @param start 出发点
+     *
+     * @param distance    相邻公交站之间的距离
+     * @param start       出发点
      * @param destination 目的地
      * @return 公交站间的距离
      */
@@ -2599,6 +2600,36 @@ public class SolutionNow {
             }
         }
         return Math.min(tmp, other);
+    }
+
+    /**
+     * 剑指 Offer 55 - II. 平衡二叉树
+     *
+     * 输入一棵二叉树的根节点，判断该树是不是平衡二叉树。
+     * 如果某二叉树中任意节点的左右子树的深度相差不超过1，那么它就是一棵平衡二叉树。
+     *
+     * 执行用时：1 ms, 在所有 Java 提交中击败了99.99% 的用户
+     * 内存消耗：38.5 MB, 在所有 Java 提交中击败了82.31% 的用户
+     * @param root 二叉树
+     * @return 该树是不是平衡二叉树
+     */
+    public boolean isBalanced(TreeNode root) {
+        isBalancedLength(root);
+        return isBalancedFlag;
+    }
+
+    private boolean isBalancedFlag = true;
+
+    public int isBalancedLength(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        int l = isBalancedLength(root.left) + 1;
+        int r = isBalancedLength(root.right) + 1;
+        if (Math.abs(l - r) >= 2) {
+            isBalancedFlag = false;
+        }
+        return Math.max(l, r);
     }
 }
 
