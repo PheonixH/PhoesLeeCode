@@ -2511,6 +2511,29 @@ public class SolutionNow {
         }
         return ans;
     }
+
+    /**
+     * 1588. 所有奇数长度子数组的和
+     * <p>
+     * 给你一个正整数数组 arr ，请你计算所有可能的奇数长度子数组的和。
+     * 子数组 定义为原数组中的一个连续子序列。
+     * 请你返回 arr 中 所有奇数长度子数组的和 。
+     * <p>
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：36.1 MB, 在所有 Java 提交中击败了76.65% 的用户
+     *
+     * @param arr 正整数数组 arr
+     * @return 所有奇数长度子数组的和
+     */
+    public int sumOddLengthSubarrays(int[] arr) {
+        int len = arr.length, res = 0;
+        for (int i = 0; i < len; i++) {
+            int LeftOdd = (i + 1) / 2, LeftEven = i / 2 + 1;
+            int RightOdd = (len - i) / 2, RightEven = (len - 1 - i) / 2 + 1;
+            res += arr[i] * (LeftOdd * RightOdd + LeftEven * RightEven);
+        }
+        return res;
+    }
 }
 
 
