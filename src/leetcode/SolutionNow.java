@@ -2403,12 +2403,13 @@ public class SolutionNow {
 
     /**
      * 164. 最大间距
-     *
+     * <p>
      * 给定一个无序的数组，找出数组在排序之后，相邻元素之间最大的差值。
      * 如果数组元素个数小于 2，则返回 0。
-     *
+     * <p>
      * 执行用时：2 ms, 在所有 Java 提交中击败了99.72% 的用户
      * 内存消耗：38.6 MB, 在所有 Java 提交中击败了81.51% 的用户
+     *
      * @param nums 无序数组
      * @return 最大间距
      */
@@ -2425,6 +2426,41 @@ public class SolutionNow {
         return di;
     }
 
+    /**
+     * 454. 四数相加 II
+     *
+     * 给定四个包含整数的数组列表 A , B , C , D ,计算有多少个元组 (i, j, k, l) ，使得 A[i] + B[j] + C[k] + D[l] = 0。
+     *
+     * 为了使问题简单化，所有的 A, B, C, D 具有相同的长度 N，且 0 ≤ N ≤ 500 。
+     * 所有整数的范围在 -228 到 228 - 1 之间，最终结果不会超过 231 - 1 。
+     * 执行用时：190 ms, 在所有 Java 提交中击败了5.34% 的用户
+     * 内存消耗：82.4 MB, 在所有 Java 提交中击败了5.04% 的用户
+     * @param A 包含整数的数组列表
+     * @param B 包含整数的数组列表
+     * @param C 包含整数的数组列表
+     * @param D 包含整数的数组列表
+     * @return 四数相加
+     */
+    public int fourSumCount(int[] A, int[] B, int[] C, int[] D) {
+        int n = A.length;
+        Map<Integer, Integer> first = new HashMap<>();
+        Map<Integer, Integer> second = new HashMap<>();
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                int v = first.getOrDefault(A[i] + B[j], 0) + 1;
+                first.put(A[i] + B[j], v);
+                int v2 = second.getOrDefault(C[i] + D[j], 0) + 1;
+                second.put(C[i] + D[j], v2);
+            }
+        }
+        int ans = 0;
+        for (Map.Entry<Integer, Integer> entry : first.entrySet()) {
+            if (second.containsKey(-entry.getKey())) {
+                ans += entry.getValue() * second.get(-entry.getKey());
+            }
+        }
+        return ans;
+    }
 }
 
 

@@ -135,7 +135,7 @@ public class Main {
         }
 
         SolutionNow solution = new SolutionNow();
-//        solution.nextPermutation(new int[]{1, 5, 3, 4, 2});
+        solution.fourSumCount(new int[]{1, 2}, new int[]{-2, -1}, new int[]{-1, 2}, new int[]{0, 2});
 
         SolitionUbuntu solitionUbuntu = new SolitionUbuntu();
         solitionUbuntu.largestIsland(twoDimensionalArray);
