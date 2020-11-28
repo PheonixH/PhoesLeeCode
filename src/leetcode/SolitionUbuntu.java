@@ -1,5 +1,6 @@
 package leetcode;//import jdk.nashorn.api.tree.Tree;
 
+import Template.BinaryIndexedTree;
 import leetcode.dataStruct.Nodes;
 
 import java.util.ArrayList;
@@ -2321,7 +2322,41 @@ x = (a[7]b[7]) (a[6]b[6]) ... (a[1]b[1]) (a[0]b[0])
         return area;
     }
 
+    /**
+     * 493. 翻转对
+     * <p>
+     * 给定一个数组 nums ，如果 i < j 且 nums[i] > 2*nums[j] 我们就将 (i, j) 称作一个重要翻转对。
+     * <p>
+     * 你需要返回给定数组中的重要翻转对的数量。
+     * <p>
+     * 执行用时：183 ms, 在所有 Java 提交中击败了15.47% 的用户
+     * 内存消耗：57.4 MB, 在所有 Java 提交中击败了5.09% 的用户
+     *
+     * @param nums 数组
+     * @return 返回给定数组中的重要翻转对的数量
+     */
     public int reversePairs(int[] nums) {
-        return 0;
+        Set<Long> set = new TreeSet<>();
+        Arrays.stream(nums).forEach(x -> {
+            set.add((long) x);
+            set.add((long) 2 * x);
+        });
+        int n = set.size();
+        int i = 0;
+        Map<Long, Integer> map = new HashMap<>();
+        for (long s : set) {
+            map.put(s, i);
+            i++;
+        }
+        BinaryIndexedTree bit = new BinaryIndexedTree(new int[n]);
+        int ans = 0;
+        for (int j = 0; j < nums.length; j++) {
+            long val = nums[j];
+            int upIdx = map.get(val);
+            int doubleIdx = map.get(val * 2);
+            ans += bit.prefixSum(n - 1) - bit.prefixSum(doubleIdx);
+            bit.update(upIdx, 1);
+        }
+        return ans;
     }
 }

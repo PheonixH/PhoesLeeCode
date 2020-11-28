@@ -82,11 +82,4 @@ public class BinaryIndexedTree {
         return prefixSum(j) - prefixSum(i - 1);
     }
 
-    public static void main(String[] args) {
-        int[] arr = new int[]{1, 3, 5};
-        BinaryIndexedTree bit = new BinaryIndexedTree(arr);
-        System.out.println(bit.sumRange(0, 2));
-        bit.update(1, 2);
-        System.out.println(bit.sumRange(0, 2));
-    }
 }
