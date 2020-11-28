@@ -20,6 +20,9 @@ public class BinaryIndexedTree {
 //			this.update(i, list[i]);
 //		}
 //	}
+    public BinaryIndexedTree(int len) {
+        this(new int[len]);
+    }
 
     /**
      * O(n) initialization

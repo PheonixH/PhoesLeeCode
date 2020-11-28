@@ -87,7 +87,7 @@ public class Main {
 
         //Arrays
         String[] oneDimensionalStringArray = {"bella", "label", "roller"};
-        int[] oneDimensionalArrayA = {2,4,3,5,1};
+        int[] oneDimensionalArrayA = {1,5,6,2};
         int[] oneDimensionalArrayB = {1864};
         int[][] twoDimensionalArray = {{1, 1}, {1, 1}};
         char[] oneDimensionalCharArray = {'A', 'B'};
@@ -135,7 +135,7 @@ public class Main {
 //        solution.nextPermutation(new int[]{1, 5, 3, 4, 2});
 
         SolitionUbuntu solitionUbuntu = new SolitionUbuntu();
-        solitionUbuntu.reversePairs(oneDimensionalArrayA);
+        solitionUbuntu.createSortedArray(oneDimensionalArrayA);
 
         Games games = new Games();
         games.minimumEffort(twoDimensionalArray);
