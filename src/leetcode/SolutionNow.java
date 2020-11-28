@@ -1,7 +1,7 @@
 package leetcode;
 
-import leetcode.datestruct.ListNode;
-import leetcode.datestruct.TreeNode;
+import leetcode.dataStruct.ListNode;
+import leetcode.dataStruct.TreeNode;
 
 import java.util.*;
 import java.util.function.Function;

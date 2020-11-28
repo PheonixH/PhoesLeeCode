@@ -1,9 +1,6 @@
 package leetcode;
 
-import java.lang.reflect.Array;
 import java.util.*;
-
-import leetcode.datestruct.TreeNode;
 
 /**
  * PhoesLeeCode

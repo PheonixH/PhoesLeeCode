@@ -1,12 +1,9 @@
 package leetcode;
 
-import leetcode.datestruct.ListNode;
-import leetcode.datestruct.TreeNode;
+import leetcode.dataStruct.ListNode;
+import leetcode.dataStruct.TreeNode;
 
 import java.util.*;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static java.util.regex.Pattern.compile;

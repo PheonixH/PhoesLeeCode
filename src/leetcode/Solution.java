@@ -1,12 +1,13 @@
 package leetcode;
 
 import Template.Trie;
-import leetcode.datestruct.Worker;
+import leetcode.dataStruct.ListNode;
+import leetcode.dataStruct.TreeNode;
+import leetcode.specialDataStruct.Worker;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
-import leetcode.datestruct.*;
+import leetcode.specialDataStruct.*;
 
 import static java.lang.Math.log10;
 import static java.lang.Math.min;
@@ -12115,10 +12116,10 @@ public class Solution {
         }
     }
 
-    public leetcode.data.Node cloneGraph(leetcode.data.Node node) {
+    public leetcode.dataStruct.Node cloneGraph(leetcode.dataStruct.Node node) {
         if (node != null) {
-            Set<leetcode.data.Node> set = new HashSet<>();
-            leetcode.data.Node res = new leetcode.data.Node();
+            Set<leetcode.dataStruct.Node> set = new HashSet<>();
+            leetcode.dataStruct.Node res = new leetcode.dataStruct.Node();
             cloneGraph(node, res, set);
             return res;
         } else {
@@ -12126,14 +12127,14 @@ public class Solution {
         }
     }
 
-    public void cloneGraph(leetcode.data.Node node, leetcode.data.Node newNode, Set<leetcode.data.Node> visit) {
+    public void cloneGraph(leetcode.dataStruct.Node node, leetcode.dataStruct.Node newNode, Set<leetcode.dataStruct.Node> visit) {
         if (node.neighbors != null) {
             if (newNode.neighbors == null) {
                 newNode.neighbors = new ArrayList<>();
             }
-            for (leetcode.data.Node n : node.neighbors) {
+            for (leetcode.dataStruct.Node n : node.neighbors) {
                 if (visit.add(n)) {
-                    leetcode.data.Node newN = new leetcode.data.Node();
+                    leetcode.dataStruct.Node newN = new leetcode.dataStruct.Node();
                     newN.val = n.val;
                     newNode.neighbors.add(newN);
                     cloneGraph(node, newNode, visit);

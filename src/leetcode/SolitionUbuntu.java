@@ -1,16 +1,15 @@
 package leetcode;//import jdk.nashorn.api.tree.Tree;
 
-import leetcode.datestruct.Nodes;
+import leetcode.dataStruct.Nodes;
 
-import java.text.Collator;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Stack;
 import java.util.*;
 
-import leetcode.datestruct.TreeNode;
-import leetcode.datestruct.ListNode;
+import leetcode.dataStruct.TreeNode;
+import leetcode.dataStruct.ListNode;
 
 /**
  * @author ：Pheonix
@@ -2320,5 +2319,9 @@ x = (a[7]b[7]) (a[6]b[6]) ... (a[1]b[1]) (a[0]b[0])
             }
         }
         return area;
+    }
+
+    public int reversePairs(int[] nums) {
+        return 0;
     }
 }
