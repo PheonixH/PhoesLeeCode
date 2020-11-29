@@ -2361,19 +2361,20 @@ x = (a[7]b[7]) (a[6]b[6]) ... (a[1]b[1]) (a[0]b[0])
 
     /**
      * 1649. 通过指令创建有序数组
-     *
+     * <p>
      * 给你一个整数数组 instructions ，你需要根据 instructions 中的元素创建一个有序数组。
      * 一开始你有一个空的数组 nums ，你需要 从左到右 遍历 instructions 中的元素，将它们依次插入 nums 数组中。
      * 每一次插入操作的 代价 是以下两者的 较小值 ：
-     *     nums 中 严格小于  instructions[i] 的数字数目。
-     *     nums 中 严格大于  instructions[i] 的数字数目。
+     * nums 中 严格小于  instructions[i] 的数字数目。
+     * nums 中 严格大于  instructions[i] 的数字数目。
      * 比方说，如果要将 3 插入到 nums = [1,2,3,5] ，那么插入操作的 代价 为 min(2, 1)
      * (元素 1 和  2 小于 3 ，元素 5 大于 3 ），插入后 nums 变成 [1,2,3,3,5] 。
      * 请你返回将 instructions 中所有元素依次插入 nums 后的 总最小代价 。由于答案会很大，
      * 请将它对 109 + 7 取余 后返回。
-     *
+     * <p>
      * 执行用时：266 ms, 在所有 Java 提交中击败了28.47% 的用户
      * 内存消耗：68.7 MB, 在所有 Java 提交中击败了5.10% 的用户
+     *
      * @param instructions 整数数组
      * @return 将 instructions 中所有元素依次插入 nums 后的 总最小代价
      */
@@ -2395,5 +2396,30 @@ x = (a[7]b[7]) (a[6]b[6]) ... (a[1]b[1]) (a[0]b[0])
             bit.update(key, 1);
         }
         return ans;
+    }
+
+    /**
+     * 976. 三角形的最大周长
+     *
+     * 给定由一些正数（代表长度）组成的数组 arr，返回由其中三个长度组成的、面积不为零的三角形的最大周长。
+     * 如果不能形成任何面积不为零的三角形，返回 0。
+     *
+     * 执行用时：8 ms, 在所有 Java 提交中击败了97.44% 的用户
+     * 内存消耗：38.9 MB, 在所有 Java 提交中击败了87.52% 的用户
+     * @param arr 数组
+     * @return 三角形的最大周长
+     */
+    public int largestPerimeter(int[] arr) {
+        int n = arr.length;
+        if (n < 3) {
+            return 0;
+        }
+        Arrays.sort(arr);
+        for (int i = n - 1; i >= 2; i--) {
+            if (arr[i] < arr[i - 1] + arr[i - 2]) {
+                return arr[i] + arr[i - 1] + arr[i - 2];
+            }
+        }
+        return 0;
     }
 }
