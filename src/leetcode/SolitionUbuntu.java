@@ -2400,12 +2400,13 @@ x = (a[7]b[7]) (a[6]b[6]) ... (a[1]b[1]) (a[0]b[0])
 
     /**
      * 976. 三角形的最大周长
-     *
+     * <p>
      * 给定由一些正数（代表长度）组成的数组 arr，返回由其中三个长度组成的、面积不为零的三角形的最大周长。
      * 如果不能形成任何面积不为零的三角形，返回 0。
-     *
+     * <p>
      * 执行用时：8 ms, 在所有 Java 提交中击败了97.44% 的用户
      * 内存消耗：38.9 MB, 在所有 Java 提交中击败了87.52% 的用户
+     *
      * @param arr 数组
      * @return 三角形的最大周长
      */
@@ -2421,5 +2422,38 @@ x = (a[7]b[7]) (a[6]b[6]) ... (a[1]b[1]) (a[0]b[0])
             }
         }
         return 0;
+    }
+
+    /**
+     * 539. 最小时间差
+     * <p>
+     * 给定一个 24 小时制（小时:分钟 "HH:MM"）的时间列表，找出列表中任意两个时间的最小时间差并以分钟数表示。
+     * <p>
+     * 执行用时：18 ms, 在所有 Java 提交中击败了19.52% 的用户
+     * 内存消耗：40.2 MB, 在所有 Java 提交中击败了28.84% 的用户
+     *
+     * @param timePoints 时间列表
+     * @return 最小时间差
+     */
+    public int findMinDifference(List<String> timePoints) {
+        int ans = Integer.MAX_VALUE;
+        int first = 0;
+        boolean isFirst = true;
+        int last = 0;
+        Collections.sort(timePoints);
+        for (String time : timePoints) {
+            String[] t = time.split(":");
+            if (isFirst) {
+                isFirst = false;
+                first = Integer.parseInt(t[0]) * 60 + Integer.parseInt(t[1]);
+                last = first;
+            } else {
+                int tmp = Integer.parseInt(t[0]) * 60 + Integer.parseInt(t[1]);
+                ans = Math.min(ans, tmp - last);
+                last = tmp;
+            }
+        }
+        ans = Math.min(ans, first + 24 * 60 - last);
+        return ans;
     }
 }
