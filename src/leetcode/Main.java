@@ -87,7 +87,7 @@ public class Main {
 
         //Arrays
         String[] oneDimensionalStringArray = {"bella", "label", "roller"};
-        int[] oneDimensionalArrayA = {1,5,6,2};
+        int[] oneDimensionalArrayA = {1, 5, 3, 4, 6, 5, 4, 2};
         int[] oneDimensionalArrayB = {1864};
         int[][] twoDimensionalArray = {{1, 1}, {1, 1}};
         char[] oneDimensionalCharArray = {'A', 'B'};
@@ -111,8 +111,11 @@ public class Main {
         String[][] listListStringArray = {{"JFK", "SFO"}, {"JFK", "ATL"}, {"SFO", "ATL"}, {"ATL", "JFK"}, {"ATL", "SFO"}};
         List<List<String>> stringListList = createListList(listListStringArray);
 
-        int[] listNodeValue = {1, 2, 3, 4};
+        int[] listNodeValue = {0, 1, 2, 3, 4};
         ListNode head = createListNode(listNodeValue);
+
+        int[] listNodeValue2 = {11, 12, 13, 14};
+        ListNode head2 = createListNode(listNodeValue);
 
         int[] treeNodeValue = {1, -2, -3, 1, 3, -2, -101, -1};
         TreeNode root = createTreeNode(treeNodeValue);
@@ -135,10 +138,10 @@ public class Main {
 //        solution.nextPermutation(new int[]{1, 5, 3, 4, 2});
 
         SolitionUbuntu solitionUbuntu = new SolitionUbuntu();
-        solitionUbuntu.createSortedArray(oneDimensionalArrayA);
+//        solitionUbuntu.createSortedArray(oneDimensionalArrayA);
 
         Games games = new Games();
-        games.minimumEffort(twoDimensionalArray);
+        games.minimumMountainRemovals(oneDimensionalArrayA);
     }
 
 }
