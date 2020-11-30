@@ -1,4 +1,4 @@
-package leetcode.data;
+package leetcode.specialDataStruct;
 
 import java.util.LinkedList;
 import java.util.List;

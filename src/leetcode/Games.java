@@ -1,9 +1,8 @@
 package leetcode;
 
-import java.lang.reflect.Array;
-import java.util.*;
+import leetcode.dataStruct.ListNode;
 
-import leetcode.datestruct.TreeNode;
+import java.util.*;
 
 /**
  * PhoesLeeCode
@@ -1028,4 +1027,107 @@ public class Games {
         }
         return sum + need;
     }
+
+
+    public int maxRepeating(String sequence, String word) {
+        int ans = 0;
+        int n = word.length();
+        int sn = sequence.length();
+        String str = word;
+        while (ans * n < sn) {
+            if (!sequence.contains(str)) {
+                break;
+            }
+            ans++;
+            str += word;
+        }
+        return ans;
+    }
+
+
+    public ListNode mergeInBetween(ListNode list1, int a, int b, ListNode list2) {
+        ListNode head = list1;
+        int i = 0;
+        while (i < a - 1) {
+            list1 = list1.next;
+            i++;
+        }
+        ListNode l1 = list1;
+        while (i < b) {
+            list1 = list1.next;
+            i++;
+        }
+        l1.next = list2;
+        while (list2.next != null) {
+            list2 = list2.next;
+        }
+        list2.next = list1.next;
+        return head;
+    }
+
+    public int minimumMountainRemovals(int[] nums) {
+        int n = nums.length;
+        // 最长下降子序列
+        int ans = 0;
+        int[][] dp = new int[n][2];
+        for (int i = 1; i < n - 1; i++) {
+            if (nums[i - 1] <= nums[i] && nums[i + 1] <= nums[i]) {
+                List<Integer> left = new ArrayList<>();
+                for (int j = 0; j < i; j++) {
+                    if (nums[i] > nums[j]) {
+                        left.add(nums[j]);
+                    }
+                }
+                if (left.size() > 0) {
+                    int[] up = left.stream().mapToInt(Integer::valueOf).toArray();
+                    dp[i][0] = getMaxPeachesUp(up);
+                }
+
+                List<Integer> right = new ArrayList<>();
+                for (int j = i + 1; j < n; j++) {
+                    if (nums[i] > nums[j]) {
+                        right.add(nums[j]);
+                    }
+                }
+                if (right.size() > 0) {
+                    int[] down = right.stream().mapToInt(Integer::valueOf).toArray();
+                    dp[i][1] = getMaxPeachesDown(down);
+                }
+                ans = Math.max(ans, dp[i][0] + 1 + dp[i][1]);
+            }
+        }
+        return n - ans;
+    }
+
+    private int getMaxPeachesUp(int[] peaches) {
+        // 用于存储子序列的长度
+        int[] subSeqLen = new int[peaches.length];
+        for (int x = 0; x < peaches.length; x++) {
+            subSeqLen[x] = 1; // 初始化最长子序列长度
+            for (int y = 0; y < x; y++) { // 找出前x+1项最长的序列
+                if (peaches[x] > peaches[y] && subSeqLen[y] + 1 > subSeqLen[x]) {
+                    subSeqLen[x] = subSeqLen[y] + 1;
+                }
+            }
+        }
+        Arrays.sort(subSeqLen);
+        return subSeqLen[subSeqLen.length - 1];
+    }
+
+    private int getMaxPeachesDown(int[] peaches) {
+        // 用于存储子序列的长度
+        int[] subSeqLen = new int[peaches.length];
+        for (int x = 0; x < peaches.length; x++) {
+            subSeqLen[x] = 1; // 初始化最长子序列长度
+            for (int y = 0; y < x; y++) { // 找出前x+1项最长的序列
+                if (peaches[x] < peaches[y] && subSeqLen[y] + 1 > subSeqLen[x]) {
+                    subSeqLen[x] = subSeqLen[y] + 1;
+                }
+            }
+        }
+        Arrays.sort(subSeqLen);
+        return subSeqLen[subSeqLen.length - 1];
+    }
+
+
 }

@@ -1,4 +1,4 @@
-package leetcode.datestruct;
+package leetcode.specialDataStruct;
 
 import java.util.ArrayList;
 import java.util.Collections;

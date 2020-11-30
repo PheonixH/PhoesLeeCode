@@ -1,16 +1,16 @@
 package leetcode;//import jdk.nashorn.api.tree.Tree;
 
-import leetcode.datestruct.Nodes;
+import Template.BinaryIndexedTree;
+import leetcode.dataStruct.Nodes;
 
-import java.text.Collator;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Stack;
 import java.util.*;
 
-import leetcode.datestruct.TreeNode;
-import leetcode.datestruct.ListNode;
+import leetcode.dataStruct.TreeNode;
+import leetcode.dataStruct.ListNode;
 
 /**
  * @author ：Pheonix
@@ -2320,5 +2320,140 @@ x = (a[7]b[7]) (a[6]b[6]) ... (a[1]b[1]) (a[0]b[0])
             }
         }
         return area;
+    }
+
+    /**
+     * 493. 翻转对
+     * <p>
+     * 给定一个数组 nums ，如果 i < j 且 nums[i] > 2*nums[j] 我们就将 (i, j) 称作一个重要翻转对。
+     * <p>
+     * 你需要返回给定数组中的重要翻转对的数量。
+     * <p>
+     * 执行用时：183 ms, 在所有 Java 提交中击败了15.47% 的用户
+     * 内存消耗：57.4 MB, 在所有 Java 提交中击败了5.09% 的用户
+     *
+     * @param nums 数组
+     * @return 返回给定数组中的重要翻转对的数量
+     */
+    public int reversePairs(int[] nums) {
+        Set<Long> set = new TreeSet<>();
+        Arrays.stream(nums).forEach(x -> {
+            set.add((long) x);
+            set.add((long) 2 * x);
+        });
+        int n = set.size();
+        int i = 0;
+        Map<Long, Integer> map = new HashMap<>();
+        for (long s : set) {
+            map.put(s, i);
+            i++;
+        }
+        BinaryIndexedTree bit = new BinaryIndexedTree(new int[n]);
+        int ans = 0;
+        for (long val : nums) {
+            int upIdx = map.get(val);
+            int doubleIdx = map.get(val * 2);
+            ans += bit.prefixSum(n - 1) - bit.prefixSum(doubleIdx);
+            bit.update(upIdx, 1);
+        }
+        return ans;
+    }
+
+    /**
+     * 1649. 通过指令创建有序数组
+     * <p>
+     * 给你一个整数数组 instructions ，你需要根据 instructions 中的元素创建一个有序数组。
+     * 一开始你有一个空的数组 nums ，你需要 从左到右 遍历 instructions 中的元素，将它们依次插入 nums 数组中。
+     * 每一次插入操作的 代价 是以下两者的 较小值 ：
+     * nums 中 严格小于  instructions[i] 的数字数目。
+     * nums 中 严格大于  instructions[i] 的数字数目。
+     * 比方说，如果要将 3 插入到 nums = [1,2,3,5] ，那么插入操作的 代价 为 min(2, 1)
+     * (元素 1 和  2 小于 3 ，元素 5 大于 3 ），插入后 nums 变成 [1,2,3,3,5] 。
+     * 请你返回将 instructions 中所有元素依次插入 nums 后的 总最小代价 。由于答案会很大，
+     * 请将它对 109 + 7 取余 后返回。
+     * <p>
+     * 执行用时：266 ms, 在所有 Java 提交中击败了28.47% 的用户
+     * 内存消耗：68.7 MB, 在所有 Java 提交中击败了5.10% 的用户
+     *
+     * @param instructions 整数数组
+     * @return 将 instructions 中所有元素依次插入 nums 后的 总最小代价
+     */
+    public int createSortedArray(int[] instructions) {
+        Set<Integer> set = new TreeSet<>();
+        Arrays.stream(instructions).forEach(set::add);
+        int n = set.size();
+        Map<Integer, Integer> map = new HashMap<>();
+        set.forEach(x -> map.put(x, map.size()));
+        int ans = 0;
+        BinaryIndexedTree bit = new BinaryIndexedTree(n);
+        for (int i : instructions) {
+            int key = map.get(i);
+            int left = bit.prefixSum(key - 1);
+            int right = bit.prefixSum(key);
+            int last = bit.prefixSum(n - 1);
+            ans += Math.min(left, last - right);
+            ans = ans % 1000000007;
+            bit.update(key, 1);
+        }
+        return ans;
+    }
+
+    /**
+     * 976. 三角形的最大周长
+     * <p>
+     * 给定由一些正数（代表长度）组成的数组 arr，返回由其中三个长度组成的、面积不为零的三角形的最大周长。
+     * 如果不能形成任何面积不为零的三角形，返回 0。
+     * <p>
+     * 执行用时：8 ms, 在所有 Java 提交中击败了97.44% 的用户
+     * 内存消耗：38.9 MB, 在所有 Java 提交中击败了87.52% 的用户
+     *
+     * @param arr 数组
+     * @return 三角形的最大周长
+     */
+    public int largestPerimeter(int[] arr) {
+        int n = arr.length;
+        if (n < 3) {
+            return 0;
+        }
+        Arrays.sort(arr);
+        for (int i = n - 1; i >= 2; i--) {
+            if (arr[i] < arr[i - 1] + arr[i - 2]) {
+                return arr[i] + arr[i - 1] + arr[i - 2];
+            }
+        }
+        return 0;
+    }
+
+    /**
+     * 539. 最小时间差
+     * <p>
+     * 给定一个 24 小时制（小时:分钟 "HH:MM"）的时间列表，找出列表中任意两个时间的最小时间差并以分钟数表示。
+     * <p>
+     * 执行用时：18 ms, 在所有 Java 提交中击败了19.52% 的用户
+     * 内存消耗：40.2 MB, 在所有 Java 提交中击败了28.84% 的用户
+     *
+     * @param timePoints 时间列表
+     * @return 最小时间差
+     */
+    public int findMinDifference(List<String> timePoints) {
+        int ans = Integer.MAX_VALUE;
+        int first = 0;
+        boolean isFirst = true;
+        int last = 0;
+        Collections.sort(timePoints);
+        for (String time : timePoints) {
+            String[] t = time.split(":");
+            if (isFirst) {
+                isFirst = false;
+                first = Integer.parseInt(t[0]) * 60 + Integer.parseInt(t[1]);
+                last = first;
+            } else {
+                int tmp = Integer.parseInt(t[0]) * 60 + Integer.parseInt(t[1]);
+                ans = Math.min(ans, tmp - last);
+                last = tmp;
+            }
+        }
+        ans = Math.min(ans, first + 24 * 60 - last);
+        return ans;
     }
 }

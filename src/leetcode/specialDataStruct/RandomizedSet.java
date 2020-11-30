@@ -1,4 +1,4 @@
-package leetcode.datestruct;
+package leetcode.specialDataStruct;
 
 import java.util.HashSet;
 import java.util.Random;

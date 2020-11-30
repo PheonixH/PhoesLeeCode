@@ -1,4 +1,4 @@
-package leetcode.data;
+package leetcode.dataStruct;
 
 import java.util.List;
 

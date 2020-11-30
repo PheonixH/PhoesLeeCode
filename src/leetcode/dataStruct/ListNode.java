@@ -1,4 +1,4 @@
-package leetcode.datestruct;
+package leetcode.dataStruct;
 
 /**
  * Definition for singly-linked list.
