@@ -2604,12 +2604,13 @@ public class SolutionNow {
 
     /**
      * 剑指 Offer 55 - II. 平衡二叉树
-     *
+     * <p>
      * 输入一棵二叉树的根节点，判断该树是不是平衡二叉树。
      * 如果某二叉树中任意节点的左右子树的深度相差不超过1，那么它就是一棵平衡二叉树。
-     *
+     * <p>
      * 执行用时：1 ms, 在所有 Java 提交中击败了99.99% 的用户
      * 内存消耗：38.5 MB, 在所有 Java 提交中击败了82.31% 的用户
+     *
      * @param root 二叉树
      * @return 该树是不是平衡二叉树
      */
@@ -2630,6 +2631,61 @@ public class SolutionNow {
             isBalancedFlag = false;
         }
         return Math.max(l, r);
+    }
+
+    /**
+     * 767. 重构字符串
+     *
+     * 给定一个字符串S，检查是否能重新排布其中的字母，使得两相邻的字符不同。
+     * 若可行，输出任意可行的结果。若不可行，返回空字符串。
+     *
+     * 执行用时：2 ms, 在所有 Java 提交中击败了58.78% 的用户
+     * 内存消耗：36.8 MB, 在所有 Java 提交中击败了56.88% 的用户
+     * @param S 字符串
+     * @return 重构字符串
+     */
+    public String reorganizeString(String S) {
+        int n = S.length();
+        int[] nums = new int[26];
+        for (char c : S.toCharArray()) {
+            nums[c - 'a']++;
+        }
+
+        Comparator<int[]> comparator = new Comparator<int[]>() {
+            @Override
+            public int compare(int[] o1, int[] o2) {
+                return o2[1] - o1[1];
+            }
+        };
+        PriorityQueue<int[]> priorityQueue = new PriorityQueue<>(comparator);
+        for (int i = 0; i < 26; i++) {
+            if (nums[i] > 0) {
+                priorityQueue.add(new int[]{i, nums[i]});
+            }
+        }
+
+        StringBuilder stringBuilder = new StringBuilder();
+        while (!priorityQueue.isEmpty()) {
+            int[] first = priorityQueue.poll();
+            stringBuilder.append((char) ('a' + first[0]));
+            first[1]--;
+            if (priorityQueue.isEmpty()) {
+                if (first[1] > 0) {
+                    return "";
+                }
+            } else {
+                int[] second = priorityQueue.poll();
+                stringBuilder.append((char) ('a' + second[0]));
+                second[1]--;
+                if (first[1] > 0) {
+                    priorityQueue.add(first);
+                }
+                if (second[1] > 0) {
+                    priorityQueue.add(second);
+                }
+            }
+        }
+        return stringBuilder.toString();
     }
 }
 
