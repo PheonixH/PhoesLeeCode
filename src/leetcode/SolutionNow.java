@@ -2635,12 +2635,13 @@ public class SolutionNow {
 
     /**
      * 767. 重构字符串
-     *
+     * <p>
      * 给定一个字符串S，检查是否能重新排布其中的字母，使得两相邻的字符不同。
      * 若可行，输出任意可行的结果。若不可行，返回空字符串。
-     *
+     * <p>
      * 执行用时：2 ms, 在所有 Java 提交中击败了58.78% 的用户
      * 内存消耗：36.8 MB, 在所有 Java 提交中击败了56.88% 的用户
+     *
      * @param S 字符串
      * @return 重构字符串
      */
@@ -2686,6 +2687,42 @@ public class SolutionNow {
             }
         }
         return stringBuilder.toString();
+    }
+
+    /**
+     * 34. 在排序数组中查找元素的第一个和最后一个位置
+     * 给定一个按照升序排列的整数数组 nums，和一个目标值 target。找出给定目标值在数组中的开始位置和结束位置。
+     * 如果数组中不存在目标值 target，返回 [-1, -1]。
+     * 进阶：
+     *     你可以设计并实现时间复杂度为 O(log n) 的算法解决此问题吗？
+     *
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：41.7 MB, 在所有 Java 提交中击败了71.09% 的用户
+     * @param nums 排序数组
+     * @param target 目标值
+     * @return 给定目标值在数组中的开始位置和结束位置
+     */
+    public int[] searchRange(int[] nums, int target) {
+        int leftIdx = binarySearch(nums, target, true);
+        int rightIdx = binarySearch(nums, target, false) - 1;
+        if (leftIdx <= rightIdx && rightIdx < nums.length && nums[leftIdx] == target && nums[rightIdx] == target) {
+            return new int[]{leftIdx, rightIdx};
+        }
+        return new int[]{-1, -1};
+    }
+
+    public int binarySearch(int[] nums, int target, boolean lower) {
+        int left = 0, right = nums.length - 1, ans = nums.length;
+        while (left <= right) {
+            int mid = (left + right) / 2;
+            if (nums[mid] > target || (lower && nums[mid] >= target)) {
+                right = mid - 1;
+                ans = mid;
+            } else {
+                left = mid + 1;
+            }
+        }
+        return ans;
     }
 }
 
