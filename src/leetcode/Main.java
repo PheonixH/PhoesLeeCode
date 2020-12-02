@@ -135,7 +135,7 @@ public class Main {
         }
 
         SolutionNow solution = new SolutionNow();
-        solution.countBattleships(twoDimensionalCharArray);
+        solution.smallestSubsequence("bcabc");
         SolitionUbuntu solitionUbuntu = new SolitionUbuntu();
 //        solitionUbuntu.createSortedArray(oneDimensionalArrayA);
 

@@ -2694,11 +2694,12 @@ public class SolutionNow {
      * 给定一个按照升序排列的整数数组 nums，和一个目标值 target。找出给定目标值在数组中的开始位置和结束位置。
      * 如果数组中不存在目标值 target，返回 [-1, -1]。
      * 进阶：
-     *     你可以设计并实现时间复杂度为 O(log n) 的算法解决此问题吗？
-     *
+     * 你可以设计并实现时间复杂度为 O(log n) 的算法解决此问题吗？
+     * <p>
      * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
      * 内存消耗：41.7 MB, 在所有 Java 提交中击败了71.09% 的用户
-     * @param nums 排序数组
+     *
+     * @param nums   排序数组
      * @param target 目标值
      * @return 给定目标值在数组中的开始位置和结束位置
      */
@@ -2723,6 +2724,46 @@ public class SolutionNow {
             }
         }
         return ans;
+    }
+
+    public String smallestSubsequence(String text) {
+        if (text == null || text.length() == 1) {
+            return text;
+        }
+        int len = text.length();
+        int[] recordCharCount = new int[26]; // 用来保存字母出现的次数
+
+        Stack<Character> res = new Stack<>();
+        for (int i = 0; i < len; i++) {
+            recordCharCount[text.charAt(i) - 'a'] += 1;
+        }
+
+        Set<Character> hasMap = new HashSet<>(); // 用来记录栈中是否存在当前遍历的字符
+        for (int i = 0; i < len; i++) {
+            recordCharCount[text.charAt(i) - 'a'] -= 1;
+            if (hasMap.contains(text.charAt(i))) {
+                continue;
+            }
+            while (!res.isEmpty()) {
+                char curPeekChar = res.peek();
+                if (curPeekChar > text.charAt(i) && recordCharCount[curPeekChar - 'a'] > 0) {
+                    res.pop();
+                    hasMap.remove(curPeekChar);
+                } else {
+                    break;
+                }
+            }
+            res.push(text.charAt(i));
+            hasMap.add(text.charAt(i));
+        }
+
+        StringBuffer result = new StringBuffer();
+        while (!res.isEmpty()) {
+            result.append(res.pop());
+        }
+
+        return result.reverse().toString();
+
     }
 }
 
