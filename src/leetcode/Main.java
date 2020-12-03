@@ -135,7 +135,7 @@ public class Main {
         }
 
         SolutionNow solution = new SolutionNow();
-        solution.smallestSubsequence("bcabc");
+        solution.countPrimes(10);
         SolitionUbuntu solitionUbuntu = new SolitionUbuntu();
 //        solitionUbuntu.createSortedArray(oneDimensionalArrayA);
 
