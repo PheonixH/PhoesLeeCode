@@ -2803,8 +2803,8 @@ public class SolutionNow {
      * 执行用时：32 ms, 在所有 Java 提交中击败了56.57% 的用户
      * 内存消耗：38.7 MB, 在所有 Java 提交中击败了99.32% 的用户
      *
-     * @param nums
-     * @return
+     * @param nums 升序排序的整数数组
+     * @return 能否分割数组为连续子序列
      */
     public boolean isPossible(int[] nums) {
         List<int[]> list = new ArrayList<>();
