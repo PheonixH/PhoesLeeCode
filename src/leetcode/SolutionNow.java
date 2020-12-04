@@ -2768,10 +2768,11 @@ public class SolutionNow {
 
     /**
      * 204. 计数质数
-     *
+     * <p>
      * 统计所有小于非负整数 n 的质数的数量。
      * 执行用时：24 ms, 在所有 Java 提交中击败了37.87% 的用户
      * 内存消耗：42.7 MB, 在所有 Java 提交中击败了10.56% 的用户
+     *
      * @param n 非负整数 n
      * @return 统计所有小于非负整数 n 的质数的数量
      */
@@ -2790,6 +2791,52 @@ public class SolutionNow {
             }
         }
         return ans;
+    }
+
+    /**
+     * 659. 分割数组为连续子序列
+     * <p>
+     * 给你一个按升序排序的整数数组 num（可能包含重复数字），
+     * 请你将它们分割成一个或多个子序列，其中每个子序列都由连续整数组成且长度至少为 3 。
+     * 如果可以完成上述分割，则返回 true ；否则，返回 false 。
+     * <p>
+     * 执行用时：32 ms, 在所有 Java 提交中击败了56.57% 的用户
+     * 内存消耗：38.7 MB, 在所有 Java 提交中击败了99.32% 的用户
+     *
+     * @param nums
+     * @return
+     */
+    public boolean isPossible(int[] nums) {
+        List<int[]> list = new ArrayList<>();
+        for (int i = 0; i < nums.length; i++) {
+            if (list.isEmpty()) {
+                list.add(new int[]{nums[i], nums[i]});
+            } else {
+                int index = list.size() - 1;
+                while (index >= 0) {
+                    int[] tmp = list.get(index);
+                    if (tmp[1] < nums[i] - 1) {
+                        list.add(new int[]{nums[i], nums[i]});
+                        break;
+                    } else if (tmp[1] == nums[i] - 1) {
+                        tmp[1]++;
+                        break;
+                    } else if (index == 0) {
+                        list.add(new int[]{nums[i], nums[i]});
+                        break;
+                    } else {
+                        index--;
+                    }
+                }
+            }
+        }
+
+        for (int[] lis : list) {
+            if (lis[1] - lis[0] < 2) {
+                return false;
+            }
+        }
+        return true;
     }
 }
 
