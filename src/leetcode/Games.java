@@ -1129,5 +1129,50 @@ public class Games {
         return subSeqLen[subSeqLen.length - 1];
     }
 
+    //周赛
 
+    public int maximumWealth(int[][] accounts) {
+        int ans = 0;
+        for (int i = 0; i < accounts.length; i++) {
+            int tmp = 0;
+            for (int j = 0; j < accounts[i].length; j++) {
+                tmp += accounts[i][j];
+            }
+            ans = Math.max(ans, tmp);
+        }
+        return ans;
+    }
+
+    public int[] mostCompetitive(int[] nums, int k) {
+        int n = nums.length;
+        int[] arr = new int[k];
+        for (int i = n - k; i < n; i++) {
+            arr[i - n + k] = nums[i];
+        }
+        for (int j = n - k-1; j >= 0; j--) {
+            if (nums[j] > arr[0]) {
+                continue;
+            }
+            int tmp = nums[j];
+            for (int i = 0; i < k; i++) {
+                if (tmp > arr[i]) {
+                    break;
+                }
+                tmp = arr[i] ^ tmp;
+                arr[i] = arr[i] ^ tmp;
+                tmp = arr[i] ^ tmp;
+            }
+        }
+        return arr;
+    }
+
+
+    public int minimumDeviation(int[] nums) {
+        int n = nums.length;
+        Arrays.sort(nums);
+        int max = Integer.parseInt(String.valueOf(Arrays.stream(nums).max()));
+        int min = Integer.parseInt(String.valueOf(Arrays.stream(nums).min()));
+        int ans = 0;
+        return ans;
+    }
 }
