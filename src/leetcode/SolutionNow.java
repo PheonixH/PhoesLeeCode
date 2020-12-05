@@ -2100,9 +2100,10 @@ public class SolutionNow {
      * 1290. 二进制链表转整数
      * 给你一个单链表的引用结点 head。链表中每个结点的值不是 0 就是 1。已知此链表是一个整数数字的二进制表示形式。
      * 请你返回该链表所表示数字的 十进制值 。
-     *
+     * <p>
      * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
      * 内存消耗：35.6 MB, 在所有 Java 提交中击败了95.81% 的用户
+     *
      * @param head 单链表的引用结点
      * @return 二进制链表转整数
      */
@@ -2113,6 +2114,729 @@ public class SolutionNow {
             head = head.next;
         }
         return ans;
+    }
+
+    /**
+     * 222. 完全二叉树的节点个数
+     * <p>
+     * 给出一个完全二叉树，求出该树的节点个数。
+     * 说明：
+     * 完全二叉树的定义如下：在完全二叉树中，除了最底层节点可能没填满外，其余每层节点数都达到最大值，
+     * 并且最下面一层的节点都集中在该层最左边的若干位置。若最底层为第 h 层，则该层包含 1~ 2h 个节点。
+     * <p>
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：40.7 MB, 在所有 Java 提交中击败了94.88% 的用户
+     *
+     * @param root 完全二叉树
+     * @return 完全二叉树的节点个数
+     */
+    public int countNodes(TreeNode root) {
+        countNodesDFS(root);
+        return countNodesNum;
+    }
+
+    private int countNodesNum = 0;
+
+    private void countNodesDFS(TreeNode root) {
+        if (root != null) {
+            countNodesNum++;
+            countNodesDFS(root.left);
+            countNodesDFS(root.right);
+        }
+    }
+
+    /**
+     * 386. 字典序排数
+     * <p>
+     * 给定一个整数 n, 返回从 1 到 n 的字典顺序。
+     * 例如，
+     * 给定 n =1 3，返回 [1,10,11,12,13,2,3,4,5,6,7,8,9] 。
+     * 请尽可能的优化算法的时间复杂度和空间复杂度。 输入的数据 n 小于等于 5,000,000。
+     * <p>
+     * 执行用时：23 ms, 在所有 Java 提交中击败了21.47% 的用户
+     * 内存消耗：46.7 MB, 在所有 Java 提交中击败了5.18% 的用户
+     *
+     * @param n 整数 n
+     * @return 字典序排数
+     */
+    public List<Integer> lexicalOrder(int n) {
+        String[] strings = new String[n];
+        for (int i = 1; i <= n; i++) {
+            strings[i] = String.valueOf(i);
+        }
+        Arrays.sort(strings);
+        List<Integer> integers = new LinkedList<>();
+        for (String s : strings) {
+            integers.add(Integer.valueOf(s));
+        }
+        return integers;
+    }
+
+    /**
+     * 1433. 检查一个字符串是否可以打破另一个字符串
+     * <p>
+     * 给你两个字符串 s1 和 s2 ，它们长度相等，请你检查是否存在一个 s1  的排列可以打破 s2 的一个排列，或者是否存在一个 s2 的排列可以打破 s1 的一个排列。
+     * 字符串 x 可以打破字符串 y （两者长度都为 n ）需满足对于所有 i（在 0 到 n - 1 之间）都有 x[i] >= y[i]（字典序意义下的顺序）。
+     * <p>
+     * 执行用时：9 ms, 在所有 Java 提交中击败了72.43% 的用户
+     * 内存消耗：39.4 MB, 在所有 Java 提交中击败了80.83% 的用户
+     *
+     * @param s1 字符串
+     * @param s2 字符串
+     * @return 一个字符串是否可以打破另一个字符串
+     */
+    public boolean checkIfCanBreak(String s1, String s2) {
+        char[] chars1 = s1.toCharArray();
+        Arrays.sort(chars1);
+        char[] chars2 = s2.toCharArray();
+        Arrays.sort(chars2);
+        int n = s1.length();
+        boolean b1 = true;
+        boolean b2 = true;
+        for (int i = 0; i < n; i++) {
+            if (chars1[i] > chars2[i]) {
+                b2 = false;
+                if (!b1) {
+                    return false;
+                }
+            } else if (chars1[i] < chars2[i]) {
+                b1 = false;
+                if (!b2) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     * 1442. 形成两个异或相等数组的三元组数目
+     * <p>
+     * 给你一个整数数组 arr 。
+     * 现需要从数组中取三个下标 i、j 和 k ，其中 (0 <= i < j <= k < arr.length) 。
+     * a 和 b 定义如下：
+     * a = arr[i] ^ arr[i + 1] ^ ... ^ arr[j - 1]
+     * b = arr[j] ^ arr[j + 1] ^ ... ^ arr[k]
+     * 注意：^ 表示 按位异或 操作。
+     * 请返回能够令 a == b 成立的三元组 (i, j , k) 的数目。
+     * <p>
+     * 执行用时：40 ms, 在所有 Java 提交中击败了17.05% 的用户
+     * 内存消耗：35.9 MB, 在所有 Java 提交中击败了91.59% 的用户
+     *
+     * @param arr 整数数组
+     * @return 形成两个异或相等数组的三元组数目
+     */
+    public int countTriplets(int[] arr) {
+        int ans = 0;
+        int n = arr.length;
+        int[] pre = new int[n + 1];
+        pre[0] = 0;
+        for (int i = 0; i < n; i++) {
+            pre[i + 1] = pre[i] ^ arr[i];
+        }
+        for (int i = 0; i <= n; i++) {
+            for (int j = i + 1; j <= n; j++) {
+                for (int k = j + 1; k <= n; k++) {
+                    if ((pre[j] ^ pre[i]) == (pre[k] ^ pre[j])) {
+                        ans++;
+                    }
+                }
+            }
+        }
+        return ans;
+    }
+
+    /**
+     * 1442. 形成两个异或相等数组的三元组数目
+     * <p>
+     * 给你一个整数数组 arr 。
+     * 现需要从数组中取三个下标 i、j 和 k ，其中 (0 <= i < j <= k < arr.length) 。
+     * a 和 b 定义如下：
+     * a = arr[i] ^ arr[i + 1] ^ ... ^ arr[j - 1]
+     * b = arr[j] ^ arr[j + 1] ^ ... ^ arr[k]
+     * 注意：^ 表示 按位异或 操作。
+     * 请返回能够令 a == b 成立的三元组 (i, j , k) 的数目。
+     * <p>
+     * 执行用时：1 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：35.9 MB, 在所有 Java 提交中击败了90.19% 的用户
+     *
+     * @param arr 整数数组
+     * @return 形成两个异或相等数组的三元组数目
+     */
+    public int countTriplets2(int[] arr) {
+        int ans = 0;
+        int n = arr.length;
+        for (int i = 0; i < n; i++) {
+            int tmp = arr[i];
+            for (int j = i + 1; j <= n; j++) {
+                tmp = tmp ^ arr[j];
+                if (tmp == 0) {
+                    ans += j - i;
+                }
+            }
+        }
+        return ans;
+    }
+
+    public int[] maxSlidingWindow(int[] nums, int k) {
+        int n = nums.length;
+        int[] ans = new int[n - k + 1];
+        Arrays.fill(ans, Integer.MIN_VALUE);
+        for (int i = 0; i < k; i++) {
+            ans[0] = Math.max(ans[0], nums[i]);
+        }
+        for (int i = 1; i < n - k; i++) {
+            if (ans[i - 1] == nums[i - 1]) {
+                for (int j = i; j < k + i; j++) {
+                    ans[i] = Math.max(ans[i], nums[j]);
+                }
+            } else {
+                ans[i - k] = Math.max(ans[i - 1 - k], nums[i]);
+            }
+        }
+        return ans;
+    }
+
+
+    /**
+     * 1370. 上升下降字符串
+     * <p>
+     * 给你一个字符串 s ，请你根据下面的算法重新构造字符串：
+     * 从 s 中选出 最小 的字符，将它 接在 结果字符串的后面。
+     * 从 s 剩余字符中选出 最小 的字符，且该字符比上一个添加的字符大，将它 接在 结果字符串后面。
+     * 重复步骤 2 ，直到你没法从 s 中选择字符。
+     * 从 s 中选出 最大 的字符，将它 接在 结果字符串的后面。
+     * 从 s 剩余字符中选出 最大 的字符，且该字符比上一个添加的字符小，将它 接在 结果字符串后面。
+     * 重复步骤 5 ，直到你没法从 s 中选择字符。
+     * 重复步骤 1 到 6 ，直到 s 中所有字符都已经被选过。
+     * 在任何一步中，如果最小或者最大字符不止一个 ，你可以选择其中任意一个，并将其添加到结果字符串。
+     * 请你返回将 s 中字符重新排序后的 结果字符串 。
+     * <p>
+     * 执行用时：3 ms, 在所有 Java 提交中击败了98.12% 的用户
+     * 内存消耗：38.7 MB, 在所有 Java 提交中击败了67.31% 的用户
+     *
+     * @param s 字符串
+     * @return 上升下降字符串
+     */
+    public String sortString(String s) {
+        int[] nums = new int[26];
+        int n = s.length();
+        for (int i = 0; i < n; i++) {
+            nums[s.charAt(i) - 'a']++;
+        }
+        StringBuilder stringBuilder = new StringBuilder();
+        while (stringBuilder.length() < n) {
+            for (int i = 0; i < 26; i++) {
+                if (nums[i] > 0) {
+                    stringBuilder.append((char) ('a' + i));
+                    nums[i]--;
+                }
+            }
+            for (int i = 25; i >= 0; i--) {
+                if (nums[i] > 0) {
+                    stringBuilder.append((char) ('a' + i));
+                    nums[i]--;
+                }
+            }
+        }
+        return stringBuilder.toString();
+    }
+
+    /**
+     * 剑指 Offer 52. 两个链表的第一个公共节点
+     * 输入两个链表，找出它们的第一个公共节点。
+     * <p>
+     * 执行用时：12 ms, 在所有 Java 提交中击败了6.91% 的用户
+     * 内存消耗：42.4 MB, 在所有 Java 提交中击败了5.00% 的用户
+     *
+     * @param headA 链表1
+     * @param headB 链表2
+     * @return 两个链表的第一个公共节点
+     */
+    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+        Set<ListNode> set = new HashSet<>();
+        ListNode ha = headA;
+        while (ha != null) {
+            set.add(ha);
+            ha = ha.next;
+        }
+        ListNode hb = headB;
+        while (hb != null) {
+            if (set.contains(hb)) {
+                return hb;
+            }
+            hb = hb.next;
+        }
+        return null;
+    }
+
+    /**
+     * 剑指 Offer 52. 两个链表的第一个公共节点
+     * 输入两个链表，找出它们的第一个公共节点。
+     * <p>
+     * 执行用时：1 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：41.2 MB, 在所有 Java 提交中击败了88.40% 的用户
+     *
+     * @param headA 链表1
+     * @param headB 链表2
+     * @return 两个链表的第一个公共节点
+     */
+    public ListNode getIntersectionNode2(ListNode headA, ListNode headB) {
+        ListNode ha = headA;
+        ListNode hb = headB;
+        while (true) {
+            if (ha == hb) {
+                return ha;
+            }
+            if (ha == null) {
+                ha = headB;
+            } else {
+                ha = ha.next;
+            }
+            if (hb == null) {
+                hb = headA;
+            } else {
+                hb = hb.next;
+            }
+        }
+    }
+
+    /**
+     * 164. 最大间距
+     * <p>
+     * 给定一个无序的数组，找出数组在排序之后，相邻元素之间最大的差值。
+     * 如果数组元素个数小于 2，则返回 0。
+     * <p>
+     * 执行用时：2 ms, 在所有 Java 提交中击败了99.72% 的用户
+     * 内存消耗：38.6 MB, 在所有 Java 提交中击败了81.51% 的用户
+     *
+     * @param nums 无序数组
+     * @return 最大间距
+     */
+    public int maximumGap(int[] nums) {
+        int n = nums.length;
+        if (n <= 1) {
+            return 0;
+        }
+        Arrays.sort(nums);
+        int di = nums[1] - nums[0];
+        for (int i = 2; i < n; i++) {
+            di = Math.max(di, nums[i] - nums[i - 1]);
+        }
+        return di;
+    }
+
+    /**
+     * 454. 四数相加 II
+     * <p>
+     * 给定四个包含整数的数组列表 A , B , C , D ,计算有多少个元组 (i, j, k, l) ，使得 A[i] + B[j] + C[k] + D[l] = 0。
+     * <p>
+     * 为了使问题简单化，所有的 A, B, C, D 具有相同的长度 N，且 0 ≤ N ≤ 500 。
+     * 所有整数的范围在 -228 到 228 - 1 之间，最终结果不会超过 231 - 1 。
+     * 执行用时：190 ms, 在所有 Java 提交中击败了5.34% 的用户
+     * 内存消耗：82.4 MB, 在所有 Java 提交中击败了5.04% 的用户
+     *
+     * @param A 包含整数的数组列表
+     * @param B 包含整数的数组列表
+     * @param C 包含整数的数组列表
+     * @param D 包含整数的数组列表
+     * @return 四数相加
+     */
+    public int fourSumCount(int[] A, int[] B, int[] C, int[] D) {
+        /**
+         *         int length = A.length;
+         *         Map<Integer, Integer> map = new HashMap<>();
+         *         //先计算A和B组成和的可能结果
+         *         for (int i = 0; i < length; i++) {
+         *             for (int j = 0; j < length; j++) {
+         *                 int sum = A[i] + B[j];
+         *                 map.put(sum, map.getOrDefault(sum, 0) + 1);
+         *             }
+         *         }
+         *         int res = 0;
+         *         //然后计算C和D组成和的可能结果的相反数是否存在于map中，如果存在就计算他的个数
+         *         for (int i = 0; i < length; i++) {
+         *             for (int j = 0; j < length; j++) {
+         *                 res += map.getOrDefault(-1 * (C[i] + D[j]), 0);
+         *             }
+         *         }
+         *         return res;
+         */
+        int n = A.length;
+        Map<Integer, Integer> first = new HashMap<>();
+        Map<Integer, Integer> second = new HashMap<>();
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                int v = first.getOrDefault(A[i] + B[j], 0) + 1;
+                first.put(A[i] + B[j], v);
+                int v2 = second.getOrDefault(C[i] + D[j], 0) + 1;
+                second.put(C[i] + D[j], v2);
+            }
+        }
+        int ans = 0;
+        for (Map.Entry<Integer, Integer> entry : first.entrySet()) {
+            if (second.containsKey(-entry.getKey())) {
+                ans += entry.getValue() * second.get(-entry.getKey());
+            }
+        }
+        return ans;
+    }
+
+    /**
+     * 419. 甲板上的战舰
+     * <p>
+     * 给定一个二维的甲板， 请计算其中有多少艘战舰。 战舰用 'X'表示，空位用 '.'表示。 你需要遵守以下规则：
+     * <p>
+     * 给你一个有效的甲板，仅由战舰或者空位组成。
+     * 战舰只能水平或者垂直放置。换句话说,战舰只能由 1xN (1 行, N 列)组成，或者 Nx1 (N 行, 1 列)组成，其中N可以是任意大小。
+     * 两艘战舰之间至少有一个水平或垂直的空位分隔 - 即没有相邻的战舰。
+     * <p>
+     * 执行用时：1 ms, 在所有 Java 提交中击败了99.83% 的用户
+     * 内存消耗：38.1 MB, 在所有 Java 提交中击败了77.26% 的用户
+     *
+     * @param board 二维的甲板
+     * @return 其中有多少艘战舰
+     */
+    public int countBattleships(char[][] board) {
+        int ans = 0;
+        int n = board.length;
+        int m = board[0].length;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (board[i][j] == 'X' && (i == 0 || board[i - 1][j] == '.')
+                        && (j == 0 || board[i][j - 1] == '.')) {
+                    ans++;
+                }
+            }
+        }
+        return ans;
+    }
+
+    /**
+     * 剑指 Offer 48. 最长不含重复字符的子字符串
+     * 请从字符串中找出一个最长的不包含重复字符的子字符串，计算该最长子字符串的长度。
+     * <p>
+     * 执行用时：5 ms, 在所有 Java 提交中击败了91.09% 的用户
+     * 内存消耗：38.8 MB, 在所有 Java 提交中击败了60.18% 的用户
+     *
+     * @param s 字符串
+     * @return 最长不含重复字符的子字符串
+     */
+    public int lengthOfLongestSubstring(String s) {
+        int n = s.length();
+        if (n <= 1) {
+            return n;
+        }
+        int l = 0, r = 1;
+        Set<Character> set = new HashSet<>();
+        set.add(s.charAt(l));
+        int ans = 0;
+        while (l < r && r < n) {
+            while (r < n && set.add(s.charAt(r))) {
+                r++;
+            }
+            ans = Math.max(set.size(), ans);
+            while (l <= r && r < n && s.charAt(l) != s.charAt(r)) {
+                set.remove(s.charAt(l));
+                l++;
+            }
+            l++;
+            r++;
+        }
+        return ans;
+    }
+
+
+    /**
+     * 1588. 所有奇数长度子数组的和
+     * <p>
+     * 给你一个正整数数组 arr ，请你计算所有可能的奇数长度子数组的和。
+     * 子数组 定义为原数组中的一个连续子序列。
+     * 请你返回 arr 中 所有奇数长度子数组的和 。
+     * <p>
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：36.1 MB, 在所有 Java 提交中击败了76.65% 的用户
+     *
+     * @param arr 正整数数组 arr
+     * @return 所有奇数长度子数组的和
+     */
+    public int sumOddLengthSubarrays(int[] arr) {
+        int len = arr.length, res = 0;
+        for (int i = 0; i < len; i++) {
+            int LeftOdd = (i + 1) / 2, LeftEven = i / 2 + 1;
+            int RightOdd = (len - i) / 2, RightEven = (len - 1 - i) / 2 + 1;
+            res += arr[i] * (LeftOdd * RightOdd + LeftEven * RightEven);
+        }
+        return res;
+    }
+
+    /**
+     * 1184. 公交站间的距离
+     * 环形公交路线上有 n 个站，按次序从 0 到 n - 1 进行编号。我们已知每一对相邻公交站之间的距离，distance[i] 表示编号为 i 的车站和编号为 (i + 1) % n 的车站之间的距离。
+     * 环线上的公交车都可以按顺时针和逆时针的方向行驶。
+     * 返回乘客从出发点 start 到目的地 destination 之间的最短距离。
+     * <p>
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：38.1 MB, 在所有 Java 提交中击败了89.57% 的用户
+     *
+     * @param distance    相邻公交站之间的距离
+     * @param start       出发点
+     * @param destination 目的地
+     * @return 公交站间的距离
+     */
+    public int distanceBetweenBusStops(int[] distance, int start, int destination) {
+        if (start > destination) {
+            start = start ^ destination;
+            destination = start ^ destination;
+            start = start ^ destination;
+        }
+        int tmp = 0;
+        int other = 0;
+        for (int i = 0; i < distance.length; i++) {
+            if (i >= start && i < destination) {
+                tmp += distance[i];
+            } else {
+                other += distance[i];
+            }
+        }
+        return Math.min(tmp, other);
+    }
+
+    /**
+     * 剑指 Offer 55 - II. 平衡二叉树
+     * <p>
+     * 输入一棵二叉树的根节点，判断该树是不是平衡二叉树。
+     * 如果某二叉树中任意节点的左右子树的深度相差不超过1，那么它就是一棵平衡二叉树。
+     * <p>
+     * 执行用时：1 ms, 在所有 Java 提交中击败了99.99% 的用户
+     * 内存消耗：38.5 MB, 在所有 Java 提交中击败了82.31% 的用户
+     *
+     * @param root 二叉树
+     * @return 该树是不是平衡二叉树
+     */
+    public boolean isBalanced(TreeNode root) {
+        isBalancedLength(root);
+        return isBalancedFlag;
+    }
+
+    private boolean isBalancedFlag = true;
+
+    public int isBalancedLength(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        int l = isBalancedLength(root.left) + 1;
+        int r = isBalancedLength(root.right) + 1;
+        if (Math.abs(l - r) >= 2) {
+            isBalancedFlag = false;
+        }
+        return Math.max(l, r);
+    }
+
+    /**
+     * 767. 重构字符串
+     * <p>
+     * 给定一个字符串S，检查是否能重新排布其中的字母，使得两相邻的字符不同。
+     * 若可行，输出任意可行的结果。若不可行，返回空字符串。
+     * <p>
+     * 执行用时：2 ms, 在所有 Java 提交中击败了58.78% 的用户
+     * 内存消耗：36.8 MB, 在所有 Java 提交中击败了56.88% 的用户
+     *
+     * @param S 字符串
+     * @return 重构字符串
+     */
+    public String reorganizeString(String S) {
+        int n = S.length();
+        int[] nums = new int[26];
+        for (char c : S.toCharArray()) {
+            nums[c - 'a']++;
+        }
+
+        Comparator<int[]> comparator = new Comparator<int[]>() {
+            @Override
+            public int compare(int[] o1, int[] o2) {
+                return o2[1] - o1[1];
+            }
+        };
+        PriorityQueue<int[]> priorityQueue = new PriorityQueue<>(comparator);
+        for (int i = 0; i < 26; i++) {
+            if (nums[i] > 0) {
+                priorityQueue.add(new int[]{i, nums[i]});
+            }
+        }
+
+        StringBuilder stringBuilder = new StringBuilder();
+        while (!priorityQueue.isEmpty()) {
+            int[] first = priorityQueue.poll();
+            stringBuilder.append((char) ('a' + first[0]));
+            first[1]--;
+            if (priorityQueue.isEmpty()) {
+                if (first[1] > 0) {
+                    return "";
+                }
+            } else {
+                int[] second = priorityQueue.poll();
+                stringBuilder.append((char) ('a' + second[0]));
+                second[1]--;
+                if (first[1] > 0) {
+                    priorityQueue.add(first);
+                }
+                if (second[1] > 0) {
+                    priorityQueue.add(second);
+                }
+            }
+        }
+        return stringBuilder.toString();
+    }
+
+    /**
+     * 34. 在排序数组中查找元素的第一个和最后一个位置
+     * 给定一个按照升序排列的整数数组 nums，和一个目标值 target。找出给定目标值在数组中的开始位置和结束位置。
+     * 如果数组中不存在目标值 target，返回 [-1, -1]。
+     * 进阶：
+     * 你可以设计并实现时间复杂度为 O(log n) 的算法解决此问题吗？
+     * <p>
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：41.7 MB, 在所有 Java 提交中击败了71.09% 的用户
+     *
+     * @param nums   排序数组
+     * @param target 目标值
+     * @return 给定目标值在数组中的开始位置和结束位置
+     */
+    public int[] searchRange(int[] nums, int target) {
+        int leftIdx = binarySearch(nums, target, true);
+        int rightIdx = binarySearch(nums, target, false) - 1;
+        if (leftIdx <= rightIdx && rightIdx < nums.length && nums[leftIdx] == target && nums[rightIdx] == target) {
+            return new int[]{leftIdx, rightIdx};
+        }
+        return new int[]{-1, -1};
+    }
+
+    public int binarySearch(int[] nums, int target, boolean lower) {
+        int left = 0, right = nums.length - 1, ans = nums.length;
+        while (left <= right) {
+            int mid = (left + right) / 2;
+            if (nums[mid] > target || (lower && nums[mid] >= target)) {
+                right = mid - 1;
+                ans = mid;
+            } else {
+                left = mid + 1;
+            }
+        }
+        return ans;
+    }
+
+    public String smallestSubsequence(String text) {
+        if (text == null || text.length() == 1) {
+            return text;
+        }
+        int len = text.length();
+        int[] recordCharCount = new int[26]; // 用来保存字母出现的次数
+
+        Stack<Character> res = new Stack<>();
+        for (int i = 0; i < len; i++) {
+            recordCharCount[text.charAt(i) - 'a'] += 1;
+        }
+
+        Set<Character> hasMap = new HashSet<>(); // 用来记录栈中是否存在当前遍历的字符
+        for (int i = 0; i < len; i++) {
+            recordCharCount[text.charAt(i) - 'a'] -= 1;
+            if (hasMap.contains(text.charAt(i))) {
+                continue;
+            }
+            while (!res.isEmpty()) {
+                char curPeekChar = res.peek();
+                if (curPeekChar > text.charAt(i) && recordCharCount[curPeekChar - 'a'] > 0) {
+                    res.pop();
+                    hasMap.remove(curPeekChar);
+                } else {
+                    break;
+                }
+            }
+            res.push(text.charAt(i));
+            hasMap.add(text.charAt(i));
+        }
+
+        StringBuffer result = new StringBuffer();
+        while (!res.isEmpty()) {
+            result.append(res.pop());
+        }
+
+        return result.reverse().toString();
+
+    }
+
+    /**
+     * 204. 计数质数
+     * <p>
+     * 统计所有小于非负整数 n 的质数的数量。
+     * 执行用时：24 ms, 在所有 Java 提交中击败了37.87% 的用户
+     * 内存消耗：42.7 MB, 在所有 Java 提交中击败了10.56% 的用户
+     *
+     * @param n 非负整数 n
+     * @return 统计所有小于非负整数 n 的质数的数量
+     */
+    public int countPrimes(int n) {
+        int[] isPrime = new int[n];
+        Arrays.fill(isPrime, 1);
+        int ans = 0;
+        for (int i = 2; i < n; ++i) {
+            if (isPrime[i] == 1) {
+                ans += 1;
+                if ((long) i * i < n) {
+                    for (int j = i * i; j < n; j += i) {
+                        isPrime[j] = 0;
+                    }
+                }
+            }
+        }
+        return ans;
+    }
+
+    /**
+     * 659. 分割数组为连续子序列
+     * <p>
+     * 给你一个按升序排序的整数数组 num（可能包含重复数字），
+     * 请你将它们分割成一个或多个子序列，其中每个子序列都由连续整数组成且长度至少为 3 。
+     * 如果可以完成上述分割，则返回 true ；否则，返回 false 。
+     * <p>
+     * 执行用时：32 ms, 在所有 Java 提交中击败了56.57% 的用户
+     * 内存消耗：38.7 MB, 在所有 Java 提交中击败了99.32% 的用户
+     *
+     * @param nums 升序排序的整数数组
+     * @return 能否分割数组为连续子序列
+     */
+    public boolean isPossible(int[] nums) {
+        List<int[]> list = new ArrayList<>();
+        for (int i = 0; i < nums.length; i++) {
+            if (list.isEmpty()) {
+                list.add(new int[]{nums[i], nums[i]});
+            } else {
+                int index = list.size() - 1;
+                while (index >= 0) {
+                    int[] tmp = list.get(index);
+                    if (tmp[1] < nums[i] - 1) {
+                        list.add(new int[]{nums[i], nums[i]});
+                        break;
+                    } else if (tmp[1] == nums[i] - 1) {
+                        tmp[1]++;
+                        break;
+                    } else if (index == 0) {
+                        list.add(new int[]{nums[i], nums[i]});
+                        break;
+                    } else {
+                        index--;
+                    }
+                }
+            }
+        }
+
+        for (int[] lis : list) {
+            if (lis[1] - lis[0] < 2) {
+                return false;
+            }
+        }
+        return true;
     }
 }
 
