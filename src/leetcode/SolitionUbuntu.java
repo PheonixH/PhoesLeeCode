@@ -2456,4 +2456,54 @@ x = (a[7]b[7]) (a[6]b[6]) ... (a[1]b[1]) (a[0]b[0])
         ans = Math.min(ans, first + 24 * 60 - last);
         return ans;
     }
+
+    public int leastInterval(char[] tasks, int n) {
+        int result = 0;
+        int[] num = new int[26];
+        int max = 0;
+        int all = 0;
+        for (char task : tasks) {
+            int key = task - 'A';
+            num[key]++;
+            if (max < num[key]) {
+                all = 1;
+                max = num[key];
+            } else if (max == num[key]) {
+                all++;
+            }
+        }
+        result = (max - 1) * n + max + all - 1;
+        return Math.max(result, tasks.length);
+    }
+
+    /**
+     * 118. 杨辉三角
+     * 给定一个非负整数 numRows，生成杨辉三角的前 numRows 行。
+     *
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：36.5 MB, 在所有 Java 提交中击败了39.39% 的用户
+     * @param numRows 非负整数
+     * @return 杨辉三角前 numRows 行
+     */
+    public List<List<Integer>> generate(int numRows) {
+        List<List<Integer>> res = new ArrayList<>();
+        if (numRows == 0) {
+            return res;
+        }
+        List<Integer> first = new ArrayList<>();
+        first.add(1);
+        res.add(first);
+        while (numRows > 1) {
+            List<Integer> pre = res.get(res.size() - 1);
+            List<Integer> newList = new ArrayList<>();
+            newList.add(1);
+            for (int i = 1; i < pre.size(); i++) {
+                newList.add(pre.get(i - 1) + pre.get(i));
+            }
+            newList.add(1);
+            res.add(newList);
+            numRows--;
+        }
+        return res;
+    }
 }
