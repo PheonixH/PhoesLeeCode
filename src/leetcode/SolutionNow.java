@@ -2893,6 +2893,75 @@ public class SolutionNow {
 
         return ans;
     }
+
+    public int heightChecker(int[] heights) {
+        int[] newHeights = Arrays.copyOf(heights, heights.length);
+        Arrays.sort(newHeights);
+        int ans = 0;
+        for (int i = 0; i < heights.length; i++) {
+            ans += heights[i] == newHeights[i] ? 0 : 1;
+        }
+        return ans;
+    }
+
+    public boolean exist(char[][] board, String word) {
+        char[] words = word.toCharArray();
+        int row = board.length;
+        int col = board[0].length;
+        Stack<int[]> stack = new Stack<>();
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                if (board[i][j] == words[0]) {
+                    stack.push(new int[]{i, j});
+                }
+            }
+        }
+        if (word.length() == 1) {
+            return !stack.empty();
+        }
+        while (!stack.empty() && !isExist) {
+            int[] tmp = stack.pop();
+            boolean[][] booleans = new boolean[row][col];
+            booleans[tmp[0]][tmp[1]] = true;
+            exist(board, words, 1, tmp[0], tmp[1], booleans);
+        }
+        return isExist;
+    }
+
+    private boolean isExist = false;
+
+    private int[][] existDir = new int[][]{{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+
+    private void exist(char[][] board, char[] word, int now,
+                       int x, int y, boolean[][] visited) {
+        if (isExist) {
+            return;
+        }
+        if (now == word.length) {
+            isExist = true;
+            return;
+        }
+        for (int[] dir : existDir) {
+            int newX = x + dir[0];
+            int newY = y + dir[1];
+            if (newX < 0 || newX >= board.length || newY < 0 || newY >= board[0].length) {
+                continue;
+            }
+            if (board[newX][newY] != word[now] || visited[newX][newY]) {
+                continue;
+            }
+            visited[newX][newY] = true;
+            exist(board, word, now + 1, newX, newY, visited);
+            visited[newX][newY] = false;
+            if (isExist) {
+                break;
+            }
+        }
+    }
+
+    public int[] sumOfDistancesInTree(int N, int[][] edges) {
+
+    }
 }
 
 
