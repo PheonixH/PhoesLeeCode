@@ -2838,6 +2838,61 @@ public class SolutionNow {
         }
         return true;
     }
+
+    /**
+     * 861. 翻转矩阵后的得分
+     * <p>
+     * 有一个二维矩阵 A 其中每个元素的值为 0 或 1 。
+     * 移动是指选择任一行或列，并转换该行或列中的每一个值：将所有 0 都更改为 1，将所有 1 都更改为 0。
+     * 在做出任意次数的移动后，将该矩阵的每一行都按照二进制数来解释，矩阵的得分就是这些数字的总和。
+     * 返回尽可能高的分数。
+     * <p>
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：36.4 MB, 在所有 Java 提交中击败了51.70% 的用户
+     *
+     * @param A 二维矩阵
+     * @return 翻转矩阵后的得分
+     */
+    public int matrixScore(int[][] A) {
+        int row = A.length;
+        if (row == 0) {
+            return 0;
+        }
+        int col = A[0].length;
+        if (col == 0) {
+            return 0;
+        }
+        for (int i = 0; i < row; i++) {
+            if (A[i][0] == 0) {
+                for (int j = 0; j < col; j++) {
+                    A[i][j] = A[i][j] ^ 1;
+                }
+            }
+        }
+
+        for (int j = 0; j < col; j++) {
+            int tmp = 0;
+            for (int i = 0; i < row; i++) {
+                tmp += A[i][j];
+            }
+            if (tmp <= row / 2) {
+                for (int i = 0; i < row; i++) {
+                    A[i][j] = A[i][j] ^ 1;
+                }
+            }
+        }
+
+        int ans = 0;
+        for (int i = 0; i < row; i++) {
+            int tmp = 0;
+            for (int j = 0; j < col; j++) {
+                tmp = tmp * 2 + A[i][j];
+            }
+            ans += tmp;
+        }
+
+        return ans;
+    }
 }
 
 
