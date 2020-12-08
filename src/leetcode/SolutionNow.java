@@ -142,12 +142,13 @@ public class SolutionNow {
 
     /**
      * 1619. 删除某些元素后的数组均值
-     *
+     * <p>
      * 给你一个整数数组 arr ，请你删除最小 5% 的数字和最大 5% 的数字后，剩余数字的平均值。
      * 与 标准答案 误差在 10-5 的结果都被视为正确结果。
-     *
+     * <p>
      * 执行用时：2 ms, 在所有 Java 提交中击败了99.81% 的用户
      * 内存消耗：38.2 MB, 在所有 Java 提交中击败了76.22% 的用户
+     *
      * @param arr 整数数组
      * @return 删除最小 5% 的数字和最大 5% 的数字后，剩余数字的平均值
      */
@@ -161,5 +162,39 @@ public class SolutionNow {
             sum += arr[i];
         }
         return (double) sum / (r - l);
+    }
+
+    /**
+     * 1209. 删除字符串中的所有相邻重复项 II
+     *
+     * 给你一个字符串 s，「k 倍重复项删除操作」将会从 s 中选择 k 个相邻且相等的字母，并删除它们，使被删去的字符串的左侧和右侧连在一起。
+     * 你需要对 s 重复进行无限次这样的删除操作，直到无法继续为止。
+     * 在执行完所有删除操作后，返回最终得到的字符串。
+     * 本题答案保证唯一。
+     *
+     * 执行用时：17 ms, 在所有 Java 提交中击败了49.20% 的用户
+     * 内存消耗：39 MB, 在所有 Java 提交中击败了63.48% 的用户
+     *
+     * @param s 小写字母组成的字符串
+     * @param k 整数
+     * @return 在完成所有重复项删除操作后返回最终的字符串
+     */
+    public String removeDuplicates(String s, int k) {
+        StringBuilder sb = new StringBuilder(s);
+        Stack<Integer> counts = new Stack<>();
+        for (int i = 0; i < sb.length(); ++i) {
+            if (i == 0 || sb.charAt(i) != sb.charAt(i - 1)) {
+                counts.push(1);
+            } else {
+                int incremented = counts.pop() + 1;
+                if (incremented == k) {
+                    sb.delete(i - k + 1, i + 1);
+                    i = i - k;
+                } else {
+                    counts.push(incremented);
+                }
+            }
+        }
+        return sb.toString();
     }
 }
