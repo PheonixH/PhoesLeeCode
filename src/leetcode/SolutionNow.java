@@ -139,4 +139,27 @@ public class SolutionNow {
         }
         return newS.equals(S) ? S : removeDuplicates(newS);
     }
+
+    /**
+     * 1619. 删除某些元素后的数组均值
+     *
+     * 给你一个整数数组 arr ，请你删除最小 5% 的数字和最大 5% 的数字后，剩余数字的平均值。
+     * 与 标准答案 误差在 10-5 的结果都被视为正确结果。
+     *
+     * 执行用时：2 ms, 在所有 Java 提交中击败了99.81% 的用户
+     * 内存消耗：38.2 MB, 在所有 Java 提交中击败了76.22% 的用户
+     * @param arr 整数数组
+     * @return 删除最小 5% 的数字和最大 5% 的数字后，剩余数字的平均值
+     */
+    public double trimMean(int[] arr) {
+        Arrays.sort(arr);
+        int n = arr.length;
+        int l = (int) (n * 0.05);
+        int r = (int) (n * 0.95);
+        int sum = 0;
+        for (int i = l; i < r; i++) {
+            sum += arr[i];
+        }
+        return (double) sum / (r - l);
+    }
 }
