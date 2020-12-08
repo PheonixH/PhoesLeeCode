@@ -2961,17 +2961,18 @@ public class SolutionNow {
 
     /**
      * 842. 将数组拆分成斐波那契序列
-     *
+     * <p>
      * 给定一个数字字符串 S，比如 S = "123456579"，我们可以将它分成斐波那契式的序列 [123, 456, 579]。
      * 形式上，斐波那契式序列是一个非负整数列表 F，且满足：
-     *     0 <= F[i] <= 2^31 - 1，（也就是说，每个整数都符合 32 位有符号整数类型）；
-     *     F.length >= 3；
-     *     对于所有的0 <= i < F.length - 2，都有 F[i] + F[i+1] = F[i+2] 成立。
+     * 0 <= F[i] <= 2^31 - 1，（也就是说，每个整数都符合 32 位有符号整数类型）；
+     * F.length >= 3；
+     * 对于所有的0 <= i < F.length - 2，都有 F[i] + F[i+1] = F[i+2] 成立。
      * 另外，请注意，将字符串拆分成小块时，每个块的数字一定不要以零开头，除非这个块是数字 0 本身。
      * 返回从 S 拆分出来的任意一组斐波那契式的序列块，如果不能拆分则返回 []。
-     *
+     * <p>
      * 执行用时：2 ms, 在所有 Java 提交中击败了93.61% 的用户
      * 内存消耗：36.8 MB, 在所有 Java 提交中击败了95.87% 的用户
+     *
      * @param S 数字字符串
      * @return 从 S 拆分出来的任意一组斐波那契式的序列块
      */
@@ -3049,6 +3050,47 @@ public class SolutionNow {
         }
         list.add(now);
         return splitIntoFibonacci(chars, second, next, begin, list);
+    }
+
+    /**
+     * 435. 无重叠区间
+     * <p>
+     * 给定一个区间的集合，找到需要移除区间的最小数量，使剩余区间互不重叠。
+     * 注意:
+     * 可以认为区间的终点总是大于它的起点。
+     * 区间 [1,2] 和 [2,3] 的边界相互“接触”，但没有相互重叠。
+     * <p>
+     * 执行用时：2 ms, 在所有 Java 提交中击败了88.88% 的用户
+     * 内存消耗：38.6 MB, 在所有 Java 提交中击败了47.10% 的用户
+     *
+     * @param intervals 一个区间的集合
+     * @return 移除区间的最小数量
+     */
+    public int eraseOverlapIntervals(int[][] intervals) {
+        int n = intervals.length;
+        if (n <= 1) {
+            return 0;
+        }
+
+        Comparator<int[]> comparator = new Comparator<int[]>() {
+            @Override
+            public int compare(int[] o1, int[] o2) {
+                return o1[0] == o2[0] ? o1[1] - o2[1] : o1[0] - o2[0];
+            }
+        };
+        Arrays.sort(intervals, comparator);
+
+        int ans = 0;
+        int pre = intervals[0][1];
+        for (int i = 1; i < n; i++) {
+            if (pre <= intervals[i][0]) {
+                pre = intervals[i][1];
+            } else {
+                pre = Math.min(pre, intervals[i][1]);
+                ans++;
+            }
+        }
+        return ans;
     }
 }
 
