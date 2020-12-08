@@ -2959,8 +2959,96 @@ public class SolutionNow {
         }
     }
 
-    public int[] sumOfDistancesInTree(int N, int[][] edges) {
+    /**
+     * 842. 将数组拆分成斐波那契序列
+     *
+     * 给定一个数字字符串 S，比如 S = "123456579"，我们可以将它分成斐波那契式的序列 [123, 456, 579]。
+     * 形式上，斐波那契式序列是一个非负整数列表 F，且满足：
+     *     0 <= F[i] <= 2^31 - 1，（也就是说，每个整数都符合 32 位有符号整数类型）；
+     *     F.length >= 3；
+     *     对于所有的0 <= i < F.length - 2，都有 F[i] + F[i+1] = F[i+2] 成立。
+     * 另外，请注意，将字符串拆分成小块时，每个块的数字一定不要以零开头，除非这个块是数字 0 本身。
+     * 返回从 S 拆分出来的任意一组斐波那契式的序列块，如果不能拆分则返回 []。
+     *
+     * 执行用时：2 ms, 在所有 Java 提交中击败了93.61% 的用户
+     * 内存消耗：36.8 MB, 在所有 Java 提交中击败了95.87% 的用户
+     * @param S 数字字符串
+     * @return 从 S 拆分出来的任意一组斐波那契式的序列块
+     */
+    public List<Integer> splitIntoFibonacci(String S) {
+        char[] chars = S.toCharArray();
+        int n = chars.length;
+        List<Integer> ans = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            if (chars[0] == '0' && i >= 1) {
+                break;
+            }
+            long first = 0;
+            boolean isRight = true;
+            for (int j = 0; j <= i; j++) {
+                first = first * 10 + chars[j] - '0';
+                if (first > Integer.MAX_VALUE) {
+                    isRight = false;
+                    break;
+                }
+            }
+            if (!isRight) {
+                break;
+            }
+            ans.add((int) first);
+            for (int j = i + 1; j < n; j++) {
+                if (chars[i + 1] == '0' && j > i + 1) {
+                    continue;
+                }
+                long second = 0;
+                isRight = true;
+                for (int k = i + 1; k <= j; k++) {
+                    second = second * 10 + chars[k] - '0';
+                    if (second > Integer.MAX_VALUE) {
+                        isRight = false;
+                        break;
+                    }
+                }
+                if (!isRight) {
+                    break;
+                }
+                ans.add((int) second);
+                if (splitIntoFibonacci(chars, first, second, j + 1, ans)) {
+                    return ans;
+                } else {
+                    ans = new ArrayList<>();
+                    ans.add((int) first);
+                }
+            }
+            ans = new ArrayList<>();
+        }
+        return new ArrayList<>();
+    }
 
+    private boolean splitIntoFibonacci(char[] chars, long first, long second, int begin, List<Integer> list) {
+        if (begin == chars.length) {
+            return list.size() >= 3;
+        }
+        long next = first + second;
+        if (next > Integer.MAX_VALUE) {
+            return false;
+        }
+        while (next != 0 && chars[begin] == '0') {
+            return false;
+        }
+        int now = 0;
+        while (begin < chars.length) {
+            now = now * 10 + chars[begin] - '0';
+            begin++;
+            if (next <= now) {
+                break;
+            }
+        }
+        if (now != next) {
+            return false;
+        }
+        list.add(now);
+        return splitIntoFibonacci(chars, second, next, begin, list);
     }
 }
 
