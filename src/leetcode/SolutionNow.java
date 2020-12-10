@@ -166,12 +166,12 @@ public class SolutionNow {
 
     /**
      * 1209. 删除字符串中的所有相邻重复项 II
-     *
+     * <p>
      * 给你一个字符串 s，「k 倍重复项删除操作」将会从 s 中选择 k 个相邻且相等的字母，并删除它们，使被删去的字符串的左侧和右侧连在一起。
      * 你需要对 s 重复进行无限次这样的删除操作，直到无法继续为止。
      * 在执行完所有删除操作后，返回最终得到的字符串。
      * 本题答案保证唯一。
-     *
+     * <p>
      * 执行用时：17 ms, 在所有 Java 提交中击败了49.20% 的用户
      * 内存消耗：39 MB, 在所有 Java 提交中击败了63.48% 的用户
      *
@@ -196,5 +196,51 @@ public class SolutionNow {
             }
         }
         return sb.toString();
+    }
+
+    /**
+     * 860. 柠檬水找零
+     * <p>
+     * 在柠檬水摊上，每一杯柠檬水的售价为 5 美元。
+     * 顾客排队购买你的产品，（按账单 bills 支付的顺序）一次购买一杯。
+     * 每位顾客只买一杯柠檬水，然后向你付 5 美元、10 美元或 20 美元。你必须给每个顾客正确找零，也就是说净交易是每位顾客向你支付 5 美元。
+     * 注意，一开始你手头没有任何零钱。
+     * 如果你能给每位顾客正确找零，返回 true ，否则返回 false 。
+     * <p>
+     * 执行用时：2 ms, 在所有 Java 提交中击败了99.72% 的用户
+     * 内存消耗：39.8 MB, 在所有 Java 提交中击败了22.85% 的用户
+     *
+     * @param bills 账单
+     * @return 能否成功给每位顾客正确找零
+     */
+    public boolean lemonadeChange(int[] bills) {
+        int money5 = 0, money10 = 0;
+        for (int bill : bills) {
+            switch (bill) {
+                case 20 -> {
+                    if (money10 > 0) {
+                        money10--;
+                        money5--;
+                    } else {
+                        money5 -= 3;
+                    }
+                    if (money5 < 0) {
+                        return false;
+                    }
+                }
+                case 10 -> {
+                    if (money5 > 0) {
+                        money5--;
+                        money10++;
+                    } else {
+                        return false;
+                    }
+                }
+                case 5 -> {
+                    money5++;
+                }
+            }
+        }
+        return true;
     }
 }
