@@ -243,4 +243,21 @@ public class SolutionNow {
         }
         return true;
     }
+
+    /**
+     * 1344. 时钟指针的夹角
+     * 给你两个数 hour 和 minutes 。请你返回在时钟上，由给定时间的时针和分针组成的较小角的角度（60 单位制）。
+     *
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：35.6 MB, 在所有 Java 提交中击败了49.09% 的用户
+     * @param hour 数
+     * @param minutes 数
+     * @return 时钟指针的夹角
+     */
+    public double angleClock(int hour, int minutes) {
+        double m = minutes * 6;
+        double h = (double) hour % 12 * 30 + (double) minutes / 2;
+        double r = Math.abs(m - h);
+        return Math.min(r, 360 - r);
+    }
 }
