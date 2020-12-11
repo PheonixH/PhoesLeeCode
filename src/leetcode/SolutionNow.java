@@ -320,7 +320,7 @@ public class SolutionNow {
 
     /**
      * 151. 翻转字符串里的单词
-     *
+     * <p>
      * 给定一个字符串，逐个翻转字符串中的每个单词。
      * 说明：
      * 无空格字符构成一个 单词 。
@@ -343,5 +343,81 @@ public class SolutionNow {
             }
         }
         return stringBuilder.toString().substring(0, stringBuilder.length() - 1);
+    }
+
+    /**
+     * 417. 太平洋大西洋水流问题
+     * 给定一个 m x n 的非负整数矩阵来表示一片大陆上各个单元格的高度。“太平洋”处于大陆的左边界和上边界，而“大西洋”处于大陆的右边界和下边界。
+     * 规定水流只能按照上、下、左、右四个方向流动，且只能从高到低或者在同等高度上流动。
+     * 请找出那些水流既可以流动到“太平洋”，又能流动到“大西洋”的陆地单元的坐标。
+     * <p>
+     * 执行用时：5 ms, 在所有 Java 提交中击败了93.02% 的用户
+     * 内存消耗：39.5 MB, 在所有 Java 提交中击败了88.26% 的用户
+     *
+     * @param matrix 负整数矩阵
+     * @return 既可以流动到“太平洋”，又能流动到“大西洋”的陆地单元的坐标
+     */
+    public List<List<Integer>> pacificAtlantic(int[][] matrix) {
+        int row = matrix.length;
+        if (row == 0) {
+            return new ArrayList<>();
+        }
+        int col = matrix[0].length;
+        if (col == 0) {
+            return new ArrayList<>();
+        }
+
+        int[][] mix = new int[row][col];
+        // left && up
+        boolean[][] visited = new boolean[row][col];
+        for (int i = 0; i < row; i++) {
+            pacificAtlantic(matrix, visited, i, 0, mix, true);
+        }
+        for (int i = 1; i < col; i++) {
+            pacificAtlantic(matrix, visited, 0, i, mix, true);
+        }
+        // right && down
+        visited = new boolean[row][col];
+        for (int i = 0; i < row; i++) {
+            pacificAtlantic(matrix, visited, i, col - 1, mix, true);
+        }
+        for (int i = 0; i < col - 1; i++) {
+            pacificAtlantic(matrix, visited, row - 1, i, mix, true);
+        }
+
+        List<List<Integer>> ans = new ArrayList<>();
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                if (mix[i][j] >= 2) {
+                    List<Integer> l = new ArrayList<>();
+                    l.add(i);
+                    l.add(j);
+                    ans.add(l);
+                }
+            }
+        }
+        return ans;
+    }
+
+    private int[][] pacificAtlanticDirs = new int[][]{{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+
+    private void pacificAtlantic(int[][] maxtrix, boolean[][] visited, int x, int y, int[][] mix, boolean left) {
+        if (!visited[x][y]) {
+            mix[x][y]++;
+        }
+        visited[x][y] = true;
+        for (int[] dir : pacificAtlanticDirs) {
+            int xx = x + dir[0];
+            int yy = y + dir[1];
+            if (xx < 0 || xx >= visited.length || yy < 0 || yy >= visited[0].length || visited[xx][yy]) {
+                continue;
+            }
+            if (left && maxtrix[xx][yy] >= maxtrix[x][y]) {
+                pacificAtlantic(maxtrix, visited, xx, yy, mix, left);
+            }
+            if (!left && maxtrix[xx][yy] <= maxtrix[x][y]) {
+                pacificAtlantic(maxtrix, visited, xx, yy, mix, left);
+            }
+        }
     }
 }
