@@ -273,11 +273,12 @@ public class SolutionNow {
      * 给定一个字符串代表每个参议员的阵营。字母 “R” 和 “D” 分别代表了 Radiant（天辉）和 Dire（夜魇）。然后，如果有 n 个参议员，给定字符串的大小将是 n。
      * 以轮为基础的过程从给定顺序的第一个参议员开始到最后一个参议员结束。这一过程将持续到投票结束。所有失去权利的参议员将在过程中被跳过。
      * 假设每一位参议员都足够聪明，会为自己的政党做出最好的策略，你需要预测哪一方最终会宣布胜利并在 Dota2 游戏中决定改变。输出应该是 Radiant 或 Dire。
+     * <p>
      * 执行用时：2 ms, 在所有 Java 提交中击败了100.00% 的用户
      * 内存消耗：38.7 MB, 在所有 Java 提交中击败了73.05% 的用户
      *
-     * @param senate
-     * @return
+     * @param senate 参议院
+     * @return 胜利的一方
      */
     public String predictPartyVictory(String senate) {
         return predictPartyVictory(senate, 0, 0);
@@ -315,5 +316,32 @@ public class SolutionNow {
         } else {
             return predictPartyVictory(stringBuilder.toString(), radiant, dire);
         }
+    }
+
+    /**
+     * 151. 翻转字符串里的单词
+     *
+     * 给定一个字符串，逐个翻转字符串中的每个单词。
+     * 说明：
+     * 无空格字符构成一个 单词 。
+     * 输入字符串可以在前面或者后面包含多余的空格，但是反转后的字符不能包括。
+     * 如果两个单词间有多余的空格，将反转后单词间的空格减少到只含一个。
+     * <p>
+     * 执行用时：6 ms, 在所有 Java 提交中击败了68.72% 的用户
+     * 内存消耗：38.5 MB, 在所有 Java 提交中击败了80.02% 的用户
+     *
+     * @param s 字符串
+     * @return 翻转字符串里的单词
+     */
+    public String reverseWords(String s) {
+        String[] ss = s.split(" ");
+        StringBuilder stringBuilder = new StringBuilder();
+
+        for (int i = ss.length - 1; i >= 0; i--) {
+            if (ss[i].length() > 0) {
+                stringBuilder.append(ss[i]).append(" ");
+            }
+        }
+        return stringBuilder.toString().substring(0, stringBuilder.length() - 1);
     }
 }
