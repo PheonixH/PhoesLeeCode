@@ -420,4 +420,22 @@ public class SolutionNow {
             }
         }
     }
+
+    /**
+     * 575. 分糖果
+     * 给定一个偶数长度的数组，其中不同的数字代表着不同种类的糖果，每一个数字代表一个糖果。
+     * 你需要把这些糖果平均分给一个弟弟和一个妹妹。返回妹妹可以获得的最大糖果的种类数。
+     * <p>
+     * 执行用时：41 ms, 在所有 Java 提交中击败了50.56% 的用户
+     * 内存消耗：40.5 MB, 在所有 Java 提交中击败了69.98% 的用户
+     *
+     * @param candyType 偶数长度的数组
+     * @return 妹妹可以获得的最大糖果的种类数
+     */
+    public int distributeCandies(int[] candyType) {
+        int n = candyType.length;
+        Set<Integer> set = new HashSet<>();
+        Arrays.stream(candyType).forEach(set::add);
+        return Math.min(n / 2, set.size());
+    }
 }
