@@ -2254,7 +2254,7 @@ x = (a[7]b[7]) (a[6]b[6]) ... (a[1]b[1]) (a[0]b[0])
         list.remove(list.size() - 1);
     }
 
-    public int largestIsland(int[][] grid) {
+    public int largestIsland0(int[][] grid) {
         int key = 10;
         Map<Integer, Integer> area = new HashMap<>();
         int n = grid.length;
@@ -2519,8 +2519,8 @@ x = (a[7]b[7]) (a[6]b[6]) ... (a[1]b[1]) (a[0]b[0])
      * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
      * 内存消耗：35.9 MB, 在所有 Java 提交中击败了82.87% 的用户
      *
-     * @param nums
-     * @return
+     * @param nums 连续数字
+     * @return 最长摆动子序列长度
      */
     public int wiggleMaxLength(int[] nums) {
         int ans = 1;
@@ -2548,5 +2548,61 @@ x = (a[7]b[7]) (a[6]b[6]) ... (a[1]b[1]) (a[0]b[0])
             }
         }
         return ans;
+    }
+
+
+    /**
+     * 827. 最大人工岛
+     * <p>
+     * 在二维地图上， 0代表海洋， 1代表陆地，我们最多只能将一格 0 海洋变成 1变成陆地。
+     * 进行填海之后，地图上最大的岛屿面积是多少？（上、下、左、右四个方向相连的 1 可形成岛屿）
+     * <p>
+     * 执行用时：233 ms, 在所有 Java 提交中击败了19.65% 的用户
+     * 内存消耗：39.1 MB, 在所有 Java 提交中击败了31.78% 的用户
+     *
+     * @param grid 二维地图
+     * @return 最大人工岛
+     */
+    public int largestIsland(int[][] grid) {
+        List<int[]> list = new ArrayList<>();
+        int ans = 0;
+        int row = grid.length;
+        if (row == 0) {
+            return 0;
+        }
+        int col = grid[0].length;
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                if (grid[i][j] == 0) {
+                    list.add(new int[]{i, j});
+                }
+            }
+        }
+        if (list.isEmpty()) {
+            return row * col;
+        }
+
+        for (int[] t : list) {
+            largestIslandNum = 1;
+            largestIsland(grid, t[0], t[1], new boolean[row][col]);
+            ans = Math.max(ans, largestIslandNum);
+        }
+        return ans;
+    }
+
+    private int largestIslandNum = 0;
+    private int[][] largestIslandDir = new int[][]{{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+
+    private void largestIsland(int[][] grid, int x, int y, boolean[][] visited) {
+        for (int[] dir : largestIslandDir) {
+            int xx = x + dir[0];
+            int yy = y + dir[1];
+            if (xx < 0 || xx >= grid.length || yy < 0 || yy >= grid[0].length || visited[xx][yy] || grid[xx][yy] == 0) {
+                continue;
+            }
+            largestIslandNum++;
+            visited[xx][yy] = true;
+            largestIsland(grid, xx, yy, visited);
+        }
     }
 }
