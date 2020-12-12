@@ -2605,4 +2605,85 @@ x = (a[7]b[7]) (a[6]b[6]) ... (a[1]b[1]) (a[0]b[0])
             largestIsland(grid, xx, yy, visited);
         }
     }
+
+    /**
+     * 827. 最大人工岛
+     * 在二维地图上， 0代表海洋， 1代表陆地，我们最多只能将一格 0 海洋变成 1变成陆地。
+     * 进行填海之后，地图上最大的岛屿面积是多少？（上、下、左、右四个方向相连的 1 可形成岛屿）
+     * <p>
+     * 并查集
+     * <p>
+     * 执行用时：10 ms, 在所有 Java 提交中击败了71.49% 的用户
+     * 内存消耗：39 MB, 在所有 Java 提交中击败了48.12% 的用户
+     *
+     * @param grid
+     * @return
+     */
+    public int largestIsland1(int[][] grid) {
+        int res = 0, a = grid.length, len = a * a;
+        int[] k = new int[len];
+        Arrays.fill(k, 1);
+        int[] father = new int[len];
+        Arrays.fill(father, -1);
+        for (int i = 0; i < a; ++i) {
+            for (int j = 0; j < a; ++j) {
+                if (grid[i][j] == 1) {
+                    father[i * a + j] = i * a + j;
+                    if (i > 0 && grid[i - 1][j] == 1) {
+                        int t = find(father, (i - 1) * a + j);
+                        k[i * a + j] += k[t];
+                        father[t] = i * a + j;
+                    }
+                    if (j > 0 && grid[i][j - 1] == 1) {
+                        int t = find(father, i * a + j - 1);
+                        if (t == i * a + j) {
+                            continue;
+                        }
+                        k[i * a + j] += k[t];
+                        father[t] = i * a + j;
+                    }
+                }
+            }
+        }
+        for (int i = 0; i < a; ++i) {
+            for (int j = 0; j < a; ++j) {
+                if (0 == grid[i][j]) {
+                    Set<Integer> m = new HashSet<>();
+                    int temp = 1, p = i * a + j;
+                    if (i > 0 && grid[i - 1][j] == 1) {
+                        int t = find(father, p - a);
+                        temp += k[t];
+                        m.add(t);
+                    }
+                    if (j > 0 && grid[i][j - 1] == 1) {
+                        int t = find(father, p - 1);
+                        if (m.add(t)) {
+                            temp += k[t];
+                        }
+                    }
+                    if (i < a - 1 && grid[i + 1][j] == 1) {
+                        int t = find(father, p + a);
+                        if (m.add(t)) {
+                            temp += k[t];
+                        }
+                    }
+                    if (j < a - 1 && grid[i][j + 1] == 1) {
+                        int t = find(father, p + 1);
+                        if (m.add(t)) {
+                            temp += k[t];
+                        }
+                    }
+                    res = Math.max(res, temp);
+                }
+            }
+        }
+        return res == 0 ? a * a : res;
+    }
+
+    int find(int[] father, int p) {
+        if (father[p] == p) {
+            return p;
+        }
+        return father[p] = find(father, father[p]);
+    }
 }
