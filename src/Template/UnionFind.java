@@ -19,7 +19,7 @@ public class UnionFind {
         }
     }
 
-    public void Union(int x, int y) {
+    public void union(int x, int y) {
         int a = find(x);
         int b = find(y);
         if (a == b) {
