@@ -2254,7 +2254,7 @@ x = (a[7]b[7]) (a[6]b[6]) ... (a[1]b[1]) (a[0]b[0])
         list.remove(list.size() - 1);
     }
 
-    public int largestIsland(int[][] grid) {
+    public int largestIsland0(int[][] grid) {
         int key = 10;
         Map<Integer, Integer> area = new HashMap<>();
         int n = grid.length;
@@ -2479,9 +2479,10 @@ x = (a[7]b[7]) (a[6]b[6]) ... (a[1]b[1]) (a[0]b[0])
     /**
      * 118. 杨辉三角
      * 给定一个非负整数 numRows，生成杨辉三角的前 numRows 行。
-     *
+     * <p>
      * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
      * 内存消耗：36.5 MB, 在所有 Java 提交中击败了39.39% 的用户
+     *
      * @param numRows 非负整数
      * @return 杨辉三角前 numRows 行
      */
@@ -2505,5 +2506,184 @@ x = (a[7]b[7]) (a[6]b[6]) ... (a[1]b[1]) (a[0]b[0])
             numRows--;
         }
         return res;
+    }
+
+    /**
+     * 376. 摆动序列
+     * 如果连续数字之间的差严格地在正数和负数之间交替，则数字序列称为摆动序列。
+     * 第一个差（如果存在的话）可能是正数或负数。少于两个元素的序列也是摆动序列。
+     * 例如， [1,7,4,9,2,5] 是一个摆动序列，因为差值 (6,-3,5,-7,3) 是正负交替出现的。
+     * 相反, [1,4,7,2,5] 和 [1,7,4,5,5] 不是摆动序列，第一个序列是因为它的前两个差值都是正数，第二个序列是因为它的最后一个差值为零。
+     * 给定一个整数序列，返回作为摆动序列的最长子序列的长度。 通过从原始序列中删除一些（也可以不删除）元素来获得子序列，剩下的元素保持其原始顺序。
+     * <p>
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：35.9 MB, 在所有 Java 提交中击败了82.87% 的用户
+     *
+     * @param nums 连续数字
+     * @return 最长摆动子序列长度
+     */
+    public int wiggleMaxLength(int[] nums) {
+        int ans = 1;
+        int n = nums.length;
+        if (n < 2) {
+            return n;
+        }
+        //先不处理等于的情况
+        int i = 1;
+        boolean up = nums[0] < nums[1];
+        while (i < n) {
+            if (nums[i] != nums[i - 1]) {
+                up = nums[i - 1] < nums[i];
+                break;
+            }
+            i++;
+        }
+        for (; i < n; i++) {
+            if (up && nums[i] > nums[i - 1]) {
+                up = false;
+                ans++;
+            } else if (!up && nums[i] < nums[i - 1]) {
+                up = true;
+                ans++;
+            }
+        }
+        return ans;
+    }
+
+
+    /**
+     * 827. 最大人工岛
+     * <p>
+     * 在二维地图上， 0代表海洋， 1代表陆地，我们最多只能将一格 0 海洋变成 1变成陆地。
+     * 进行填海之后，地图上最大的岛屿面积是多少？（上、下、左、右四个方向相连的 1 可形成岛屿）
+     * <p>
+     * 执行用时：233 ms, 在所有 Java 提交中击败了19.65% 的用户
+     * 内存消耗：39.1 MB, 在所有 Java 提交中击败了31.78% 的用户
+     *
+     * @param grid 二维地图
+     * @return 最大人工岛
+     */
+    public int largestIsland(int[][] grid) {
+        List<int[]> list = new ArrayList<>();
+        int ans = 0;
+        int row = grid.length;
+        if (row == 0) {
+            return 0;
+        }
+        int col = grid[0].length;
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                if (grid[i][j] == 0) {
+                    list.add(new int[]{i, j});
+                }
+            }
+        }
+        if (list.isEmpty()) {
+            return row * col;
+        }
+
+        for (int[] t : list) {
+            largestIslandNum = 1;
+            largestIsland(grid, t[0], t[1], new boolean[row][col]);
+            ans = Math.max(ans, largestIslandNum);
+        }
+        return ans;
+    }
+
+    private int largestIslandNum = 0;
+    private int[][] largestIslandDir = new int[][]{{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+
+    private void largestIsland(int[][] grid, int x, int y, boolean[][] visited) {
+        for (int[] dir : largestIslandDir) {
+            int xx = x + dir[0];
+            int yy = y + dir[1];
+            if (xx < 0 || xx >= grid.length || yy < 0 || yy >= grid[0].length || visited[xx][yy] || grid[xx][yy] == 0) {
+                continue;
+            }
+            largestIslandNum++;
+            visited[xx][yy] = true;
+            largestIsland(grid, xx, yy, visited);
+        }
+    }
+
+    /**
+     * 827. 最大人工岛
+     * 在二维地图上， 0代表海洋， 1代表陆地，我们最多只能将一格 0 海洋变成 1变成陆地。
+     * 进行填海之后，地图上最大的岛屿面积是多少？（上、下、左、右四个方向相连的 1 可形成岛屿）
+     * <p>
+     * 并查集
+     * <p>
+     * 执行用时：10 ms, 在所有 Java 提交中击败了71.49% 的用户
+     * 内存消耗：39 MB, 在所有 Java 提交中击败了48.12% 的用户
+     *
+     * @param grid
+     * @return
+     */
+    public int largestIsland1(int[][] grid) {
+        int res = 0, a = grid.length, len = a * a;
+        int[] k = new int[len];
+        Arrays.fill(k, 1);
+        int[] father = new int[len];
+        Arrays.fill(father, -1);
+        for (int i = 0; i < a; ++i) {
+            for (int j = 0; j < a; ++j) {
+                if (grid[i][j] == 1) {
+                    father[i * a + j] = i * a + j;
+                    if (i > 0 && grid[i - 1][j] == 1) {
+                        int t = find(father, (i - 1) * a + j);
+                        k[i * a + j] += k[t];
+                        father[t] = i * a + j;
+                    }
+                    if (j > 0 && grid[i][j - 1] == 1) {
+                        int t = find(father, i * a + j - 1);
+                        if (t == i * a + j) {
+                            continue;
+                        }
+                        k[i * a + j] += k[t];
+                        father[t] = i * a + j;
+                    }
+                }
+            }
+        }
+        for (int i = 0; i < a; ++i) {
+            for (int j = 0; j < a; ++j) {
+                if (0 == grid[i][j]) {
+                    Set<Integer> m = new HashSet<>();
+                    int temp = 1, p = i * a + j;
+                    if (i > 0 && grid[i - 1][j] == 1) {
+                        int t = find(father, p - a);
+                        temp += k[t];
+                        m.add(t);
+                    }
+                    if (j > 0 && grid[i][j - 1] == 1) {
+                        int t = find(father, p - 1);
+                        if (m.add(t)) {
+                            temp += k[t];
+                        }
+                    }
+                    if (i < a - 1 && grid[i + 1][j] == 1) {
+                        int t = find(father, p + a);
+                        if (m.add(t)) {
+                            temp += k[t];
+                        }
+                    }
+                    if (j < a - 1 && grid[i][j + 1] == 1) {
+                        int t = find(father, p + 1);
+                        if (m.add(t)) {
+                            temp += k[t];
+                        }
+                    }
+                    res = Math.max(res, temp);
+                }
+            }
+        }
+        return res == 0 ? a * a : res;
+    }
+
+    int find(int[] father, int p) {
+        if (father[p] == p) {
+            return p;
+        }
+        return father[p] = find(father, father[p]);
     }
 }

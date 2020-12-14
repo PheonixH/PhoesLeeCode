@@ -1149,7 +1149,7 @@ public class Games {
         for (int i = n - k; i < n; i++) {
             arr[i - n + k] = nums[i];
         }
-        for (int j = n - k-1; j >= 0; j--) {
+        for (int j = n - k - 1; j >= 0; j--) {
             if (nums[j] > arr[0]) {
                 continue;
             }
@@ -1174,5 +1174,163 @@ public class Games {
         int min = Integer.parseInt(String.valueOf(Arrays.stream(nums).min()));
         int ans = 0;
         return ans;
+    }
+
+    // 218 周赛 -- 阿里
+    public String interpret(String command) {
+        String res = command.replace("()", "o");
+        res = res.replace("(al)", "al");
+        return res;
+    }
+
+    public int maxOperations(int[] nums, int k) {
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int num : nums) {
+            int n = map.getOrDefault(num, 0) + 1;
+            map.put(num, n);
+        }
+        int ans = 0;
+        Set<Integer> visited = new HashSet();
+        for (int key : map.keySet()) {
+            if (visited.add(key)) {
+                int reKey = k - key;
+                if (key == reKey) {
+                    ans += map.get(key) / 2;
+                } else {
+                    visited.add(reKey);
+                    ans += Math.min(map.get(key), map.getOrDefault(reKey, 0));
+                }
+            }
+        }
+        return ans;
+    }
+
+    public int concatenatedBinary(int n) {
+        long now = 0;
+        for (int i = 1; i <= n; i++) {
+            String s = Integer.toBinaryString(i);
+            int p = s.length();
+            now = now * (long) Math.pow(2, p) + i;
+            now = now % 1000000007;
+        }
+        return (int) now;
+    }
+
+    public int minimumIncompatibility0(int[] nums, int k) {
+        Arrays.sort(nums);
+        minimumIncompatibilityDFS(nums, new boolean[nums.length], nums.length / k,
+                0, 0, 0, 0, new ArrayList<Integer>());
+        return minimumIncompatibilityRes == Integer.MAX_VALUE ? -1 : minimumIncompatibilityRes;
+    }
+
+    private int minimumIncompatibilityRes = Integer.MAX_VALUE;
+
+    private void minimumIncompatibilityDFS(int[] nums, boolean[] visited, int k,
+                                           int preKey, int visitedNum,
+                                           int sum, int left, List<Integer> list) {
+        if (visitedNum == nums.length) {
+            minimumIncompatibilityRes = Math.min(minimumIncompatibilityRes, sum);
+            return;
+        }
+        int t = preKey == 0 ? 0 : left;
+        for (int i = t; i < nums.length; i++) {
+            if (visited[i]) {
+                continue;
+            }
+            if (preKey == nums[i]) {
+                continue;
+            }
+            if (preKey == 0) {
+                visited[i] = true;
+                list.add(nums[i]);
+                preKey = nums[i];
+                visitedNum++;
+            } else {
+//                if (preKey - first + sum > minimumIncompatibilityRes) {
+//                    break;
+//                }
+                visited[i] = true;
+                list.add(nums[i]);
+                visitedNum++;
+                int first = list.get(list.size() - k);
+                if (visitedNum % k == 0) {
+                    sum += nums[i] - first;
+                    preKey = 0;
+                }
+            }
+            minimumIncompatibilityDFS(nums, visited, k, preKey,
+                    visitedNum, sum, i + 1, list);
+            if (visitedNum % k == 0) {
+                int first = list.get(list.size() - k);
+                sum -= nums[i] - first;
+            }
+            visitedNum--;
+            if (visitedNum % k == 0) {
+                preKey = 0;
+            }
+            visited[i] = false;
+            list.remove(list.size() - 1);
+        }
+    }
+
+    // geek-ro
+
+    int res = Integer.MAX_VALUE;
+    int size;
+
+    public int minimumIncompatibility(int[] nums, int k) {
+        size = nums.length / k;
+        if (nums.length % k != 0) {
+            return -1;
+        }
+        int[] arr = new int[20];
+        for (int i : nums) {
+            arr[i]++;
+        }
+        for (int i : arr) {
+            if (i > k) {
+                return -1;
+            }
+        }
+
+        List<List<Integer>> list = new LinkedList<>();
+        for (int i = 0; i < k; i++) {
+            list.add(new LinkedList<>());
+        }
+        Arrays.sort(nums);
+        backtracking(nums, 0, list, 0);
+
+        return res;
+    }
+
+    private void backtracking(int[] arr, int idx, List<List<Integer>> list, int num) {
+        if (idx == arr.length) {
+            res = Math.min(res, num);
+            return;
+        }
+        if (num >= res) {
+            return;
+        }
+
+        int n = arr[idx];
+        int temp = num;
+
+        for (List<Integer> l : list) {
+            if (l.size() == size) {
+                continue;
+            } else if (l.size() > 0 && l.get(l.size() - 1) != n) {
+                num -= (l.get(l.size() - 1) - l.get(0));
+                l.add(n);
+                num += (n - l.get(0));
+                backtracking(arr, idx + 1, list, num);
+                l.remove(l.size() - 1);
+                num = temp;
+            } else if (l.size() == 0) {
+                l.add(n);
+                backtracking(arr, idx + 1, list, num);
+                l.remove(l.size() - 1);
+                break;
+            }
+        }
     }
 }

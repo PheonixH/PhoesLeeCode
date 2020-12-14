@@ -87,10 +87,10 @@ public class Main {
 
         //Arrays
         String[] oneDimensionalStringArray = {"bella", "label", "roller"};
-        int[] oneDimensionalArrayA = {1, 5, 3, 4, 6, 5, 4, 2};
+        int[] oneDimensionalArrayA = {6, 3, 8, 1, 3, 1, 2, 2};
         int[] oneDimensionalArrayB = {1864};
         int[][] twoDimensionalArray = {{1, 1}, {1, 1}};
-        char[] oneDimensionalCharArray = {'A', 'B'};
+        char[] oneDimensionalCharArray = {'A', 'A', 'A', 'B', 'B', 'B', 'C', 'C', 'C', 'D', 'D', 'E'};
         char[][] twoDimensionalCharArray = {
                 {'X', '.', '.', '.', '.', '.', '.', '.', '.'},
                 {'X', '.', '.', 'X', 'X', 'X', '.', '.', '.'},
@@ -135,12 +135,12 @@ public class Main {
         }
 
         SolutionNow solution = new SolutionNow();
-        solution.countPrimes(10);
+//        solution.countPrimes(10);
         SolitionUbuntu solitionUbuntu = new SolitionUbuntu();
-//        solitionUbuntu.createSortedArray(oneDimensionalArrayA);
+//        solitionUbuntu.leastInterval(oneDimensionalCharArray, 0);
 
         Games games = new Games();
-        games.minimumMountainRemovals(oneDimensionalArrayA);
+        games.minimumIncompatibility(oneDimensionalArrayA, 4);
     }
 
 }
