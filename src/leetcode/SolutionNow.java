@@ -438,4 +438,70 @@ public class SolutionNow {
         Arrays.stream(candyType).forEach(set::add);
         return Math.min(n / 2, set.size());
     }
+
+    /**
+     * 面试题 17.19. 消失的两个数字
+     * <p>
+     * 给定一个数组，包含从 1 到 N 所有的整数，但其中缺了两个数字。你能在 O(N) 时间内只用 O(1) 的空间找到它们吗？
+     * 以任意顺序返回这两个数字均可。
+     * <p>
+     * 执行用时：3 ms, 在所有 Java 提交中击败了28.20% 的用户
+     * 内存消耗：40.1 MB, 在所有 Java 提交中击败了72.19% 的用户
+     *
+     * @param nums 包含从 1 到 N 所有的整数
+     * @return 返回这两个数字均可
+     */
+    public int[] missingTwo(int[] nums) {
+        Arrays.sort(nums);
+        int[] ans = new int[2];
+        int n = nums.length;
+        int find = 0;
+        int t = 1;
+        for (int i = 0; i < n; i++) {
+            if (t != nums[i]) {
+                ans[find++] = t;
+                if (find > 1) {
+                    break;
+                }
+                i--;
+            }
+            t++;
+        }
+        while (find < 2) {
+            ans[find++] = t++;
+        }
+        return ans;
+    }
+
+    /**
+     * 剑指 Offer 56 - I. 数组中数字出现的次数
+     * <p>
+     * 一个整型数组 nums 里除两个数字之外，其他数字都出现了两次。请写程序找出这两个只出现一次的数字。要求时间复杂度是O(n)，空间复杂度是O(1)。
+     * <p>
+     * 执行用时：1 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：40 MB, 在所有 Java 提交中击败了88.18% 的用户
+     *
+     * @param nums 整型数组
+     * @return 找出这两个只出现一次的数字
+     */
+    public int[] singleNumbers(int[] nums) {
+        int ret = 0;
+        for (int n : nums) {
+            ret ^= n;
+        }
+        int div = 1;
+        while ((div & ret) == 0) {
+            div <<= 1;
+        }
+        int a = 0, b = 0;
+        for (int n : nums) {
+            if ((div & n) != 0) {
+                a ^= n;
+            } else {
+                b ^= n;
+            }
+        }
+        return new int[]{a, b};
+    }
+
 }
