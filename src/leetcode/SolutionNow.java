@@ -504,4 +504,32 @@ public class SolutionNow {
         return new int[]{a, b};
     }
 
+    /**
+     * 738. 单调递增的数字
+     * <p>
+     * 给定一个非负整数 N，找出小于或等于 N 的最大的整数，同时这个整数需要满足其各个位数上的数字是单调递增。
+     * （当且仅当每个相邻位数上的数字 x 和 y 满足 x <= y 时，我们称这个整数是单调递增的。）
+     * <p>
+     * 执行用时：1 ms, 在所有 Java 提交中击败了97.96% 的用户
+     * 内存消耗：35.4 MB, 在所有 Java 提交中击败了65.30% 的用户
+     *
+     * @param N 非负整数 N
+     * @return 小于或等于 N 的最大的整数
+     */
+    public int monotoneIncreasingDigits(int N) {
+        char[] strN = Integer.toString(N).toCharArray();
+        int n = strN.length;
+        int ans = 0;
+        for (int i = n - 1; i > 0; i--) {
+            if (strN[i] >= strN[i - 1]) {
+                ans = ans + (strN[i] - '0') * (int) Math.pow(10, n - 1 - i);
+            } else {
+                strN[i - 1]--;
+                ans = (int) Math.pow(10, n - i) - 1;
+                // 1 2 2 0
+            }
+        }
+        ans = ans + (strN[0] - '0') * (int) Math.pow(10, n - 1);
+        return ans;
+    }
 }
