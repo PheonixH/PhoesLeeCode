@@ -532,4 +532,38 @@ public class SolutionNow {
         ans = ans + (strN[0] - '0') * (int) Math.pow(10, n - 1);
         return ans;
     }
+
+    /**
+     * 290. 单词规律
+     *
+     * 给定一种规律 pattern 和一个字符串 str ，判断 str 是否遵循相同的规律。
+     * 这里的 遵循 指完全匹配，
+     * 例如， pattern 里的每个字母和字符串 str 中的每个非空单词之间存在着双向连接的对应规律。
+     *
+     * 执行用时：1 ms, 在所有 Java 提交中击败了98.94% 的用户
+     * 内存消耗：36.5 MB, 在所有 Java 提交中击败了63.26% 的用户
+     * @param pattern 规律
+     * @param s 字符串
+     * @return 判断 str 是否遵循相同的规律
+     */
+    public boolean wordPattern(String pattern, String s) {
+        String[] word = s.split(" ");
+        char[] pat = pattern.toCharArray();
+        int len = word.length;
+        if (pat.length != len) {
+            return false;
+        }
+        Map<Character, String> map = new HashMap<>();
+        for (int i = 0; i < len; i++) {
+            if (!map.containsKey(pat[i])) {
+                if (map.containsValue(word[i])) {
+                    return false;
+                }
+                map.put(pat[i], word[i]);
+            } else if (!map.get(pat[i]).equals(word[i])) {
+                return false;
+            }
+        }
+        return true;
+    }
 }
