@@ -535,15 +535,16 @@ public class SolutionNow {
 
     /**
      * 290. 单词规律
-     *
+     * <p>
      * 给定一种规律 pattern 和一个字符串 str ，判断 str 是否遵循相同的规律。
      * 这里的 遵循 指完全匹配，
      * 例如， pattern 里的每个字母和字符串 str 中的每个非空单词之间存在着双向连接的对应规律。
-     *
+     * <p>
      * 执行用时：1 ms, 在所有 Java 提交中击败了98.94% 的用户
      * 内存消耗：36.5 MB, 在所有 Java 提交中击败了63.26% 的用户
+     *
      * @param pattern 规律
-     * @param s 字符串
+     * @param s       字符串
      * @return 判断 str 是否遵循相同的规律
      */
     public boolean wordPattern(String pattern, String s) {
@@ -565,5 +566,34 @@ public class SolutionNow {
             }
         }
         return true;
+    }
+
+    /**
+     * 面试题 17.06. 2出现的次数
+     * <p>
+     * 编写一个方法，计算从 0 到 n (含 n) 中数字 2 出现的次数。
+     * <p>
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：35.2 MB, 在所有 Java 提交中击败了75.76% 的用户
+     *
+     * @param n 数字
+     * @return 从 0 到 n (含 n) 中数字 2 出现的次数
+     */
+    public int numberOf2sInRange(int n) {
+        int[] arr = new int[]{0, 1, 20, 300, 4000, 50000, 600000, 7000000, 80000000, 900000000};
+        int[] brr = new int[]{1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000};
+        int ans = 0;
+        char[] chars = String.valueOf(n).toCharArray();
+        int len = chars.length;
+        for (int i = 0; i < len; i++) {
+            int tmp = chars[i] - '0';
+            ans += arr[len - i - 1] * tmp;
+            if (tmp > 2) {
+                ans += brr[len - i - 1];
+            } else if (tmp == 2) {
+                ans += n % brr[len - i - 1] + 1;
+            }
+        }
+        return ans;
     }
 }
