@@ -638,4 +638,30 @@ public class SolutionNow {
             return f[0] * 2 > total ? "Alice" : "Bob";
         }
     }
+
+    /**
+     * 剑指 Offer 14- I. 剪绳子
+     * <p>
+     * 给你一根长度为 n 的绳子，请把绳子剪成整数长度的 m 段（m、n都是整数，n>1并且m>1），
+     * 每段绳子的长度记为 k[0],k[1]...k[m-1] 。请问 k[0]*k[1]*...*k[m-1] 可能的最大乘积是多少？
+     * 例如，当绳子的长度是8时，我们把它剪成长度分别为2、3、3的三段，此时得到的最大乘积是18。
+     * <p>
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：35.5 MB, 在所有 Java 提交中击败了43.22% 的用户
+     *
+     * @param n 长度
+     * @return 最大乘积
+     */
+    public int cuttingRope(int n) {
+        if (n <= 3) {
+            return n - 1;
+        }
+        int ans = 1;
+        while (n > 4) {
+            ans *= 3;
+            n -= 3;
+        }
+        ans *= n;
+        return ans;
+    }
 }
