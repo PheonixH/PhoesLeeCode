@@ -726,16 +726,17 @@ public class SolutionNow {
 
     /**
      * 714. 买卖股票的最佳时机含手续费
-     *
+     * <p>
      * 给定一个整数数组 prices，其中第 i 个元素代表了第 i 天的股票价格 ；非负整数 fee 代表了交易股票的手续费用。
      * 你可以无限次地完成交易，但是你每笔交易都需要付手续费。如果你已经购买了一个股票，在卖出它之前你就不能再继续购买股票了。
      * 返回获得利润的最大值。
      * 注意：这里的一笔交易指买入持有并卖出股票的整个过程，每笔交易你只需要为支付一次手续费。
-     *
+     * <p>
      * 执行用时：23 ms, 在所有 Java 提交中击败了27.31% 的用户
      * 内存消耗：47.9 MB, 在所有 Java 提交中击败了44.85% 的用户
+     *
      * @param prices 整数数组
-     * @param fee 手续费
+     * @param fee    手续费
      * @return 获得利润的最大值
      */
     public int maxProfit(int[] prices, int fee) {
@@ -751,4 +752,39 @@ public class SolutionNow {
         return Math.max(dp[n - 1][0], dp[n - 1][1] - fee);
     }
 
+    // 2 5 1 1 1 1
+    // 0 2 1 2 3 3
+
+
+    public int minJump(int[] jump) {
+        int[] f = new int[10000000 + 7];
+        //数组 maxdis[w] 表示 w 步可以跳到的最远位置
+        int[] maxdis = new int[10000000 + 7];
+        int n = jump.length;
+        int w = 0;
+        int ans = 1000000000;
+
+        for (int i = 1; i <= n; ++i) {
+            f[i] = 1000000000;
+            maxdis[i] = 0;
+        }
+        f[1] = 0;
+        maxdis[0] = 1;
+
+        for (int i = 1; i <= n; ++i) {
+            if (i > maxdis[w]) { // 更新单调指针
+                ++w;
+            }
+            f[i] = Math.min(f[i], w + 1); // 用 maxdis[w] 更新 f[i]
+            int next = i + jump[i - 1]; // 第一步跳跃更新
+
+            if (next > n) {
+                ans = Math.min(ans, f[i] + 1);
+            } else if (f[next] > f[i] + 1) {
+                f[next] = f[i] + 1;
+                maxdis[f[next]] = Math.max(maxdis[f[next]], next);
+            }
+        }
+        return ans;
+    }
 }
