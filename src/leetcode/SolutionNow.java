@@ -1168,12 +1168,13 @@ public class SolutionNow {
 
     /**
      * 1641. 统计字典序元音字符串的数目
-     *
+     * <p>
      * 给你一个整数 n，请返回长度为 n 、仅由元音 (a, e, i, o, u) 组成且按 字典序排列 的字符串数量。
      * 字符串 s 按 字典序排列 需要满足：对于所有有效的 i，s[i] 在字母表中的位置总是与 s[i+1] 相同或在 s[i+1] 之前。
-     *
+     * <p>
      * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
      * 内存消耗：35.2 MB, 在所有 Java 提交中击败了59.91% 的用户
+     *
      * @param n 整数
      * @return 统计字典序元音字符串的数目
      */
@@ -1193,5 +1194,33 @@ public class SolutionNow {
             ans += value;
         }
         return ans;
+    }
+
+    /**
+     * 1043. 分隔数组以得到最大和
+     *
+     * 给你一个整数数组 arr，请你将该数组分隔为长度最多为 k 的一些（连续）子数组。分隔完成后，每个子数组的中的所有值都会变为该子数组中的最大值。
+     * 返回将数组分隔变换后能够得到的元素最大和。
+     * 注意，原数组和分隔后的数组对应顺序应当一致，也就是说，你只能选择分隔数组的位置而不能调整数组中的顺序。
+     *
+     * 执行用时：6 ms, 在所有 Java 提交中击败了94.16% 的用户
+     * 内存消耗：38.1 MB, 在所有 Java 提交中击败了70.35% 的用户
+     * @param arr 整数数组
+     * @param k 长度
+     * @return 分隔数组以得到最大和
+     */
+    public int maxSumAfterPartitioning(int[] arr, int k) {
+        int n = arr.length;
+        int[] dp = new int[n + 1];
+        for (int i = 0; i <= n; i++) {
+            int j = i - 1;
+            int max = dp[i];
+            while ((i - j) <= k && j >= 0) {
+                max = Math.max(max, arr[j]);
+                dp[i] = Math.max(dp[i], dp[j] + (i - j) * max);
+                j--;
+            }
+        }
+        return dp[n];
     }
 }
