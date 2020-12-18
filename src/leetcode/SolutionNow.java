@@ -933,4 +933,50 @@ public class SolutionNow {
         return ans;
     }
 
+    /**
+     * 1380. 矩阵中的幸运数
+     * <p>
+     * 给你一个 m * n 的矩阵，矩阵中的数字 各不相同 。请你按 任意 顺序返回矩阵中的所有幸运数。
+     * 幸运数是指矩阵中满足同时下列两个条件的元素：
+     * 在同一行的所有元素中最小
+     * 在同一列的所有元素中最大
+     * <p>
+     * 执行用时：11 ms, 在所有 Java 提交中击败了5.36% 的用户
+     * 内存消耗：39 MB, 在所有 Java 提交中击败了70.47% 的用户
+     *
+     * @param matrix
+     * @return
+     */
+    public List<Integer> luckyNumbers(int[][] matrix) {
+        int row = matrix.length;
+        if (row == 0) {
+            return new ArrayList<>();
+        }
+        int col = matrix[0].length;
+
+        Set<String> luckyNum = new HashSet<>();
+        for (int i = 0; i < row; i++) {
+            int luck = 0;
+            for (int j = 1; j < col; j++) {
+                if (matrix[i][luck] > matrix[i][j]) {
+                    luck = j;
+                }
+            }
+            luckyNum.add(i + "," + luck);
+        }
+
+        List<Integer> ans = new ArrayList<>();
+        for (int j = 0; j < col; j++) {
+            int luck = 0;
+            for (int i = 1; i < row; i++) {
+                if (matrix[luck][j] < matrix[i][j]) {
+                    luck = i;
+                }
+            }
+            if (luckyNum.contains(luck + "," + j)) {
+                ans.add(matrix[luck][j]);
+            }
+        }
+        return ans;
+    }
 }
