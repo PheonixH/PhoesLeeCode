@@ -1140,12 +1140,13 @@ public class SolutionNow {
 
     /**
      * 剑指 Offer 42. 连续子数组的最大和
-     *
+     * <p>
      * 输入一个整型数组，数组中的一个或连续多个整数组成一个子数组。求所有子数组的和的最大值。
      * 要求时间复杂度为O(n)。
-     *
+     * <p>
      * 执行用时：1 ms, 在所有 Java 提交中击败了98.65% 的用户
      * 内存消耗：44.8 MB, 在所有 Java 提交中击败了86.45% 的用户
+     *
      * @param nums 整型数组
      * @return 所有子数组的和的最大值
      */
@@ -1163,5 +1164,34 @@ public class SolutionNow {
             min = Math.min(min, preFix[i]);
         }
         return max;
+    }
+
+    /**
+     * 1641. 统计字典序元音字符串的数目
+     *
+     * 给你一个整数 n，请返回长度为 n 、仅由元音 (a, e, i, o, u) 组成且按 字典序排列 的字符串数量。
+     * 字符串 s 按 字典序排列 需要满足：对于所有有效的 i，s[i] 在字母表中的位置总是与 s[i+1] 相同或在 s[i+1] 之前。
+     *
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：35.2 MB, 在所有 Java 提交中击败了59.91% 的用户
+     * @param n 整数
+     * @return 统计字典序元音字符串的数目
+     */
+    public int countVowelStrings(int n) {
+        // dp[i][]: dp[i][a] + dp[i-1][a]
+        int[][] dp = new int[n][5];
+        Arrays.fill(dp[0], 1);
+        for (int i = 1; i < n; i++) {
+            dp[i][0] = dp[i - 1][0];
+            dp[i][1] = dp[i][0] + dp[i - 1][1];
+            dp[i][2] = dp[i][1] + dp[i - 1][2];
+            dp[i][3] = dp[i][2] + dp[i - 1][3];
+            dp[i][4] = dp[i][3] + dp[i - 1][4];
+        }
+        int ans = 0;
+        for (int value : dp[n - 1]) {
+            ans += value;
+        }
+        return ans;
     }
 }
