@@ -787,4 +787,29 @@ public class SolutionNow {
         }
         return ans;
     }
+
+    /**
+     * 389. 找不同
+     * <p>
+     * 给定两个字符串 s 和 t，它们只包含小写字母。
+     * 字符串 t 由字符串 s 随机重排，然后在随机位置添加一个字母。
+     * 请找出在 t 中被添加的字母。
+     * <p>
+     * 执行用时：1 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：36.8 MB, 在所有 Java 提交中击败了82.27% 的用户
+     *
+     * @param s 字符串
+     * @param t 字符串
+     * @return 在 t 中被添加的字母
+     */
+    public char findTheDifference(String s, String t) {
+        char[] sc = s.toCharArray();
+        char[] tc = t.toCharArray();
+        int n = sc.length;
+        int res = tc[n];
+        for (int i = 0; i < n; i++) {
+            res = res ^ sc[i] ^ tc[i];
+        }
+        return (char) res;
+    }
 }
