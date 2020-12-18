@@ -1107,12 +1107,13 @@ public class SolutionNow {
 
     /**
      * 1079. 活字印刷
-     *
+     * <p>
      * 你有一套活字字模 tiles，其中每个字模上都刻有一个字母 tiles[i]。返回你可以印出的非空字母序列的数目。
      * 注意：本题中，每个活字字模只能使用一次。
-     *
+     * <p>
      * 执行用时：33 ms, 在所有 Java 提交中击败了20.98% 的用户
      * 内存消耗：40.3 MB, 在所有 Java 提交中击败了15.27% 的用户
+     *
      * @param tiles 活字字模
      * @return 可以印出的非空字母序列的数目
      */
@@ -1135,5 +1136,32 @@ public class SolutionNow {
                 used[i] = false;
             }
         }
+    }
+
+    /**
+     * 剑指 Offer 42. 连续子数组的最大和
+     *
+     * 输入一个整型数组，数组中的一个或连续多个整数组成一个子数组。求所有子数组的和的最大值。
+     * 要求时间复杂度为O(n)。
+     *
+     * 执行用时：1 ms, 在所有 Java 提交中击败了98.65% 的用户
+     * 内存消耗：44.8 MB, 在所有 Java 提交中击败了86.45% 的用户
+     * @param nums 整型数组
+     * @return 所有子数组的和的最大值
+     */
+    public int maxSubArray(int[] nums) {
+        int n = nums.length;
+        int[] preFix = new int[n + 1];
+        preFix[1] = nums[0];
+        for (int i = 1; i < n; i++) {
+            preFix[i + 1] = preFix[i] + nums[i];
+        }
+        int min = 0;
+        int max = Integer.MIN_VALUE;
+        for (int i = 1; i <= n; i++) {
+            max = Math.max(max, preFix[i] - min);
+            min = Math.min(min, preFix[i]);
+        }
+        return max;
     }
 }
