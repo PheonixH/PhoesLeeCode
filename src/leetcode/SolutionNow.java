@@ -979,4 +979,26 @@ public class SolutionNow {
         }
         return ans;
     }
+
+    /**
+     * 面试题 05.06. 整数转换
+     * <p>
+     * 整数转换。编写一个函数，确定需要改变几个位才能将整数A转成整数B。
+     * <p>
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：35.3 MB, 在所有 Java 提交中击败了63.27% 的用户
+     *
+     * @param A 整数
+     * @param B 整数
+     * @return 需要改变几个位才能将整数A转成整数B
+     */
+    public int convertInteger(int A, int B) {
+        int c = A ^ B;
+        int ans = 0;
+        while (c != 0) {
+            ans++;
+            c &= (c - 1);
+        }
+        return ans;
+    }
 }
