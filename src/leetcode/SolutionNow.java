@@ -1001,4 +1001,52 @@ public class SolutionNow {
         }
         return ans;
     }
+
+    /**
+     * 面试题 16.06. 最小差
+     * <p>
+     * 给定两个整数数组a和b，计算具有最小差绝对值的一对数值（每个数组中取一个值），并返回该对数值的差
+     * <p>
+     * 执行用时：24 ms, 在所有 Java 提交中击败了38.34% 的用户
+     * 内存消耗：46.2 MB, 在所有 Java 提交中击败了88.76% 的用户
+     *
+     * @param a 整数数组
+     * @param b 整数数组
+     * @return 最小差绝对值的一对数值（每个数组中取一个值）
+     */
+    public int smallestDifference(int[] a, int[] b) {
+        Arrays.sort(a);
+        Arrays.sort(b);
+        long ans = Math.abs((long) a[0] - (long) b[0]);
+        int aa = 0, bb = 0;
+        int an = a.length;
+        int bn = b.length;
+        while (aa < an || bb < bn) {
+            if (aa >= an) {
+                if (b[bb] > a[an - 1]) {
+                    break;
+                } else {
+                    ans = Math.abs((long) a[an - 1] - (long) b[bb]);
+                    bb++;
+                }
+            }
+            if (bb >= bn) {
+                if (b[bn - 1] < a[aa]) {
+                    break;
+                } else {
+                    ans = Math.abs((long) a[aa] - (long) b[bn - 1]);
+                    aa++;
+                }
+            }
+            ans = Math.min(Math.abs((long) a[aa] - (long) b[bb]), ans);
+            if (a[aa] < b[bb]) {
+                aa++;
+            } else if (a[aa] > b[bb]) {
+                bb++;
+            } else {
+                return 0;
+            }
+        }
+        return (int) ans;
+    }
 }
