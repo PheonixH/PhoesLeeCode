@@ -1052,13 +1052,14 @@ public class SolutionNow {
 
     /**
      * 1353. 最多可以参加的会议数目
-     *
+     * <p>
      * 给你一个数组 events，其中 events[i] = [startDayi, endDayi] ，表示会议 i 开始于 startDayi ，结束于 endDayi 。
      * 你可以在满足 startDayi <= d <= endDayi 中的任意一天 d 参加会议 i 。注意，一天只能参加一个会议。
      * 请你返回你可以参加的 最大 会议数目。
-     *
+     * <p>
      * 执行用时：133 ms, 在所有 Java 提交中击败了5.69% 的用户
      * 内存消耗：80.9 MB, 在所有 Java 提交中击败了82.48% 的用户
+     *
      * @param events 数组
      * @return 可以参加的 最大 会议数目
      */
@@ -1102,5 +1103,37 @@ public class SolutionNow {
             }
         }
         return ans;
+    }
+
+    /**
+     * 1079. 活字印刷
+     *
+     * 你有一套活字字模 tiles，其中每个字模上都刻有一个字母 tiles[i]。返回你可以印出的非空字母序列的数目。
+     * 注意：本题中，每个活字字模只能使用一次。
+     *
+     * 执行用时：33 ms, 在所有 Java 提交中击败了20.98% 的用户
+     * 内存消耗：40.3 MB, 在所有 Java 提交中击败了15.27% 的用户
+     * @param tiles 活字字模
+     * @return 可以印出的非空字母序列的数目
+     */
+    public int numTilePossibilities(String tiles) {
+        int n = tiles.length();
+        numTilePossibilities(tiles.toCharArray(), new boolean[n], "");
+        return numTilePossibilitiesSet.size();
+    }
+
+    private Set<String> numTilePossibilitiesSet = new HashSet<>();
+
+    private void numTilePossibilities(char[] chars, boolean[] used, String now) {
+        if (now != "") {
+            numTilePossibilitiesSet.add(now);
+        }
+        for (int i = 0; i < chars.length; i++) {
+            if (!used[i]) {
+                used[i] = true;
+                numTilePossibilities(chars, used, now + chars[i]);
+                used[i] = false;
+            }
+        }
     }
 }
