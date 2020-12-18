@@ -812,4 +812,84 @@ public class SolutionNow {
         }
         return (char) res;
     }
+
+    /**
+     * 1395. 统计作战单位数
+     * <p>
+     * n 名士兵站成一排。每个士兵都有一个 独一无二 的评分 rating 。
+     * 每 3 个士兵可以组成一个作战单位，分组规则如下：
+     * 从队伍中选出下标分别为 i、j、k 的 3 名士兵，他们的评分分别为 rating[i]、rating[j]、rating[k]
+     * 作战单位需满足： rating[i] < rating[j] < rating[k] 或者 rating[i] > rating[j] > rating[k] ，其中  0 <= i < j < k < n
+     * 请你返回按上述条件可以组建的作战单位数量。每个士兵都可以是多个作战单位的一部分。
+     * <p>
+     * 执行用时：24 ms, 在所有 Java 提交中击败了21.28% 的用户
+     * 内存消耗：35.7 MB, 在所有 Java 提交中击败了92.28% 的用户
+     *
+     * @param rating 评分
+     * @return 按上述条件可以组建的作战单位数量
+     */
+    public int numTeams0(int[] rating) {
+        int n = rating.length;
+        int ans = 0;
+        for (int i = 0; i < n; i++) {
+            for (int j = i + 1; j < n; j++) {
+                for (int k = j + 1; k < n; k++) {
+                    if (rating[i] > rating[j] && rating[j] > rating[k]) {
+                        ans++;
+                    }
+                    if (rating[i] < rating[j] && rating[j] < rating[k]) {
+                        ans++;
+                    }
+                }
+            }
+        }
+        return ans;
+    }
+
+    /**
+     * 1395. 统计作战单位数
+     * <p>
+     * n 名士兵站成一排。每个士兵都有一个 独一无二 的评分 rating 。
+     * 每 3 个士兵可以组成一个作战单位，分组规则如下：
+     * 从队伍中选出下标分别为 i、j、k 的 3 名士兵，他们的评分分别为 rating[i]、rating[j]、rating[k]
+     * 作战单位需满足： rating[i] < rating[j] < rating[k] 或者 rating[i] > rating[j] > rating[k] ，其中  0 <= i < j < k < n
+     * 请你返回按上述条件可以组建的作战单位数量。每个士兵都可以是多个作战单位的一部分。
+     * <p>
+     * 执行用时：5 ms, 在所有 Java 提交中击败了58.75% 的用户
+     * 内存消耗：38 MB, 在所有 Java 提交中击败了5.04% 的用户
+     *
+     * @param rating 评分
+     * @return 按上述条件可以组建的作战单位数量
+     */
+    public int numTeams(int[] rating) {
+        int n = rating.length;
+
+        // 因为rating最多200个且不重复，所以可以压缩
+        int[] newR = rating.clone();
+        Arrays.sort(newR);
+        Map<Integer, Integer> disc = new HashMap<>();
+        for (int i = 0; i < n; i++) {
+            disc.put(newR[i], i);
+        }
+
+
+        BinaryIndexedTree bit = new BinaryIndexedTree(201);
+        for (int value : rating) {
+            bit.update(disc.get(value), 1);
+        }
+        int ans = 0;
+        BinaryIndexedTree bit2 = new BinaryIndexedTree(201);
+        for (int i = 0; i < n; i++) {
+            int a = bit.prefixSum(disc.get(rating[i]) - 1);
+            int b = bit2.sumRange(disc.get(rating[i]) + 1, 200);
+            ans += a * b;
+            a = bit2.prefixSum(disc.get(rating[i]) - 1);
+            b = bit.sumRange(disc.get(rating[i]) + 1, 200);
+            ans += a * b;
+            bit.update(disc.get(rating[i]), -1);
+            bit2.update(disc.get(rating[i]), 1);
+        }
+        return ans;
+    }
+
 }
