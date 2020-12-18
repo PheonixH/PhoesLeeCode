@@ -879,15 +879,56 @@ public class SolutionNow {
         }
         int ans = 0;
         BinaryIndexedTree bit2 = new BinaryIndexedTree(201);
-        for (int i = 0; i < n; i++) {
-            int a = bit.prefixSum(disc.get(rating[i]) - 1);
-            int b = bit2.sumRange(disc.get(rating[i]) + 1, 200);
+        for (int value : rating) {
+            int a = bit.prefixSum(disc.get(value) - 1);
+            int b = bit2.sumRange(disc.get(value) + 1, 200);
             ans += a * b;
-            a = bit2.prefixSum(disc.get(rating[i]) - 1);
-            b = bit.sumRange(disc.get(rating[i]) + 1, 200);
+            a = bit2.prefixSum(disc.get(value) - 1);
+            b = bit.sumRange(disc.get(value) + 1, 200);
             ans += a * b;
-            bit.update(disc.get(rating[i]), -1);
-            bit2.update(disc.get(rating[i]), 1);
+            bit.update(disc.get(value), -1);
+            bit2.update(disc.get(value), 1);
+        }
+        return ans;
+    }
+
+    /**
+     * 1456. 定长子串中元音的最大数目
+     * <p>
+     * 给你字符串 s 和整数 k 。
+     * 请返回字符串 s 中长度为 k 的单个子字符串中可能包含的最大元音字母数。
+     * 英文中的 元音字母 为（a, e, i, o, u）。
+     * <p>
+     * 执行用时：11 ms, 在所有 Java 提交中击败了89.05% 的用户
+     * 内存消耗：39.1 MB, 在所有 Java 提交中击败了62.76% 的用户
+     *
+     * @param s 字符串
+     * @param k 整数
+     * @return 定长子串中元音的最大数目
+     */
+    public int maxVowels(String s, int k) {
+        char[] chars = s.toCharArray();
+        int n = chars.length;
+        int ans = 0;
+        int r = 0;
+        for (; r < k; r++) {
+            if (chars[r] == 'a' || chars[r] == 'e' || chars[r] == 'i'
+                    || chars[r] == 'o' || chars[r] == 'u') {
+                ans++;
+            }
+        }
+        int tmp = ans;
+        for (int l = 0; l < n - k; l++) {
+            if (chars[l] == 'a' || chars[l] == 'e' || chars[l] == 'i'
+                    || chars[l] == 'o' || chars[l] == 'u') {
+                tmp--;
+            }
+            if (chars[r] == 'a' || chars[r] == 'e' || chars[r] == 'i'
+                    || chars[r] == 'o' || chars[r] == 'u') {
+                tmp++;
+            }
+            r++;
+            ans = Math.max(ans, tmp);
         }
         return ans;
     }
