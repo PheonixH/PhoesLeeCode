@@ -420,4 +420,807 @@ public class SolutionNow {
             }
         }
     }
+
+    /**
+     * 575. 分糖果
+     * 给定一个偶数长度的数组，其中不同的数字代表着不同种类的糖果，每一个数字代表一个糖果。
+     * 你需要把这些糖果平均分给一个弟弟和一个妹妹。返回妹妹可以获得的最大糖果的种类数。
+     * <p>
+     * 执行用时：41 ms, 在所有 Java 提交中击败了50.56% 的用户
+     * 内存消耗：40.5 MB, 在所有 Java 提交中击败了69.98% 的用户
+     *
+     * @param candyType 偶数长度的数组
+     * @return 妹妹可以获得的最大糖果的种类数
+     */
+    public int distributeCandies(int[] candyType) {
+        int n = candyType.length;
+        Set<Integer> set = new HashSet<>();
+        Arrays.stream(candyType).forEach(set::add);
+        return Math.min(n / 2, set.size());
+    }
+
+    /**
+     * 面试题 17.19. 消失的两个数字
+     * <p>
+     * 给定一个数组，包含从 1 到 N 所有的整数，但其中缺了两个数字。你能在 O(N) 时间内只用 O(1) 的空间找到它们吗？
+     * 以任意顺序返回这两个数字均可。
+     * <p>
+     * 执行用时：3 ms, 在所有 Java 提交中击败了28.20% 的用户
+     * 内存消耗：40.1 MB, 在所有 Java 提交中击败了72.19% 的用户
+     *
+     * @param nums 包含从 1 到 N 所有的整数
+     * @return 返回这两个数字均可
+     */
+    public int[] missingTwo(int[] nums) {
+        Arrays.sort(nums);
+        int[] ans = new int[2];
+        int n = nums.length;
+        int find = 0;
+        int t = 1;
+        for (int i = 0; i < n; i++) {
+            if (t != nums[i]) {
+                ans[find++] = t;
+                if (find > 1) {
+                    break;
+                }
+                i--;
+            }
+            t++;
+        }
+        while (find < 2) {
+            ans[find++] = t++;
+        }
+        return ans;
+    }
+
+    /**
+     * 剑指 Offer 56 - I. 数组中数字出现的次数
+     * <p>
+     * 一个整型数组 nums 里除两个数字之外，其他数字都出现了两次。请写程序找出这两个只出现一次的数字。要求时间复杂度是O(n)，空间复杂度是O(1)。
+     * <p>
+     * 执行用时：1 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：40 MB, 在所有 Java 提交中击败了88.18% 的用户
+     *
+     * @param nums 整型数组
+     * @return 找出这两个只出现一次的数字
+     */
+    public int[] singleNumbers(int[] nums) {
+        int ret = 0;
+        for (int n : nums) {
+            ret ^= n;
+        }
+        int div = 1;
+        while ((div & ret) == 0) {
+            div <<= 1;
+        }
+        int a = 0, b = 0;
+        for (int n : nums) {
+            if ((div & n) != 0) {
+                a ^= n;
+            } else {
+                b ^= n;
+            }
+        }
+        return new int[]{a, b};
+    }
+
+    /**
+     * 738. 单调递增的数字
+     * <p>
+     * 给定一个非负整数 N，找出小于或等于 N 的最大的整数，同时这个整数需要满足其各个位数上的数字是单调递增。
+     * （当且仅当每个相邻位数上的数字 x 和 y 满足 x <= y 时，我们称这个整数是单调递增的。）
+     * <p>
+     * 执行用时：1 ms, 在所有 Java 提交中击败了97.96% 的用户
+     * 内存消耗：35.4 MB, 在所有 Java 提交中击败了65.30% 的用户
+     *
+     * @param N 非负整数 N
+     * @return 小于或等于 N 的最大的整数
+     */
+    public int monotoneIncreasingDigits(int N) {
+        char[] strN = Integer.toString(N).toCharArray();
+        int n = strN.length;
+        int ans = 0;
+        for (int i = n - 1; i > 0; i--) {
+            if (strN[i] >= strN[i - 1]) {
+                ans = ans + (strN[i] - '0') * (int) Math.pow(10, n - 1 - i);
+            } else {
+                strN[i - 1]--;
+                ans = (int) Math.pow(10, n - i) - 1;
+                // 1 2 2 0
+            }
+        }
+        ans = ans + (strN[0] - '0') * (int) Math.pow(10, n - 1);
+        return ans;
+    }
+
+    /**
+     * 290. 单词规律
+     * <p>
+     * 给定一种规律 pattern 和一个字符串 str ，判断 str 是否遵循相同的规律。
+     * 这里的 遵循 指完全匹配，
+     * 例如， pattern 里的每个字母和字符串 str 中的每个非空单词之间存在着双向连接的对应规律。
+     * <p>
+     * 执行用时：1 ms, 在所有 Java 提交中击败了98.94% 的用户
+     * 内存消耗：36.5 MB, 在所有 Java 提交中击败了63.26% 的用户
+     *
+     * @param pattern 规律
+     * @param s       字符串
+     * @return 判断 str 是否遵循相同的规律
+     */
+    public boolean wordPattern(String pattern, String s) {
+        String[] word = s.split(" ");
+        char[] pat = pattern.toCharArray();
+        int len = word.length;
+        if (pat.length != len) {
+            return false;
+        }
+        Map<Character, String> map = new HashMap<>();
+        for (int i = 0; i < len; i++) {
+            if (!map.containsKey(pat[i])) {
+                if (map.containsValue(word[i])) {
+                    return false;
+                }
+                map.put(pat[i], word[i]);
+            } else if (!map.get(pat[i]).equals(word[i])) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * 面试题 17.06. 2出现的次数
+     * <p>
+     * 编写一个方法，计算从 0 到 n (含 n) 中数字 2 出现的次数。
+     * <p>
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：35.2 MB, 在所有 Java 提交中击败了75.76% 的用户
+     *
+     * @param n 数字
+     * @return 从 0 到 n (含 n) 中数字 2 出现的次数
+     */
+    public int numberOf2sInRange(int n) {
+        int[] arr = new int[]{0, 1, 20, 300, 4000, 50000, 600000, 7000000, 80000000, 900000000};
+        int[] brr = new int[]{1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000};
+        int ans = 0;
+        char[] chars = String.valueOf(n).toCharArray();
+        int len = chars.length;
+        for (int i = 0; i < len; i++) {
+            int tmp = chars[i] - '0';
+            ans += arr[len - i - 1] * tmp;
+            if (tmp > 2) {
+                ans += brr[len - i - 1];
+            } else if (tmp == 2) {
+                ans += n % brr[len - i - 1] + 1;
+            }
+        }
+        return ans;
+    }
+
+    /**
+     * 1406. 石子游戏 III
+     * <p>
+     * Alice 和 Bob 用几堆石子在做游戏。几堆石子排成一行，每堆石子都对应一个得分，由数组 stoneValue 给出。
+     * Alice 和 Bob 轮流取石子，Alice 总是先开始。在每个玩家的回合中，该玩家可以拿走剩下石子中的的前 1、2 或 3 堆石子 。
+     * 比赛一直持续到所有石头都被拿走。每个玩家的最终得分为他所拿到的每堆石子的对应得分之和。
+     * 每个玩家的初始分数都是 0 。比赛的目标是决出最高分，得分最高的选手将会赢得比赛，比赛也可能会出现平局。
+     * 假设 Alice 和 Bob 都采取 最优策略 。如果 Alice 赢了就返回 "Alice" ，Bob 赢了就返回 "Bob"，平局（分数相同）返回 "Tie" 。
+     * <p>
+     * <p>
+     * 执行用时：9 ms, 在所有 Java 提交中击败了91.46% 的用户
+     * 内存消耗：48 MB, 在所有 Java 提交中击败了61.93% 的用户
+     *
+     * @param stoneValue 几堆石子排成一行
+     * @return 获胜者
+     */
+    public String stoneGameIII(int[] stoneValue) {
+        int n = stoneValue.length;
+        int[] suffixSum = new int[n];
+        suffixSum[n - 1] = stoneValue[n - 1];
+        for (int i = n - 2; i >= 0; --i) {
+            suffixSum[i] = suffixSum[i + 1] + stoneValue[i];
+        }
+        int[] f = new int[n + 1];
+        // 边界情况，当没有石子时，分数为 0
+        // 为了代码的可读性，显式声明
+        f[n] = 0;
+        for (int i = n - 1; i >= 0; i--) {
+            int bestj = f[i + 1];
+            for (int j = i + 2; j <= i + 3 && j <= n; j++) {
+                bestj = Math.min(bestj, f[j]);
+            }
+            f[i] = suffixSum[i] - bestj;
+        }
+        int total = suffixSum[0];
+        if (f[0] * 2 == total) {
+            return "Tie";
+        } else {
+            return f[0] * 2 > total ? "Alice" : "Bob";
+        }
+    }
+
+    /**
+     * 剑指 Offer 14- I. 剪绳子
+     * <p>
+     * 给你一根长度为 n 的绳子，请把绳子剪成整数长度的 m 段（m、n都是整数，n>1并且m>1），
+     * 每段绳子的长度记为 k[0],k[1]...k[m-1] 。请问 k[0]*k[1]*...*k[m-1] 可能的最大乘积是多少？
+     * 例如，当绳子的长度是8时，我们把它剪成长度分别为2、3、3的三段，此时得到的最大乘积是18。
+     * <p>
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：35.5 MB, 在所有 Java 提交中击败了43.22% 的用户
+     *
+     * @param n 长度
+     * @return 最大乘积
+     */
+    public int cuttingRope(int n) {
+        if (n <= 3) {
+            return n - 1;
+        }
+        int ans = 1;
+        while (n > 4) {
+            ans *= 3;
+            n -= 3;
+        }
+        ans *= n;
+        return ans;
+    }
+
+    /**
+     * 剑指 Offer 14- II. 剪绳子 II
+     * <p>
+     * 给你一根长度为 n 的绳子，请把绳子剪成整数长度的 m 段（m、n都是整数，n>1并且m>1），
+     * 每段绳子的长度记为 k[0],k[1]...k[m - 1] 。请问 k[0]*k[1]*...*k[m - 1] 可能的最大乘积是多少？
+     * 例如，当绳子的长度是8时，我们把它剪成长度分别为2、3、3的三段，此时得到的最大乘积是18。
+     * <p>
+     * 答案需要取模 1e9+7（1000000007），如计算初始结果为：1000000008，请返回 1。
+     * <p>
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：35.2 MB, 在所有 Java 提交中击败了79.73% 的用户
+     *
+     * @param n 长度
+     * @return 最大乘积
+     */
+    public int cuttingRope2(int n) {
+        if (n <= 3) {
+            return n - 1;
+        }
+        long ans = 1;
+        while (n > 4) {
+            ans = ans * 3 % 1000000007;
+            n -= 3;
+        }
+        ans = ans * n % 1000000007;
+        return (int) ans;
+    }
+
+    /**
+     * 剑指 Offer 47. 礼物的最大价值
+     * <p>
+     * 在一个 m*n 的棋盘的每一格都放有一个礼物，每个礼物都有一定的价值（价值大于 0）。
+     * 你可以从棋盘的左上角开始拿格子里的礼物，并每次向右或者向下移动一格、直到到达棋盘的右下角。
+     * 给定一个棋盘及其上面的礼物的价值，请计算你最多能拿到多少价值的礼物？
+     * <p>
+     * 执行用时：5 ms, 在所有 Java 提交中击败了14.99% 的用户
+     * 内存消耗：41.4 MB, 在所有 Java 提交中击败了34.76% 的用户
+     *
+     * @param grid 礼物
+     * @return 最多能拿到多少价值的礼物
+     */
+    public int maxValue(int[][] grid) {
+        int row = grid.length;
+        int col = grid[0].length;
+        int[][] dp = new int[row][col];
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                if (j - 1 >= 0) {
+                    dp[i][j] = Math.max(dp[i][j - 1], dp[i][j]);
+                }
+                if (i - 1 >= 0) {
+                    dp[i][j] = Math.max(dp[i - 1][j], dp[i][j]);
+                }
+                dp[i][j] += grid[i][j];
+            }
+        }
+        return dp[row - 1][col - 1];
+    }
+
+    /**
+     * 714. 买卖股票的最佳时机含手续费
+     * <p>
+     * 给定一个整数数组 prices，其中第 i 个元素代表了第 i 天的股票价格 ；非负整数 fee 代表了交易股票的手续费用。
+     * 你可以无限次地完成交易，但是你每笔交易都需要付手续费。如果你已经购买了一个股票，在卖出它之前你就不能再继续购买股票了。
+     * 返回获得利润的最大值。
+     * 注意：这里的一笔交易指买入持有并卖出股票的整个过程，每笔交易你只需要为支付一次手续费。
+     * <p>
+     * 执行用时：23 ms, 在所有 Java 提交中击败了27.31% 的用户
+     * 内存消耗：47.9 MB, 在所有 Java 提交中击败了44.85% 的用户
+     *
+     * @param prices 整数数组
+     * @param fee    手续费
+     * @return 获得利润的最大值
+     */
+    public int maxProfit(int[] prices, int fee) {
+        int n = prices.length;
+        // 0 :不持有股票， 1:持有股票
+        int[][] dp = new int[n][2];
+        dp[0][0] = 0;
+        dp[0][1] = -prices[0];
+        for (int i = 1; i < n; i++) {
+            dp[i][0] = Math.max(dp[i - 1][0], dp[i - 1][1] - fee + prices[i]);
+            dp[i][1] = Math.max(dp[i - 1][1], dp[i - 1][0] - prices[i]);
+        }
+        return Math.max(dp[n - 1][0], dp[n - 1][1] - fee);
+    }
+
+    // 2 5 1 1 1 1
+    // 0 2 1 2 3 3
+
+
+    public int minJump(int[] jump) {
+        int[] f = new int[10000000 + 7];
+        //数组 maxdis[w] 表示 w 步可以跳到的最远位置
+        int[] maxdis = new int[10000000 + 7];
+        int n = jump.length;
+        int w = 0;
+        int ans = 1000000000;
+
+        for (int i = 1; i <= n; ++i) {
+            f[i] = 1000000000;
+            maxdis[i] = 0;
+        }
+        f[1] = 0;
+        maxdis[0] = 1;
+
+        for (int i = 1; i <= n; ++i) {
+            if (i > maxdis[w]) { // 更新单调指针
+                ++w;
+            }
+            f[i] = Math.min(f[i], w + 1); // 用 maxdis[w] 更新 f[i]
+            int next = i + jump[i - 1]; // 第一步跳跃更新
+
+            if (next > n) {
+                ans = Math.min(ans, f[i] + 1);
+            } else if (f[next] > f[i] + 1) {
+                f[next] = f[i] + 1;
+                maxdis[f[next]] = Math.max(maxdis[f[next]], next);
+            }
+        }
+        return ans;
+    }
+
+    /**
+     * 389. 找不同
+     * <p>
+     * 给定两个字符串 s 和 t，它们只包含小写字母。
+     * 字符串 t 由字符串 s 随机重排，然后在随机位置添加一个字母。
+     * 请找出在 t 中被添加的字母。
+     * <p>
+     * 执行用时：1 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：36.8 MB, 在所有 Java 提交中击败了82.27% 的用户
+     *
+     * @param s 字符串
+     * @param t 字符串
+     * @return 在 t 中被添加的字母
+     */
+    public char findTheDifference(String s, String t) {
+        char[] sc = s.toCharArray();
+        char[] tc = t.toCharArray();
+        int n = sc.length;
+        int res = tc[n];
+        for (int i = 0; i < n; i++) {
+            res = res ^ sc[i] ^ tc[i];
+        }
+        return (char) res;
+    }
+
+    /**
+     * 1395. 统计作战单位数
+     * <p>
+     * n 名士兵站成一排。每个士兵都有一个 独一无二 的评分 rating 。
+     * 每 3 个士兵可以组成一个作战单位，分组规则如下：
+     * 从队伍中选出下标分别为 i、j、k 的 3 名士兵，他们的评分分别为 rating[i]、rating[j]、rating[k]
+     * 作战单位需满足： rating[i] < rating[j] < rating[k] 或者 rating[i] > rating[j] > rating[k] ，其中  0 <= i < j < k < n
+     * 请你返回按上述条件可以组建的作战单位数量。每个士兵都可以是多个作战单位的一部分。
+     * <p>
+     * 执行用时：24 ms, 在所有 Java 提交中击败了21.28% 的用户
+     * 内存消耗：35.7 MB, 在所有 Java 提交中击败了92.28% 的用户
+     *
+     * @param rating 评分
+     * @return 按上述条件可以组建的作战单位数量
+     */
+    public int numTeams0(int[] rating) {
+        int n = rating.length;
+        int ans = 0;
+        for (int i = 0; i < n; i++) {
+            for (int j = i + 1; j < n; j++) {
+                for (int k = j + 1; k < n; k++) {
+                    if (rating[i] > rating[j] && rating[j] > rating[k]) {
+                        ans++;
+                    }
+                    if (rating[i] < rating[j] && rating[j] < rating[k]) {
+                        ans++;
+                    }
+                }
+            }
+        }
+        return ans;
+    }
+
+    /**
+     * 1395. 统计作战单位数
+     * <p>
+     * n 名士兵站成一排。每个士兵都有一个 独一无二 的评分 rating 。
+     * 每 3 个士兵可以组成一个作战单位，分组规则如下：
+     * 从队伍中选出下标分别为 i、j、k 的 3 名士兵，他们的评分分别为 rating[i]、rating[j]、rating[k]
+     * 作战单位需满足： rating[i] < rating[j] < rating[k] 或者 rating[i] > rating[j] > rating[k] ，其中  0 <= i < j < k < n
+     * 请你返回按上述条件可以组建的作战单位数量。每个士兵都可以是多个作战单位的一部分。
+     * <p>
+     * 执行用时：5 ms, 在所有 Java 提交中击败了58.75% 的用户
+     * 内存消耗：38 MB, 在所有 Java 提交中击败了5.04% 的用户
+     *
+     * @param rating 评分
+     * @return 按上述条件可以组建的作战单位数量
+     */
+    public int numTeams(int[] rating) {
+        int n = rating.length;
+
+        // 因为rating最多200个且不重复，所以可以压缩
+        int[] newR = rating.clone();
+        Arrays.sort(newR);
+        Map<Integer, Integer> disc = new HashMap<>();
+        for (int i = 0; i < n; i++) {
+            disc.put(newR[i], i);
+        }
+
+
+        BinaryIndexedTree bit = new BinaryIndexedTree(201);
+        for (int value : rating) {
+            bit.update(disc.get(value), 1);
+        }
+        int ans = 0;
+        BinaryIndexedTree bit2 = new BinaryIndexedTree(201);
+        for (int value : rating) {
+            int a = bit.prefixSum(disc.get(value) - 1);
+            int b = bit2.sumRange(disc.get(value) + 1, 200);
+            ans += a * b;
+            a = bit2.prefixSum(disc.get(value) - 1);
+            b = bit.sumRange(disc.get(value) + 1, 200);
+            ans += a * b;
+            bit.update(disc.get(value), -1);
+            bit2.update(disc.get(value), 1);
+        }
+        return ans;
+    }
+
+    /**
+     * 1456. 定长子串中元音的最大数目
+     * <p>
+     * 给你字符串 s 和整数 k 。
+     * 请返回字符串 s 中长度为 k 的单个子字符串中可能包含的最大元音字母数。
+     * 英文中的 元音字母 为（a, e, i, o, u）。
+     * <p>
+     * 执行用时：11 ms, 在所有 Java 提交中击败了89.05% 的用户
+     * 内存消耗：39.1 MB, 在所有 Java 提交中击败了62.76% 的用户
+     *
+     * @param s 字符串
+     * @param k 整数
+     * @return 定长子串中元音的最大数目
+     */
+    public int maxVowels(String s, int k) {
+        char[] chars = s.toCharArray();
+        int n = chars.length;
+        int ans = 0;
+        int r = 0;
+        for (; r < k; r++) {
+            if (chars[r] == 'a' || chars[r] == 'e' || chars[r] == 'i'
+                    || chars[r] == 'o' || chars[r] == 'u') {
+                ans++;
+            }
+        }
+        int tmp = ans;
+        for (int l = 0; l < n - k; l++) {
+            if (chars[l] == 'a' || chars[l] == 'e' || chars[l] == 'i'
+                    || chars[l] == 'o' || chars[l] == 'u') {
+                tmp--;
+            }
+            if (chars[r] == 'a' || chars[r] == 'e' || chars[r] == 'i'
+                    || chars[r] == 'o' || chars[r] == 'u') {
+                tmp++;
+            }
+            r++;
+            ans = Math.max(ans, tmp);
+        }
+        return ans;
+    }
+
+    /**
+     * 1380. 矩阵中的幸运数
+     * <p>
+     * 给你一个 m * n 的矩阵，矩阵中的数字 各不相同 。请你按 任意 顺序返回矩阵中的所有幸运数。
+     * 幸运数是指矩阵中满足同时下列两个条件的元素：
+     * 在同一行的所有元素中最小
+     * 在同一列的所有元素中最大
+     * <p>
+     * 执行用时：11 ms, 在所有 Java 提交中击败了5.36% 的用户
+     * 内存消耗：39 MB, 在所有 Java 提交中击败了70.47% 的用户
+     *
+     * @param matrix
+     * @return
+     */
+    public List<Integer> luckyNumbers(int[][] matrix) {
+        int row = matrix.length;
+        if (row == 0) {
+            return new ArrayList<>();
+        }
+        int col = matrix[0].length;
+
+        Set<String> luckyNum = new HashSet<>();
+        for (int i = 0; i < row; i++) {
+            int luck = 0;
+            for (int j = 1; j < col; j++) {
+                if (matrix[i][luck] > matrix[i][j]) {
+                    luck = j;
+                }
+            }
+            luckyNum.add(i + "," + luck);
+        }
+
+        List<Integer> ans = new ArrayList<>();
+        for (int j = 0; j < col; j++) {
+            int luck = 0;
+            for (int i = 1; i < row; i++) {
+                if (matrix[luck][j] < matrix[i][j]) {
+                    luck = i;
+                }
+            }
+            if (luckyNum.contains(luck + "," + j)) {
+                ans.add(matrix[luck][j]);
+            }
+        }
+        return ans;
+    }
+
+    /**
+     * 面试题 05.06. 整数转换
+     * <p>
+     * 整数转换。编写一个函数，确定需要改变几个位才能将整数A转成整数B。
+     * <p>
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：35.3 MB, 在所有 Java 提交中击败了63.27% 的用户
+     *
+     * @param A 整数
+     * @param B 整数
+     * @return 需要改变几个位才能将整数A转成整数B
+     */
+    public int convertInteger(int A, int B) {
+        int c = A ^ B;
+        int ans = 0;
+        while (c != 0) {
+            ans++;
+            c &= (c - 1);
+        }
+        return ans;
+    }
+
+    /**
+     * 面试题 16.06. 最小差
+     * <p>
+     * 给定两个整数数组a和b，计算具有最小差绝对值的一对数值（每个数组中取一个值），并返回该对数值的差
+     * <p>
+     * 执行用时：24 ms, 在所有 Java 提交中击败了38.34% 的用户
+     * 内存消耗：46.2 MB, 在所有 Java 提交中击败了88.76% 的用户
+     *
+     * @param a 整数数组
+     * @param b 整数数组
+     * @return 最小差绝对值的一对数值（每个数组中取一个值）
+     */
+    public int smallestDifference(int[] a, int[] b) {
+        Arrays.sort(a);
+        Arrays.sort(b);
+        long ans = Math.abs((long) a[0] - (long) b[0]);
+        int aa = 0, bb = 0;
+        int an = a.length;
+        int bn = b.length;
+        while (aa < an || bb < bn) {
+            if (aa >= an) {
+                if (b[bb] > a[an - 1]) {
+                    break;
+                } else {
+                    ans = Math.abs((long) a[an - 1] - (long) b[bb]);
+                    bb++;
+                }
+            }
+            if (bb >= bn) {
+                if (b[bn - 1] < a[aa]) {
+                    break;
+                } else {
+                    ans = Math.abs((long) a[aa] - (long) b[bn - 1]);
+                    aa++;
+                }
+            }
+            ans = Math.min(Math.abs((long) a[aa] - (long) b[bb]), ans);
+            if (a[aa] < b[bb]) {
+                aa++;
+            } else if (a[aa] > b[bb]) {
+                bb++;
+            } else {
+                return 0;
+            }
+        }
+        return (int) ans;
+    }
+
+    /**
+     * 1353. 最多可以参加的会议数目
+     * <p>
+     * 给你一个数组 events，其中 events[i] = [startDayi, endDayi] ，表示会议 i 开始于 startDayi ，结束于 endDayi 。
+     * 你可以在满足 startDayi <= d <= endDayi 中的任意一天 d 参加会议 i 。注意，一天只能参加一个会议。
+     * 请你返回你可以参加的 最大 会议数目。
+     * <p>
+     * 执行用时：133 ms, 在所有 Java 提交中击败了5.69% 的用户
+     * 内存消耗：80.9 MB, 在所有 Java 提交中击败了82.48% 的用户
+     *
+     * @param events 数组
+     * @return 可以参加的 最大 会议数目
+     */
+    public int maxEvents(int[][] events) {
+        Map<Integer, List<int[]>> eventMap = new TreeMap<>();
+        for (int[] event : events) {
+            List<int[]> list = eventMap.getOrDefault(event[0], new ArrayList<>());
+            list.add(event);
+            eventMap.put(event[0], list);
+        }
+
+        PriorityQueue<int[]> unDone = new PriorityQueue<>(new Comparator<int[]>() {
+            @Override
+            public int compare(int[] o1, int[] o2) {
+                return o1[1] - o2[1];
+            }
+        });
+        int pre = 0;
+        int ans = 0;
+        for (Map.Entry<Integer, List<int[]>> entry : eventMap.entrySet()) {
+            for (; pre < entry.getKey(); pre++) {
+                while (!unDone.isEmpty()) {
+                    int[] tmp = unDone.poll();
+                    if (tmp[1] >= pre) {
+                        ans++;
+                        break;
+                    }
+                }
+                if (unDone.isEmpty()) {
+                    pre = entry.getKey();
+                    break;
+                }
+            }
+            unDone.addAll(entry.getValue());
+        }
+        while (!unDone.isEmpty()) {
+            int[] tmp = unDone.poll();
+            if (tmp[1] >= pre) {
+                pre++;
+                ans++;
+            }
+        }
+        return ans;
+    }
+
+    /**
+     * 1079. 活字印刷
+     * <p>
+     * 你有一套活字字模 tiles，其中每个字模上都刻有一个字母 tiles[i]。返回你可以印出的非空字母序列的数目。
+     * 注意：本题中，每个活字字模只能使用一次。
+     * <p>
+     * 执行用时：33 ms, 在所有 Java 提交中击败了20.98% 的用户
+     * 内存消耗：40.3 MB, 在所有 Java 提交中击败了15.27% 的用户
+     *
+     * @param tiles 活字字模
+     * @return 可以印出的非空字母序列的数目
+     */
+    public int numTilePossibilities(String tiles) {
+        int n = tiles.length();
+        numTilePossibilities(tiles.toCharArray(), new boolean[n], "");
+        return numTilePossibilitiesSet.size();
+    }
+
+    private Set<String> numTilePossibilitiesSet = new HashSet<>();
+
+    private void numTilePossibilities(char[] chars, boolean[] used, String now) {
+        if (now != "") {
+            numTilePossibilitiesSet.add(now);
+        }
+        for (int i = 0; i < chars.length; i++) {
+            if (!used[i]) {
+                used[i] = true;
+                numTilePossibilities(chars, used, now + chars[i]);
+                used[i] = false;
+            }
+        }
+    }
+
+    /**
+     * 剑指 Offer 42. 连续子数组的最大和
+     * <p>
+     * 输入一个整型数组，数组中的一个或连续多个整数组成一个子数组。求所有子数组的和的最大值。
+     * 要求时间复杂度为O(n)。
+     * <p>
+     * 执行用时：1 ms, 在所有 Java 提交中击败了98.65% 的用户
+     * 内存消耗：44.8 MB, 在所有 Java 提交中击败了86.45% 的用户
+     *
+     * @param nums 整型数组
+     * @return 所有子数组的和的最大值
+     */
+    public int maxSubArray(int[] nums) {
+        int n = nums.length;
+        int[] preFix = new int[n + 1];
+        preFix[1] = nums[0];
+        for (int i = 1; i < n; i++) {
+            preFix[i + 1] = preFix[i] + nums[i];
+        }
+        int min = 0;
+        int max = Integer.MIN_VALUE;
+        for (int i = 1; i <= n; i++) {
+            max = Math.max(max, preFix[i] - min);
+            min = Math.min(min, preFix[i]);
+        }
+        return max;
+    }
+
+    /**
+     * 1641. 统计字典序元音字符串的数目
+     * <p>
+     * 给你一个整数 n，请返回长度为 n 、仅由元音 (a, e, i, o, u) 组成且按 字典序排列 的字符串数量。
+     * 字符串 s 按 字典序排列 需要满足：对于所有有效的 i，s[i] 在字母表中的位置总是与 s[i+1] 相同或在 s[i+1] 之前。
+     * <p>
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：35.2 MB, 在所有 Java 提交中击败了59.91% 的用户
+     *
+     * @param n 整数
+     * @return 统计字典序元音字符串的数目
+     */
+    public int countVowelStrings(int n) {
+        // dp[i][]: dp[i][a] + dp[i-1][a]
+        int[][] dp = new int[n][5];
+        Arrays.fill(dp[0], 1);
+        for (int i = 1; i < n; i++) {
+            dp[i][0] = dp[i - 1][0];
+            dp[i][1] = dp[i][0] + dp[i - 1][1];
+            dp[i][2] = dp[i][1] + dp[i - 1][2];
+            dp[i][3] = dp[i][2] + dp[i - 1][3];
+            dp[i][4] = dp[i][3] + dp[i - 1][4];
+        }
+        int ans = 0;
+        for (int value : dp[n - 1]) {
+            ans += value;
+        }
+        return ans;
+    }
+
+    /**
+     * 1043. 分隔数组以得到最大和
+     *
+     * 给你一个整数数组 arr，请你将该数组分隔为长度最多为 k 的一些（连续）子数组。分隔完成后，每个子数组的中的所有值都会变为该子数组中的最大值。
+     * 返回将数组分隔变换后能够得到的元素最大和。
+     * 注意，原数组和分隔后的数组对应顺序应当一致，也就是说，你只能选择分隔数组的位置而不能调整数组中的顺序。
+     *
+     * 执行用时：6 ms, 在所有 Java 提交中击败了94.16% 的用户
+     * 内存消耗：38.1 MB, 在所有 Java 提交中击败了70.35% 的用户
+     * @param arr 整数数组
+     * @param k 长度
+     * @return 分隔数组以得到最大和
+     */
+    public int maxSumAfterPartitioning(int[] arr, int k) {
+        int n = arr.length;
+        int[] dp = new int[n + 1];
+        for (int i = 0; i <= n; i++) {
+            int j = i - 1;
+            int max = dp[i];
+            while ((i - j) <= k && j >= 0) {
+                max = Math.max(max, arr[j]);
+                dp[i] = Math.max(dp[i], dp[j] + (i - j) * max);
+                j--;
+            }
+        }
+        return dp[n];
+    }
 }
