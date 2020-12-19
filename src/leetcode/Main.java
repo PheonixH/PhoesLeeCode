@@ -87,7 +87,7 @@ public class Main {
 
         //Arrays
         String[] oneDimensionalStringArray = {"bella", "label", "roller"};
-        int[] oneDimensionalArrayA = {6, 3, 8, 1, 3, 1, 2, 2};
+        int[] oneDimensionalArrayA = {1,1,1,1,1,1,1,7,7,1,1,1,1,1,1,1};
         int[] oneDimensionalArrayB = {1864};
         int[][] twoDimensionalArray = {{1, 1}, {1, 1}};
         char[] oneDimensionalCharArray = {'A', 'A', 'A', 'B', 'B', 'B', 'C', 'C', 'C', 'D', 'D', 'E'};
@@ -140,7 +140,7 @@ public class Main {
 //        solitionUbuntu.leastInterval(oneDimensionalCharArray, 0);
 
         Games games = new Games();
-        games.minimumIncompatibility(oneDimensionalArrayA, 4);
+        games.stoneGameVII(oneDimensionalArrayA);
     }
 
 }

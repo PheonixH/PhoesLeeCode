@@ -1333,4 +1333,110 @@ public class Games {
             }
         }
     }
+
+    // 219周赛
+    public int numberOfMatches(int n) {
+        int ans = 0;
+        while (n > 1) {
+            ans += n / 2;
+            n = (n + 1) / 2;
+        }
+        return ans;
+    }
+
+    public int minPartitions(String n) {
+        int ans = 0;
+        char[] c = n.toCharArray();
+        for (char cc : c) {
+            int tmp = cc - '0';
+            ans = Math.max(ans, tmp);
+        }
+        return ans;
+    }
+
+
+    public int stoneGameVII(int[] stones) {
+        int n = stones.length;
+        int left = 0, right = n - 1;
+        boolean add = true;
+        int ans = 0;
+        if (n % 2 == 0) {
+            add = false;
+            int minL = Math.min(stones[left + 1], stones[right]);
+            int minR = Math.min(stones[left], stones[right - 1]);
+            if (minL < minR) {
+                right--;
+            } else {
+                left++;
+            }
+            for (int i = left; i <= right; i++) {
+                ans += stones[i];
+            }
+        }
+        stoneGameVII(stones, left, right, false);
+        return add ? ans + stoneGameVIIRes : ans - stoneGameVIIRes;
+    }
+
+    private int stoneGameVIIRes = 0;
+
+    private void stoneGameVII(int[] stones, int left, int right, boolean boub) {
+        if (right - left < 1) {
+            return;
+        }
+        int minL = Math.min(stones[left + 1], stones[right]);
+        int minR = Math.min(stones[left], stones[right - 1]);
+        if (minL < minR) {
+            if (boub) {
+                stoneGameVIIRes += stones[right];
+            }
+            right--;
+        } else if (minL > minR) {
+            if (boub) {
+                stoneGameVIIRes += stones[left];
+            }
+            left++;
+        } else if (stones[right] < stones[left]) {
+            if (boub) {
+                stoneGameVIIRes += stones[right];
+            }
+            right--;
+        } else {
+            if (boub) {
+                stoneGameVIIRes += stones[left];
+            }
+            left++;
+        }
+
+        boub = !boub;
+
+        stoneGameVII(stones, left, right, boub);
+
+    }
+
+    // 2 2 3   1 3 2
+    public int maxHeight(int[][] cuboids) {
+        int n = cuboids.length;
+        if (n < 1) {
+            return 0;
+        }
+        int m = cuboids[0].length;
+        for (int[] cuboid : cuboids) {
+            Arrays.sort(cuboid);
+        }
+        Comparator<int[]> comparator = new Comparator<int[]>() {
+            @Override
+            public int compare(int[] o1, int[] o2) {
+                if (o1[0] != o2[0]) {
+                    return o1[0] - o2[0];
+                } else if (o1[1] != o2[1]) {
+                    return o1[1] - o2[1];
+                }
+                return o1[2] - o2[2];
+            }
+        };
+        Arrays.sort(cuboids, comparator);
+        // 2 2 5
+        // 1 3 3
+        return 0;
+    }
 }
