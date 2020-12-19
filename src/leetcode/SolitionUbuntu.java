@@ -2758,4 +2758,40 @@ x = (a[7]b[7]) (a[6]b[6]) ... (a[1]b[1]) (a[0]b[0])
             }
         }
     }
+
+    /**
+     * 1288. 删除被覆盖区间
+     * <p>
+     * 给你一个区间列表，请你删除列表中被其他区间所覆盖的区间。
+     * 只有当 c <= a 且 b <= d 时，我们才认为区间 [a,b) 被区间 [c,d) 覆盖。
+     * 在完成所有删除操作后，请你返回列表中剩余区间的数目。
+     * <p>
+     * 执行用时：6 ms, 在所有 Java 提交中击败了95.73% 的用户
+     * 内存消耗：38.8 MB, 在所有 Java 提交中击败了75.70% 的用户
+     *
+     * @param intervals
+     * @return
+     */
+    public int removeCoveredIntervals(int[][] intervals) {
+        Comparator<int[]> comparator = new Comparator<int[]>() {
+            @Override
+            public int compare(int[] o1, int[] o2) {
+                if (o1[0] == o2[0]) {
+                    return o2[1] - o1[1];
+                }
+                return o1[0] - o2[0];
+            }
+        };
+
+        Arrays.sort(intervals, comparator);
+        int max = Integer.MIN_VALUE;
+        int ans = 0;
+        for (int[] interval : intervals) {
+            if (interval[1] > max) {
+                max = interval[1];
+                ans++;
+            }
+        }
+        return ans;
+    }
 }
