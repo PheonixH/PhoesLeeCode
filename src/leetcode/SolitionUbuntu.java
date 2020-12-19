@@ -2769,8 +2769,8 @@ x = (a[7]b[7]) (a[6]b[6]) ... (a[1]b[1]) (a[0]b[0])
      * 执行用时：6 ms, 在所有 Java 提交中击败了95.73% 的用户
      * 内存消耗：38.8 MB, 在所有 Java 提交中击败了75.70% 的用户
      *
-     * @param intervals
-     * @return
+     * @param intervals 区间列表
+     * @return 剩余区间的数目
      */
     public int removeCoveredIntervals(int[][] intervals) {
         Comparator<int[]> comparator = new Comparator<int[]>() {
@@ -2791,6 +2791,38 @@ x = (a[7]b[7]) (a[6]b[6]) ... (a[1]b[1]) (a[0]b[0])
                 max = interval[1];
                 ans++;
             }
+        }
+        return ans;
+    }
+
+    /**
+     * 1684. 统计一致字符串的数目
+     * <p>
+     * 给你一个由不同字符组成的字符串 allowed 和一个字符串数组 words 。如果一个字符串的每一个字符都在 allowed 中，就称这个字符串是 一致字符串 。
+     * 请你返回 words 数组中 一致字符串 的数目。
+     * <p>
+     * 执行用时：6 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：39.3 MB, 在所有 Java 提交中击败了100.00% 的用户
+     *
+     * @param allowed 字符串
+     * @param words 字符串数组
+     * @return 数组中 一致字符串 的数目
+     */
+    public int countConsistentStrings(String allowed, String[] words) {
+        boolean[] chars = new boolean[26];
+        for (char c : allowed.toCharArray()) {
+            chars[c - 'a'] = true;
+        }
+        int ans = 0;
+        for (String word : words) {
+            int tmp = 1;
+            for (char c : word.toCharArray()) {
+                if (!chars[c - 'a']) {
+                    tmp = 0;
+                    break;
+                }
+            }
+            ans += tmp;
         }
         return ans;
     }
