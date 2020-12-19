@@ -2689,12 +2689,13 @@ x = (a[7]b[7]) (a[6]b[6]) ... (a[1]b[1]) (a[0]b[0])
 
     /**
      * 217. 存在重复元素
-     *
+     * <p>
      * 给定一个整数数组，判断是否存在重复元素。
      * 如果任意一值在数组中出现至少两次，函数返回 true 。如果数组中每个元素都不相同，则返回 false 。
-     *
+     * <p>
      * 执行用时：5 ms, 在所有 Java 提交中击败了76.63% 的用户
      * 内存消耗：42.5 MB, 在所有 Java 提交中击败了76.75% 的用户
+     *
      * @param nums 数组
      * @return 是否存在重复的元素
      */
@@ -2706,5 +2707,55 @@ x = (a[7]b[7]) (a[6]b[6]) ... (a[1]b[1]) (a[0]b[0])
             }
         }
         return false;
+    }
+
+    /**
+     * 48. 旋转图像
+     * <p>
+     * 给定一个 n × n 的二维矩阵表示一个图像。
+     * 将图像顺时针旋转 90 度。
+     * 说明：
+     * 你必须在原地旋转图像，这意味着你需要直接修改输入的二维矩阵。请不要使用另一个矩阵来旋转图像。
+     * <p>
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：38.4 MB, 在所有 Java 提交中击败了88.35% 的用户
+     *
+     * @param matrix 矩阵
+     */
+    public void rotate(int[][] matrix) {
+        int n = matrix.length;
+        if (n <= 1) {
+            return;
+        }
+        int t = n / 2;
+        for (int i = 0; i <= t; i++) {
+            if (t == i && n % 2 == 0) {
+                break;
+            }
+            for (int j = 0; j < t; j++) {
+//                 5,1,9,11
+//                 2,4,8,10
+//                 13,3,6,7
+//                 15,14,12,16
+
+                // n == 5: 0,1 & 1,4
+                // swap 1&2
+                matrix[i][j] = matrix[i][j] ^ matrix[j][n - 1 - i];
+                matrix[j][n - 1 - i] = matrix[i][j] ^ matrix[j][n - 1 - i];
+                matrix[i][j] = matrix[i][j] ^ matrix[j][n - 1 - i];
+
+                // n == 5: 0,1(原 1,4) & 4,3
+                // swap 1&3
+                matrix[i][j] = matrix[i][j] ^ matrix[n - 1 - i][n - 1 - j];
+                matrix[n - 1 - i][n - 1 - j] = matrix[i][j] ^ matrix[n - 1 - i][n - 1 - j];
+                matrix[i][j] = matrix[i][j] ^ matrix[n - 1 - i][n - 1 - j];
+
+                // n == 5: 0,1(原 4,3) & 3,0
+                // swap 1&4
+                matrix[i][j] = matrix[i][j] ^ matrix[n - 1 - j][i];
+                matrix[n - 1 - j][i] = matrix[i][j] ^ matrix[n - 1 - j][i];
+                matrix[i][j] = matrix[i][j] ^ matrix[n - 1 - j][i];
+            }
+        }
     }
 }
