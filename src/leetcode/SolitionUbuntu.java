@@ -2846,4 +2846,35 @@ x = (a[7]b[7]) (a[6]b[6]) ... (a[1]b[1]) (a[0]b[0])
         }
         return ones;
     }
+
+
+    /**
+     * 面试题 08.04. 幂集
+     *
+     * 幂集。编写一种方法，返回某集合的所有子集。集合中不包含重复的元素。
+     * 说明：解集不能包含重复的子集。
+     *
+     * 执行用时：1 ms, 在所有 Java 提交中击败了94.39% 的用户
+     * 内存消耗：38.7 MB, 在所有 Java 提交中击败了77.81% 的用户
+     * @param nums 集合
+     * @return 集合的所有子集
+     */
+    public List<List<Integer>> subsets(int[] nums) {
+        int n = nums.length;
+        subsets(nums, new ArrayList<>(), 0);
+        return subsetsList;
+    }
+
+    private List<List<Integer>> subsetsList = new ArrayList<>();
+
+    private void subsets(int[] num, List<Integer> list, int left) {
+        List<Integer> newList = new ArrayList<>();
+        newList.addAll(list);
+        subsetsList.add(newList);
+        for (int i = left; i < num.length; i++) {
+            list.add(num[i]);
+            subsets(num, list, i + 1);
+            list.remove(list.size() - 1);
+        }
+    }
 }
