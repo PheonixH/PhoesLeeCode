@@ -87,9 +87,9 @@ public class Main {
 
         //Arrays
         String[] oneDimensionalStringArray = {"bella", "label", "roller"};
-        int[] oneDimensionalArrayA = {1,1,1,1,1,1,1,7,7,1,1,1,1,1,1,1};
+        int[] oneDimensionalArrayA = {1, -5, -20, 4, -1, 3, -6, -3};
         int[] oneDimensionalArrayB = {1864};
-        int[][] twoDimensionalArray = {{1, 1}, {1, 1}};
+        int[][] twoDimensionalArray = {{5, 1, 9, 11}, {2, 4, 8, 10}, {13, 3, 6, 7}, {15, 14, 12, 16}};
         char[] oneDimensionalCharArray = {'A', 'A', 'A', 'B', 'B', 'B', 'C', 'C', 'C', 'D', 'D', 'E'};
         char[][] twoDimensionalCharArray = {
                 {'X', '.', '.', '.', '.', '.', '.', '.', '.'},
@@ -137,10 +137,10 @@ public class Main {
         SolutionNow solution = new SolutionNow();
 //        solution.countPrimes(10);
         SolitionUbuntu solitionUbuntu = new SolitionUbuntu();
-//        solitionUbuntu.leastInterval(oneDimensionalCharArray, 0);
+//        solitionUbuntu.subsets(oneDimensionalArrayA);
 
         Games games = new Games();
-        games.stoneGameVII(oneDimensionalArrayA);
+        games.maxResult(oneDimensionalArrayA, 2);
     }
 
 }

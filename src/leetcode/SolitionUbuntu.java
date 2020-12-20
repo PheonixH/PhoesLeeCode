@@ -2850,12 +2850,13 @@ x = (a[7]b[7]) (a[6]b[6]) ... (a[1]b[1]) (a[0]b[0])
 
     /**
      * 面试题 08.04. 幂集
-     *
+     * <p>
      * 幂集。编写一种方法，返回某集合的所有子集。集合中不包含重复的元素。
      * 说明：解集不能包含重复的子集。
-     *
+     * <p>
      * 执行用时：1 ms, 在所有 Java 提交中击败了94.39% 的用户
      * 内存消耗：38.7 MB, 在所有 Java 提交中击败了77.81% 的用户
+     *
      * @param nums 集合
      * @return 集合的所有子集
      */
@@ -2876,5 +2877,32 @@ x = (a[7]b[7]) (a[6]b[6]) ... (a[1]b[1]) (a[0]b[0])
             subsets(num, list, i + 1);
             list.remove(list.size() - 1);
         }
+    }
+
+    public String removeDuplicateLetters(String s) {
+        char[] chars = s.toCharArray();
+        int[] charNum = new int[26];
+        boolean[] vis = new boolean[26];
+        for (char cha : chars) {
+            charNum[cha - 'a']++;
+        }
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < chars.length; i++) {
+            char ch = s.charAt(i);
+            if (!vis[ch - 'a']) {
+                while (stringBuilder.length() > 0 && stringBuilder.charAt(stringBuilder.length() - 1) > ch) {
+                    if (charNum[stringBuilder.charAt(stringBuilder.length() - 1) - 'a'] > 0) {
+                        vis[stringBuilder.charAt(stringBuilder.length() - 1) - 'a'] = false;
+                        stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+                    } else {
+                        break;
+                    }
+                }
+                vis[ch - 'a'] = true;
+                stringBuilder.append(ch);
+            }
+            charNum[ch - 'a'] -= 1;
+        }
+        return stringBuilder.toString();
     }
 }
