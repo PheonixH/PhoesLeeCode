@@ -10,18 +10,27 @@ public class UnionFind {
     static int[] parent;
     static int[] rank;
 
+    public UnionFind(int n){
+        this.parent = new int[n];
+        this.rank = new int[n];
+        for (int i = 0; i < n; i++) {
+            parent[i] = i;
+            rank[i] = 1;
+        }
+    }
+
     public void init(int n) {
-        parent = new int[n + 1];
-        rank = new int[n + 1];
-        for (int i = 0; i < parent.length; i++) {
+        parent = new int[n];
+        rank = new int[n];
+        for (int i = 0; i < n; i++) {
             parent[i] = i;
             rank[i] = 1;
         }
     }
 
     public void union(int x, int y) {
-        int a = find(x);
-        int b = find(y);
+        int a = root(x);
+        int b = root(y);
         if (a == b) {
             return;
         }
@@ -35,10 +44,62 @@ public class UnionFind {
         }
     }
 
-    public int find(int x) {
+
+    public int root(int x) {
         if (parent[x] == x) {
             return x;
         }
-        return parent[x] = find(parent[x]);
+        return parent[x] = root(parent[x]);
+    }
+
+    /**
+     * 判断是否属于同一个集合：find(que[0]) == find(que[1])
+     */
+    public boolean connect(int i, int j) {
+        return root(i) == root(j);
     }
 }
+////《算法四》路径压缩带权重并查集模板
+//class Union {
+//    int[] id;
+//    int[] sz;
+//
+//    public Union(int n) {
+//        this.id = new int[n];
+//        this.sz = new int[n];
+//        for (int i = 0; i < n; i++) {
+//            id[i] = i;
+//            sz[i] = 1;
+//        }
+//    }
+//
+//    public void union(int i, int j) {
+//        int fi = root(i);
+//        int fj = root(j);
+//        if (fi == fj) {
+//            return;
+//        }
+//        if (sz[fi] > sz[fj]) {
+//            sz[fi] += sz[fj];
+//            id[fj] = fi;
+//        } else {
+//            sz[fj] += sz[fi];
+//            id[fi] = fj;
+//        }
+//    }
+//
+//    //        public int root(int i) {
+////            return id[i] == i ? i : root(id[i]);
+////        }
+//    public int root(int i) {
+//        while (id[i] != i) {
+//            id[i] = id[id[i]];
+//            i = id[i];
+//        }
+//        return i;
+//    }
+//
+//    public boolean connect(int i, int j) {
+//        return root(i) == root(j);
+//    }
+//}

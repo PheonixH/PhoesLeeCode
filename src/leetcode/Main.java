@@ -140,7 +140,8 @@ public class Main {
 //        solitionUbuntu.subsets(oneDimensionalArrayA);
 
         Games games = new Games();
-        games.maxResult(oneDimensionalArrayA, 2);
+        games.distanceLimitedPathsExist(3, new int[][]{{0, 1, 2}, {1, 2, 4}, {2, 0, 8}, {1, 0, 16}},
+                new int[][]{{0, 1, 2}, {0, 2, 5}});
     }
 
 }

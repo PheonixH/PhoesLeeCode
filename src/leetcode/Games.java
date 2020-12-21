@@ -1,5 +1,6 @@
 package leetcode;
 
+import Template.UnionFind;
 import leetcode.dataStruct.ListNode;
 
 import java.util.*;
@@ -1529,21 +1530,42 @@ public class Games {
         return ans;
     }
 
+    /**
+     * 5632. 检查边长度限制的路径是否存在
+     *
+     * 给你一个 n 个点组成的无向图边集 edgeList ，
+     * 其中 edgeList[i] = [ui, vi, disi] 表示点 ui 和点 vi 之间有一条长度为 disi 的边。请注意，两个点之间可能有 超过一条边 。
+     * 给你一个查询数组queries ，其中 queries[j] = [pj, qj, limitj] ，
+     * 你的任务是对于每个查询 queries[j] ，判断是否存在从 pj 到 qj 的路径，且这条路径上的每一条边都 严格小于 limitj 。
+     * 请你返回一个 布尔数组 answer ，其中 answer.length == queries.length ，
+     * 当 queries[j] 的查询结果为 true 时， answer 第 j 个值为 true ，否则为 false 。
+     *
+     * 执行用时：170 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：73.1 MB, 在所有 Java 提交中击败了100.00% 的用户
+     * @param n  n 个点
+     * @param edgeList 无向图边集
+     * @param queries 查询数组
+     * @return 对于每个查询 queries[j] ，判断是否存在从 pj 到 qj 的路径，且这条路径上的每一条边都 严格小于 limitj 。
+     */
     public boolean[] distanceLimitedPathsExist(int n, int[][] edgeList, int[][] queries) {
-        int[][] minDis = new int[n][n];
-        for (int[] dis : minDis) {
-            Arrays.fill(dis, Integer.MAX_VALUE);
+        UnionFind union = new UnionFind(n);
+        Arrays.sort(edgeList, Comparator.comparingInt(a -> a[2]));
+        int size = queries.length;
+        boolean[] res = new boolean[size];
+        int i = 0;
+        Map<int[], Integer> map = new HashMap<>();
+        for (int[] q : queries) {
+            map.put(q, i++);
         }
-        for (int[] edge : edgeList) {
-            int a = edge[0];
-            int b = edge[1];
-            int d = edge[2];
-            minDis[a][b] = Math.min(d, minDis[a][b]);
-            for (int c : minDis[a]) {
-
+        Arrays.sort(queries, Comparator.comparingInt(a -> a[2]));
+        int index = 0;
+        for (int[] arr : queries) {
+            while (index < edgeList.length && edgeList[index][2] < arr[2]) {
+                union.union(edgeList[index][0], edgeList[index][1]);
+                ++index;
             }
-
+            res[map.get(arr)] = union.connect(arr[0], arr[1]);
         }
-        return new boolean[1];
+        return res;
     }
 }
