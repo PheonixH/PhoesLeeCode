@@ -2905,4 +2905,31 @@ x = (a[7]b[7]) (a[6]b[6]) ... (a[1]b[1]) (a[0]b[0])
         }
         return stringBuilder.toString();
     }
+
+    /**
+     * 746. 使用最小花费爬楼梯
+     * <p>
+     * 数组的每个索引作为一个阶梯，第 i个阶梯对应着一个非负数的体力花费值 cost[i](索引从0开始)。
+     * 每当你爬上一个阶梯你都要花费对应的体力花费值，然后你可以选择继续爬一个阶梯或者爬两个阶梯。
+     * 您需要找到达到楼层顶部的最低花费。在开始时，你可以选择从索引为 0 或 1 的元素作为初始阶梯。
+     * <p>
+     * 执行用时：1 ms, 在所有 Java 提交中击败了99.68% 的用户
+     * 内存消耗：38.1 MB, 在所有 Java 提交中击败了76.73% 的用户
+     *
+     * @param cost 非负数的体力花费值
+     * @return 达到楼层顶部的最低花费
+     */
+    public int minCostClimbingStairs(int[] cost) {
+        int n = cost.length;
+        if (n < 2) {
+            return 0;
+        }
+        int[] dp = new int[n];
+        dp[0] = cost[0];
+        dp[1] = cost[1];
+        for (int i = 2; i < n; i++) {
+            dp[i] = Math.min(dp[i - 1], dp[i - 2]) + cost[i];
+        }
+        return Math.min(dp[n - 1], dp[n - 2]);
+    }
 }
