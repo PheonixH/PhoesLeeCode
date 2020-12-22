@@ -1198,15 +1198,16 @@ public class SolutionNow {
 
     /**
      * 1043. 分隔数组以得到最大和
-     *
+     * <p>
      * 给你一个整数数组 arr，请你将该数组分隔为长度最多为 k 的一些（连续）子数组。分隔完成后，每个子数组的中的所有值都会变为该子数组中的最大值。
      * 返回将数组分隔变换后能够得到的元素最大和。
      * 注意，原数组和分隔后的数组对应顺序应当一致，也就是说，你只能选择分隔数组的位置而不能调整数组中的顺序。
-     *
+     * <p>
      * 执行用时：6 ms, 在所有 Java 提交中击败了94.16% 的用户
      * 内存消耗：38.1 MB, 在所有 Java 提交中击败了70.35% 的用户
+     *
      * @param arr 整数数组
-     * @param k 长度
+     * @param k   长度
      * @return 分隔数组以得到最大和
      */
     public int maxSumAfterPartitioning(int[] arr, int k) {
@@ -1222,5 +1223,56 @@ public class SolutionNow {
             }
         }
         return dp[n];
+    }
+
+    /**
+     * 103. 二叉树的锯齿形层序遍历
+     *
+     * 给定一个二叉树，返回其节点值的锯齿形层序遍历。（即先从左往右，再从右往左进行下一层遍历，以此类推，层与层之间交替进行）。
+     * 例如：
+     * 给定二叉树 [3,9,20,null,null,15,7],
+     *
+     * 执行用时：1 ms, 在所有 Java 提交中击败了98.42% 的用户
+     * 内存消耗：38.5 MB, 在所有 Java 提交中击败了71.18% 的用户
+     * @param root 二叉树
+     * @return 其节点值的锯齿形层序遍历
+     */
+    public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+        Deque<TreeNode> fromLeft = new LinkedList<>();
+        Deque<TreeNode> fromRight = new LinkedList<>();
+        if (root != null) {
+            fromLeft.add(root);
+        }
+        List<List<Integer>> ans = new LinkedList<>();
+
+        while (!fromLeft.isEmpty()) {
+            List<Integer> left = new ArrayList<>();
+            while (!fromLeft.isEmpty()) {
+                TreeNode t = fromLeft.pollFirst();
+                left.add(t.val);
+                if (t.left != null) {
+                    fromRight.addLast(t.left);
+                }
+                if (t.right != null) {
+                    fromRight.addLast(t.right);
+                }
+            }
+            ans.add(left);
+            List<Integer> right = new ArrayList<>();
+            while (!fromRight.isEmpty()) {
+                TreeNode t = fromRight.pollLast();
+                right.add(t.val);
+                if (t.right != null) {
+                    fromLeft.addFirst(t.right);
+                }
+                if (t.left != null) {
+                    fromLeft.addFirst(t.left);
+                }
+            }
+            if (right.size() > 0) {
+                ans.add(right);
+            }
+        }
+        return ans;
     }
 }
