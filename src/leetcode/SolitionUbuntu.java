@@ -2686,4 +2686,223 @@ x = (a[7]b[7]) (a[6]b[6]) ... (a[1]b[1]) (a[0]b[0])
         }
         return father[p] = find(father, father[p]);
     }
+
+    /**
+     * 217. 存在重复元素
+     * <p>
+     * 给定一个整数数组，判断是否存在重复元素。
+     * 如果任意一值在数组中出现至少两次，函数返回 true 。如果数组中每个元素都不相同，则返回 false 。
+     * <p>
+     * 执行用时：5 ms, 在所有 Java 提交中击败了76.63% 的用户
+     * 内存消耗：42.5 MB, 在所有 Java 提交中击败了76.75% 的用户
+     *
+     * @param nums 数组
+     * @return 是否存在重复的元素
+     */
+    public boolean containsDuplicate(int[] nums) {
+        Set<Integer> set = new HashSet<Integer>();
+        for (int x : nums) {
+            if (!set.add(x)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 48. 旋转图像
+     * <p>
+     * 给定一个 n × n 的二维矩阵表示一个图像。
+     * 将图像顺时针旋转 90 度。
+     * 说明：
+     * 你必须在原地旋转图像，这意味着你需要直接修改输入的二维矩阵。请不要使用另一个矩阵来旋转图像。
+     * <p>
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：38.4 MB, 在所有 Java 提交中击败了88.35% 的用户
+     *
+     * @param matrix 矩阵
+     */
+    public void rotate(int[][] matrix) {
+        int n = matrix.length;
+        if (n <= 1) {
+            return;
+        }
+        int t = n / 2;
+        for (int i = 0; i <= t; i++) {
+            if (t == i && n % 2 == 0) {
+                break;
+            }
+            for (int j = 0; j < t; j++) {
+//                 5,1,9,11
+//                 2,4,8,10
+//                 13,3,6,7
+//                 15,14,12,16
+
+                // n == 5: 0,1 & 1,4
+                // swap 1&2
+                matrix[i][j] = matrix[i][j] ^ matrix[j][n - 1 - i];
+                matrix[j][n - 1 - i] = matrix[i][j] ^ matrix[j][n - 1 - i];
+                matrix[i][j] = matrix[i][j] ^ matrix[j][n - 1 - i];
+
+                // n == 5: 0,1(原 1,4) & 4,3
+                // swap 1&3
+                matrix[i][j] = matrix[i][j] ^ matrix[n - 1 - i][n - 1 - j];
+                matrix[n - 1 - i][n - 1 - j] = matrix[i][j] ^ matrix[n - 1 - i][n - 1 - j];
+                matrix[i][j] = matrix[i][j] ^ matrix[n - 1 - i][n - 1 - j];
+
+                // n == 5: 0,1(原 4,3) & 3,0
+                // swap 1&4
+                matrix[i][j] = matrix[i][j] ^ matrix[n - 1 - j][i];
+                matrix[n - 1 - j][i] = matrix[i][j] ^ matrix[n - 1 - j][i];
+                matrix[i][j] = matrix[i][j] ^ matrix[n - 1 - j][i];
+            }
+        }
+    }
+
+    /**
+     * 1288. 删除被覆盖区间
+     * <p>
+     * 给你一个区间列表，请你删除列表中被其他区间所覆盖的区间。
+     * 只有当 c <= a 且 b <= d 时，我们才认为区间 [a,b) 被区间 [c,d) 覆盖。
+     * 在完成所有删除操作后，请你返回列表中剩余区间的数目。
+     * <p>
+     * 执行用时：6 ms, 在所有 Java 提交中击败了95.73% 的用户
+     * 内存消耗：38.8 MB, 在所有 Java 提交中击败了75.70% 的用户
+     *
+     * @param intervals 区间列表
+     * @return 剩余区间的数目
+     */
+    public int removeCoveredIntervals(int[][] intervals) {
+        Comparator<int[]> comparator = new Comparator<int[]>() {
+            @Override
+            public int compare(int[] o1, int[] o2) {
+                if (o1[0] == o2[0]) {
+                    return o2[1] - o1[1];
+                }
+                return o1[0] - o2[0];
+            }
+        };
+
+        Arrays.sort(intervals, comparator);
+        int max = Integer.MIN_VALUE;
+        int ans = 0;
+        for (int[] interval : intervals) {
+            if (interval[1] > max) {
+                max = interval[1];
+                ans++;
+            }
+        }
+        return ans;
+    }
+
+    /**
+     * 1684. 统计一致字符串的数目
+     * <p>
+     * 给你一个由不同字符组成的字符串 allowed 和一个字符串数组 words 。如果一个字符串的每一个字符都在 allowed 中，就称这个字符串是 一致字符串 。
+     * 请你返回 words 数组中 一致字符串 的数目。
+     * <p>
+     * 执行用时：6 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：39.3 MB, 在所有 Java 提交中击败了100.00% 的用户
+     *
+     * @param allowed 字符串
+     * @param words   字符串数组
+     * @return 数组中 一致字符串 的数目
+     */
+    public int countConsistentStrings(String allowed, String[] words) {
+        boolean[] chars = new boolean[26];
+        for (char c : allowed.toCharArray()) {
+            chars[c - 'a'] = true;
+        }
+        int ans = 0;
+        for (String word : words) {
+            int tmp = 1;
+            for (char c : word.toCharArray()) {
+                if (!chars[c - 'a']) {
+                    tmp = 0;
+                    break;
+                }
+            }
+            ans += tmp;
+        }
+        return ans;
+    }
+
+    /**
+     * 剑指 Offer 56 - II. 数组中数字出现的次数 II
+     * <p>
+     * 在一个数组 nums 中除一个数字只出现一次之外，其他数字都出现了三次。请找出那个只出现一次的数字。
+     * <p>
+     * 执行用时：1 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：39.3 MB, 在所有 Java 提交中击败了85.86% 的用户
+     *
+     * @param nums 数组
+     * @return 数组中数字出现的次数
+     */
+    public int singleNumber3(int[] nums) {
+        int ones = 0, twos = 0;
+        for (int num : nums) {
+            ones = ones ^ num & ~twos;
+            twos = twos ^ num & ~ones;
+        }
+        return ones;
+    }
+
+
+    /**
+     * 面试题 08.04. 幂集
+     * <p>
+     * 幂集。编写一种方法，返回某集合的所有子集。集合中不包含重复的元素。
+     * 说明：解集不能包含重复的子集。
+     * <p>
+     * 执行用时：1 ms, 在所有 Java 提交中击败了94.39% 的用户
+     * 内存消耗：38.7 MB, 在所有 Java 提交中击败了77.81% 的用户
+     *
+     * @param nums 集合
+     * @return 集合的所有子集
+     */
+    public List<List<Integer>> subsets(int[] nums) {
+        int n = nums.length;
+        subsets(nums, new ArrayList<>(), 0);
+        return subsetsList;
+    }
+
+    private List<List<Integer>> subsetsList = new ArrayList<>();
+
+    private void subsets(int[] num, List<Integer> list, int left) {
+        List<Integer> newList = new ArrayList<>();
+        newList.addAll(list);
+        subsetsList.add(newList);
+        for (int i = left; i < num.length; i++) {
+            list.add(num[i]);
+            subsets(num, list, i + 1);
+            list.remove(list.size() - 1);
+        }
+    }
+
+    public String removeDuplicateLetters(String s) {
+        char[] chars = s.toCharArray();
+        int[] charNum = new int[26];
+        boolean[] vis = new boolean[26];
+        for (char cha : chars) {
+            charNum[cha - 'a']++;
+        }
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < chars.length; i++) {
+            char ch = s.charAt(i);
+            if (!vis[ch - 'a']) {
+                while (stringBuilder.length() > 0 && stringBuilder.charAt(stringBuilder.length() - 1) > ch) {
+                    if (charNum[stringBuilder.charAt(stringBuilder.length() - 1) - 'a'] > 0) {
+                        vis[stringBuilder.charAt(stringBuilder.length() - 1) - 'a'] = false;
+                        stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+                    } else {
+                        break;
+                    }
+                }
+                vis[ch - 'a'] = true;
+                stringBuilder.append(ch);
+            }
+            charNum[ch - 'a'] -= 1;
+        }
+        return stringBuilder.toString();
+    }
 }

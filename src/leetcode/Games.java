@@ -1333,4 +1333,217 @@ public class Games {
             }
         }
     }
+
+    // 219周赛
+    public int numberOfMatches(int n) {
+        int ans = 0;
+        while (n > 1) {
+            ans += n / 2;
+            n = (n + 1) / 2;
+        }
+        return ans;
+    }
+
+    public int minPartitions(String n) {
+        int ans = 0;
+        char[] c = n.toCharArray();
+        for (char cc : c) {
+            int tmp = cc - '0';
+            ans = Math.max(ans, tmp);
+        }
+        return ans;
+    }
+
+
+    public int stoneGameVII(int[] stones) {
+        int n = stones.length;
+        int left = 0, right = n - 1;
+        boolean add = true;
+        int ans = 0;
+        if (n % 2 == 0) {
+            add = false;
+            int minL = Math.min(stones[left + 1], stones[right]);
+            int minR = Math.min(stones[left], stones[right - 1]);
+            if (minL < minR) {
+                right--;
+            } else {
+                left++;
+            }
+            for (int i = left; i <= right; i++) {
+                ans += stones[i];
+            }
+        }
+        stoneGameVII(stones, left, right, false);
+        return add ? ans + stoneGameVIIRes : ans - stoneGameVIIRes;
+    }
+
+    private int stoneGameVIIRes = 0;
+
+    private void stoneGameVII(int[] stones, int left, int right, boolean boub) {
+        if (right - left < 1) {
+            return;
+        }
+        int minL = Math.min(stones[left + 1], stones[right]);
+        int minR = Math.min(stones[left], stones[right - 1]);
+        if (minL < minR) {
+            if (boub) {
+                stoneGameVIIRes += stones[right];
+            }
+            right--;
+        } else if (minL > minR) {
+            if (boub) {
+                stoneGameVIIRes += stones[left];
+            }
+            left++;
+        } else if (stones[right] < stones[left]) {
+            if (boub) {
+                stoneGameVIIRes += stones[right];
+            }
+            right--;
+        } else {
+            if (boub) {
+                stoneGameVIIRes += stones[left];
+            }
+            left++;
+        }
+
+        boub = !boub;
+
+        stoneGameVII(stones, left, right, boub);
+
+    }
+
+    // 2 2 3   1 3 2
+    public int maxHeight(int[][] cuboids) {
+        int n = cuboids.length;
+        if (n < 1) {
+            return 0;
+        }
+        int m = cuboids[0].length;
+        for (int[] cuboid : cuboids) {
+            Arrays.sort(cuboid);
+        }
+        Comparator<int[]> comparator = new Comparator<int[]>() {
+            @Override
+            public int compare(int[] o1, int[] o2) {
+                if (o1[0] != o2[0]) {
+                    return o1[0] - o2[0];
+                } else if (o1[1] != o2[1]) {
+                    return o1[1] - o2[1];
+                }
+                return o1[2] - o2[2];
+            }
+        };
+        Arrays.sort(cuboids, comparator);
+        // 2 2 5
+        // 1 3 3
+        return 0;
+    }
+
+    // 周赛
+    public String reformatNumber(String number) {
+        number = number.replaceAll("-", "");
+        number = number.replaceAll(" ", "");
+        int n = number.length();
+        int t = n;
+        StringBuilder sb = new StringBuilder();
+        char[] chars = number.toCharArray();
+        int i = 0;
+        for (; i < n - 4; i++) {
+            sb.append(chars[i]).append(chars[i + 1]).append(chars[i + 2]).append("-");
+            i = i + 2;
+        }
+        if (i == n - 4) {
+            sb.append(chars[i]).append(chars[i + 1]).append("-").append(chars[i + 2]).append(chars[i + 3]);
+        } else if (i == n - 3) {
+            sb.append(chars[i]).append(chars[i + 1]).append(chars[i + 2]);
+        } else if (i == n - 2) {
+            sb.append(chars[i]).append(chars[i + 1]);
+        }
+        return sb.toString();
+    }
+
+    public int maximumUniqueSubarray(int[] nums) {
+        int[] arr = new int[10005];
+        int max = 0;
+        int l = 0, r = 0;
+        int n = nums.length;
+        int now = 0;
+        while (r < n) {
+            if (arr[nums[r]] == 0) {
+                arr[nums[r]]++;
+                now += nums[r];
+                r++;
+            } else {
+                max = Math.max(now, max);
+                while (l < r && arr[nums[r]] > 0) {
+                    now -= nums[l];
+                    arr[nums[l]]--;
+                    l++;
+                }
+                now += nums[r];
+                arr[nums[r]] = 1;
+                r++;
+            }
+        }
+        max = Math.max(max, now);
+        return max;
+    }
+
+    public int maxResult(int[] nums, int k) {
+        int n = nums.length;
+        int ans = nums[0];
+        int tmp = 0;
+        for (int i = 1; i < n; i++) {
+            if (nums[i] >= 0) {
+                ans += nums[i];
+                tmp = i;
+            } else {
+                // k == 3： 1 -1 -2 -3 -1 -3 -1 1
+                int j = i;
+                for (; j < n; j++) {
+                    if (nums[j] >= 0) {
+                        break;
+                    }
+                }
+                j = Math.min(j, n - 1);
+                if (j - i >= k) {
+                    int[] dp = new int[j - i + 1];
+                    Arrays.fill(dp, Integer.MIN_VALUE);
+                    dp[0] = nums[i];
+                    for (int ii = i; ii <= j; ii++) {
+                        for (int jj = ii - k; jj < ii; jj++) {
+                            if (jj < i) {
+                                continue;
+                            }
+                            dp[ii - i] = Math.max(dp[jj - i] + nums[ii], dp[ii - i]);
+                        }
+                    }
+                    ans += dp[j - i];
+                } else {
+                    ans += nums[j];
+                }
+                i = j;
+            }
+        }
+        return ans;
+    }
+
+    public boolean[] distanceLimitedPathsExist(int n, int[][] edgeList, int[][] queries) {
+        int[][] minDis = new int[n][n];
+        for (int[] dis : minDis) {
+            Arrays.fill(dis, Integer.MAX_VALUE);
+        }
+        for (int[] edge : edgeList) {
+            int a = edge[0];
+            int b = edge[1];
+            int d = edge[2];
+            minDis[a][b] = Math.min(d, minDis[a][b]);
+            for (int c : minDis[a]) {
+
+            }
+
+        }
+        return new boolean[1];
+    }
 }
