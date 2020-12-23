@@ -1227,13 +1227,14 @@ public class SolutionNow {
 
     /**
      * 103. 二叉树的锯齿形层序遍历
-     *
+     * <p>
      * 给定一个二叉树，返回其节点值的锯齿形层序遍历。（即先从左往右，再从右往左进行下一层遍历，以此类推，层与层之间交替进行）。
      * 例如：
      * 给定二叉树 [3,9,20,null,null,15,7],
-     *
+     * <p>
      * 执行用时：1 ms, 在所有 Java 提交中击败了98.42% 的用户
      * 内存消耗：38.5 MB, 在所有 Java 提交中击败了71.18% 的用户
+     *
      * @param root 二叉树
      * @return 其节点值的锯齿形层序遍历
      */
@@ -1274,5 +1275,32 @@ public class SolutionNow {
             }
         }
         return ans;
+    }
+
+    /**
+     * 387. 字符串中的第一个唯一字符
+     * <p>
+     * 给定一个字符串，找到它的第一个不重复的字符，并返回它的索引。如果不存在，则返回 -1。
+     * <p>
+     * 执行用时：8 ms, 在所有 Java 提交中击败了72.75% 的用户
+     * 内存消耗：38.9 MB, 在所有 Java 提交中击败了81.02% 的用户
+     *
+     * @param s 字符串
+     * @return 字符串中的第一个唯一字符
+     */
+    public int firstUniqChar(String s) {
+        int n = s.length();
+        int[][] d = new int[26][2];
+        for (int i = 0; i < n; i++) {
+            d[s.charAt(i) - 'a'][0] = i;
+            d[s.charAt(i) - 'a'][1]++;
+        }
+        int ans = Integer.MAX_VALUE;
+        for (int[] dd : d) {
+            if (dd[1] == 1) {
+                ans = Math.min(ans, dd[0]);
+            }
+        }
+        return ans == Integer.MAX_VALUE ? -1 : ans;
     }
 }
