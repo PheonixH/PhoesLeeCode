@@ -1198,15 +1198,16 @@ public class SolutionNow {
 
     /**
      * 1043. 分隔数组以得到最大和
-     *
+     * <p>
      * 给你一个整数数组 arr，请你将该数组分隔为长度最多为 k 的一些（连续）子数组。分隔完成后，每个子数组的中的所有值都会变为该子数组中的最大值。
      * 返回将数组分隔变换后能够得到的元素最大和。
      * 注意，原数组和分隔后的数组对应顺序应当一致，也就是说，你只能选择分隔数组的位置而不能调整数组中的顺序。
-     *
+     * <p>
      * 执行用时：6 ms, 在所有 Java 提交中击败了94.16% 的用户
      * 内存消耗：38.1 MB, 在所有 Java 提交中击败了70.35% 的用户
+     *
      * @param arr 整数数组
-     * @param k 长度
+     * @param k   长度
      * @return 分隔数组以得到最大和
      */
     public int maxSumAfterPartitioning(int[] arr, int k) {
@@ -1222,5 +1223,167 @@ public class SolutionNow {
             }
         }
         return dp[n];
+    }
+
+    /**
+     * 103. 二叉树的锯齿形层序遍历
+     * <p>
+     * 给定一个二叉树，返回其节点值的锯齿形层序遍历。（即先从左往右，再从右往左进行下一层遍历，以此类推，层与层之间交替进行）。
+     * 例如：
+     * 给定二叉树 [3,9,20,null,null,15,7],
+     * <p>
+     * 执行用时：1 ms, 在所有 Java 提交中击败了98.42% 的用户
+     * 内存消耗：38.5 MB, 在所有 Java 提交中击败了71.18% 的用户
+     *
+     * @param root 二叉树
+     * @return 其节点值的锯齿形层序遍历
+     */
+    public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+        Deque<TreeNode> fromLeft = new LinkedList<>();
+        Deque<TreeNode> fromRight = new LinkedList<>();
+        if (root != null) {
+            fromLeft.add(root);
+        }
+        List<List<Integer>> ans = new LinkedList<>();
+
+        while (!fromLeft.isEmpty()) {
+            List<Integer> left = new ArrayList<>();
+            while (!fromLeft.isEmpty()) {
+                TreeNode t = fromLeft.pollFirst();
+                left.add(t.val);
+                if (t.left != null) {
+                    fromRight.addLast(t.left);
+                }
+                if (t.right != null) {
+                    fromRight.addLast(t.right);
+                }
+            }
+            ans.add(left);
+            List<Integer> right = new ArrayList<>();
+            while (!fromRight.isEmpty()) {
+                TreeNode t = fromRight.pollLast();
+                right.add(t.val);
+                if (t.right != null) {
+                    fromLeft.addFirst(t.right);
+                }
+                if (t.left != null) {
+                    fromLeft.addFirst(t.left);
+                }
+            }
+            if (right.size() > 0) {
+                ans.add(right);
+            }
+        }
+        return ans;
+    }
+
+    /**
+     * 387. 字符串中的第一个唯一字符
+     * <p>
+     * 给定一个字符串，找到它的第一个不重复的字符，并返回它的索引。如果不存在，则返回 -1。
+     * <p>
+     * 执行用时：8 ms, 在所有 Java 提交中击败了72.75% 的用户
+     * 内存消耗：38.9 MB, 在所有 Java 提交中击败了81.02% 的用户
+     *
+     * @param s 字符串
+     * @return 字符串中的第一个唯一字符
+     */
+    public int firstUniqChar(String s) {
+        int n = s.length();
+        int[][] d = new int[26][2];
+        for (int i = 0; i < n; i++) {
+            d[s.charAt(i) - 'a'][0] = i;
+            d[s.charAt(i) - 'a'][1]++;
+        }
+        int ans = Integer.MAX_VALUE;
+        for (int[] dd : d) {
+            if (dd[1] == 1) {
+                ans = Math.min(ans, dd[0]);
+            }
+        }
+        return ans == Integer.MAX_VALUE ? -1 : ans;
+    }
+
+    /**
+     * 135. 分发糖果
+     * <p>
+     * 老师想给孩子们分发糖果，有 N 个孩子站成了一条直线，老师会根据每个孩子的表现，预先给他们评分。
+     * 你需要按照以下要求，帮助老师给这些孩子分发糖果：
+     * 每个孩子至少分配到 1 个糖果。
+     * 相邻的孩子中，评分高的孩子必须获得更多的糖果。
+     * 那么这样下来，老师至少需要准备多少颗糖果呢？
+     * <p>
+     * 执行用时：4 ms, 在所有 Java 提交中击败了31.64% 的用户
+     * 内存消耗：40.1 MB, 在所有 Java 提交中击败了12.43% 的用户
+     *
+     * @param ratings 评分
+     * @return 糖果
+     */
+    public int candy(int[] ratings) {
+        int n = ratings.length;
+        if (n <= 1) {
+            return n;
+        }
+        int[] left = new int[n];
+        int[] right = new int[n];
+        left[0] = 1;
+        right[n - 1] = 1;
+        for (int i = 1; i < n; i++) {
+            if (ratings[i] > ratings[i - 1]) {
+                left[i] = left[i - 1] + 1;
+            } else {
+                left[i] = 1;
+            }
+            if (ratings[n - i - 1] > ratings[n - i]) {
+                right[n - i - 1] = right[n - i] + 1;
+            } else {
+                right[n - i - 1] = 1;
+            }
+        }
+        int ans = 0;
+        for (int i = 0; i < n; i++) {
+            ans += Math.max(left[i], right[i]);
+        }
+        return ans;
+    }
+
+    // 12-24
+    public int fun01(int n, int m) {
+        Queue<Integer> queue = new LinkedList<>();
+        queue.add(n);
+        int ans = 0;
+        while (!queue.isEmpty()) {
+            int tmp = Math.min(m, queue.size());
+            for (int i = 0; i < tmp; i++) {
+                int t = queue.poll();
+                int a = (t + 1) / 2;
+                int b = (t / 2);
+                if (a > 1) {
+                    queue.add(a);
+                }
+                if (b > 1) {
+                    queue.add(b);
+                }
+            }
+            ans++;
+        }
+        return ans;
+    }
+
+    public int lengthOfLIS(int[] nums) {
+        int n = nums.length;
+        int[] dp = new int[n];
+        dp[0] = 1;
+        int ans = 1;
+        for (int i = 1; i < n; i++) {
+            dp[i] = 1;
+            for (int j = 0; j < i; j++) {
+                if (nums[i] > nums[j]) {
+                    dp[i] = Math.max(dp[i], dp[j] + 1);
+                }
+            }
+            ans = Math.max(ans, dp[i]);
+        }
+        return ans;
     }
 }
