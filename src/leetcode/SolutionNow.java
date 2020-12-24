@@ -1306,16 +1306,17 @@ public class SolutionNow {
 
     /**
      * 135. 分发糖果
-     *
+     * <p>
      * 老师想给孩子们分发糖果，有 N 个孩子站成了一条直线，老师会根据每个孩子的表现，预先给他们评分。
      * 你需要按照以下要求，帮助老师给这些孩子分发糖果：
-     *     每个孩子至少分配到 1 个糖果。
-     *     相邻的孩子中，评分高的孩子必须获得更多的糖果。
+     * 每个孩子至少分配到 1 个糖果。
+     * 相邻的孩子中，评分高的孩子必须获得更多的糖果。
      * 那么这样下来，老师至少需要准备多少颗糖果呢？
-     *
+     * <p>
      * 执行用时：4 ms, 在所有 Java 提交中击败了31.64% 的用户
      * 内存消耗：40.1 MB, 在所有 Java 提交中击败了12.43% 的用户
-     * @param ratings  评分
+     *
+     * @param ratings 评分
      * @return 糖果
      */
     public int candy(int[] ratings) {
@@ -1342,6 +1343,46 @@ public class SolutionNow {
         int ans = 0;
         for (int i = 0; i < n; i++) {
             ans += Math.max(left[i], right[i]);
+        }
+        return ans;
+    }
+
+    // 12-24
+    public int fun01(int n, int m) {
+        Queue<Integer> queue = new LinkedList<>();
+        queue.add(n);
+        int ans = 0;
+        while (!queue.isEmpty()) {
+            int tmp = Math.min(m, queue.size());
+            for (int i = 0; i < tmp; i++) {
+                int t = queue.poll();
+                int a = (t + 1) / 2;
+                int b = (t / 2);
+                if (a > 1) {
+                    queue.add(a);
+                }
+                if (b > 1) {
+                    queue.add(b);
+                }
+            }
+            ans++;
+        }
+        return ans;
+    }
+
+    public int lengthOfLIS(int[] nums) {
+        int n = nums.length;
+        int[] dp = new int[n];
+        dp[0] = 1;
+        int ans = 1;
+        for (int i = 1; i < n; i++) {
+            dp[i] = 1;
+            for (int j = 0; j < i; j++) {
+                if (nums[i] > nums[j]) {
+                    dp[i] = Math.max(dp[i], dp[j] + 1);
+                }
+            }
+            ans = Math.max(ans, dp[i]);
         }
         return ans;
     }
