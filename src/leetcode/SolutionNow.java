@@ -1303,4 +1303,46 @@ public class SolutionNow {
         }
         return ans == Integer.MAX_VALUE ? -1 : ans;
     }
+
+    /**
+     * 135. 分发糖果
+     *
+     * 老师想给孩子们分发糖果，有 N 个孩子站成了一条直线，老师会根据每个孩子的表现，预先给他们评分。
+     * 你需要按照以下要求，帮助老师给这些孩子分发糖果：
+     *     每个孩子至少分配到 1 个糖果。
+     *     相邻的孩子中，评分高的孩子必须获得更多的糖果。
+     * 那么这样下来，老师至少需要准备多少颗糖果呢？
+     *
+     * 执行用时：4 ms, 在所有 Java 提交中击败了31.64% 的用户
+     * 内存消耗：40.1 MB, 在所有 Java 提交中击败了12.43% 的用户
+     * @param ratings  评分
+     * @return 糖果
+     */
+    public int candy(int[] ratings) {
+        int n = ratings.length;
+        if (n <= 1) {
+            return n;
+        }
+        int[] left = new int[n];
+        int[] right = new int[n];
+        left[0] = 1;
+        right[n - 1] = 1;
+        for (int i = 1; i < n; i++) {
+            if (ratings[i] > ratings[i - 1]) {
+                left[i] = left[i - 1] + 1;
+            } else {
+                left[i] = 1;
+            }
+            if (ratings[n - i - 1] > ratings[n - i]) {
+                right[n - i - 1] = right[n - i] + 1;
+            } else {
+                right[n - i - 1] = 1;
+            }
+        }
+        int ans = 0;
+        for (int i = 0; i < n; i++) {
+            ans += Math.max(left[i], right[i]);
+        }
+        return ans;
+    }
 }
