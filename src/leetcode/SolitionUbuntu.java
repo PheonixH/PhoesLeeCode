@@ -3098,19 +3098,20 @@ x = (a[7]b[7]) (a[6]b[6]) ... (a[1]b[1]) (a[0]b[0])
 
     /**
      * LCP 18. 早餐组合
-     *
+     * <p>
      * 小扣在秋日市集选择了一家早餐摊位，一维整型数组 staple 中记录了每种主食的价格，一维整型数组 drinks 中记录了每种饮料的价格。
      * 小扣的计划选择一份主食和一款饮料，且花费不超过 x 元。请返回小扣共有多少种购买方案。
      * 注意：答案需要以 1e9 + 7 (1000000007) 为底取模，如：计算初始结果为：1000000008，请返回 1
-     *
+     * <p>
      * 执行用时：83 ms, 在所有 Java 提交中击败了80.73% 的用户
      * 内存消耗：58.1 MB, 在所有 Java 提交中击败了66.41% 的用户
+     *
      * @param staple 整型数组
      * @param drinks 整型数组
-     * @param x 整数
+     * @param x      整数
      * @return 早餐组合
      */
-    public int breakfastNumber(int[] staple, int[] drinks, int x) {
+    public int breakfastNumber0(int[] staple, int[] drinks, int x) {
         Arrays.sort(drinks);
         Arrays.sort(staple);
         int ans = 0;
@@ -3123,6 +3124,39 @@ x = (a[7]b[7]) (a[6]b[6]) ... (a[1]b[1]) (a[0]b[0])
                 break;
             }
             ans = (ans + dr + 1) % 1000000007;
+        }
+        return ans;
+    }
+
+    /**
+     * LCP 18. 早餐组合
+     * <p>
+     * 小扣在秋日市集选择了一家早餐摊位，一维整型数组 staple 中记录了每种主食的价格，一维整型数组 drinks 中记录了每种饮料的价格。
+     * 小扣的计划选择一份主食和一款饮料，且花费不超过 x 元。请返回小扣共有多少种购买方案。
+     * 注意：答案需要以 1e9 + 7 (1000000007) 为底取模，如：计算初始结果为：1000000008，请返回 1
+     * <p>
+     * 执行用时：64 ms, 在所有 Java 提交中击败了86.56% 的用户
+     * 内存消耗：57.6 MB, 在所有 Java 提交中击败了84.88% 的用户
+     * <p>
+     * 树状数组解法
+     *
+     * @param staple 整型数组
+     * @param drinks 整型数组
+     * @param x      整数
+     * @return 早餐组合
+     */
+    public int breakfastNumber(int[] staple, int[] drinks, int x) {
+        BinaryIndexedTree bit = new BinaryIndexedTree(100005);
+        for (int d : drinks) {
+            bit.update(d, 1);
+        }
+        int ans = 0;
+        for (int s : staple) {
+            if (x - s >= 100005) {
+                ans = (ans + drinks.length) % 1000000007;
+            } else {
+                ans = (ans + bit.prefixSum(x - s)) % 1000000007;
+            }
         }
         return ans;
     }
