@@ -2935,14 +2935,15 @@ x = (a[7]b[7]) (a[6]b[6]) ... (a[1]b[1]) (a[0]b[0])
 
     /**
      * 455. 分发饼干
-     *
+     * <p>
      * 假设你是一位很棒的家长，想要给你的孩子们一些小饼干。但是，每个孩子最多只能给一块饼干。
      * 对每个孩子 i，都有一个胃口值 g[i]，这是能让孩子们满足胃口的饼干的最小尺寸；并且每块饼干 j，
      * 都有一个尺寸 s[j] 。如果 s[j] >= g[i]，我们可以将这个饼干 j 分配给孩子 i ，
      * 这个孩子会得到满足。你的目标是尽可能满足越多数量的孩子，并输出这个最大数值。
-     *
+     * <p>
      * 执行用时：8 ms, 在所有 Java 提交中击败了88.98% 的用户
      * 内存消耗：39.3 MB, 在所有 Java 提交中击败了44.32% 的用户
+     *
      * @param g 胃口值
      * @param s 尺寸
      * @return 分发饼干
@@ -2962,6 +2963,49 @@ x = (a[7]b[7]) (a[6]b[6]) ... (a[1]b[1]) (a[0]b[0])
             }
             ans++;
             j++;
+        }
+        return ans;
+    }
+
+    /**
+     * 85. 最大矩形
+     * 给定一个仅包含 0 和 1 、大小为 rows x cols 的二维二进制矩阵，找出只包含 1 的最大矩形，并返回其面积。
+     *
+     * 执行用时：6 ms, 在所有 Java 提交中击败了78.93% 的用户
+     * 内存消耗：41.7 MB, 在所有 Java 提交中击败了51.30% 的用户
+     * @param matrix 二维二进制矩阵
+     * @return 最大矩形
+     */
+    public int maximalRectangle(char[][] matrix) {
+        int n = matrix.length;
+        if (n <= 0) {
+            return 0;
+        }
+        int m = matrix[0].length;
+        int[][] pre = new int[n][m];
+        int ans = 0;
+        for (int i = 0; i < n; i++) {
+            pre[i][0] = matrix[i][0] - '0';
+            ans = Math.max(pre[i][0], ans);
+            for (int j = 1; j < m; j++) {
+                pre[i][j] = matrix[i][j] == '0' ? 0 : pre[i][j - 1] + 1;
+                ans = Math.max(pre[i][j], ans);
+            }
+        }
+        // 1 2 5 4
+        for (int j = 0; j < m; j++) {
+            for (int i = 0; i < n; i++) {
+                int key = pre[i][j];
+                int len = 1;
+                for (int ii = i - 1; ii >= 0; ii--) {
+                    if (pre[ii][j] == 0) {
+                        break;
+                    }
+                    key = Math.min(key, pre[ii][j]);
+                    len++;
+                    ans = Math.max(key*len, ans);
+                }
+            }
         }
         return ans;
     }
