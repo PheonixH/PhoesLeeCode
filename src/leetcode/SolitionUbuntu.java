@@ -2970,9 +2970,10 @@ x = (a[7]b[7]) (a[6]b[6]) ... (a[1]b[1]) (a[0]b[0])
     /**
      * 85. 最大矩形
      * 给定一个仅包含 0 和 1 、大小为 rows x cols 的二维二进制矩阵，找出只包含 1 的最大矩形，并返回其面积。
-     *
+     * <p>
      * 执行用时：6 ms, 在所有 Java 提交中击败了78.93% 的用户
      * 内存消耗：41.7 MB, 在所有 Java 提交中击败了51.30% 的用户
+     *
      * @param matrix 二维二进制矩阵
      * @return 最大矩形
      */
@@ -3003,7 +3004,91 @@ x = (a[7]b[7]) (a[6]b[6]) ... (a[1]b[1]) (a[0]b[0])
                     }
                     key = Math.min(key, pre[ii][j]);
                     len++;
-                    ans = Math.max(key*len, ans);
+                    ans = Math.max(key * len, ans);
+                }
+            }
+        }
+        return ans;
+    }
+
+    /**
+     * LCP 08. 剧情触发时间
+     *
+     * 在战略游戏中，玩家往往需要发展自己的势力来触发各种新的剧情。一个势力的主要属性有三种，分别是文明等级（C），资源储备（R）以及人口数量（H）。
+     * 在游戏开始时（第 0 天），三种属性的值均为 0。
+     * 随着游戏进程的进行，每一天玩家的三种属性都会对应增加，我们用一个二维数组 increase 来表示每天的增加情况。
+     * 这个二维数组的每个元素是一个长度为 3 的一维数组，例如 [[1,2,1],[3,4,2]] 表示第一天三种属性分别增加 1,2,1 而第二天分别增加 3,4,2。
+     * 所有剧情的触发条件也用一个二维数组 requirements 表示。这个二维数组的每个元素是一个长度为 3 的一维数组，
+     * 对于某个剧情的触发条件 c[i], r[i], h[i]，如果当前 C >= c[i] 且 R >= r[i] 且 H >= h[i] ，则剧情会被触发。
+     * 根据所给信息，请计算每个剧情的触发时间，并以一个数组返回。如果某个剧情不会被触发，则该剧情对应的触发时间为 -1 。
+     *
+     * 执行用时：317 ms, 在所有 Java 提交中击败了16.06% 的用户
+     * 内存消耗：90.4 MB, 在所有 Java 提交中击败了69.34% 的用户
+     * @param increase 势力的主要属性
+     * @param requirements 剧情
+     * @return 每个剧情的触发时间
+     */
+    public int[] getTriggerTime(int[][] increase, int[][] requirements) {
+        int n = requirements.length;
+        int[] ans = new int[n];
+        Arrays.fill(ans, -1);
+        Comparator<int[]> comparator = new Comparator<int[]>() {
+            @Override
+            public int compare(int[] o1, int[] o2) {
+                return o1[0] - o2[0];
+            }
+        };
+
+        PriorityQueue<int[]> cQueue = new PriorityQueue<>(comparator);
+        PriorityQueue<int[]> rQueue = new PriorityQueue<>(comparator);
+        PriorityQueue<int[]> hQueue = new PriorityQueue<>(comparator);
+
+        int[] success = new int[n];
+
+        for (int j = 0; j < n; j++) {
+            if (requirements[j][0] == 0) {
+                success[j]++;
+            } else {
+                cQueue.add(new int[]{requirements[j][0], j});
+            }
+            if (requirements[j][1] == 0) {
+                success[j]++;
+            } else {
+                rQueue.add(new int[]{requirements[j][1], j});
+            }
+            if (requirements[j][2] == 0) {
+                success[j]++;
+            } else {
+                hQueue.add(new int[]{requirements[j][2], j});
+            }
+            if (success[j] >= 3) {
+                ans[j] = 0;
+            }
+        }
+        int c = 0, r = 0, h = 0;
+        for (int i = 0; i < increase.length; i++) {
+            c += increase[i][0];
+            r += increase[i][1];
+            h += increase[i][2];
+            while (!cQueue.isEmpty() && cQueue.peek()[0] <= c) {
+                int t = cQueue.poll()[1];
+                success[t]++;
+                if (success[t] >= 3) {
+                    ans[t] = i + 1;
+                }
+            }
+            while (!rQueue.isEmpty() && rQueue.peek()[0] <= r) {
+                int t = rQueue.poll()[1];
+                success[t]++;
+                if (success[t] >= 3) {
+                    ans[t] = i + 1;
+                }
+            }
+            while (!hQueue.isEmpty() && hQueue.peek()[0] <= h) {
+                int t = hQueue.poll()[1];
+                success[t]++;
+                if (success[t] >= 3) {
+                    ans[t] = i + 1;
                 }
             }
         }
