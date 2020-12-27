@@ -1,5 +1,6 @@
 package leetcode;
 
+import Template.BinaryIndexedTree;
 import Template.UnionFind;
 import leetcode.dataStruct.ListNode;
 
@@ -1532,19 +1533,20 @@ public class Games {
 
     /**
      * 5632. 检查边长度限制的路径是否存在
-     *
+     * <p>
      * 给你一个 n 个点组成的无向图边集 edgeList ，
      * 其中 edgeList[i] = [ui, vi, disi] 表示点 ui 和点 vi 之间有一条长度为 disi 的边。请注意，两个点之间可能有 超过一条边 。
      * 给你一个查询数组queries ，其中 queries[j] = [pj, qj, limitj] ，
      * 你的任务是对于每个查询 queries[j] ，判断是否存在从 pj 到 qj 的路径，且这条路径上的每一条边都 严格小于 limitj 。
      * 请你返回一个 布尔数组 answer ，其中 answer.length == queries.length ，
      * 当 queries[j] 的查询结果为 true 时， answer 第 j 个值为 true ，否则为 false 。
-     *
+     * <p>
      * 执行用时：170 ms, 在所有 Java 提交中击败了100.00% 的用户
      * 内存消耗：73.1 MB, 在所有 Java 提交中击败了100.00% 的用户
-     * @param n  n 个点
+     *
+     * @param n        n 个点
      * @param edgeList 无向图边集
-     * @param queries 查询数组
+     * @param queries  查询数组
      * @return 对于每个查询 queries[j] ，判断是否存在从 pj 到 qj 的路径，且这条路径上的每一条边都 严格小于 limitj 。
      */
     public boolean[] distanceLimitedPathsExist(int n, int[][] edgeList, int[][] queries) {
@@ -1568,4 +1570,77 @@ public class Games {
         }
         return res;
     }
+
+
+    public boolean halvesAreAlike(String s) {
+        int n = s.length();
+        Set<Character> set = new HashSet<>();
+        char[] chars = new char[]{'a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U'};
+        for (char c : chars) {
+            set.add(c);
+        }
+        int numA = 0, numB = 0;
+        int half = n / 2;
+        for (int i = 0; i < half; i++) {
+            if (set.contains(s.charAt(i))) {
+                numA++;
+            }
+            if (set.contains(s.charAt(i + half))) {
+                numB++;
+            }
+        }
+        return numA == numB;
+    }
+
+    public int eatenApples(int[] apples, int[] days) {
+        PriorityQueue<int[]> q = new PriorityQueue<>(Comparator.comparingInt(x -> x[0]));
+        int res = 0;
+        for (int i = 0; ; i++) {
+            if (i < apples.length && apples[i] > 0) {
+                q.offer(new int[]{i + days[i], apples[i]});
+            } else if (i >= apples.length && q.isEmpty()) {
+                break;
+            }
+            while (!q.isEmpty() && (q.peek()[0] <= i || q.peek()[1] <= 0)) {
+                q.poll();
+            }
+            if (!q.isEmpty()) {
+                q.peek()[1] -= 1;
+                res++;
+            }
+        }
+        return res;
+    }
+
+    public int[] findBall(int[][] grid) {
+        int n = grid.length;
+        int m = grid[0].length;
+        int[][] newGrid = new int[n][m];
+        for (int i = 0; i < n; i++) {
+            Arrays.fill(newGrid[i], -1);
+            int pre = grid[i][0];
+            for (int j = 1; j < m; j++) {
+                if (pre == 1 && grid[i][j] == 1) {
+                    newGrid[i][j - 1] = j;
+                } else if (pre == -1 && grid[i][j] == -1) {
+                    newGrid[i][j] = j - 1;
+                }
+                pre = grid[i][j];
+            }
+        }
+        int[] ans = new int[m];
+        for (int k = 0; k < m; k++) {
+            ans[k] = k;
+        }
+        for (int i = 0; i < n; i++) {
+            for (int k = 0; k < m; k++) {
+                if (ans[k] == -1) {
+                    continue;
+                }
+                ans[k] = newGrid[i][ans[k]];
+            }
+        }
+        return ans;
+    }
+
 }
