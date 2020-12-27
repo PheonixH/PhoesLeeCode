@@ -3160,4 +3160,42 @@ x = (a[7]b[7]) (a[6]b[6]) ... (a[1]b[1]) (a[0]b[0])
         }
         return ans;
     }
+
+    /**
+     * 205. 同构字符串
+     *
+     * 给定两个字符串 s 和 t，判断它们是否是同构的。
+     * 如果 s 中的字符可以被替换得到 t ，那么这两个字符串是同构的。
+     * 所有出现的字符都必须用另一个字符替换，同时保留字符的顺序。两个字符不能映射到同一个字符上，
+     * 但字符可以映射自己本身。
+     *
+     * 执行用时：7 ms, 在所有 Java 提交中击败了79.71% 的用户
+     * 内存消耗：38.6 MB, 在所有 Java 提交中击败了48.13% 的用户
+     * @param t 字符串
+     * @param s 字符串
+     * @return 是否是同构字符串
+     */
+    public boolean isIsomorphic(String t, String s) {
+        char[] kv = new char[256];
+        char[] kv2 = new char[256];
+        for (int i = 0; i < s.length(); i++) {
+            char c = kv[s.charAt(i)];
+            if (c != '\u0000') {
+                if (c != t.charAt(i)) {
+                    return false;
+                }
+            } else {
+                kv[s.charAt(i)] = t.charAt(i);
+            }
+            char c2 = kv2[t.charAt(i)];
+            if (c2 != '\u0000') {
+                if (c2 != s.charAt(i)) {
+                    return false;
+                }
+            } else {
+                kv2[t.charAt(i)] = s.charAt(i);
+            }
+        }
+        return true;
+    }
 }
