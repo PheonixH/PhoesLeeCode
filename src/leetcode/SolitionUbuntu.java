@@ -2935,14 +2935,15 @@ x = (a[7]b[7]) (a[6]b[6]) ... (a[1]b[1]) (a[0]b[0])
 
     /**
      * 455. 分发饼干
-     *
+     * <p>
      * 假设你是一位很棒的家长，想要给你的孩子们一些小饼干。但是，每个孩子最多只能给一块饼干。
      * 对每个孩子 i，都有一个胃口值 g[i]，这是能让孩子们满足胃口的饼干的最小尺寸；并且每块饼干 j，
      * 都有一个尺寸 s[j] 。如果 s[j] >= g[i]，我们可以将这个饼干 j 分配给孩子 i ，
      * 这个孩子会得到满足。你的目标是尽可能满足越多数量的孩子，并输出这个最大数值。
-     *
+     * <p>
      * 执行用时：8 ms, 在所有 Java 提交中击败了88.98% 的用户
      * 内存消耗：39.3 MB, 在所有 Java 提交中击败了44.32% 的用户
+     *
      * @param g 胃口值
      * @param s 尺寸
      * @return 分发饼干
@@ -2964,5 +2965,237 @@ x = (a[7]b[7]) (a[6]b[6]) ... (a[1]b[1]) (a[0]b[0])
             j++;
         }
         return ans;
+    }
+
+    /**
+     * 85. 最大矩形
+     * 给定一个仅包含 0 和 1 、大小为 rows x cols 的二维二进制矩阵，找出只包含 1 的最大矩形，并返回其面积。
+     * <p>
+     * 执行用时：6 ms, 在所有 Java 提交中击败了78.93% 的用户
+     * 内存消耗：41.7 MB, 在所有 Java 提交中击败了51.30% 的用户
+     *
+     * @param matrix 二维二进制矩阵
+     * @return 最大矩形
+     */
+    public int maximalRectangle(char[][] matrix) {
+        int n = matrix.length;
+        if (n <= 0) {
+            return 0;
+        }
+        int m = matrix[0].length;
+        int[][] pre = new int[n][m];
+        int ans = 0;
+        for (int i = 0; i < n; i++) {
+            pre[i][0] = matrix[i][0] - '0';
+            ans = Math.max(pre[i][0], ans);
+            for (int j = 1; j < m; j++) {
+                pre[i][j] = matrix[i][j] == '0' ? 0 : pre[i][j - 1] + 1;
+                ans = Math.max(pre[i][j], ans);
+            }
+        }
+        // 1 2 5 4
+        for (int j = 0; j < m; j++) {
+            for (int i = 0; i < n; i++) {
+                int key = pre[i][j];
+                int len = 1;
+                for (int ii = i - 1; ii >= 0; ii--) {
+                    if (pre[ii][j] == 0) {
+                        break;
+                    }
+                    key = Math.min(key, pre[ii][j]);
+                    len++;
+                    ans = Math.max(key * len, ans);
+                }
+            }
+        }
+        return ans;
+    }
+
+    /**
+     * LCP 08. 剧情触发时间
+     * <p>
+     * 在战略游戏中，玩家往往需要发展自己的势力来触发各种新的剧情。一个势力的主要属性有三种，分别是文明等级（C），资源储备（R）以及人口数量（H）。
+     * 在游戏开始时（第 0 天），三种属性的值均为 0。
+     * 随着游戏进程的进行，每一天玩家的三种属性都会对应增加，我们用一个二维数组 increase 来表示每天的增加情况。
+     * 这个二维数组的每个元素是一个长度为 3 的一维数组，例如 [[1,2,1],[3,4,2]] 表示第一天三种属性分别增加 1,2,1 而第二天分别增加 3,4,2。
+     * 所有剧情的触发条件也用一个二维数组 requirements 表示。这个二维数组的每个元素是一个长度为 3 的一维数组，
+     * 对于某个剧情的触发条件 c[i], r[i], h[i]，如果当前 C >= c[i] 且 R >= r[i] 且 H >= h[i] ，则剧情会被触发。
+     * 根据所给信息，请计算每个剧情的触发时间，并以一个数组返回。如果某个剧情不会被触发，则该剧情对应的触发时间为 -1 。
+     * <p>
+     * 执行用时：317 ms, 在所有 Java 提交中击败了16.06% 的用户
+     * 内存消耗：90.4 MB, 在所有 Java 提交中击败了69.34% 的用户
+     *
+     * @param increase     势力的主要属性
+     * @param requirements 剧情
+     * @return 每个剧情的触发时间
+     */
+    public int[] getTriggerTime(int[][] increase, int[][] requirements) {
+        int n = requirements.length;
+        int[] ans = new int[n];
+        Arrays.fill(ans, -1);
+        Comparator<int[]> comparator = new Comparator<int[]>() {
+            @Override
+            public int compare(int[] o1, int[] o2) {
+                return o1[0] - o2[0];
+            }
+        };
+
+        PriorityQueue<int[]> cQueue = new PriorityQueue<>(comparator);
+        PriorityQueue<int[]> rQueue = new PriorityQueue<>(comparator);
+        PriorityQueue<int[]> hQueue = new PriorityQueue<>(comparator);
+
+        int[] success = new int[n];
+
+        for (int j = 0; j < n; j++) {
+            if (requirements[j][0] == 0) {
+                success[j]++;
+            } else {
+                cQueue.add(new int[]{requirements[j][0], j});
+            }
+            if (requirements[j][1] == 0) {
+                success[j]++;
+            } else {
+                rQueue.add(new int[]{requirements[j][1], j});
+            }
+            if (requirements[j][2] == 0) {
+                success[j]++;
+            } else {
+                hQueue.add(new int[]{requirements[j][2], j});
+            }
+            if (success[j] >= 3) {
+                ans[j] = 0;
+            }
+        }
+        int c = 0, r = 0, h = 0;
+        for (int i = 0; i < increase.length; i++) {
+            c += increase[i][0];
+            r += increase[i][1];
+            h += increase[i][2];
+            while (!cQueue.isEmpty() && cQueue.peek()[0] <= c) {
+                int t = cQueue.poll()[1];
+                success[t]++;
+                if (success[t] >= 3) {
+                    ans[t] = i + 1;
+                }
+            }
+            while (!rQueue.isEmpty() && rQueue.peek()[0] <= r) {
+                int t = rQueue.poll()[1];
+                success[t]++;
+                if (success[t] >= 3) {
+                    ans[t] = i + 1;
+                }
+            }
+            while (!hQueue.isEmpty() && hQueue.peek()[0] <= h) {
+                int t = hQueue.poll()[1];
+                success[t]++;
+                if (success[t] >= 3) {
+                    ans[t] = i + 1;
+                }
+            }
+        }
+        return ans;
+    }
+
+    /**
+     * LCP 18. 早餐组合
+     * <p>
+     * 小扣在秋日市集选择了一家早餐摊位，一维整型数组 staple 中记录了每种主食的价格，一维整型数组 drinks 中记录了每种饮料的价格。
+     * 小扣的计划选择一份主食和一款饮料，且花费不超过 x 元。请返回小扣共有多少种购买方案。
+     * 注意：答案需要以 1e9 + 7 (1000000007) 为底取模，如：计算初始结果为：1000000008，请返回 1
+     * <p>
+     * 执行用时：83 ms, 在所有 Java 提交中击败了80.73% 的用户
+     * 内存消耗：58.1 MB, 在所有 Java 提交中击败了66.41% 的用户
+     *
+     * @param staple 整型数组
+     * @param drinks 整型数组
+     * @param x      整数
+     * @return 早餐组合
+     */
+    public int breakfastNumber0(int[] staple, int[] drinks, int x) {
+        Arrays.sort(drinks);
+        Arrays.sort(staple);
+        int ans = 0;
+        int dr = drinks.length - 1;
+        for (int value : staple) {
+            while (dr >= 0 && drinks[dr] + value > x) {
+                dr--;
+            }
+            if (dr < 0) {
+                break;
+            }
+            ans = (ans + dr + 1) % 1000000007;
+        }
+        return ans;
+    }
+
+    /**
+     * LCP 18. 早餐组合
+     * <p>
+     * 小扣在秋日市集选择了一家早餐摊位，一维整型数组 staple 中记录了每种主食的价格，一维整型数组 drinks 中记录了每种饮料的价格。
+     * 小扣的计划选择一份主食和一款饮料，且花费不超过 x 元。请返回小扣共有多少种购买方案。
+     * 注意：答案需要以 1e9 + 7 (1000000007) 为底取模，如：计算初始结果为：1000000008，请返回 1
+     * <p>
+     * 执行用时：64 ms, 在所有 Java 提交中击败了86.56% 的用户
+     * 内存消耗：57.6 MB, 在所有 Java 提交中击败了84.88% 的用户
+     * <p>
+     * 树状数组解法
+     *
+     * @param staple 整型数组
+     * @param drinks 整型数组
+     * @param x      整数
+     * @return 早餐组合
+     */
+    public int breakfastNumber(int[] staple, int[] drinks, int x) {
+        BinaryIndexedTree bit = new BinaryIndexedTree(100005);
+        for (int d : drinks) {
+            bit.update(d, 1);
+        }
+        int ans = 0;
+        for (int s : staple) {
+            if (x - s >= 100005) {
+                ans = (ans + drinks.length) % 1000000007;
+            } else {
+                ans = (ans + bit.prefixSum(x - s)) % 1000000007;
+            }
+        }
+        return ans;
+    }
+
+    /**
+     * 205. 同构字符串
+     *
+     * 给定两个字符串 s 和 t，判断它们是否是同构的。
+     * 如果 s 中的字符可以被替换得到 t ，那么这两个字符串是同构的。
+     * 所有出现的字符都必须用另一个字符替换，同时保留字符的顺序。两个字符不能映射到同一个字符上，
+     * 但字符可以映射自己本身。
+     *
+     * 执行用时：7 ms, 在所有 Java 提交中击败了79.71% 的用户
+     * 内存消耗：38.6 MB, 在所有 Java 提交中击败了48.13% 的用户
+     * @param t 字符串
+     * @param s 字符串
+     * @return 是否是同构字符串
+     */
+    public boolean isIsomorphic(String t, String s) {
+        char[] kv = new char[256];
+        char[] kv2 = new char[256];
+        for (int i = 0; i < s.length(); i++) {
+            char c = kv[s.charAt(i)];
+            if (c != '\u0000') {
+                if (c != t.charAt(i)) {
+                    return false;
+                }
+            } else {
+                kv[s.charAt(i)] = t.charAt(i);
+            }
+            char c2 = kv2[t.charAt(i)];
+            if (c2 != '\u0000') {
+                if (c2 != s.charAt(i)) {
+                    return false;
+                }
+            } else {
+                kv2[t.charAt(i)] = s.charAt(i);
+            }
+        }
+        return true;
     }
 }

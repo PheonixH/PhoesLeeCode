@@ -87,20 +87,15 @@ public class Main {
 
         //Arrays
         String[] oneDimensionalStringArray = {"bella", "label", "roller"};
-        int[] oneDimensionalArrayA = {1, -5, -20, 4, -1, 3, -6, -3};
-        int[] oneDimensionalArrayB = {1864};
-        int[][] twoDimensionalArray = {{5, 1, 9, 11}, {2, 4, 8, 10}, {13, 3, 6, 7}, {15, 14, 12, 16}};
+        int[] oneDimensionalArrayA = {2, 2, 2, 2, 2, 2, 2};
+        int[] oneDimensionalArrayB = {14, 12, 10, 8, 6, 4, 2};
+        int[][] twoDimensionalArray = {{-1, 1, -1, -1, -1, -1, -1, -1, 1, -1, -1, -1, -1, 1, 1, -1, -1, -1, 1, 1, 1, -1, -1, 1, 1, -1, -1, 1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, -1, 1, -1, -1, -1, -1, -1, -1, -1, 1, -1, -1, 1, -1, 1, -1, -1, 1, 1, -1, 1, -1, -1, -1, -1, 1, 1, 1, 1, 1, 1, -1, 1, 1, 1, -1, 1, 1, 1, -1, -1, -1, 1, -1, 1, -1, -1, 1, 1, -1, -1, 1, -1, 1, -1, 1, 1, 1, -1, -1, -1, -1}};
         char[] oneDimensionalCharArray = {'A', 'A', 'A', 'B', 'B', 'B', 'C', 'C', 'C', 'D', 'D', 'E'};
         char[][] twoDimensionalCharArray = {
-                {'X', '.', '.', '.', '.', '.', '.', '.', '.'},
-                {'X', '.', '.', 'X', 'X', 'X', '.', '.', '.'},
-                {'.', 'X', 'X', '.', '.', '.', '.', 'X', '.'},
-                {'X', '.', '.', '.', 'X', '.', '.', '.', 'X'},
-                {'X', '.', '.', '.', '.', 'X', '.', '.', 'X'},
-                {'X', '.', '.', '.', 'X', '.', '.', '.', 'X'},
-                {'.', 'X', '.', '.', '.', '.', 'X', 'X', '.'},
-                {'.', '.', '.', 'X', 'X', 'X', '.', '.', 'X'},
-                {'.', '.', '.', '.', '.', '.', '.', '.', 'X'}};
+                {'0', '0', '0', '0', '0', '0', '1'},
+                {'0', '0', '0', '0', '1', '1', '1'},
+                {'1', '1', '1', '1', '1', '1', '1'},
+                {'0', '0', '0', '1', '1', '1', '1'}};
 
 
         //List<List<Integer>>
@@ -137,11 +132,10 @@ public class Main {
         SolutionNow solution = new SolutionNow();
 //        solution.countPrimes(10);
         SolitionUbuntu solitionUbuntu = new SolitionUbuntu();
-//        solitionUbuntu.subsets(oneDimensionalArrayA);
+//        solitionUbuntu.isIsomorphic("ad", "aa");
 
         Games games = new Games();
-        games.distanceLimitedPathsExist(3, new int[][]{{0, 1, 2}, {1, 2, 4}, {2, 0, 8}, {1, 0, 16}},
-                new int[][]{{0, 1, 2}, {0, 2, 5}});
+        games.eatenApples(oneDimensionalArrayA, oneDimensionalArrayB);
     }
 
 }
