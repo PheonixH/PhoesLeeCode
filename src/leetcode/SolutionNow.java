@@ -1422,8 +1422,8 @@ public class SolutionNow {
      * 执行用时：142 ms, 在所有 Java 提交中击败了45.45% 的用户
      * 内存消耗：78.2 MB, 在所有 Java 提交中击败了25.46% 的用户
      *
-     * @param n  n 个点
-     * @param k  k 个不重叠线段
+     * @param n n 个点
+     * @param k k 个不重叠线段
      * @return 方案数
      */
     public int numberOfSets(int n, int k) {
@@ -1443,5 +1443,37 @@ public class SolutionNow {
             }
         }
         return (int) ((dp[n - 1][k][0] + dp[n - 1][k][1]) % 1000000007);
+    }
+
+    /**
+     * 330. 按要求补齐数组
+     *
+     * 给定一个已排序的正整数数组 nums，和一个正整数 n 。
+     * 从 [1, n] 区间内选取任意个数字补充到 nums 中，
+     * 使得 [1, n] 区间内的任何数字都可以用 nums 中某几个数字的和来表示。
+     * 请输出满足上述要求的最少需要补充的数字个数。
+     *
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：38 MB, 在所有 Java 提交中击败了85.79% 的用户
+     * @param nums 正整数数组
+     * @param n 正整数
+     * @return 最少需要补充的数字个数
+     */
+    public int minPatches(int[] nums, int n) {
+        int ans = 0;
+        long now = 0;
+        int t = 0;
+        for (long i = 1; i <= n; i++) {
+            if (t < nums.length && nums[t] <= i) {
+                now += nums[t];
+                t++;
+            }
+            if (now < i) {
+                now += i;
+                ans++;
+            }
+            i = now;
+        }
+        return ans;
     }
 }
