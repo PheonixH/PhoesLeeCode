@@ -581,7 +581,7 @@ public class SolutionNow {
      */
     public int numberOf2sInRange(int n) {
         int[] arr = new int[]{0, 1, 20, 300, 4000, 50000, 600000, 7000000, 80000000, 900000000};
-        int[] brr = new int[]{1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000};
+        int[] brr = new int[]{1, 10, 100, 1000, 10000, 100000, 1000000, 1, 100000000};
         int ans = 0;
         char[] chars = String.valueOf(n).toCharArray();
         int len = chars.length;
@@ -1383,6 +1383,96 @@ public class SolutionNow {
                 }
             }
             ans = Math.max(ans, dp[i]);
+        }
+        return ans;
+    }
+
+    /**
+     * LCP 17. 速算机器人
+     * <p>
+     * 小扣在秋日市集发现了一款速算机器人。店家对机器人说出两个数字（记作 x 和 y），请小扣说出计算指令：
+     * "A" 运算：使 x = 2 * x + y；
+     * "B" 运算：使 y = 2 * y + x。
+     * 在本次游戏中，店家说出的数字为 x = 1 和 y = 0，小扣说出的计算指令记作仅由大写字母 A、B 组成的字符串 s，
+     * 字符串中字符的顺序表示计算顺序，请返回最终 x 与 y 的和为多少。
+     * <p>
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：36 MB, 在所有 Java 提交中击败了92.15% 的用户
+     *
+     * @param s 字符串
+     * @return 最终 x 与 y 的和为多少
+     */
+    public int calculate(String s) {
+        int x = 1, y = 0;
+        for (char c : s.toCharArray()) {
+            switch (c) {
+                case 'A' -> x = 2 * x + y;
+                case 'B' -> y = 2 * y + x;
+            }
+        }
+        return x + y;
+    }
+
+    /**
+     * 1621. 大小为 K 的不重叠线段的数目
+     * <p>
+     * 给你一维空间的 n 个点，其中第 i 个点（编号从 0 到 n-1）位于 x = i 处，请你找到 恰好 k 个不重叠 线段且每个线段至少覆盖两个点的方案数。线段的两个端点必须都是 整数坐标 。这 k 个线段不需要全部覆盖全部 n 个点，且它们的端点 可以 重合。
+     * 请你返回 k 个不重叠线段的方案数。由于答案可能很大，请将结果对 109 + 7 取余 后返回。
+     * <p>
+     * 执行用时：142 ms, 在所有 Java 提交中击败了45.45% 的用户
+     * 内存消耗：78.2 MB, 在所有 Java 提交中击败了25.46% 的用户
+     *
+     * @param n n 个点
+     * @param k k 个不重叠线段
+     * @return 方案数
+     */
+    public int numberOfSets(int n, int k) {
+        // dp[j][i][1]: 排了j-1条线 以i端点结尾
+        // dp[j][i][0]: 排了j-1条线 不以i端点结尾
+        long[][][] dp = new long[1010][1010][2];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                Arrays.fill(dp[i][j], 0);
+            }
+            dp[i][0][0] = 1;
+        }
+        for (int i = 1; i < n; i++) {
+            for (int j = 1; j <= k; j++) {
+                dp[i][j][0] = (dp[i - 1][j][0] + dp[i - 1][j][1]) % 1000000007;
+                dp[i][j][1] = (dp[i - 1][j - 1][0] + dp[i - 1][j][1] + dp[i - 1][j - 1][1]) % 1000000007;
+            }
+        }
+        return (int) ((dp[n - 1][k][0] + dp[n - 1][k][1]) % 1000000007);
+    }
+
+    /**
+     * 330. 按要求补齐数组
+     *
+     * 给定一个已排序的正整数数组 nums，和一个正整数 n 。
+     * 从 [1, n] 区间内选取任意个数字补充到 nums 中，
+     * 使得 [1, n] 区间内的任何数字都可以用 nums 中某几个数字的和来表示。
+     * 请输出满足上述要求的最少需要补充的数字个数。
+     *
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：38 MB, 在所有 Java 提交中击败了85.79% 的用户
+     * @param nums 正整数数组
+     * @param n 正整数
+     * @return 最少需要补充的数字个数
+     */
+    public int minPatches(int[] nums, int n) {
+        int ans = 0;
+        long now = 0;
+        int t = 0;
+        for (long i = 1; i <= n; i++) {
+            if (t < nums.length && nums[t] <= i) {
+                now += nums[t];
+                t++;
+            }
+            if (now < i) {
+                now += i;
+                ans++;
+            }
+            i = now;
         }
         return ans;
     }
