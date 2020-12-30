@@ -131,7 +131,7 @@ public class Main {
 
         SolutionNow solution = new SolutionNow();
 //        solution.countPrimes(10);
-        SolitionUbuntu solitionUbuntu = new SolitionUbuntu();
+        SolutionUbuntu solitionUbuntu = new SolutionUbuntu();
 //        solitionUbuntu.isIsomorphic("ad", "aa");
 
         Games games = new Games();

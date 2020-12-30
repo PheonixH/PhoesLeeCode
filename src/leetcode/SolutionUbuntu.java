@@ -19,6 +19,6 @@ import leetcode.dataStruct.ListNode;
  * @description ：LeetCode
  * @modified By ：
  */
-public class SolitionUbuntu {
+public class SolutionUbuntu {
 
 }
