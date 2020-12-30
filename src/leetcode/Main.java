@@ -135,7 +135,7 @@ public class Main {
 //        solitionUbuntu.isIsomorphic("ad", "aa");
 
         Games games = new Games();
-        games.eatenApples(oneDimensionalArrayA, oneDimensionalArrayB);
+//        games.eatenApples(oneDimensionalArrayA, oneDimensionalArrayB);
     }
 
 }
