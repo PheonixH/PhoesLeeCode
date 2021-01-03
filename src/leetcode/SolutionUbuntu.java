@@ -113,7 +113,7 @@ public class SolutionUbuntu {
      * 内存消耗：53.2 MB, 在所有 Java 提交中击败了32.33% 的用户
      *
      * @param nums 整数数组
-     * @param k 整数
+     * @param k    整数
      * @return 滑动窗口中的最大值。
      */
     public int[] maxSlidingWindow(int[] nums, int k) {
@@ -153,5 +153,40 @@ public class SolutionUbuntu {
             ans[i - k + 1] = queue.peek();
         }
         return ans;
+    }
+
+    /**
+     * 86. 分隔链表
+     *
+     * 给你一个链表和一个特定值 x ，请你对链表进行分隔，
+     * 使得所有小于 x 的节点都出现在大于或等于 x 的节点之前。
+     * 你应当保留两个分区中每个节点的初始相对位置。
+     *
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：37.8 MB, 在所有 Java 提交中击败了60.28% 的用户
+     *
+     * @param head 链表
+     * @param x 整数
+     * @return 分隔后的链表
+     */
+    public ListNode partition(ListNode head, int x) {
+        ListNode big = new ListNode(0);
+        ListNode small = new ListNode(0);
+        ListNode tb = big;
+        ListNode ts = small;
+        ListNode tmp = head;
+        while (tmp != null) {
+            if (tmp.val >= x) {
+                tb.next = tmp;
+                tb = tb.next;
+            } else {
+                ts.next = tmp;
+                ts = ts.next;
+            }
+            tmp = tmp.next;
+        }
+        ts.next = big.next;
+        tb.next = null;
+        return small.next;
     }
 }
