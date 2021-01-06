@@ -78,39 +78,48 @@ public class Games {
     public int waysToSplit(int[] nums) {
         long sum = 0;
         int n = nums.length;
-        for (int num : nums) {
-            sum += num;
-        }
-        if (sum == 0) {
-            return (int) ((long) (n - 1) * (long) (n - 2))  % 1000000007/ 2;
+        int[] pre = new int[n];
+        sum = nums[0];
+        pre[0] = nums[0];
+        for (int i = 1; i < n; i++) {
+            pre[i] = pre[i - 1] + nums[i];
+            sum += nums[i];
         }
         int ans = 0;
-        int valC = (int) (sum / 3);
-        int r = nums.length - 1;
-        int vac = 0;
-        for (; r >= 2; r--) {
-            vac += nums[r];
-            if (vac >= valC) {
+        int val = 0;
+        for (int i = 0; i < n; i++) {
+            val += nums[i];
+            if (val > sum / 3) {
                 break;
             }
-        }
-        if (vac < valC) {
-            return 0;
-        }
-        for (; r > 1; r--) {
-            int vab = (int) (sum - vac);
-            int va = 0;
-            for (int i = 0; i < r - 1; i++) {
-                va += nums[i];
-                if (vab - va <= vac && va <= vab - va) {
-                    ans++;
-                    ans = ans % 1000000007;
-                }
-                if (vab - va < va) {
-                    break;
+            int tmp = (int) (sum + val) / 2;
+            int l = i + 1, r = n - 1;
+            if (l >= r) {
+                break;
+            }
+            while (l < r) {
+                int half = (l + r + 1) / 2;
+                if (pre[half] > tmp) {
+                    r = half - 1;
+                } else {
+                    l = half;
                 }
             }
-            vac += nums[r - 1];
+            if (pre[l] < 2 * val) {
+                break;
+            }
+            l = Math.min(n - 1, l);
+            int ll = i + 1, lr = l;
+            while (ll < lr) {
+                int half = (ll + lr + 1) / 2;
+                if (pre[half] < 2 * val) {
+                    ll = half;
+                } else {
+                    lr = half - 1;
+                }
+            }
+            ans += l - ll + 1;
+            ans = ans % 1000000007;
         }
         return ans;
     }
@@ -137,50 +146,6 @@ public class Games {
         }
 
         return target.length - dp[length1][length2];
-    }
-
-
-    int[] pre = new int[100005];
-    int[] last = new int[100005];
-
-    public int minOperationsAss2(int[] target, int[] arr) {
-        if (target == null || target.length <= 0 || arr == null || arr.length <= 0) {
-            return 0;
-        }
-
-        int length1 = target.length;
-        int length2 = arr.length;
-        int[] pre = new int[length2 + 1];
-        int[] last = new int[length2 + 1];
-
-        boolean preIspre = true;
-
-        for (int i = 1; i <= length1; i++) {
-            if (preIspre) {
-                for (int j = 1; j <= length2; j++) {
-                    if (target[i - 1] == arr[j - 1]) {
-                        last[j] = pre[j - 1] + 1;
-                    } else {
-                        last[j] = Math.max(pre[j], last[j - 1]);
-                    }
-                    pre = last.clone();
-                }
-                preIspre = false;
-            } else {
-                for (int j = 1; j <= length2; j++) {
-                    if (target[i - 1] == arr[j - 1]) {
-                        pre[j] = last[j - 1] + 1;
-                    } else {
-                        pre[j] = Math.max(last[j], pre[j - 1]);
-                    }
-                    last = pre.clone();
-                }
-                preIspre = true;
-            }
-        }
-
-        int t = preIspre ? last[length2] : pre[length2];
-        return target.length - t;
     }
 
 }
