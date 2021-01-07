@@ -99,14 +99,14 @@ public class Main {
 
 
         //List<List<Integer>>
-        int[][] listListIntegerArray = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
+        int[][] listListIntegerArray = {{1, 1, 0}, {1, 1, 0}, {0, 0, 1}};
         List<List<Integer>> intListList = createListListInteger(listListIntegerArray);
 
         //List<List<String>> 非Integer
         String[][] listListStringArray = {{"JFK", "SFO"}, {"JFK", "ATL"}, {"SFO", "ATL"}, {"ATL", "JFK"}, {"ATL", "SFO"}};
         List<List<String>> stringListList = createListList(listListStringArray);
 
-        int[] listNodeValue = {0, 1, 2, 3, 4};
+        int[] listNodeValue = {1, 4, 3, 2, 5, 2};
         ListNode head = createListNode(listNodeValue);
 
         int[] listNodeValue2 = {11, 12, 13, 14};
@@ -131,11 +131,11 @@ public class Main {
 
 //        SolutionCmic solution = new SolutionCmic();
 //        solution.countPrimes(10);
-        SolutionUbuntu solitionUbuntu = new SolutionUbuntu();
-        solitionUbuntu.maxSlidingWindow(new int[]{3,1,-1,-3,5,3,2,1}, 3);
+        SolutionNow solitionUbuntu = new SolutionNow();
+        solitionUbuntu.findCircleNum(listListIntegerArray);
 
         Games games = new Games();
-//        games.eatenApples(oneDimensionalArrayA, oneDimensionalArrayB);
+        games.waysToSplit(new int[]{0, 0, 0, 0, 0, 0});
     }
 
 }
