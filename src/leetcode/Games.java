@@ -5,6 +5,7 @@ import Template.UnionFind;
 import leetcode.dataStruct.ListNode;
 
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * PhoesLeeCode
@@ -148,4 +149,130 @@ public class Games {
         return target.length - dp[length1][length2];
     }
 
+    /**
+     * 5649. 解码异或后的数组
+     */
+    public int[] decode(int[] encoded, int first) {
+        int n = encoded.length;
+        int[] arr = new int[n + 1];
+        arr[0] = first;
+        for (int i = 1; i <= n; i++) {
+            arr[i] = encoded[i - 1] ^ arr[i - 1];
+        }
+        return arr;
+    }
+
+    /**
+     * 5652. 交换链表中的节点
+     */
+    public ListNode swapNodes(ListNode head, int k) {
+        ListNode p = head;
+        ListNode q = head;
+        int i = 1;
+        while (i < k) {
+            q = q.next;
+            i++;
+        }
+        ListNode first = q;
+        while (q.next != null) {
+            p = p.next;
+            q = q.next;
+        }
+        int t = first.val;
+        first.val = p.val;
+        p.val = t;
+        return head;
+    }
+
+    /**
+     * 5650. 执行交换操作后的最小汉明距离
+     * 5 1 2 4 3
+     * 3 1 2 4 5
+     * 3 1 5 4 2
+     * 2 1 5 4 3
+     * <p>
+     * 0 4 + 4 2 -> 0 2
+     */
+
+    public int minimumHammingDistance(int[] source, int[] target, int[][] allowedSwaps) {
+        int n = source.length;
+        UnionFind uf = new UnionFind(n);
+        for (int[] a : allowedSwaps) {
+            uf.union(a[0], a[1]);
+        }
+        HashMap<Integer, List<Integer>> tMap = new HashMap<>();
+        for (int i = 0; i < n; i++) {
+            List<Integer> list = tMap.getOrDefault(target[i], new ArrayList<>());
+            list.add(i);
+            tMap.put(target[i], list);
+        }
+        int ans = 0;
+        for (int i = 0; i < n; i++) {
+            List<Integer> list = tMap.getOrDefault(source[i], new ArrayList<>());
+            boolean b = true;
+            for (int j = 0; j < list.size(); j++) {
+                if (uf.connect(i, list.get(j))) {
+                    list.remove(j);
+                    tMap.put(source[i], list);
+                    b = false;
+                    break;
+                }
+            }
+            if (b) {
+                ans++;
+            }
+        }
+        return ans;
+    }
+
+    /**
+     * 5639. 完成所有工作的最短时间
+     * 91 84 76 59 49 38 8 6
+     */
+    public int minimumTimeRequired(int[] jobs, int k) {
+        int n = jobs.length;
+        Arrays.sort(jobs);
+        PriorityQueue<Integer> priorityQueue = new PriorityQueue<>();
+
+        PriorityQueue<Integer> p = new PriorityQueue<>((o1, o2) -> o1 - o2);
+        int i = n - 1;
+        for (; i >= n - k; i--) {
+            p.add(jobs[i]);
+        }
+        for (; i >= 0; i--) {
+            int t = p.poll();
+            p.add(t + jobs[i]);
+        }
+        int max = 0;
+        for (int t : p) {
+            max = Math.max(t, max);
+        }
+        minimumTimeRequiredMax = max;
+        help(jobs, new int[k], max, n - 1);
+        return minimumTimeRequiredMax;
+
+    }
+
+    private int minimumTimeRequiredMax = 0;
+
+    public void help(int[] jobs, int[] works, int max, int i) {
+        if (i == 0) {
+            int k = Integer.MAX_VALUE;
+            int m = 0;
+            for (int j = 0; j < works.length; j++) {
+                k = Math.min(k, works[j]);
+                m = Math.max(m, works[j]);
+            }
+            m = Math.max(m, k + jobs[i]);
+            minimumTimeRequiredMax = Math.min(m, minimumTimeRequiredMax);
+            return;
+        }
+        for (int j = 0; j < works.length; j++) {
+            if (works[j] + jobs[i] < max) {
+                works[j] += jobs[i];
+                help(jobs, works, max, i - 1);
+                works[j] -= jobs[i];
+            }
+        }
+    }
 }
