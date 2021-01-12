@@ -56,14 +56,15 @@ public class SolutionNow {
 
     /**
      * 1202. 交换字符串中的元素
-     *
+     * <p>
      * 给你一个字符串 s，以及该字符串中的一些「索引对」数组 pairs，其中 pairs[i] = [a, b] 表示字符串中的两个索引（编号从 0 开始）。
      * 你可以 任意多次交换 在 pairs 中任意一对索引处的字符。
      * 返回在经过若干次交换后，s 可以变成的按字典序最小的字符串。
-     *
+     * <p>
      * 执行用时：64 ms, 在所有 Java 提交中击败了35.42% 的用户
      * 内存消耗：88.8 MB, 在所有 Java 提交中击败了12.50% 的用户
-     * @param s 字符串
+     *
+     * @param s     字符串
      * @param pairs 「索引对」数组
      * @return 在经过若干次交换后，s 可以变成的按字典序最小的字符串
      */
@@ -86,5 +87,51 @@ public class SolutionNow {
             sb.append(tmp.poll());
         }
         return sb.toString();
+    }
+
+
+    /**
+     * 207. 课程表
+     *
+     * 你这个学期必须选修 numCourse 门课程，记为 0 到 numCourse-1 。
+     * 在选修某些课程之前需要一些先修课程。 例如，想要学习课程 0 ，你需要先完成课程 1 ，我们用一个匹配来表示他们：[0,1]
+     * 给定课程总量以及它们的先决条件，请你判断是否可能完成所有课程的学习？
+     *
+     * 执行用时：49 ms, 在所有 Java 提交中击败了7.36% 的用户
+     * 内存消耗：39.1 MB, 在所有 Java 提交中击败了55.46% 的用户
+     * @param numCourses 课程数量
+     * @param prerequisites 先修课程
+     * @return 是否可能完成所有课程的学习
+     */
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        Map<Integer, List<Integer>> map = new HashMap<>();
+        for (int i = 0; i < numCourses; i++) {
+            map.put(i, new ArrayList<>());
+        }
+        for (int[] prerequisite : prerequisites) {
+            List<Integer> tmp = map.getOrDefault(prerequisite[1], new ArrayList<>());
+            tmp.add(prerequisite[0]);
+            map.put(prerequisite[1], tmp);
+        }
+        boolean[] finished = new boolean[numCourses];
+        while (!map.isEmpty()) {
+            int bfSize = map.size();
+            Set<Map.Entry<Integer, List<Integer>>> entries = map.entrySet();
+            Iterator<Map.Entry<Integer, List<Integer>>> iteratorMap = entries.iterator();
+            while (iteratorMap.hasNext()) {
+                Map.Entry<Integer, List<Integer>> next = iteratorMap.next();
+                List<Integer> val = next.getValue();
+                val.removeIf(a -> finished[a]);
+                if (val.size() == 0) {
+                    finished[next.getKey()] = true;
+                    iteratorMap.remove();
+                }
+            }
+            int afSize = map.size();
+            if (bfSize == afSize) {
+                return false;
+            }
+        }
+        return true;
     }
 }
