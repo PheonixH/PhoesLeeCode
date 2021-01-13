@@ -92,14 +92,15 @@ public class SolutionNow {
 
     /**
      * 207. 课程表
-     *
+     * <p>
      * 你这个学期必须选修 numCourse 门课程，记为 0 到 numCourse-1 。
      * 在选修某些课程之前需要一些先修课程。 例如，想要学习课程 0 ，你需要先完成课程 1 ，我们用一个匹配来表示他们：[0,1]
      * 给定课程总量以及它们的先决条件，请你判断是否可能完成所有课程的学习？
-     *
+     * <p>
      * 执行用时：49 ms, 在所有 Java 提交中击败了7.36% 的用户
      * 内存消耗：39.1 MB, 在所有 Java 提交中击败了55.46% 的用户
-     * @param numCourses 课程数量
+     *
+     * @param numCourses    课程数量
      * @param prerequisites 先修课程
      * @return 是否可能完成所有课程的学习
      */
@@ -133,5 +134,30 @@ public class SolutionNow {
             }
         }
         return true;
+    }
+
+    /**
+     * 684. 冗余连接
+     *
+     * 在本问题中, 树指的是一个连通且无环的无向图。
+     * 输入一个图，该图由一个有着N个节点 (节点值不重复1, 2, ..., N) 的树及一条附加的边构成。附加的边的两个顶点包含在1到N中间，这条附加的边不属于树中已存在的边。
+     * 结果图是一个以边组成的二维数组。每一个边的元素是一对[u, v] ，满足 u < v，表示连接顶点u 和v的无向图的边。
+     * 返回一条可以删去的边，使得结果图是一个有着N个节点的树。如果有多个答案，则返回二维数组中最后出现的边。答案边 [u, v] 应满足相同的格式 u < v。
+     *
+     * 执行用时：1 ms, 在所有 Java 提交中击败了87.99% 的用户
+     * 内存消耗：38.8 MB, 在所有 Java 提交中击败了33.69% 的用户
+     * @param edges 以边组成的二维数组
+     * @return 一条可以删去的边
+     */
+    public int[] findRedundantConnection(int[][] edges) {
+        int n = edges.length;
+        UnionFind uf = new UnionFind(n);
+        for (int[] edge : edges) {
+            if (uf.connect(edge[0] - 1, edge[1] - 1)) {
+                return edge;
+            }
+            uf.union(edge[0] - 1, edge[1] - 1);
+        }
+        return new int[]{};
     }
 }
