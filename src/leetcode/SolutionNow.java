@@ -138,14 +138,15 @@ public class SolutionNow {
 
     /**
      * 684. 冗余连接
-     *
+     * <p>
      * 在本问题中, 树指的是一个连通且无环的无向图。
      * 输入一个图，该图由一个有着N个节点 (节点值不重复1, 2, ..., N) 的树及一条附加的边构成。附加的边的两个顶点包含在1到N中间，这条附加的边不属于树中已存在的边。
      * 结果图是一个以边组成的二维数组。每一个边的元素是一对[u, v] ，满足 u < v，表示连接顶点u 和v的无向图的边。
      * 返回一条可以删去的边，使得结果图是一个有着N个节点的树。如果有多个答案，则返回二维数组中最后出现的边。答案边 [u, v] 应满足相同的格式 u < v。
-     *
+     * <p>
      * 执行用时：1 ms, 在所有 Java 提交中击败了87.99% 的用户
      * 内存消耗：38.8 MB, 在所有 Java 提交中击败了33.69% 的用户
+     *
      * @param edges 以边组成的二维数组
      * @return 一条可以删去的边
      */
@@ -159,5 +160,27 @@ public class SolutionNow {
             uf.union(edge[0] - 1, edge[1] - 1);
         }
         return new int[]{};
+    }
+
+    /**
+     * 1018. 可被 5 整除的二进制前缀
+     *
+     * 给定由若干 0 和 1 组成的数组 A。我们定义 N_i：从 A[0] 到 A[i] 的第 i 个子数组被解释为一个二进制数（从最高有效位到最低有效位）。
+     * 返回布尔值列表 answer，只有当 N_i 可以被 5 整除时，答案 answer[i] 为 true，否则为 false。
+     *
+     * 执行用时：4 ms, 在所有 Java 提交中击败了92.76% 的用户
+     * 内存消耗：39 MB, 在所有 Java 提交中击败了65.22% 的用户
+     * @param arr 数组 A
+     * @return 布尔值列表 answer
+     */
+    public List<Boolean> prefixesDivBy5(int[] arr) {
+        int now = 0;
+        List<Boolean> ans = new ArrayList<>();
+        for (int a : arr) {
+            now = now * 2 + a;
+            now = now % 5;
+            ans.add(now == 0);
+        }
+        return ans;
     }
 }
