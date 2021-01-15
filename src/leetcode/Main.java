@@ -129,10 +129,10 @@ public class Main {
             list.add(a);
         }
 
-//        SolutionCmic solution = new SolutionCmic();
+        SolutionNow solution = new SolutionNow();
 //        solution.countPrimes(10);
-        SolutionUbuntu solitionUbuntu = new SolutionUbuntu();
-        solitionUbuntu.maxSlidingWindow(new int[]{3,1,-1,-3,5,3,2,1}, 3);
+//        SolitionUbuntu solitionUbuntu = new SolitionUbuntu();
+//        solitionUbuntu.isIsomorphic("ad", "aa");
 
         Games games = new Games();
 //        games.eatenApples(oneDimensionalArrayA, oneDimensionalArrayB);

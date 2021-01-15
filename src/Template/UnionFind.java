@@ -7,7 +7,15 @@ package Template;
  * @create: 2020-12-12 16:44
  **/
 public class UnionFind {
+    /**
+     * 当 父节点 == 自己 的时候就是一个根
+     */
     static int[] parent;
+
+    /**
+     * 表示 每个节点为根的时候的层数：
+     * 为了合并之后的并查集层数低
+     */
     static int[] rank;
 
     public UnionFind(int n){
@@ -55,7 +63,7 @@ public class UnionFind {
     /**
      * 判断是否属于同一个集合：find(que[0]) == find(que[1])
      */
-    public boolean connect(int i, int j) {
+    public boolean isConnect(int i, int j) {
         return root(i) == root(j);
     }
 }

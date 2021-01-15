@@ -23608,7 +23608,7 @@ public class Solution {
                 union.union(edgeList[index][0], edgeList[index][1]);
                 ++index;
             }
-            res[map.get(arr)] = union.connect(arr[0], arr[1]);
+            res[map.get(arr)] = union.isConnect(arr[0], arr[1]);
         }
         return res;
     }
