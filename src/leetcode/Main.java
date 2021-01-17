@@ -87,9 +87,9 @@ public class Main {
 
         //Arrays
         String[] oneDimensionalStringArray = {"bella", "label", "roller"};
-        int[] oneDimensionalArrayA = {2, 2, 2, 2, 2, 2, 2};
-        int[] oneDimensionalArrayB = {14, 12, 10, 8, 6, 4, 2};
-        int[][] twoDimensionalArray = {{-1, 1, -1, -1, -1, -1, -1, -1, 1, -1, -1, -1, -1, 1, 1, -1, -1, -1, 1, 1, 1, -1, -1, 1, 1, -1, -1, 1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, -1, 1, -1, -1, -1, -1, -1, -1, -1, 1, -1, -1, 1, -1, 1, -1, -1, 1, 1, -1, 1, -1, -1, -1, -1, 1, 1, 1, 1, 1, 1, -1, 1, 1, 1, -1, 1, 1, 1, -1, -1, -1, 1, -1, 1, -1, -1, 1, 1, -1, -1, 1, -1, 1, -1, 1, 1, 1, -1, -1, -1, -1}};
+        int[] oneDimensionalArrayA = {1, 2, 4, 7, 8};
+        int[] oneDimensionalArrayB = {67, 6, 32, 48, 36, 97, 70, 29, 29, 15, 90, 73, 32, 94, 38, 61, 24, 20, 22};
+        int[][] twoDimensionalArray = {{16, 17}, {10, 4}, {6, 4}, {5, 4}, {13, 15}, {7, 18}, {4, 13}, {18, 12}, {14, 15}, {17, 8}, {7, 11}, {18, 11}, {6, 15}};
         char[] oneDimensionalCharArray = {'A', 'A', 'A', 'B', 'B', 'B', 'C', 'C', 'C', 'D', 'D', 'E'};
         char[][] twoDimensionalCharArray = {
                 {'0', '0', '0', '0', '0', '0', '1'},
@@ -99,14 +99,14 @@ public class Main {
 
 
         //List<List<Integer>>
-        int[][] listListIntegerArray = {{1, 1, 0}, {1, 1, 0}, {0, 0, 1}};
+        int[][] listListIntegerArray = {{0, 3}, {1, 2}, {0, 2}};
         List<List<Integer>> intListList = createListListInteger(listListIntegerArray);
 
         //List<List<String>> 非Integer
         String[][] listListStringArray = {{"JFK", "SFO"}, {"JFK", "ATL"}, {"SFO", "ATL"}, {"ATL", "JFK"}, {"ATL", "SFO"}};
         List<List<String>> stringListList = createListList(listListStringArray);
 
-        int[] listNodeValue = {1, 4, 3, 2, 5, 2};
+        int[] listNodeValue = {1, 2, 3, 4, 5};
         ListNode head = createListNode(listNodeValue);
 
         int[] listNodeValue2 = {11, 12, 13, 14};
@@ -131,11 +131,11 @@ public class Main {
 
 //        SolutionCmic solution = new SolutionCmic();
 //        solution.countPrimes(10);
-        SolutionNow solitionUbuntu = new SolutionNow();
-        solitionUbuntu.findCircleNum(listListIntegerArray);
+        SolutionUbuntu solitionUbuntu = new SolutionUbuntu();
+        solitionUbuntu.checkStraightLine(new int[][]{{1, 2}, {2, 3}, {3, 4}, {4, 5}});
 
         Games games = new Games();
-        games.waysToSplit(new int[]{0, 0, 0, 0, 0, 0});
+//        games.minimumTimeRequired(new int[]{38, 49, 91, 59, 14, 76, 84},                3);
     }
 
 }
