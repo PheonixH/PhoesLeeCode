@@ -79,6 +79,7 @@ public class SolutionNow {
         }
         return ans;
     }
+
     /**
      * 547. 省份数量
      * <p>
@@ -223,12 +224,13 @@ public class SolutionNow {
 
     /**
      * 1018. 可被 5 整除的二进制前缀
-     *
+     * <p>
      * 给定由若干 0 和 1 组成的数组 A。我们定义 N_i：从 A[0] 到 A[i] 的第 i 个子数组被解释为一个二进制数（从最高有效位到最低有效位）。
      * 返回布尔值列表 answer，只有当 N_i 可以被 5 整除时，答案 answer[i] 为 true，否则为 false。
-     *
+     * <p>
      * 执行用时：4 ms, 在所有 Java 提交中击败了92.76% 的用户
      * 内存消耗：39 MB, 在所有 Java 提交中击败了65.22% 的用户
+     *
      * @param arr 数组 A
      * @return 布尔值列表 answer
      */
@@ -241,5 +243,34 @@ public class SolutionNow {
             ans.add(now == 0);
         }
         return ans;
+    }
+
+    /**
+     * 674. 最长连续递增序列
+     *
+     * 给定一个未经排序的整数数组，找到最长且 连续递增的子序列，并返回该序列的长度。
+     * 连续递增的子序列 可以由两个下标 l 和 r（l < r）确定，
+     * 如果对于每个 l <= i < r，都有 nums[i] < nums[i + 1] ，
+     * 那么子序列 [nums[l], nums[l + 1], ..., nums[r - 1], nums[r]] 就是连续递增子序列。
+     *
+     * 执行用时：1 ms, 在所有 Java 提交中击败了99.91% 的用户
+     * 内存消耗：39.4 MB, 在所有 Java 提交中击败了21.29% 的用户
+     * @param nums 未经排序的整数数组
+     * @return 连续递增子序列最大长度
+     */
+    public int findLengthOfLCIS(int[] nums) {
+        int n = nums.length;
+        int ans = 0;
+        int now = 1;
+        for (int i = 1; i < n; i++) {
+            if (nums[i] > nums[i - 1]) {
+                now++;
+            } else {
+                ans = Math.max(ans, now);
+                now = 1;
+            }
+        }
+        ans = Math.max(ans, now);
+        return Math.min(ans, n);
     }
 }
