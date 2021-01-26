@@ -5,6 +5,7 @@ import Template.UnionFind;
 import leetcode.dataStruct.ListNode;
 
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * PhoesLeeCode
@@ -78,39 +79,48 @@ public class Games {
     public int waysToSplit(int[] nums) {
         long sum = 0;
         int n = nums.length;
-        for (int num : nums) {
-            sum += num;
-        }
-        if (sum == 0) {
-            return (int) ((long) (n - 1) * (long) (n - 2))  % 1000000007/ 2;
+        int[] pre = new int[n];
+        sum = nums[0];
+        pre[0] = nums[0];
+        for (int i = 1; i < n; i++) {
+            pre[i] = pre[i - 1] + nums[i];
+            sum += nums[i];
         }
         int ans = 0;
-        int valC = (int) (sum / 3);
-        int r = nums.length - 1;
-        int vac = 0;
-        for (; r >= 2; r--) {
-            vac += nums[r];
-            if (vac >= valC) {
+        int val = 0;
+        for (int i = 0; i < n; i++) {
+            val += nums[i];
+            if (val > sum / 3) {
                 break;
             }
-        }
-        if (vac < valC) {
-            return 0;
-        }
-        for (; r > 1; r--) {
-            int vab = (int) (sum - vac);
-            int va = 0;
-            for (int i = 0; i < r - 1; i++) {
-                va += nums[i];
-                if (vab - va <= vac && va <= vab - va) {
-                    ans++;
-                    ans = ans % 1000000007;
-                }
-                if (vab - va < va) {
-                    break;
+            int tmp = (int) (sum + val) / 2;
+            int l = i + 1, r = n - 1;
+            if (l >= r) {
+                break;
+            }
+            while (l < r) {
+                int half = (l + r + 1) / 2;
+                if (pre[half] > tmp) {
+                    r = half - 1;
+                } else {
+                    l = half;
                 }
             }
-            vac += nums[r - 1];
+            if (pre[l] < 2 * val) {
+                break;
+            }
+            l = Math.min(n - 1, l);
+            int ll = i + 1, lr = l;
+            while (ll < lr) {
+                int half = (ll + lr + 1) / 2;
+                if (pre[half] < 2 * val) {
+                    ll = half;
+                } else {
+                    lr = half - 1;
+                }
+            }
+            ans += l - ll + 1;
+            ans = ans % 1000000007;
         }
         return ans;
     }
@@ -139,48 +149,130 @@ public class Games {
         return target.length - dp[length1][length2];
     }
 
-
-    int[] pre = new int[100005];
-    int[] last = new int[100005];
-
-    public int minOperationsAss2(int[] target, int[] arr) {
-        if (target == null || target.length <= 0 || arr == null || arr.length <= 0) {
-            return 0;
+    /**
+     * 5649. 解码异或后的数组
+     */
+    public int[] decode(int[] encoded, int first) {
+        int n = encoded.length;
+        int[] arr = new int[n + 1];
+        arr[0] = first;
+        for (int i = 1; i <= n; i++) {
+            arr[i] = encoded[i - 1] ^ arr[i - 1];
         }
-
-        int length1 = target.length;
-        int length2 = arr.length;
-        int[] pre = new int[length2 + 1];
-        int[] last = new int[length2 + 1];
-
-        boolean preIspre = true;
-
-        for (int i = 1; i <= length1; i++) {
-            if (preIspre) {
-                for (int j = 1; j <= length2; j++) {
-                    if (target[i - 1] == arr[j - 1]) {
-                        last[j] = pre[j - 1] + 1;
-                    } else {
-                        last[j] = Math.max(pre[j], last[j - 1]);
-                    }
-                    pre = last.clone();
-                }
-                preIspre = false;
-            } else {
-                for (int j = 1; j <= length2; j++) {
-                    if (target[i - 1] == arr[j - 1]) {
-                        pre[j] = last[j - 1] + 1;
-                    } else {
-                        pre[j] = Math.max(last[j], pre[j - 1]);
-                    }
-                    last = pre.clone();
-                }
-                preIspre = true;
-            }
-        }
-
-        int t = preIspre ? last[length2] : pre[length2];
-        return target.length - t;
+        return arr;
     }
 
+    /**
+     * 5652. 交换链表中的节点
+     */
+    public ListNode swapNodes(ListNode head, int k) {
+        ListNode p = head;
+        ListNode q = head;
+        int i = 1;
+        while (i < k) {
+            q = q.next;
+            i++;
+        }
+        ListNode first = q;
+        while (q.next != null) {
+            p = p.next;
+            q = q.next;
+        }
+        int t = first.val;
+        first.val = p.val;
+        p.val = t;
+        return head;
+    }
+
+    /**
+     * 5650. 执行交换操作后的最小汉明距离
+     * 5 1 2 4 3
+     * 3 1 2 4 5
+     * 3 1 5 4 2
+     * 2 1 5 4 3
+     * <p>
+     * 0 4 + 4 2 -> 0 2
+     */
+
+    public int minimumHammingDistance(int[] source, int[] target, int[][] allowedSwaps) {
+        int n = source.length;
+        UnionFind uf = new UnionFind(n);
+        for (int[] a : allowedSwaps) {
+            uf.union(a[0], a[1]);
+        }
+        HashMap<Integer, List<Integer>> tMap = new HashMap<>();
+        for (int i = 0; i < n; i++) {
+            List<Integer> list = tMap.getOrDefault(target[i], new ArrayList<>());
+            list.add(i);
+            tMap.put(target[i], list);
+        }
+        int ans = 0;
+        for (int i = 0; i < n; i++) {
+            List<Integer> list = tMap.getOrDefault(source[i], new ArrayList<>());
+            boolean b = true;
+            for (int j = 0; j < list.size(); j++) {
+                if (uf.connect(i, list.get(j))) {
+                    list.remove(j);
+                    tMap.put(source[i], list);
+                    b = false;
+                    break;
+                }
+            }
+            if (b) {
+                ans++;
+            }
+        }
+        return ans;
+    }
+
+    /**
+     * 5639. 完成所有工作的最短时间
+     * 91 84 76 59 49 38 8 6
+     */
+    public int minimumTimeRequired(int[] jobs, int k) {
+        int n = jobs.length;
+        Arrays.sort(jobs);
+        PriorityQueue<Integer> priorityQueue = new PriorityQueue<>();
+
+        PriorityQueue<Integer> p = new PriorityQueue<>((o1, o2) -> o1 - o2);
+        int i = n - 1;
+        for (; i >= n - k; i--) {
+            p.add(jobs[i]);
+        }
+        for (; i >= 0; i--) {
+            int t = p.poll();
+            p.add(t + jobs[i]);
+        }
+        int max = 0;
+        for (int t : p) {
+            max = Math.max(t, max);
+        }
+        minimumTimeRequiredMax = max;
+        help(jobs, new int[k], max, n - 1);
+        return minimumTimeRequiredMax;
+
+    }
+
+    private int minimumTimeRequiredMax = 0;
+
+    public void help(int[] jobs, int[] works, int max, int i) {
+        if (i == 0) {
+            int k = Integer.MAX_VALUE;
+            int m = 0;
+            for (int j = 0; j < works.length; j++) {
+                k = Math.min(k, works[j]);
+                m = Math.max(m, works[j]);
+            }
+            m = Math.max(m, k + jobs[i]);
+            minimumTimeRequiredMax = Math.min(m, minimumTimeRequiredMax);
+            return;
+        }
+        for (int j = 0; j < works.length; j++) {
+            if (works[j] + jobs[i] < max) {
+                works[j] += jobs[i];
+                help(jobs, works, max, i - 1);
+                works[j] -= jobs[i];
+            }
+        }
+    }
 }

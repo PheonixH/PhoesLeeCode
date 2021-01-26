@@ -21,43 +21,45 @@ import leetcode.dataStruct.ListNode;
  */
 public class SolutionUbuntu {
     public int[] prisonAfterNDays(int[] cells, int N) {
-        Set<Integer> set = new HashSet<>();
         int n = cells.length;
-        int i = 0;
-        int tmp = 0;
-        List<Integer> list = new ArrayList<>();
-        for (; i < N; i++) {
-            tmp = 0;
+        Map<String, Integer> map = new HashMap<>();
+        int day = 0;
+        String status = cells.toString();
+        while (!map.containsKey(status)) {
+            map.put(status, day);
+            day++;
             int pre = cells[0];
             cells[0] = 0;
-            for (int j = 1; j < n - 1; j++) {
-                int t = cells[j];
-                cells[j] = pre == cells[j + 1] ? 1 : 0;
-                pre = t;
-                tmp = tmp * 2 + cells[j];
+            for (int i = 1; i < cells.length - 1; i++) {
+                int tmp = cells[i];
+                cells[i] = pre == cells[i + 1] ? 0 : 1;
+                pre = tmp;
             }
-            cells[n - 1] = 0;
-            tmp = tmp * 2;
-            if (!set.add(tmp)) {
-                break;
-            }
-            list.add(list.size(), tmp);
-        }
-
-        if (i != N) {
-            int tt = N % list.size();
-            if (tt != 0) {
-                tmp = list.get(tt);
-            } else {
-                tmp = list.get(list.size() - 1);
+            cells[cells.length - 1] = 0;
+            status = cells.toString();
+            if (day == N) {
+                char[] chars = status.toCharArray();
+                int[] ans = new int[chars.length];
+                for (int j = 0; j < n; j++) {
+                    ans[j] = chars[j] - '0';
+                }
+                return ans;
             }
         }
-        int[] ans = new int[n];
-        for (int j = n - 1; j >= 0; j--) {
-            ans[j] = tmp % 2;
-            tmp = tmp / 2;
+        int b = map.get(status);
+        int e = day;
+        day = (N - day) % (e - b + 1) + b;
+        for (String sta : map.keySet()) {
+            if (map.get(sta) == day) {
+                char[] chars = sta.toCharArray();
+                int[] ans = new int[chars.length];
+                for (int j = 0; j < n; j++) {
+                    ans[j] = chars[j] - '0';
+                }
+                return ans;
+            }
         }
-        return ans;
+        return null;
     }
 
 
@@ -157,16 +159,16 @@ public class SolutionUbuntu {
 
     /**
      * 86. 分隔链表
-     *
+     * <p>
      * 给你一个链表和一个特定值 x ，请你对链表进行分隔，
      * 使得所有小于 x 的节点都出现在大于或等于 x 的节点之前。
      * 你应当保留两个分区中每个节点的初始相对位置。
-     *
+     * <p>
      * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
      * 内存消耗：37.8 MB, 在所有 Java 提交中击败了60.28% 的用户
      *
      * @param head 链表
-     * @param x 整数
+     * @param x    整数
      * @return 分隔后的链表
      */
     public ListNode partition(ListNode head, int x) {
@@ -188,5 +190,45 @@ public class SolutionUbuntu {
         ts.next = big.next;
         tb.next = null;
         return small.next;
+    }
+
+    /**
+     * 1232. 缀点成线
+     *
+     * 在一个 XY 坐标系中有一些点，我们用数组 coordinates 来分别记录它们的坐标，
+     * 其中 coordinates[i] = [x, y] 表示横坐标为 x、纵坐标为 y 的点。
+     * 请你来判断，这些点是否在该坐标系中属于同一条直线上，是则返回 true，否则请返回 false。
+     *
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：37.9 MB, 在所有 Java 提交中击败了80.76% 的用户
+     *
+     * @param coordinates 点
+     * @return 这些点是否在该坐标系中属于同一条直线上
+     */
+    public boolean checkStraightLine(int[][] coordinates) {
+        int n = coordinates.length;
+        if (n <= 2) {
+            return true;
+        }
+        int[] co0 = coordinates[0];
+        int[] co1 = coordinates[1];
+        if (co0[1] == co1[1]) {
+            for (int i = 2; i < n; i++) {
+                if (coordinates[i][1] != co0[1]) {
+                    return false;
+                }
+            }
+        } else {
+            double k = (double) (co0[0] - co1[0]) / (double) (co0[1] - co1[1]);
+            for (int i = 2; i < n; i++) {
+                if (co0[1] - coordinates[i][1] == 0) {
+                    return false;
+                }
+                if ((double) (co0[0] - coordinates[i][0]) / (double) (co0[1] - coordinates[i][1]) != k) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }

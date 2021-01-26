@@ -7,6 +7,7 @@ package Template;
  * @create: 2020-12-12 16:44
  **/
 public class UnionFind {
+
     /**
      * 当 父节点 == 自己 的时候就是一个根
      */
@@ -18,7 +19,7 @@ public class UnionFind {
      */
     static int[] rank;
 
-    public UnionFind(int n){
+    public UnionFind(int n) {
         this.parent = new int[n];
         this.rank = new int[n];
         for (int i = 0; i < n; i++) {
@@ -27,6 +28,11 @@ public class UnionFind {
         }
     }
 
+    /**
+     * 初始化
+     *
+     * @param n 并查集长度
+     */
     public void init(int n) {
         parent = new int[n];
         rank = new int[n];
@@ -36,6 +42,12 @@ public class UnionFind {
         }
     }
 
+    /**
+     * 合并并查集
+     *
+     * @param x 元素位置x
+     * @param y 元素位置y
+     */
     public void union(int x, int y) {
         int a = root(x);
         int b = root(y);
@@ -63,7 +75,7 @@ public class UnionFind {
     /**
      * 判断是否属于同一个集合：find(que[0]) == find(que[1])
      */
-    public boolean isConnect(int i, int j) {
+    public boolean connect(int i, int j) {
         return root(i) == root(j);
     }
 }
