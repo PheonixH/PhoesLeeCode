@@ -11,13 +11,13 @@ public class UnionFind {
     /**
      * 当 父节点 == 自己 的时候就是一个根
      */
-    static int[] parent;
+    public int[] parent;
 
     /**
      * 表示 每个节点为根的时候的层数：
      * 为了合并之后的并查集层数低
      */
-    static int[] rank;
+    public int[] rank;
 
     public UnionFind(int n) {
         this.parent = new int[n];
