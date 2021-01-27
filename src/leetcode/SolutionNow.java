@@ -272,17 +272,18 @@ public class SolutionNow {
 
     /**
      * 1579. 保证图可完全遍历
-     *
+     * <p>
      * Alice 和 Bob 共有一个无向图，其中包含 n 个节点和 3  种类型的边：
-     *     类型 1：只能由 Alice 遍历。
-     *     类型 2：只能由 Bob 遍历。
-     *     类型 3：Alice 和 Bob 都可以遍历。
+     * 类型 1：只能由 Alice 遍历。
+     * 类型 2：只能由 Bob 遍历。
+     * 类型 3：Alice 和 Bob 都可以遍历。
      * 给你一个数组 edges ，其中 edges[i] = [typei, ui, vi] 表示节点 ui 和 vi 之间存在类型为 typei 的双向边。请你在保证图仍能够被 Alice和 Bob 完全遍历的前提下，找出可以删除的最大边数。如果从任何节点开始，Alice 和 Bob 都可以到达所有其他节点，则认为图是可以完全遍历的。
      * 返回可以删除的最大边数，如果 Alice 和 Bob 无法完全遍历图，则返回 -1 。
-     *
+     * <p>
      * 执行用时：13 ms, 在所有 Java 提交中击败了98.97% 的用户
      * 内存消耗：96.5 MB, 在所有 Java 提交中击败了79.38% 的用户
-     * @param n 无向图，其中包含 n 个节点
+     *
+     * @param n     无向图，其中包含 n 个节点
      * @param edges 边
      * @return 以删除的最大边数，如果 Alice 和 Bob 无法完全遍历图，则返回 -1
      */
@@ -332,4 +333,34 @@ public class SolutionNow {
         }
         return ans;
     }
+
+    /**
+     * 1154. 一年中的第几天
+     * <p>
+     * 给你一个按 YYYY-MM-DD 格式表示日期的字符串 date，请你计算并返回该日期是当年的第几天。
+     * 通常情况下，我们认为 1 月 1 日是每年的第 1 天，1 月 2 日是每年的第 2 天，依此类推。每个月的天数与现行公元纪年法（格里高利历）一致
+     * <p>
+     * 执行用时：2 ms, 在所有 Java 提交中击败了69.09% 的用户
+     * 内存消耗：36.9 MB, 在所有 Java 提交中击败了12.53% 的用户
+     *
+     * @param date 表示日期的字符串
+     * @return 期是当年的第几天
+     */
+    public int dayOfYear(String date) {
+        String[] time = date.split("-");
+        int year = Integer.parseInt(time[0]);
+        int month = Integer.parseInt(time[1]);
+        int day = Integer.parseInt(time[2]);
+        if (year % 400 == 0 || (year % 100 != 0 && year % 4 == 0)) {
+            monthDays[1] = 29;
+        }
+        int ans = 0;
+        for (int i = 0; i < month - 1; i++) {
+            ans += monthDays[i];
+        }
+        return ans + day;
+    }
+
+    private int[] monthDays = new int[]{31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+
 }
