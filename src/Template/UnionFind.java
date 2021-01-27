@@ -75,7 +75,7 @@ public class UnionFind {
     /**
      * 判断是否属于同一个集合：find(que[0]) == find(que[1])
      */
-    public boolean connect(int i, int j) {
+    public boolean isConnect(int i, int j) {
         return root(i) == root(j);
     }
 }

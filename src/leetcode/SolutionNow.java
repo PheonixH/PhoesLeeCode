@@ -1,13 +1,8 @@
 package leetcode;
 
-import Template.BinaryIndexedTree;
 import Template.UnionFind;
-import leetcode.dataStruct.ListNode;
-import leetcode.dataStruct.TreeNode;
 
 import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * @ProjectName: PhoesLeeCode
@@ -214,7 +209,7 @@ public class SolutionNow {
         int n = edges.length;
         UnionFind uf = new UnionFind(n);
         for (int[] edge : edges) {
-            if (uf.connect(edge[0] - 1, edge[1] - 1)) {
+            if (uf.isConnect(edge[0] - 1, edge[1] - 1)) {
                 return edge;
             }
             uf.union(edge[0] - 1, edge[1] - 1);
@@ -247,14 +242,15 @@ public class SolutionNow {
 
     /**
      * 674. 最长连续递增序列
-     *
+     * <p>
      * 给定一个未经排序的整数数组，找到最长且 连续递增的子序列，并返回该序列的长度。
      * 连续递增的子序列 可以由两个下标 l 和 r（l < r）确定，
      * 如果对于每个 l <= i < r，都有 nums[i] < nums[i + 1] ，
      * 那么子序列 [nums[l], nums[l + 1], ..., nums[r - 1], nums[r]] 就是连续递增子序列。
-     *
+     * <p>
      * 执行用时：1 ms, 在所有 Java 提交中击败了99.91% 的用户
      * 内存消耗：39.4 MB, 在所有 Java 提交中击败了21.29% 的用户
+     *
      * @param nums 未经排序的整数数组
      * @return 连续递增子序列最大长度
      */
@@ -272,5 +268,68 @@ public class SolutionNow {
         }
         ans = Math.max(ans, now);
         return Math.min(ans, n);
+    }
+
+    /**
+     * 1579. 保证图可完全遍历
+     *
+     * Alice 和 Bob 共有一个无向图，其中包含 n 个节点和 3  种类型的边：
+     *     类型 1：只能由 Alice 遍历。
+     *     类型 2：只能由 Bob 遍历。
+     *     类型 3：Alice 和 Bob 都可以遍历。
+     * 给你一个数组 edges ，其中 edges[i] = [typei, ui, vi] 表示节点 ui 和 vi 之间存在类型为 typei 的双向边。请你在保证图仍能够被 Alice和 Bob 完全遍历的前提下，找出可以删除的最大边数。如果从任何节点开始，Alice 和 Bob 都可以到达所有其他节点，则认为图是可以完全遍历的。
+     * 返回可以删除的最大边数，如果 Alice 和 Bob 无法完全遍历图，则返回 -1 。
+     *
+     * 执行用时：13 ms, 在所有 Java 提交中击败了98.97% 的用户
+     * 内存消耗：96.5 MB, 在所有 Java 提交中击败了79.38% 的用户
+     * @param n 无向图，其中包含 n 个节点
+     * @param edges 边
+     * @return 以删除的最大边数，如果 Alice 和 Bob 无法完全遍历图，则返回 -1
+     */
+    public int maxNumEdgesToRemove(int n, int[][] edges) {
+        UnionFind ufA = new UnionFind(n + 1);
+        UnionFind ufB = new UnionFind(n + 1);
+        int ans = 0;
+        for (int[] edge : edges) {
+            if (edge[0] == 3) {
+                if (ufA.isConnect(edge[1], edge[2])) {
+                    ans++;
+                    continue;
+                }
+                ufA.union(edge[1], edge[2]);
+                ufB.union(edge[1], edge[2]);
+            }
+        }
+        for (int[] edge : edges) {
+            if (edge[0] == 1) {
+                if (ufA.isConnect(edge[1], edge[2])) {
+                    ans++;
+                    continue;
+                }
+                ufA.union(edge[1], edge[2]);
+            } else if (edge[0] == 2) {
+                if (ufB.isConnect(edge[1], edge[2])) {
+                    ans++;
+                    continue;
+                }
+                ufB.union(edge[1], edge[2]);
+            }
+        }
+        int rightA = 0, rightB = 0;
+        for (int i = 1; i <= n; i++) {
+            if (ufA.parent[i] == i) {
+                rightA++;
+                if (rightA > 1) {
+                    return -1;
+                }
+            }
+            if (ufB.parent[i] == i) {
+                rightB++;
+                if (rightB > 1) {
+                    return -1;
+                }
+            }
+        }
+        return ans;
     }
 }

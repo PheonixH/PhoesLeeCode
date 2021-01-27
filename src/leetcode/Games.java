@@ -1,11 +1,9 @@
 package leetcode;
 
-import Template.BinaryIndexedTree;
 import Template.UnionFind;
 import leetcode.dataStruct.ListNode;
 
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
 
 /**
  * PhoesLeeCode
@@ -211,7 +209,7 @@ public class Games {
             List<Integer> list = tMap.getOrDefault(source[i], new ArrayList<>());
             boolean b = true;
             for (int j = 0; j < list.size(); j++) {
-                if (uf.connect(i, list.get(j))) {
+                if (uf.isConnect(i, list.get(j))) {
                     list.remove(j);
                     tMap.put(source[i], list);
                     b = false;
