@@ -400,17 +400,18 @@ public class SolutionNow {
 
     /**
      * 1432. 改变一个整数能得到的最大差值
-     *
+     * <p>
      * 给你一个整数 num 。你可以对它进行如下步骤恰好 两次 ：
-     *     选择一个数字 x (0 <= x <= 9).
-     *     选择另一个数字 y (0 <= y <= 9) 。数字 y 可以等于 x 。
-     *     将 num 中所有出现 x 的数位都用 y 替换。
-     *     得到的新的整数 不能 有前导 0 ，得到的新整数也 不能 是 0 。
+     * 选择一个数字 x (0 <= x <= 9).
+     * 选择另一个数字 y (0 <= y <= 9) 。数字 y 可以等于 x 。
+     * 将 num 中所有出现 x 的数位都用 y 替换。
+     * 得到的新的整数 不能 有前导 0 ，得到的新整数也 不能 是 0 。
      * 令两次对 num 的操作得到的结果分别为 a 和 b 。
      * 请你返回 a 和 b 的 最大差值 。
-     *
+     * <p>
      * 执行用时：1 ms, 在所有 Java 提交中击败了98.13% 的用户
      * 内存消耗：35 MB, 在所有 Java 提交中击败了93.75% 的用户
+     *
      * @param num 整数
      * @return 改变一个整数能得到的最大差值
      */
@@ -471,4 +472,48 @@ public class SolutionNow {
         }
         return maxN - minN;
     }
+
+    /**
+     * 面试题 16.19. 水域大小
+     *
+     * 你有一个用于表示一片土地的整数矩阵land，该矩阵中每个点的值代表对应地点的海拔高度。若值为0则表示水域。由垂直、水平或对角连接的水域为池塘。
+     * 池塘的大小是指相连接的水域的个数。编写一个方法来计算矩阵中所有池塘的大小，返回值需要从小到大排序。
+     *
+     * 执行用时：15 ms, 在所有 Java 提交中击败了59.24% 的用户
+     * 内存消耗：62.9 MB, 在所有 Java 提交中击败了62.57% 的用户
+     * @param land 一片土地的整数矩阵land
+     * @return 所有池塘的大小，返回值需要从小到大排序
+     */
+    public int[] pondSizes(int[][] land) {
+        int row = land.length;
+        int col = land[0].length;
+        List<Integer> pondSizeType = new ArrayList<>();
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                if (land[i][j] == 0) {
+                    pondSizeType.add(pondSizesDFS(land, i, j));
+                }
+            }
+        }
+        int[] ans = pondSizeType.stream().mapToInt(Integer::valueOf).toArray();
+        Arrays.sort(ans);
+        return ans;
+    }
+
+    private int[][] pondDir = new int[][]{{1, 0}, {-1, 0}, {0, 1}, {0, -1}, {-1, -1}, {1, 1}, {-1, 1}, {1, -1}};
+
+    private int pondSizesDFS(int[][] land, int x, int y) {
+        land[x][y] = 1;
+        int ans = 1;
+        for (int[] dir : pondDir) {
+            int nx = x + dir[0];
+            int ny = y + dir[1];
+            if (nx < 0 || nx >= land.length || ny < 0 || ny >= land[0].length || land[nx][ny] > 0) {
+                continue;
+            }
+            ans += pondSizesDFS(land, nx, ny);
+        }
+        return ans;
+    }
+
 }
