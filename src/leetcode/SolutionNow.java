@@ -397,4 +397,78 @@ public class SolutionNow {
         }
         return -1;
     }
+
+    /**
+     * 1432. 改变一个整数能得到的最大差值
+     *
+     * 给你一个整数 num 。你可以对它进行如下步骤恰好 两次 ：
+     *     选择一个数字 x (0 <= x <= 9).
+     *     选择另一个数字 y (0 <= y <= 9) 。数字 y 可以等于 x 。
+     *     将 num 中所有出现 x 的数位都用 y 替换。
+     *     得到的新的整数 不能 有前导 0 ，得到的新整数也 不能 是 0 。
+     * 令两次对 num 的操作得到的结果分别为 a 和 b 。
+     * 请你返回 a 和 b 的 最大差值 。
+     *
+     * 执行用时：1 ms, 在所有 Java 提交中击败了98.13% 的用户
+     * 内存消耗：35 MB, 在所有 Java 提交中击败了93.75% 的用户
+     * @param num 整数
+     * @return 改变一个整数能得到的最大差值
+     */
+    public int maxDiff(int num) {
+        String str = String.valueOf(num);
+        int n = str.length();
+        int minN = 0;
+        int maxN = 0;
+        if ('1' == str.charAt(0)) {
+            char minChange = '-';
+            minN = 1;
+            maxN = 9;
+            for (int i = 1; i < n; i++) {
+                if ('-' == minChange && '1' != str.charAt(i) && '0' != str.charAt(i)) {
+                    minChange = str.charAt(i);
+                }
+                if (str.charAt(i) == minChange) {
+                    minN = minN * 10;
+                } else {
+                    minN = minN * 10 + str.charAt(i) - '0';
+                }
+                if ('1' == str.charAt(i)) {
+                    maxN = maxN * 10 + 9;
+                } else {
+                    maxN = maxN * 10 + str.charAt(i) - '0';
+                }
+            }
+        } else if ('9' == str.charAt(0)) {
+            char maxChange = '-';
+            minN = 1;
+            maxN = 9;
+            for (int i = 1; i < n; i++) {
+                if ('-' == maxChange && '9' != str.charAt(i)) {
+                    maxChange = str.charAt(i);
+                }
+                if (str.charAt(i) == maxChange) {
+                    maxN = maxN * 10 + 9;
+                } else {
+                    maxN = maxN * 10 + str.charAt(i) - '0';
+                }
+                if ('9' == str.charAt(i)) {
+                    minN = minN * 10 + 1;
+                } else {
+                    minN = minN * 10 + str.charAt(i) - '0';
+                }
+            }
+        } else {
+            char change = str.charAt(0);
+            for (int i = 0; i < n; i++) {
+                if (change == str.charAt(i)) {
+                    minN = minN * 10 + 1;
+                    maxN = maxN * 10 + 9;
+                } else {
+                    minN = minN * 10 + str.charAt(i) - '0';
+                    maxN = maxN * 10 + str.charAt(i) - '0';
+                }
+            }
+        }
+        return maxN - minN;
+    }
 }
