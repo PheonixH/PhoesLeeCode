@@ -363,4 +363,38 @@ public class SolutionNow {
 
     private int[] monthDays = new int[]{31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
+    /**
+     * 724. 寻找数组的中心索引
+     * <p>
+     * 给定一个整数类型的数组 nums，请编写一个能够返回数组 “中心索引” 的方法。
+     * 我们是这样定义数组 中心索引 的：数组中心索引的左侧所有元素相加的和等于右侧所有元素相加的和。
+     * 如果数组不存在中心索引，那么我们应该返回 -1。如果数组有多个中心索引，那么我们应该返回最靠近左边的那一个。
+     * <p>
+     * 执行用时：2 ms, 在所有 Java 提交中击败了55.66% 的用户
+     * 内存消耗：39.2 MB, 在所有 Java 提交中击败了39.04% 的用户
+     *
+     * @param nums 数组
+     * @return 数组的中心索引
+     */
+    public int pivotIndex(int[] nums) {
+        int n = nums.length;
+        if (n <= 1) {
+            return n - 1;
+        }
+        int sum = 0;
+        for (int num : nums) {
+            sum += num;
+        }
+        if (sum - nums[0] == 0) {
+            return 0;
+        }
+        int left = 0;
+        for (int i = 1; i < n; i++) {
+            left += nums[i - 1];
+            if (left == sum - left - nums[i]) {
+                return i;
+            }
+        }
+        return -1;
+    }
 }
