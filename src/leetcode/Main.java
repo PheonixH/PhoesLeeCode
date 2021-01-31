@@ -87,9 +87,9 @@ public class Main {
 
         //Arrays
         String[] oneDimensionalStringArray = {"bella", "label", "roller"};
-        int[] oneDimensionalArrayA = {2, 2, 2, 2, 2, 2, 2};
+        int[] oneDimensionalArrayA = {7, 4, 5, 3, 8};
         int[] oneDimensionalArrayB = {14, 12, 10, 8, 6, 4, 2};
-        int[][] twoDimensionalArray = {{3, 1, 2}, {3, 2, 3}, {1, 1, 3}, {1, 2, 4}, {1, 1, 2}, {2, 3, 4}};
+        int[][] twoDimensionalArray = {{0, 2, 2}, {4, 2, 4}, {2, 13, 1000000000}};
         char[] oneDimensionalCharArray = {'A', 'A', 'A', 'B', 'B', 'B', 'C', 'C', 'C', 'D', 'D', 'E'};
         char[][] twoDimensionalCharArray = {
                 {'0', '0', '0', '0', '0', '0', '1'},
@@ -130,12 +130,12 @@ public class Main {
         }
 
         SolutionNow solution = new SolutionNow();
-        solution.maxNumEdgesToRemove(4, twoDimensionalArray);
+//        solution.maxNumEdgesToRemove(4, twoDimensionalArray);
 //        SolitionUbuntu solitionUbuntu = new SolitionUbuntu();
 //        solitionUbuntu.isIsomorphic("ad", "aa");
 
         Games games = new Games();
-//        games.eatenApples(oneDimensionalArrayA, oneDimensionalArrayB);
+        games.checkPartitioning("aabad");
     }
 
 }

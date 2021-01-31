@@ -273,4 +273,157 @@ public class Games {
             }
         }
     }
+
+    // 周赛20210131
+    public int countBalls(int lowLimit, int highLimit) {
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int i = lowLimit; i <= highLimit; i++) {
+            int tmp = i;
+            int key = 0;
+            while (tmp > 0) {
+                key = tmp % 10 + key;
+                tmp = tmp / 10;
+            }
+            int value = map.getOrDefault(key, 0) + 1;
+            map.put(key, value);
+        }
+        int ans = 0;
+        for (int key : map.keySet()) {
+            ans = Math.max(ans, map.get(key));
+        }
+        return ans;
+    }
+
+    public int[] restoreArray(int[][] adjacentPairs) {
+        int n = adjacentPairs.length;
+        Map<Integer, List<Integer>> map = new HashMap<>();
+        for (int[] adj : adjacentPairs) {
+            int a = adj[0];
+            int b = adj[1];
+            List<Integer> al = map.getOrDefault(a, new ArrayList<>());
+            al.add(b);
+            map.put(a, al);
+            List<Integer> bl = map.getOrDefault(b, new ArrayList<>());
+            bl.add(a);
+            map.put(b, bl);
+        }
+        List<Integer> list = new ArrayList<>();
+        list.add(adjacentPairs[0][0]);
+        list.add(adjacentPairs[0][1]);
+        restoreArrayRemoveFromMap(map, adjacentPairs[0][0], adjacentPairs[0][1]);
+        restoreArrayRemoveFromMap(map, adjacentPairs[0][1], adjacentPairs[0][0]);
+        // 往前查
+        int now = adjacentPairs[0][0];
+        List<Integer> preL = map.getOrDefault(now, new ArrayList<>());
+        while (preL.size() > 0) {
+            int next = preL.get(0);
+            restoreArrayRemoveFromMap(map, next, now);
+            restoreArrayRemoveFromMap(map, now, next);
+            now = next;
+            list.add(0, next);
+            preL = map.getOrDefault(now, new ArrayList<>());
+        }
+        // 往后查
+        now = adjacentPairs[0][1];
+        preL = map.getOrDefault(now, new ArrayList<>());
+        while (preL.size() > 0) {
+            int next = preL.get(0);
+            restoreArrayRemoveFromMap(map, next, now);
+            restoreArrayRemoveFromMap(map, now, next);
+            now = next;
+            list.add(next);
+            preL = map.getOrDefault(now, new ArrayList<>());
+        }
+        return list.stream().mapToInt(Integer::valueOf).toArray();
+    }
+
+    private void restoreArrayRemoveFromMap(Map<Integer, List<Integer>> map, int key, int value) {
+        List<Integer> list = map.getOrDefault(key, new ArrayList<>());
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i) == value) {
+                list.remove(i);
+                break;
+            }
+        }
+        if (list.size() > 0) {
+            map.put(key, list);
+        } else {
+            map.remove(key);
+        }
+    }
+
+    public boolean[] canEat(int[] candiesCount, int[][] queries) {
+        int m = candiesCount.length;
+        long[] pre = new long[m];
+        pre[0] = candiesCount[0];
+        for (int i = 1; i < m; i++) {
+            pre[i] = candiesCount[i] + pre[i - 1];
+        }
+
+        int n = queries.length;
+        boolean[] ans = new boolean[n];
+        for (int i = 0; i < n; i++) {
+            int favoriteType = queries[i][0], favoriteDay = queries[i][1] + 1, dailyCap = queries[i][2];
+            ans[i] = favoriteDay - 1 < pre[favoriteType];
+            if (ans[i] && favoriteType > 0) {
+                long kk = (long) favoriteDay * (long) dailyCap;
+                ans[i] = ans[i] && kk > pre[favoriteType - 1];
+            }
+        }
+        return ans;
+    }
+
+    private boolean backtrackRes = false;
+
+    public boolean checkPartitioning(String s) {
+        int len = s.length();
+        if (len == 0) {
+            return false;
+        }
+
+        // 预处理
+        // 状态：dp[i][j] 表示 s[i][j] 是否是回文
+        boolean[][] dp = new boolean[len][len];
+        // 状态转移方程：在 s[i] == s[j] 的时候，dp[i][j] 参考 dp[i + 1][j - 1]
+        for (int right = 0; right < len; right++) {
+            // 注意：left <= right 取等号表示 1 个字符的时候也需要判断
+            for (int left = 0; left <= right; left++) {
+                if (s.charAt(left) == s.charAt(right) && (right - left <= 2 || dp[left + 1][right - 1])) {
+                    dp[left][right] = true;
+                }
+            }
+        }
+
+        Deque<String> stack = new ArrayDeque<>();
+        backtracking(s, 0, len, dp, stack);
+        return backtrackRes;
+    }
+
+    private void backtracking(String s,
+                              int start,
+                              int len,
+                              boolean[][] dp,
+                              Deque<String> path) {
+        if (start == len) {
+            if (path.size() == 3) {
+                backtrackRes = true;
+            }
+            return;
+        }
+
+        for (int i = len - 1; i >= start; i--) {
+            // 剪枝
+            if (!dp[start][i]) {
+                continue;
+            }
+            path.addLast(s.substring(start, i + 1));
+            if (path.size() > 3) {
+                path.removeLast();
+                break;
+            }
+            backtracking(s, i + 1, len, dp, path);
+            path.removeLast();
+        }
+    }
+
 }
