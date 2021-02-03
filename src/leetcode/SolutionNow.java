@@ -475,12 +475,13 @@ public class SolutionNow {
 
     /**
      * 面试题 16.19. 水域大小
-     *
+     * <p>
      * 你有一个用于表示一片土地的整数矩阵land，该矩阵中每个点的值代表对应地点的海拔高度。若值为0则表示水域。由垂直、水平或对角连接的水域为池塘。
      * 池塘的大小是指相连接的水域的个数。编写一个方法来计算矩阵中所有池塘的大小，返回值需要从小到大排序。
-     *
+     * <p>
      * 执行用时：15 ms, 在所有 Java 提交中击败了59.24% 的用户
      * 内存消耗：62.9 MB, 在所有 Java 提交中击败了62.57% 的用户
+     *
      * @param land 一片土地的整数矩阵land
      * @return 所有池塘的大小，返回值需要从小到大排序
      */
@@ -516,4 +517,129 @@ public class SolutionNow {
         return ans;
     }
 
+
+    /**
+     * 480. 滑动窗口中位数
+     * <p>
+     * 中位数是有序序列最中间的那个数。如果序列的长度是偶数，则没有最中间的数；此时中位数是最中间的两个数的平均数。
+     * 例如：
+     * [2,3,4]，中位数是 3
+     * [2,3]，中位数是 (2 + 3) / 2 = 2.5
+     * 给你一个数组 nums，有一个长度为 k 的窗口从最左端滑动到最右端。窗口中有 k 个数，每次窗口向右移动 1 位。你的任务是找出每次窗口移动后得到的新窗口中元素的中位数，并输出由它们组成的数组。
+     * 示例：
+     * 给出 nums = [1,3,-1,-3,5,3,6,7]，以及 k = 3。
+     * <p>
+     * 执行用时：20 ms, 在所有 Java 提交中击败了98.61% 的用户
+     * 内存消耗：41.4 MB, 在所有 Java 提交中击败了5.20% 的用户
+     *
+     * @param nums 数组
+     * @param k 滑动窗口长度
+     * @return 滑动窗口中位数
+     */
+    public double[] medianSlidingWindow(int[] nums, int k) {
+        int n = nums.length;
+        if (k == 1) {
+            double[] ans = new double[n];
+            for (int i = 0; i < n; i++) {
+                ans[i] = nums[i];
+            }
+            return ans;
+        }
+        boolean isEven = k % 2 == 0;
+        // 左最大堆， 右最小堆；
+        // 查中位数： 当左边数目等于右边数目的时候，取平均数
+        // 删除一个数： 延迟删除，
+        //            每次取出顶点的数的时候判断下是否被删除，如果被删除，则取下一个数；
+        //            分别用两个map记录左右被删除的数但是实际上没有被删除的数
+        // 插入一个数： 将新的数和中间数排序，插入删除的数和中间数的位置??
+        PriorityQueue<Integer> left = new PriorityQueue<>((o1, o2) -> o2.compareTo(o1));
+        PriorityQueue<Integer> right = new PriorityQueue<>();
+        HashMap<Integer, Integer> lDelete = new HashMap<>();
+        HashMap<Integer, Integer> rDelete = new HashMap<>();
+
+        // 初始化
+        int i = 0;
+        for (; i < (k + 1) / 2; i++) {
+            left.add(nums[i]);
+        }
+        for (; i < k; i++) {
+            left.add(nums[i]);
+            int tmp = left.poll();
+            right.add(tmp);
+        }
+
+        double[] ans = new double[n - k + 1];
+        if (isEven) {
+            int le = medianSlidingWindowGetRealValue(left, lDelete);
+            int ri = medianSlidingWindowGetRealValue(right, rDelete);
+            ans[i - k] = (double) (le) / 2 + (double) (ri) / 2;
+        } else {
+            ans[i - k] = medianSlidingWindowGetRealValue(left, lDelete);
+        }
+        for (; i < n; i++) {
+            int lmax = medianSlidingWindowGetRealValue(left, lDelete);
+            if (nums[i - k] > lmax) {
+                rDelete.put(nums[i - k], rDelete.getOrDefault(nums[i - k], 0) + 1);
+                if (nums[i] >= lmax) {
+                    right.add(nums[i]);
+                } else {
+                    right.add(lmax);
+                    left.poll();
+                    left.add(nums[i]);
+                }
+            } else {
+                int rmin = medianSlidingWindowGetRealValue(right, rDelete);
+                lDelete.put(nums[i - k], lDelete.getOrDefault(nums[i - k], 0) + 1);
+                if (nums[i] <= rmin) {
+                    left.add(nums[i]);
+                } else {
+                    left.add(rmin);
+                    right.poll();
+                    right.add(nums[i]);
+                }
+            }
+            if (isEven) {
+                int le = medianSlidingWindowGetRealValue(left, lDelete);
+                int ri = medianSlidingWindowGetRealValue(right, rDelete);
+                ans[i - k + 1] = (double) (le) / 2 + (double) (ri) / 2;
+            } else {
+                ans[i - k + 1] = medianSlidingWindowGetRealValue(left, lDelete);
+            }
+        }
+        return ans;
+    }
+
+    private int medianSlidingWindowGetRealValue(PriorityQueue<Integer> priorityQueue, HashMap<Integer, Integer> map) {
+        int ans = priorityQueue.peek();
+        while (map.containsKey(ans)) {
+            int v = map.get(ans);
+            v--;
+            if (v == 0) {
+                map.remove(ans);
+            } else {
+                map.put(ans, v);
+            }
+            priorityQueue.poll();
+            ans = priorityQueue.peek();
+        }
+        return ans;
+    }
+
+
+    public static void main(String[] args) {
+        PriorityQueue<Integer> priorityQueue = new PriorityQueue<>((o1, o2) -> o2.compareTo(o1));
+        priorityQueue.add(Integer.MIN_VALUE);
+        priorityQueue.add(Integer.MAX_VALUE);
+        priorityQueue.add(Integer.MIN_VALUE);
+        while (!priorityQueue.isEmpty()) {
+            System.out.println(priorityQueue.poll());
+        }
+
+        priorityQueue.add(1);
+        priorityQueue.add(-1);
+        priorityQueue.add(1);
+        while (!priorityQueue.isEmpty()) {
+            System.out.println(priorityQueue.poll());
+        }
+    }
 }

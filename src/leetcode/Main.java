@@ -87,7 +87,7 @@ public class Main {
 
         //Arrays
         String[] oneDimensionalStringArray = {"bella", "label", "roller"};
-        int[] oneDimensionalArrayA = {7, 4, 5, 3, 8};
+        int[] oneDimensionalArrayA = {-2147483648,-2147483648,2147483647,-2147483648,-2147483648,-2147483648,2147483647,2147483647,2147483647,2147483647,-2147483648,2147483647,-2147483648};
         int[] oneDimensionalArrayB = {14, 12, 10, 8, 6, 4, 2};
         int[][] twoDimensionalArray = {{0, 2, 2}, {4, 2, 4}, {2, 13, 1000000000}};
         char[] oneDimensionalCharArray = {'A', 'A', 'A', 'B', 'B', 'B', 'C', 'C', 'C', 'D', 'D', 'E'};
@@ -130,7 +130,7 @@ public class Main {
         }
 
         SolutionNow solution = new SolutionNow();
-//        solution.maxNumEdgesToRemove(4, twoDimensionalArray);
+        solution.medianSlidingWindow(oneDimensionalArrayA, 3);
 //        SolitionUbuntu solitionUbuntu = new SolitionUbuntu();
 //        solitionUbuntu.isIsomorphic("ad", "aa");
 
