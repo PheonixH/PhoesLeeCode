@@ -533,7 +533,7 @@ public class SolutionNow {
      * 内存消耗：41.4 MB, 在所有 Java 提交中击败了5.20% 的用户
      *
      * @param nums 数组
-     * @param k 滑动窗口长度
+     * @param k    滑动窗口长度
      * @return 滑动窗口中位数
      */
     public double[] medianSlidingWindow(int[] nums, int k) {
@@ -625,21 +625,28 @@ public class SolutionNow {
         return ans;
     }
 
-
-    public static void main(String[] args) {
-        PriorityQueue<Integer> priorityQueue = new PriorityQueue<>((o1, o2) -> o2.compareTo(o1));
-        priorityQueue.add(Integer.MIN_VALUE);
-        priorityQueue.add(Integer.MAX_VALUE);
-        priorityQueue.add(Integer.MIN_VALUE);
-        while (!priorityQueue.isEmpty()) {
-            System.out.println(priorityQueue.poll());
+    /**
+     * 643. 子数组最大平均数 I
+     *
+     * 给定 n 个整数，找出平均数最大且长度为 k 的连续子数组，并输出该最大平均数。
+     *
+     * 执行用时：2 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：42.7 MB, 在所有 Java 提交中击败了44.03% 的用户
+     * @param nums n 个整数
+     * @param k 长度为 k
+     * @return 最大平均数
+     */
+    public double findMaxAverage(int[] nums, int k) {
+        int sum = 0;
+        int i = 0;
+        for (; i < k; i++) {
+            sum += nums[i];
         }
-
-        priorityQueue.add(1);
-        priorityQueue.add(-1);
-        priorityQueue.add(1);
-        while (!priorityQueue.isEmpty()) {
-            System.out.println(priorityQueue.poll());
+        int max = sum;
+        for (; i < nums.length; i++) {
+            sum = sum + nums[i] - nums[i - k];
+            max = Math.max(max, sum);
         }
+        return (double) max / k;
     }
 }
