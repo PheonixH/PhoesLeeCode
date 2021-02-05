@@ -627,13 +627,14 @@ public class SolutionNow {
 
     /**
      * 643. 子数组最大平均数 I
-     *
+     * <p>
      * 给定 n 个整数，找出平均数最大且长度为 k 的连续子数组，并输出该最大平均数。
-     *
+     * <p>
      * 执行用时：2 ms, 在所有 Java 提交中击败了100.00% 的用户
      * 内存消耗：42.7 MB, 在所有 Java 提交中击败了44.03% 的用户
+     *
      * @param nums n 个整数
-     * @param k 长度为 k
+     * @param k    长度为 k
      * @return 最大平均数
      */
     public double findMaxAverage(int[] nums, int k) {
@@ -648,5 +649,47 @@ public class SolutionNow {
             max = Math.max(max, sum);
         }
         return (double) max / k;
+    }
+
+    /**
+     * 1208. 尽可能使字符串相等
+     *
+     * 给你两个长度相同的字符串，s 和 t。
+     * 将 s 中的第 i 个字符变到 t 中的第 i 个字符需要 |s[i] - t[i]| 的开销（开销可能为 0），也就是两个字符的 ASCII 码值的差的绝对值。
+     * 用于变更字符串的最大预算是 maxCost。在转化字符串时，总开销应当小于等于该预算，这也意味着字符串的转化可能是不完全的。
+     * 如果你可以将 s 的子字符串转化为它在 t 中对应的子字符串，则返回可以转化的最大长度。
+     * 如果 s 中没有子字符串可以转化成 t 中对应的子字符串，则返回 0。
+     *
+     * 执行用时：5 ms, 在所有 Java 提交中击败了94.88% 的用户
+     * 内存消耗：38.6 MB, 在所有 Java 提交中击败了58.76% 的用户
+     * @param s 字符串
+     * @param t 字符串
+     * @param maxCost 开销
+     * @return 转化后最长相同子字符串
+     */
+    public int equalSubstring(String s, String t, int maxCost) {
+        int n = s.length();
+        int[] cost = new int[n];
+        for (int i = 0; i < n; i++) {
+            cost[i] = Math.abs(t.charAt(i) - s.charAt(i));
+        }
+        int max = 0;
+        // length : >= l, < r;
+        int l = 0, r = 0;
+        int now = 0;
+        while (r < n) {
+            if (now + cost[r] <= maxCost) {
+                now += cost[r];
+                r++;
+            } else {
+                max = Math.max(r - l, max);
+                now -= cost[l];
+                l++;
+            }
+        }
+        if (now <= maxCost) {
+            max = Math.max(max, r - l);
+        }
+        return max;
     }
 }
