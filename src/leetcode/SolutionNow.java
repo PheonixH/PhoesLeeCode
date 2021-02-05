@@ -653,17 +653,18 @@ public class SolutionNow {
 
     /**
      * 1208. 尽可能使字符串相等
-     *
+     * <p>
      * 给你两个长度相同的字符串，s 和 t。
      * 将 s 中的第 i 个字符变到 t 中的第 i 个字符需要 |s[i] - t[i]| 的开销（开销可能为 0），也就是两个字符的 ASCII 码值的差的绝对值。
      * 用于变更字符串的最大预算是 maxCost。在转化字符串时，总开销应当小于等于该预算，这也意味着字符串的转化可能是不完全的。
      * 如果你可以将 s 的子字符串转化为它在 t 中对应的子字符串，则返回可以转化的最大长度。
      * 如果 s 中没有子字符串可以转化成 t 中对应的子字符串，则返回 0。
-     *
+     * <p>
      * 执行用时：5 ms, 在所有 Java 提交中击败了94.88% 的用户
      * 内存消耗：38.6 MB, 在所有 Java 提交中击败了58.76% 的用户
-     * @param s 字符串
-     * @param t 字符串
+     *
+     * @param s       字符串
+     * @param t       字符串
      * @param maxCost 开销
      * @return 转化后最长相同子字符串
      */
@@ -691,5 +692,38 @@ public class SolutionNow {
             max = Math.max(max, r - l);
         }
         return max;
+    }
+
+    /**
+     * 1208. 尽可能使字符串相等
+     * <p>
+     * 给你两个长度相同的字符串，s 和 t。
+     * 将 s 中的第 i 个字符变到 t 中的第 i 个字符需要 |s[i] - t[i]| 的开销（开销可能为 0），也就是两个字符的 ASCII 码值的差的绝对值。
+     * 用于变更字符串的最大预算是 maxCost。在转化字符串时，总开销应当小于等于该预算，这也意味着字符串的转化可能是不完全的。
+     * 如果你可以将 s 的子字符串转化为它在 t 中对应的子字符串，则返回可以转化的最大长度。
+     * 如果 s 中没有子字符串可以转化成 t 中对应的子字符串，则返回 0。
+     * <p>
+     * 执行用时：5 ms, 在所有 Java 提交中击败了94.88% 的用户
+     * 内存消耗：38.6 MB, 在所有 Java 提交中击败了58.76% 的用户
+     *
+     * @param s       字符串
+     * @param t       字符串
+     * @param maxCost 开销
+     * @return 转化后最长相同子字符串
+     */
+    public int equalSubstring0(String s, String t, int maxCost) {
+        int left = 0;   // 窗口左边界
+        int len = 0;    // 窗口最大长度
+        int cost = 0;   // 当前窗口消耗
+        // i作为窗口右边界
+        for (int i = 0; i < s.length(); i++) {
+            cost += Math.abs(s.charAt(i) - t.charAt(i));
+            // 如果当前窗口消耗大于总开销，则左边界++，缩减窗口
+            if (cost > maxCost) {
+                cost -= Math.abs(s.charAt(left) - t.charAt(left));
+                left++;
+            }
+        }
+        return s.length() - left;
     }
 }
