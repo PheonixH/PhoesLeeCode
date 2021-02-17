@@ -87,8 +87,8 @@ public class Main {
 
         //Arrays
         String[] oneDimensionalStringArray = {"bella", "label", "roller"};
-        int[] oneDimensionalArrayA = {7, 4, 5, 3, 8};
-        int[] oneDimensionalArrayB = {14, 12, 10, 8, 6, 4, 2};
+        int[] oneDimensionalArrayA = {1, 1};
+        int[] oneDimensionalArrayB = {2, 2, 4};
         int[][] twoDimensionalArray = {{0, 2, 2}, {4, 2, 4}, {2, 13, 1000000000}};
         char[] oneDimensionalCharArray = {'A', 'A', 'A', 'B', 'B', 'B', 'C', 'C', 'C', 'D', 'D', 'E'};
         char[][] twoDimensionalCharArray = {
@@ -130,12 +130,12 @@ public class Main {
         }
 
         SolutionNow solution = new SolutionNow();
-//        solution.maxNumEdgesToRemove(4, twoDimensionalArray);
+        solution.characterReplacement("AABABBA", 1);
 //        SolitionUbuntu solitionUbuntu = new SolitionUbuntu();
 //        solitionUbuntu.isIsomorphic("ad", "aa");
 
         Games games = new Games();
-        games.checkPartitioning("aabad");
+//        games.checkPartitioning("aabad");
     }
 
 }

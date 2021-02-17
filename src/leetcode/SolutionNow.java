@@ -561,12 +561,13 @@ public class SolutionNow {
 
     /**
      * 424. 替换后的最长重复字符
-     *
+     * <p>
      * 给你一个仅由大写英文字母组成的字符串，你可以将任意位置上的字符替换成另外的字符，总共可最多替换 k 次。在执行上述操作后，找到包含重复字母的最长子串的长度。
      * 注意：字符串长度 和 k 不会超过 104。
-     *
+     * <p>
      * 执行用时：765 ms, 在所有 Java 提交中击败了5.02% 的用户
      * 内存消耗：38.6 MB, 在所有 Java 提交中击败了25.29% 的用户
+     *
      * @param s 字符串
      * @param k 字符串
      * @return 替换后的最长重复字符长度
@@ -593,5 +594,42 @@ public class SolutionNow {
             max = Math.max(max, num[i]);
         }
         return Math.min(max, n);
+    }
+
+    public boolean checkPossibility(int[] nums) {
+        int n = nums.length;
+        boolean f = false;
+        for (int i = 1; i < n; i++) {
+            if (nums[i] < nums[i - 1]) {
+                if (f) {
+                    return false;
+                } else {
+                    f = true;
+                    nums[i] = nums[i - 1];
+                }
+            }
+        }
+        return true;
+    }
+
+    public int[][] matrixReshape(int[][] nums, int r, int c) {
+        int n = nums.length;
+        int m = nums[0].length;
+        if (n * m == r * c) {
+            int[][] ans = new int[r][c];
+            int t = 0;
+            int p = 0;
+            for (int[] ns : nums) {
+                for (int nu : ns) {
+                    ans[t][p++] = nu;
+                    if (p == c) {
+                        p = 0;
+                        t++;
+                    }
+                }
+            }
+            return ans;
+        }
+        return nums;
     }
 }
