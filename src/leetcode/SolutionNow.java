@@ -971,7 +971,7 @@ public class SolutionNow {
      * 内存消耗：36.3 MB, 在所有 Java 提交中击败了73.06% 的用户
      *
      * @param root 树
-     * @param val 值
+     * @param val  值
      * @return 新的树
      */
     public TreeNode insertIntoMaxTree(TreeNode root, int val) {
@@ -986,4 +986,25 @@ public class SolutionNow {
         root.right = insertIntoMaxTree(root.right, val);
         return root;
     }
+
+    /**
+     * 1304. 和为零的N个唯一整数
+     * <p>
+     * 给你一个整数 n，请你返回 任意 一个由 n 个 各不相同 的整数组成的数组，并且这 n 个数相加和为 0 。
+     * <p>
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：36.7 MB, 在所有 Java 提交中击败了64.06% 的用户
+     *
+     * @param n 整数
+     * @return 和为零的N个唯一整数
+     */
+    public int[] sumZero(int n) {
+        int[] ans = new int[n];
+        for (int i = 0; i < n / 2; i++) {
+            ans[i] = -(i + 1);
+            ans[i + n / 2] = (i + 1);
+        }
+        return ans;
+    }
+
 }
