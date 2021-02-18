@@ -1007,4 +1007,28 @@ public class SolutionNow {
         return ans;
     }
 
+    /**
+     * 1753. 移除石子的最大得分
+     * <p>
+     * 你正在玩一个单人游戏，面前放置着大小分别为 a​​​​​​、b 和 c​​​​​​ 的 三堆 石子。
+     * 每回合你都要从两个 不同的非空堆 中取出一颗石子，并在得分上加 1 分。当存在 两个或更多 的空堆时，游戏停止。
+     * 给你三个整数 a 、b 和 c ，返回可以得到的 最大分数 。
+     * <p>
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：35.2 MB, 在所有 Java 提交中击败了84.91% 的用户
+     *
+     * @param a 数
+     * @param b 数
+     * @param c 数
+     * @return 最大得分
+     */
+    public int maximumScore(int a, int b, int c) {
+        int max = Math.max(Math.max(a, b), c);
+        int sum = a + b + c;
+        if (max > sum / 2) {
+            return sum - max;
+        } else {
+            return sum / 2;
+        }
+    }
 }
