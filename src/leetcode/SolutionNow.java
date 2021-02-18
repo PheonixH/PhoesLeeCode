@@ -871,12 +871,13 @@ public class SolutionNow {
 
     /**
      * 995. K 连续位的最小翻转次数
-     *
+     * <p>
      * 在仅包含 0 和 1 的数组 A 中，一次 K 位翻转包括选择一个长度为 K 的（连续）子数组，同时将子数组中的每个 0 更改为 1，而每个 1 更改为 0。
      * 返回所需的 K 位翻转的最小次数，以便数组没有值为 0 的元素。如果不可能，返回 -1。
-     *
+     * <p>
      * 执行用时：6 ms, 在所有 Java 提交中击败了83.23% 的用户
      * 内存消耗：46.9 MB, 在所有 Java 提交中击败了16.25% 的用户
+     *
      * @param A 数组
      * @param K 整数
      * @return 连续位的最小翻转次数
@@ -897,5 +898,57 @@ public class SolutionNow {
             }
         }
         return ans;
+    }
+
+    /**
+     * 76. 最小覆盖子串
+     * 给你一个字符串 s 、一个字符串 t 。返回 s 中涵盖 t 所有字符的最小子串。如果 s 中不存在涵盖 t 所有字符的子串，则返回空字符串 "" 。
+     * 注意：如果 s 中存在这样的子串，我们保证它是唯一的答案。
+     * <p>
+     * 执行用时：5 ms, 在所有 Java 提交中击败了76.04% 的用户
+     * 内存消耗：39.7 MB, 在所有 Java 提交中击败了7.07% 的用户
+     *
+     * @param s 字符串
+     * @param t 字符串
+     * @return 最小覆盖子串
+     */
+    public String minWindow(String s, String t) {
+        int ns = s.length();
+        int[] arr = new int[58];
+        int[] brr = new int[58];
+        int type = 0;
+        for (char c : t.toCharArray()) {
+            if (brr[c - 'A'] == 0) {
+                type++;
+            }
+            brr[c - 'A']++;
+        }
+
+        int l = 0, r = 0;
+        String min = "";
+        int now = 0;
+        char[] ss = s.toCharArray();
+        while (r < ns || now >= type) {
+            if (now >= type) {
+                if ("".equals(min) || min.length() > r - l) {
+                    min = s.substring(l, r);
+                }
+                // l 右移
+                arr[ss[l] - 'A']--;
+                if (arr[ss[l] - 'A'] < brr[ss[l] - 'A']) {
+                    now--;
+                }
+                l++;
+            } else {
+                // r 右移
+                arr[ss[r] - 'A']++;
+                if (arr[ss[r] - 'A'] == brr[ss[r] - 'A']) {
+                    now++;
+                }
+                r++;
+            }
+
+        }
+        return min;
     }
 }
