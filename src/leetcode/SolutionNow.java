@@ -519,6 +519,121 @@ public class SolutionNow {
 
 
     /**
+     * 888. 公平的糖果棒交换
+     * <p>
+     * 爱丽丝和鲍勃有不同大小的糖果棒：A[i] 是爱丽丝拥有的第 i 根糖果棒的大小，B[j] 是鲍勃拥有的第 j 根糖果棒的大小。
+     * 因为他们是朋友，所以他们想交换一根糖果棒，这样交换后，他们都有相同的糖果总量。（一个人拥有的糖果总量是他们拥有的糖果棒大小的总和。）
+     * 返回一个整数数组 ans，其中 ans[0] 是爱丽丝必须交换的糖果棒的大小，ans[1] 是 Bob 必须交换的糖果棒的大小。
+     * 如果有多个答案，你可以返回其中任何一个。保证答案存在。
+     * <p>
+     * 执行用时：26 ms, 在所有 Java 提交中击败了28.10% 的用户
+     * 内存消耗：40 MB, 在所有 Java 提交中击败了66.32% 的用户
+     *
+     * @param A 糖果棒
+     * @param B 糖果棒
+     * @return 交换的糖果棒
+     */
+    public int[] fairCandySwap(int[] A, int[] B) {
+        Arrays.sort(A);
+        Arrays.sort(B);
+        int sumA = Arrays.stream(A).sum();
+        int sumB = Arrays.stream(B).sum();
+        int dir = (sumA - sumB) / 2;
+        for (int i : A) {
+            if (i - dir > 0) {
+                int target = i - dir;
+                int l = 0;
+                int r = B.length - 1;
+                while (l <= r) {
+                    int mid = (l + r) / 2;
+                    if (B[mid] < target) {
+                        l = mid + 1;
+                    } else if (B[mid] > target) {
+                        r = mid - 1;
+                    } else {
+                        return new int[]{i, target};
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 424. 替换后的最长重复字符
+     * <p>
+     * 给你一个仅由大写英文字母组成的字符串，你可以将任意位置上的字符替换成另外的字符，总共可最多替换 k 次。在执行上述操作后，找到包含重复字母的最长子串的长度。
+     * 注意：字符串长度 和 k 不会超过 104。
+     * <p>
+     * 执行用时：765 ms, 在所有 Java 提交中击败了5.02% 的用户
+     * 内存消耗：38.6 MB, 在所有 Java 提交中击败了25.29% 的用户
+     *
+     * @param s 字符串
+     * @param k 字符串
+     * @return 替换后的最长重复字符长度
+     */
+    public int characterReplacement(String s, int k) {
+        int n = s.length();
+        char[] chars = s.toCharArray();
+        int[] num = new int[n];
+        int max = 0;
+        for (int i = 0; i < n; i++) {
+            if (i <= k) {
+                num[i] = i + 1;
+            } else {
+                int t = 0;
+                int l = i - 1;
+                while (l >= 0 && (t < k || chars[l] == chars[i])) {
+                    if (chars[l] != chars[i]) {
+                        t++;
+                    }
+                    l--;
+                }
+                num[i] = i - l + (k - t);
+            }
+            max = Math.max(max, num[i]);
+        }
+        return Math.min(max, n);
+    }
+
+    public boolean checkPossibility(int[] nums) {
+        int n = nums.length;
+        boolean f = false;
+        for (int i = 1; i < n; i++) {
+            if (nums[i] < nums[i - 1]) {
+                if (f) {
+                    return false;
+                } else {
+                    f = true;
+                    nums[i] = nums[i - 1];
+                }
+            }
+        }
+        return true;
+    }
+
+    public int[][] matrixReshape(int[][] nums, int r, int c) {
+        int n = nums.length;
+        int m = nums[0].length;
+        if (n * m == r * c) {
+            int[][] ans = new int[r][c];
+            int t = 0;
+            int p = 0;
+            for (int[] ns : nums) {
+                for (int nu : ns) {
+                    ans[t][p++] = nu;
+                    if (p == c) {
+                        p = 0;
+                        t++;
+                    }
+                }
+            }
+            return ans;
+        }
+        return nums;
+    }
+
+    /**
      * 480. 滑动窗口中位数
      * <p>
      * 中位数是有序序列最中间的那个数。如果序列的长度是偶数，则没有最中间的数；此时中位数是最中间的两个数的平均数。
