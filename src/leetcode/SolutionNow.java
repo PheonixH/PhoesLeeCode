@@ -1034,10 +1034,10 @@ public class SolutionNow {
 
     /**
      * 1004. 最大连续1的个数 III
-     *
+     * <p>
      * 给定一个由若干 0 和 1 组成的数组 A，我们最多可以将 K 个值从 0 变成 1 。
      * 返回仅包含 1 的最长（连续）子数组的长度。
-     *
+     * <p>
      * 执行用时：3 ms, 在所有 Java 提交中击败了94.07% 的用户
      * 内存消耗：39.7 MB, 在所有 Java 提交中击败了48.11% 的用户
      *
@@ -1069,5 +1069,50 @@ public class SolutionNow {
             }
         }
         return Math.max(ans, r - l);
+    }
+
+    /**
+     * 1005. K 次取反后最大化的数组和
+     * <p>
+     * 给定一个整数数组 A，我们只能用以下方法修改该数组：我们选择某个索引 i 并将 A[i] 替换为 -A[i]，然后总共重复这个过程 K 次。（我们可以多次选择同一个索引 i。）
+     * 以这种方式修改数组后，返回数组可能的最大和。
+     * <p>
+     * 执行用时：1 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：38 MB, 在所有 Java 提交中击败了28.28% 的用户
+     *
+     * @param A 数组
+     * @param K 数
+     * @return 数组可能的最大和
+     */
+    public int largestSumAfterKNegations(int[] A, int K) {
+        //-100 <= A[i] <= 100,这个范围的大小是201
+        int[] number = new int[201];
+        for (int t : A) {
+            //将[-100,100]映射到[0,200]上
+            number[t + 100]++;
+        }
+        int i = 0;
+        while (K > 0) {
+            //找到A[]中最小的数字
+            while (number[i] == 0) {
+                i++;
+            }
+            //此数字个数-1
+            number[i]--;
+            //其相反数个数+1
+            number[200 - i]++;
+            //若原最小数索引>100,则新的最小数索引应为200-i.(索引即number[]数组的下标)
+            if (i > 100) {
+                i = 200 - i;
+            }
+            K--;
+        }
+        int sum = 0;
+        //遍历number[]求和
+        for (int j = i; j < number.length; j++) {
+            //j-100是数字大小,number[j]是该数字出现次数.
+            sum += (j - 100) * number[j];
+        }
+        return sum;
     }
 }
