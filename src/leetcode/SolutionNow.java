@@ -1031,4 +1031,43 @@ public class SolutionNow {
             return sum / 2;
         }
     }
+
+    /**
+     * 1004. 最大连续1的个数 III
+     *
+     * 给定一个由若干 0 和 1 组成的数组 A，我们最多可以将 K 个值从 0 变成 1 。
+     * 返回仅包含 1 的最长（连续）子数组的长度。
+     *
+     * 执行用时：3 ms, 在所有 Java 提交中击败了94.07% 的用户
+     * 内存消耗：39.7 MB, 在所有 Java 提交中击败了48.11% 的用户
+     *
+     * @param A 数组
+     * @param K 数
+     * @return 包含 1 的最长（连续）子数组的长度
+     */
+    public int longestOnes(int[] A, int K) {
+        int n = A.length;
+        if (K >= n) {
+            return n;
+        }
+        int l = 0, r = 0;
+        int ans = 0;
+        int now = 0;
+        while (r < n) {
+            if (A[r] == 0 && now < K) {
+                now++;
+                r++;
+            } else if (A[r] == 1) {
+                r++;
+            } else {
+                ans = Math.max(ans, r - l);
+                while (A[l] == 1) {
+                    l++;
+                }
+                l++;
+                r++;
+            }
+        }
+        return Math.max(ans, r - l);
+    }
 }
