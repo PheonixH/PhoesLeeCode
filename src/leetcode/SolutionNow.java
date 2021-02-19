@@ -1118,12 +1118,13 @@ public class SolutionNow {
 
     /**
      * 797. 所有可能的路径
-     *
+     * <p>
      * 给一个有 n 个结点的有向无环图，找到所有从 0 到 n-1 的路径并输出（不要求按顺序）
      * 二维数组的第 i 个数组中的单元都表示有向图中 i 号结点所能到达的下一些结点（译者注：有向图是有方向的，即规定了 a→b 你就不能从 b→a ）空就是没有下一个结点了。
-     *
+     * <p>
      * 执行用时：3 ms, 在所有 Java 提交中击败了87.04% 的用户
      * 内存消耗：40.2 MB, 在所有 Java 提交中击败了36.76% 的用户
+     *
      * @param graph 有向无环图
      * @return 所有从 0 到 n-1 的路径
      */
@@ -1156,5 +1157,79 @@ public class SolutionNow {
             visited[i] = false;
             list.remove(list.size() - 1);
         }
+    }
+
+    /**
+     * 1110. 删点成林
+     *
+     * 给出二叉树的根节点 root，树上每个节点都有一个不同的值。
+     * 如果节点值在 to_delete 中出现，我们就把该节点从树上删去，最后得到一个森林（一些不相交的树构成的集合）。
+     * 返回森林中的每棵树。你可以按任意顺序组织答案。
+     *
+     * 执行用时：3 ms, 在所有 Java 提交中击败了25.40% 的用户
+     * 内存消耗：39.3 MB, 在所有 Java 提交中击败了18.15% 的用户
+     *
+     * @param root 二叉树
+     * @param to_delete 待删除的值的数组
+     * @return 最终得到的森林
+     */
+    public List<TreeNode> delNodes(TreeNode root, int[] to_delete) {
+        Arrays.sort(to_delete);
+        List<TreeNode> ans = new ArrayList<>();
+        int now = 0;
+        ans.add(root);
+        while (now < ans.size()) {
+            TreeNode tempTree = ans.get(now);
+            if(tempTree == null){
+                ans.remove(now);
+            }
+            if (delNodesFind(to_delete, tempTree.val)) {
+                if (tempTree.left != null) {
+                    ans.add(tempTree.left);
+                }
+                if (tempTree.right != null) {
+                    ans.add(tempTree.right);
+                }
+                tempTree = null;
+                ans.remove(now);
+            } else {
+                tempTree = delNodes(tempTree, to_delete, ans);
+                now++;
+            }
+        }
+        return ans;
+    }
+
+    private boolean delNodesFind(int[] delArray, int target) {
+        int l = 0, r = delArray.length - 1;
+        while (l <= r) {
+            int tmp = (l + r) / 2;
+            if (target == delArray[tmp]) {
+                return true;
+            } else if (target < delArray[tmp]) {
+                r = tmp - 1;
+            } else {
+                l = tmp + 1;
+            }
+        }
+        return false;
+    }
+
+    private TreeNode delNodes(TreeNode root, int[] delArray, List<TreeNode> ans) {
+        if (root != null) {
+            if (delNodesFind(delArray, root.val)) {
+                if (root.left != null) {
+                    ans.add(root.left);
+                }
+                if (root.right != null) {
+                    ans.add(root.right);
+                }
+                return null;
+            } else {
+                root.left = delNodes(root.left, delArray, ans);
+                root.right = delNodes(root.right, delArray, ans);
+            }
+        }
+        return root;
     }
 }
