@@ -1115,4 +1115,46 @@ public class SolutionNow {
         }
         return sum;
     }
+
+    /**
+     * 797. 所有可能的路径
+     *
+     * 给一个有 n 个结点的有向无环图，找到所有从 0 到 n-1 的路径并输出（不要求按顺序）
+     * 二维数组的第 i 个数组中的单元都表示有向图中 i 号结点所能到达的下一些结点（译者注：有向图是有方向的，即规定了 a→b 你就不能从 b→a ）空就是没有下一个结点了。
+     *
+     * 执行用时：3 ms, 在所有 Java 提交中击败了87.04% 的用户
+     * 内存消耗：40.2 MB, 在所有 Java 提交中击败了36.76% 的用户
+     * @param graph 有向无环图
+     * @return 所有从 0 到 n-1 的路径
+     */
+    public List<List<Integer>> allPathsSourceTarget(int[][] graph) {
+        int n = graph.length;
+        List<Integer> list = new ArrayList<>();
+        list.add(0);
+        boolean[] visited = new boolean[n];
+        visited[0] = true;
+        allPathsSourceTargetDFS(graph, visited, 0, n - 1, list);
+        return allPathsSourceTargetRes;
+    }
+
+    private List<List<Integer>> allPathsSourceTargetRes = new ArrayList<>();
+
+    private void allPathsSourceTargetDFS(int[][] graph, boolean[] visited, int now, int target, List<Integer> list) {
+        if (now == target) {
+            List<Integer> newList = new ArrayList<>();
+            newList.addAll(list);
+            allPathsSourceTargetRes.add(newList);
+            return;
+        }
+        for (int i : graph[now]) {
+            if (visited[i]) {
+                continue;
+            }
+            visited[i] = true;
+            list.add(i);
+            allPathsSourceTargetDFS(graph, visited, i, target, list);
+            visited[i] = false;
+            list.remove(list.size() - 1);
+        }
+    }
 }
