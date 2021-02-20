@@ -1322,29 +1322,65 @@ public class SolutionNow {
      * 如果你画的线只是从砖块的边缘经过，就不算穿过这块砖。你需要找出怎样画才能使这条线穿过的砖块数量最少，并且返回穿过的砖块数量。
      * 你不能沿着墙的两个垂直边缘之一画线，这样显然是没有穿过一块砖的。
      * <p>
-     * 执行用时：18 ms, 在所有 Java 提交中击败了20.10% 的用户
-     * 内存消耗：41.7 MB, 在所有 Java 提交中击败了48.34% 的用户
+     * 执行用时：9 ms, 在所有 Java 提交中击败了98.96% 的用户
+     * 内存消耗：41.3 MB, 在所有 Java 提交中击败了86.56% 的用户
      *
      * @param wall 砖墙
      * @return 穿过的砖块数量
      */
     public int leastBricks(List<List<Integer>> wall) {
-        int n = wall.size();
         Map<Integer, Integer> map = new HashMap<>();
-        int tmp = 0;
-        for (List<Integer> wal : wall) {
-            tmp = 0;
-            for (int w : wal) {
-                tmp += w;
-                int val = map.getOrDefault(tmp, 0) + 1;
-                map.put(tmp, val);
+        wall.forEach(
+                wal -> {
+                    int tmp = 0;
+                    for (int i = 0; i < wal.size() - 1; i++) {
+                        tmp += wal.get(i);
+                        int val = map.getOrDefault(tmp, 0) + 1;
+                        map.put(tmp, val);
+                    }
+                }
+        );
+        return wall.size() - map.values().stream().max(Integer::compareTo).orElse(0);
+    }
+
+    /**
+     * 825. 适龄的朋友
+     * <p>
+     * 人们会互相发送好友请求，现在给定一个包含有他们年龄的数组，ages[i] 表示第 i 个人的年龄。
+     * 当满足以下任一条件时，A 不能给 B（A、B不为同一人）发送好友请求：
+     * age[B] <= 0.5 * age[A] + 7
+     * age[B] > age[A]
+     * age[B] > 100 && age[A] < 100
+     * 否则，A 可以给 B 发送好友请求。
+     * 注意如果 A 向 B 发出了请求，不等于 B 也一定会向 A 发出请求。而且，人们不会给自己发送好友请求。
+     * 求总共会发出多少份好友请求?
+     * <p>
+     * 执行用时：9 ms, 在所有 Java 提交中击败了23.28% 的用户
+     * 内存消耗：40.8 MB, 在所有 Java 提交中击败了14.81% 的用户
+     *
+     * @param ages 年龄的数组
+     * @return 总共会发出多少份好友请求
+     */
+    public int numFriendRequests(int[] ages) {
+        int n = ages.length;
+        Arrays.sort(ages);
+        int low = 0;
+        int ans = 0;
+        for (int i = 0; i < n; i++) {
+            int key = ages[i];
+            int j = 1;
+            while (i + j < n && ages[i + j] == key) {
+                j++;
             }
+            double small = key * 0.5 + 7;
+            while (low < n && ages[low] <= small && low < i + j) {
+                low++;
+            }
+            if (small <= key) {
+                ans += j * Math.max((i + j - low - 1), 0);
+            }
+            i += j - 1;
         }
-        map.remove(tmp);
-        int max = 0;
-        for (Map.Entry<Integer, Integer> entity : map.entrySet()) {
-            max = Math.max(max, entity.getValue());
-        }
-        return n - max;
+        return ans;
     }
 }
