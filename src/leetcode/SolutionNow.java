@@ -1222,12 +1222,13 @@ public class SolutionNow {
 
     /**
      * 697. 数组的度
-     *
+     * <p>
      * 给定一个非空且只包含非负数的整数数组 nums，数组的度的定义是指数组里任一元素出现频数的最大值。
      * 你的任务是在 nums 中找到与 nums 拥有相同大小的度的最短连续子数组，返回其长度。
-     *
+     * <p>
      * 执行用时：18 ms, 在所有 Java 提交中击败了83.08% 的用户
      * 内存消耗：43.3 MB, 在所有 Java 提交中击败了19.63% 的用户
+     *
      * @param nums 只包含非负数的整数数组
      * @return 与 nums 拥有相同大小的度的最短连续子数组 的 长度
      */
@@ -1269,5 +1270,45 @@ public class SolutionNow {
             }
         }
         return ans;
+    }
+
+
+    /**
+     * 687. 最长同值路径
+     *
+     * 给定一个二叉树，找到最长的路径，这个路径中的每个节点具有相同值。 这条路径可以经过也可以不经过根节点。
+     * 注意：两个节点之间的路径长度由它们之间的边数表示。
+     *
+     * 执行用时：2 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：41.9 MB, 在所有 Java 提交中击败了56.89% 的用户
+     * @param root 二叉树
+     * @return 最长的路径
+     */
+    public int longestUnivaluePath(TreeNode root) {
+        longestUniValuePath(root);
+        return longestUnivaluePathAns;
+    }
+
+    private int longestUnivaluePathAns = 0;
+
+    public int longestUniValuePath(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        int lef = 0, rig = 0;
+        if (root.left != null) {
+            int tl = longestUniValuePath(root.left);
+            if (root.left.val == root.val) {
+                lef = tl + 1;
+            }
+        }
+        if (root.right != null) {
+            int rl = longestUniValuePath(root.right);
+            if (root.right.val == root.val) {
+                rig = rl + 1;
+            }
+        }
+        longestUnivaluePathAns = Math.max(longestUnivaluePathAns, lef + rig);
+        return Math.max(lef, rig);
     }
 }
