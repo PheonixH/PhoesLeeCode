@@ -1161,29 +1161,29 @@ public class SolutionNow {
 
     /**
      * 1110. 删点成林
-     *
+     * <p>
      * 给出二叉树的根节点 root，树上每个节点都有一个不同的值。
      * 如果节点值在 to_delete 中出现，我们就把该节点从树上删去，最后得到一个森林（一些不相交的树构成的集合）。
      * 返回森林中的每棵树。你可以按任意顺序组织答案。
-     *
+     * <p>
      * 执行用时：3 ms, 在所有 Java 提交中击败了25.40% 的用户
      * 内存消耗：39.3 MB, 在所有 Java 提交中击败了18.15% 的用户
      *
-     * @param root 二叉树
+     * @param root      二叉树
      * @param to_delete 待删除的值的数组
      * @return 最终得到的森林
      */
     public List<TreeNode> delNodes(TreeNode root, int[] to_delete) {
-        Arrays.sort(to_delete);
+        Arrays.stream(to_delete).forEach(delNodeArray::add);
         List<TreeNode> ans = new ArrayList<>();
         int now = 0;
         ans.add(root);
         while (now < ans.size()) {
             TreeNode tempTree = ans.get(now);
-            if(tempTree == null){
+            if (tempTree == null) {
                 ans.remove(now);
             }
-            if (delNodesFind(to_delete, tempTree.val)) {
+            if (delNodeArray.contains(tempTree.val)) {
                 if (tempTree.left != null) {
                     ans.add(tempTree.left);
                 }
@@ -1200,24 +1200,11 @@ public class SolutionNow {
         return ans;
     }
 
-    private boolean delNodesFind(int[] delArray, int target) {
-        int l = 0, r = delArray.length - 1;
-        while (l <= r) {
-            int tmp = (l + r) / 2;
-            if (target == delArray[tmp]) {
-                return true;
-            } else if (target < delArray[tmp]) {
-                r = tmp - 1;
-            } else {
-                l = tmp + 1;
-            }
-        }
-        return false;
-    }
+    private Set<Integer> delNodeArray = new HashSet<>();
 
     private TreeNode delNodes(TreeNode root, int[] delArray, List<TreeNode> ans) {
         if (root != null) {
-            if (delNodesFind(delArray, root.val)) {
+            if (delNodeArray.contains(root.val)) {
                 if (root.left != null) {
                     ans.add(root.left);
                 }
@@ -1231,5 +1218,56 @@ public class SolutionNow {
             }
         }
         return root;
+    }
+
+    /**
+     * 697. 数组的度
+     *
+     * 给定一个非空且只包含非负数的整数数组 nums，数组的度的定义是指数组里任一元素出现频数的最大值。
+     * 你的任务是在 nums 中找到与 nums 拥有相同大小的度的最短连续子数组，返回其长度。
+     *
+     * 执行用时：18 ms, 在所有 Java 提交中击败了83.08% 的用户
+     * 内存消耗：43.3 MB, 在所有 Java 提交中击败了19.63% 的用户
+     * @param nums 只包含非负数的整数数组
+     * @return 与 nums 拥有相同大小的度的最短连续子数组 的 长度
+     */
+    public int findShortestSubArray(int[] nums) {
+        int n = nums.length;
+        if (n <= 1) {
+            return n;
+        }
+        int[] arr = new int[50000];
+        int[] begin = new int[50000];
+        int[] end = new int[50000];
+        Arrays.fill(begin, -1);
+        for (int i = 0; i < n; i++) {
+            arr[nums[i]]++;
+            if (begin[nums[i]] != -1) {
+                end[nums[i]] = i;
+            } else {
+                begin[nums[i]] = i;
+            }
+        }
+        int max = 0;
+        List<Integer> maxList = new ArrayList<>();
+        for (int i = 0; i < 50000; i++) {
+            if (arr[i] > max) {
+                maxList = new ArrayList<>();
+                maxList.add(i);
+                max = arr[i];
+            } else if (arr[i] == max) {
+                maxList.add(i);
+            }
+        }
+        if (max == 1) {
+            return 1;
+        }
+        int ans = n;
+        for (int i : maxList) {
+            if (end[i] > begin[i]) {
+                ans = Math.min(end[i] - begin[i] + 1, ans);
+            }
+        }
+        return ans;
     }
 }
