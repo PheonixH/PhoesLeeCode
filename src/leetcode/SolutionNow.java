@@ -1383,4 +1383,43 @@ public class SolutionNow {
         }
         return ans;
     }
+
+    /**
+     * 825. 适龄的朋友
+     * <p>
+     * 人们会互相发送好友请求，现在给定一个包含有他们年龄的数组，ages[i] 表示第 i 个人的年龄。
+     * 当满足以下任一条件时，A 不能给 B（A、B不为同一人）发送好友请求：
+     * age[B] <= 0.5 * age[A] + 7
+     * age[B] > age[A]
+     * age[B] > 100 && age[A] < 100
+     * 否则，A 可以给 B 发送好友请求。
+     * 注意如果 A 向 B 发出了请求，不等于 B 也一定会向 A 发出请求。而且，人们不会给自己发送好友请求。
+     * 求总共会发出多少份好友请求?
+     * <p>
+     * 执行用时：4 ms, 在所有 Java 提交中击败了57.14% 的用户
+     * 内存消耗：40.6 MB, 在所有 Java 提交中击败了40.74% 的用户
+     *
+     * @param ages 年龄的数组
+     * @return 总共会发出多少份好友请求
+     */
+    public int numFriendRequests0(int[] ages) {
+        int[] ageArr = new int[121];
+        Arrays.stream(ages).forEach(x -> ageArr[x]++);
+        int left = 0, right = 0;
+        int below = 0;
+        int sum = 0;
+        int ans = 0;
+        for (; right < 121; right++) {
+            if (ageArr[right] == 0) {
+                continue;
+            }
+            sum += ageArr[right];
+            double small = right * 0.5 + 7;
+            for (; left <= small && left <= right; left++) {
+                below += ageArr[left];
+            }
+            ans = ans + ageArr[right] * Math.max((sum - below - 1), 0);
+        }
+        return ans;
+    }
 }
