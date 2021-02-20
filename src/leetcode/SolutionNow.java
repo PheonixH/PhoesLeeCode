@@ -3,6 +3,7 @@ package leetcode;
 import Template.UnionFind;
 import leetcode.dataStruct.TreeNode;
 
+import javax.swing.text.html.parser.Entity;
 import java.util.*;
 
 /**
@@ -1275,12 +1276,13 @@ public class SolutionNow {
 
     /**
      * 687. 最长同值路径
-     *
+     * <p>
      * 给定一个二叉树，找到最长的路径，这个路径中的每个节点具有相同值。 这条路径可以经过也可以不经过根节点。
      * 注意：两个节点之间的路径长度由它们之间的边数表示。
-     *
+     * <p>
      * 执行用时：2 ms, 在所有 Java 提交中击败了100.00% 的用户
      * 内存消耗：41.9 MB, 在所有 Java 提交中击败了56.89% 的用户
+     *
      * @param root 二叉树
      * @return 最长的路径
      */
@@ -1310,5 +1312,39 @@ public class SolutionNow {
         }
         longestUnivaluePathAns = Math.max(longestUnivaluePathAns, lef + rig);
         return Math.max(lef, rig);
+    }
+
+    /**
+     * 554. 砖墙
+     * <p>
+     * 你的面前有一堵矩形的、由多行砖块组成的砖墙。 这些砖块高度相同但是宽度不同。你现在要画一条自顶向下的、穿过最少砖块的垂线。
+     * 砖墙由行的列表表示。 每一行都是一个代表从左至右每块砖的宽度的整数列表。
+     * 如果你画的线只是从砖块的边缘经过，就不算穿过这块砖。你需要找出怎样画才能使这条线穿过的砖块数量最少，并且返回穿过的砖块数量。
+     * 你不能沿着墙的两个垂直边缘之一画线，这样显然是没有穿过一块砖的。
+     * <p>
+     * 执行用时：18 ms, 在所有 Java 提交中击败了20.10% 的用户
+     * 内存消耗：41.7 MB, 在所有 Java 提交中击败了48.34% 的用户
+     *
+     * @param wall 砖墙
+     * @return 穿过的砖块数量
+     */
+    public int leastBricks(List<List<Integer>> wall) {
+        int n = wall.size();
+        Map<Integer, Integer> map = new HashMap<>();
+        int tmp = 0;
+        for (List<Integer> wal : wall) {
+            tmp = 0;
+            for (int w : wal) {
+                tmp += w;
+                int val = map.getOrDefault(tmp, 0) + 1;
+                map.put(tmp, val);
+            }
+        }
+        map.remove(tmp);
+        int max = 0;
+        for (Map.Entry<Integer, Integer> entity : map.entrySet()) {
+            max = Math.max(max, entity.getValue());
+        }
+        return n - max;
     }
 }
