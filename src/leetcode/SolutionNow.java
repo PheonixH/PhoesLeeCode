@@ -1422,4 +1422,29 @@ public class SolutionNow {
         }
         return ans;
     }
+
+    /**
+     * 766. 托普利茨矩阵
+     * <p>
+     * 给你一个 m x n 的矩阵 matrix 。如果这个矩阵是托普利茨矩阵，返回 true ；否则，返回 false 。
+     * 如果矩阵上每一条由左上到右下的对角线上的元素都相同，那么这个矩阵是 托普利茨矩阵 。
+     * <p>
+     * 执行用时：1 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：38.6 MB, 在所有 Java 提交中击败了51.03% 的用户
+     *
+     * @param matrix 矩阵
+     * @return 矩阵是否是托普利茨矩阵
+     */
+    public boolean isToeplitzMatrix(int[][] matrix) {
+        int n = matrix.length;
+        int m = matrix[0].length;
+        for (int i = 1; i < n; i++) {
+            for (int j = m - 1; j > 0; j--) {
+                if (matrix[i][j] != matrix[i - 1][j - 1]) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 }
