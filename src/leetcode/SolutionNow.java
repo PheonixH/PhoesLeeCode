@@ -1447,4 +1447,48 @@ public class SolutionNow {
         }
         return true;
     }
+
+    /**
+     * 1052. 爱生气的书店老板
+     * <p>
+     * 今天，书店老板有一家店打算试营业 customers.length 分钟。每分钟都有一些顾客（customers[i]）会进入书店，所有这些顾客都会在那一分钟结束后离开。
+     * 在某些时候，书店老板会生气。 如果书店老板在第 i 分钟生气，那么 grumpy[i] = 1，否则 grumpy[i] = 0。 当书店老板生气时，那一分钟的顾客就会不满意，不生气则他们是满意的。
+     * 书店老板知道一个秘密技巧，能抑制自己的情绪，可以让自己连续 X 分钟不生气，但却只能使用一次。
+     * 请你返回这一天营业下来，最多有多少客户能够感到满意的数量。
+     * <p>
+     * 执行用时：8 ms, 在所有 Java 提交中击败了14.80% 的用户
+     * 内存消耗：41 MB, 在所有 Java 提交中击败了29.82% 的用户
+     *
+     * @param customers 顾客
+     * @param grumpy 生气与否
+     * @param X 秘笈
+     * @return 最大顾客满意人数
+     */
+    public int maxSatisfied(int[] customers, int[] grumpy, int X) {
+        int n = customers.length;
+        // dp[i][0] : 没用x 时候的用户满意数量
+        // dp[i][1] : 用了x
+        int[][] dp = new int[n][2];
+        int[] pre = new int[n];
+        pre[0] = customers[0];
+        for (int i = 1; i < n; i++) {
+            pre[i] = pre[i - 1] + customers[i];
+        }
+        dp[0][0] = (1 - grumpy[0]) * customers[0];
+        if (X > 0) {
+            dp[0][1] = customers[0];
+        } else {
+            dp[0][1] = dp[0][0];
+        }
+        int i = 1;
+        for (; i < X && i < n; i++) {
+            dp[i][0] = dp[i - 1][0] + (1 - grumpy[i]) * customers[i];
+            dp[i][1] = dp[i - 1][1] + customers[i];
+        }
+        for (; i < n; i++) {
+            dp[i][0] = dp[i - 1][0] + (1 - grumpy[i]) * customers[i];
+            dp[i][1] = Math.max(dp[i - 1][1] + (1 - grumpy[i]) * customers[i], dp[i - X][0] + pre[i] - pre[i - X]);
+        }
+        return dp[n - 1][1];
+    }
 }
