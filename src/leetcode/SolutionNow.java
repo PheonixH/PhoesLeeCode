@@ -1460,8 +1460,8 @@ public class SolutionNow {
      * 内存消耗：41 MB, 在所有 Java 提交中击败了29.82% 的用户
      *
      * @param customers 顾客
-     * @param grumpy 生气与否
-     * @param X 秘笈
+     * @param grumpy    生气与否
+     * @param X         秘笈
      * @return 最大顾客满意人数
      */
     public int maxSatisfied(int[] customers, int[] grumpy, int X) {
@@ -1491,4 +1491,136 @@ public class SolutionNow {
         }
         return dp[n - 1][1];
     }
+
+    /**
+     * 1768. 交替合并字符串
+     * <p>
+     * 给你两个字符串 word1 和 word2 。请你从 word1 开始，通过交替添加字母来合并字符串。如果一个字符串比另一个字符串长，就将多出来的字母追加到合并后字符串的末尾。
+     * 返回 合并后的字符串 。
+     * <p>
+     * 执行用时：1 ms, 在所有 Java 提交中击败了88.67% 的用户
+     * 内存消耗：37.1 MB, 在所有 Java 提交中击败了17.37% 的用户
+     *
+     * @param word1 字符串
+     * @param word2 字符串
+     * @return 合并后的字符串
+     */
+    public String mergeAlternately(String word1, String word2) {
+        int n = word1.length();
+        int m = word2.length();
+        int t = 0, p = 0;
+        StringBuilder stb = new StringBuilder();
+        while (t < n || p < m) {
+            if (t < n) {
+                stb.append(word1.charAt(t++));
+            }
+            if (p < m) {
+                stb.append(word2.charAt(p++));
+            }
+        }
+        return stb.toString();
+    }
+
+    /**
+     * 1769. 移动所有球到每个盒子所需的最小操作数
+     *
+     * 有 n 个盒子。给你一个长度为 n 的二进制字符串 boxes ，其中 boxes[i] 的值为 '0' 表示第 i 个盒子是 空 的，而 boxes[i] 的值为 '1' 表示盒子里有 一个 小球。
+     * 在一步操作中，你可以将 一个 小球从某个盒子移动到一个与之相邻的盒子中。第 i 个盒子和第 j 个盒子相邻需满足 abs(i - j) == 1 。注意，操作执行后，某些盒子中可能会存在不止一个小球。
+     * 返回一个长度为 n 的数组 answer ，其中 answer[i] 是将所有小球移动到第 i 个盒子所需的 最小 操作数。
+     * 每个 answer[i] 都需要根据盒子的 初始状态 进行计算。
+     *
+     * 执行用时：4 ms, 在所有 Java 提交中击败了86.50% 的用户
+     * 内存消耗：39.1 MB, 在所有 Java 提交中击败了81.55% 的用户
+     *
+     * @param boxes 二进制字符串
+     * @return 将所有小球移动到第 i 个盒子所需的 最小 操作数
+     */
+    public int[] minOperations(String boxes) {
+        int n = boxes.length();
+        int[] pre = new int[n];
+        pre[0] = 0;
+        int pn = boxes.charAt(0) - '0';
+        for (int i = 1; i < n; i++) {
+            pre[i] = pre[i - 1] + pn;
+            pn += boxes.charAt(i) - '0';
+        }
+        int[] aft = new int[n];
+        aft[n - 1] = 0;
+        int an = boxes.charAt(n - 1) - '0';
+        int[] ans = new int[n];
+        ans[n - 1] = pre[n - 1];
+        for (int i = n - 2; i >= 0; i--) {
+            aft[i] = aft[i + 1] + an;
+            an += boxes.charAt(i) - '0';
+            ans[i] = aft[i] + pre[i];
+        }
+        return ans;
+    }
+
+
+    /**
+     * 1770. 执行乘法运算的最大分数
+     * <p>
+     * 给你两个长度分别 n 和 m 的整数数组 nums 和 multipliers ，其中 n >= m ，数组下标 从 1 开始 计数。
+     * 初始时，你的分数为 0 。你需要执行恰好 m 步操作。在第 i 步操作（从 1 开始 计数）中，需要：
+     * 选择数组 nums 开头处或者末尾处 的整数 x 。
+     * 你获得 multipliers[i] * x 分，并累加到你的分数中。
+     * 将 x 从数组 nums 中移除。
+     * 在执行 m 步操作后，返回 最大 分数。
+     * <p>
+     * 执行用时：57 ms, 在所有 Java 提交中击败了64.47% 的用户
+     * 内存消耗：48.7 MB, 在所有 Java 提交中击败了42.54% 的用户
+     *
+     * @param nums        整数数组
+     * @param multipliers 整数数组
+     * @return 执行乘法运算的最大分数
+     */
+    public int maximumScore(int[] nums, int[] multipliers) {
+        // dp[m][m] = Math.max(dp[m][m+1] + value1, dp[m-1][m] + value2)
+        int n = nums.length, m = multipliers.length;
+        int[][] dp = new int[1000 + 5][1000 + 5];
+        dp[0][0] = 0;
+        for (int i = 1; i <= m; ++i) dp[i][0] = dp[i - 1][0] + nums[i - 1] * multipliers[i - 1];
+        for (int j = 1; j <= m; ++j) dp[0][j] = dp[0][j - 1] + nums[n - j] * multipliers[j - 1];
+        for (int i = 1; i <= m; ++i) {
+            for (int j = 1; i + j <= m; ++j) {
+                dp[i][j] = Math.max(dp[i - 1][j] + nums[i - 1] * multipliers[i + j - 1], dp[i][j - 1] + nums[n - j] * multipliers[i + j - 1]);
+            }
+        }
+        int ans = Integer.MIN_VALUE;
+        for (int i = 0; i <= m; ++i) ans = Math.max(ans, dp[i][m - i]);
+        return ans;
+    }
+
+
+    public int longestPalindrome(String word1, String word2) {
+        word2 = new StringBuilder().append(word2).reverse().toString();
+        int n = findLCS(word1, word1.length(), word2, word2.length());
+        return n == 0 ? 0 : n * 2 + (useLast ? 0 : 1);
+    }
+
+    private boolean useLast = false;
+
+    private int findLCS(String A, int n, String B, int m) {
+        int[][] dp = new int[n + 1][m + 1];
+        for (int i = 0; i <= n; i++) {
+            for (int j = 0; j <= m; j++) {
+                dp[i][j] = 0;
+            }
+        }
+        for (int i = 1; i <= n; i++) {
+            for (int j = 1; j <= m; j++) {
+                if (A.charAt(i - 1) == B.charAt(j - 1)) {
+                    dp[i][j] = dp[i - 1][j - 1] + 1;
+                    if (i == n && j == m) {
+                        useLast = true;
+                    }
+                } else {
+                    dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
+                }
+            }
+        }
+        return dp[n][m];
+    }
+
 }
