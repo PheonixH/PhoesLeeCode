@@ -1651,13 +1651,14 @@ public class SolutionNow {
 
     /**
      * 1438. 绝对差不超过限制的最长连续子数组
-     *
+     * <p>
      * 给你一个整数数组 nums ，和一个表示限制的整数 limit，请你返回最长连续子数组的长度，该子数组中的任意两个元素之间的绝对差必须小于或者等于 limit 。
      * 如果不存在满足条件的子数组，则返回 0 。
-     *
+     * <p>
      * 执行用时：87 ms, 在所有 Java 提交中击败了32.66% 的用户
      * 内存消耗：47.5 MB, 在所有 Java 提交中击败了82.68% 的用户
-     * @param nums 整数数组
+     *
+     * @param nums  整数数组
      * @param limit 限制
      * @return 绝对差不超过限制的最长连续子数组
      */
@@ -1679,5 +1680,29 @@ public class SolutionNow {
             right++;
         }
         return ret;
+    }
+
+
+    /**
+     * 867. 转置矩阵
+     *
+     * 给你一个二维整数数组 matrix， 返回 matrix 的 转置矩阵 。
+     * 矩阵的 转置 是指将矩阵的主对角线翻转，交换矩阵的行索引与列索引。
+     *
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：39.3 MB, 在所有 Java 提交中击败了60.50% 的用户
+     * @param A 二维整数数组
+     * @return 转置矩阵
+     */
+    public int[][] transpose(int[][] A) {
+        int row = A.length;
+        int col = A[0].length;
+        int[][] ans = new int[col][row];
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                ans[j][i] = A[i][j];
+            }
+        }
+        return ans;
     }
 }
