@@ -1685,12 +1685,13 @@ public class SolutionNow {
 
     /**
      * 867. 转置矩阵
-     *
+     * <p>
      * 给你一个二维整数数组 matrix， 返回 matrix 的 转置矩阵 。
      * 矩阵的 转置 是指将矩阵的主对角线翻转，交换矩阵的行索引与列索引。
-     *
+     * <p>
      * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
      * 内存消耗：39.3 MB, 在所有 Java 提交中击败了60.50% 的用户
+     *
      * @param A 二维整数数组
      * @return 转置矩阵
      */
@@ -1704,5 +1705,57 @@ public class SolutionNow {
             }
         }
         return ans;
+    }
+
+    /**
+     * 1178. 猜字谜
+     * <p>
+     * 外国友人仿照中国字谜设计了一个英文版猜字谜小游戏，请你来猜猜看吧。
+     * 字谜的迷面 puzzle 按字符串形式给出，如果一个单词 word 符合下面两个条件，那么它就可以算作谜底：
+     * 单词 word 中包含谜面 puzzle 的第一个字母。
+     * 单词 word 中的每一个字母都可以在谜面 puzzle 中找到。
+     * 例如，如果字谜的谜面是 "abcdefg"，那么可以作为谜底的单词有 "faced", "cabbage", 和 "baggage"；而 "beefed"（不含字母 "a"）以及 "based"（其中的 "s" 没有出现在谜面中）。
+     * 返回一个答案数组 answer，数组中的每个元素 answer[i] 是在给出的单词列表 words 中可以作为字谜迷面 puzzles[i] 所对应的谜底的单词数目。
+     * <p>
+     * 执行用时：184 ms, 在所有 Java 提交中击败了13.04% 的用户
+     * 内存消耗：56.8 MB, 在所有 Java 提交中击败了9.78% 的用户
+     *
+     * @param words 谜底
+     * @param puzzles 谜面
+     * @return 谜底的单词数目
+     */
+    public List<Integer> findNumOfValidWords(String[] words, String[] puzzles) {
+        Map<Integer, Integer> realWord = new HashMap<>();
+        for (int i = 0; i < words.length; i++) {
+            int real = 0;
+            for (int j = 0; j < words[i].length(); j++) {
+                real = real | 1 << (words[i].charAt(j) - 'a');
+            }
+            realWord.put(real, realWord.getOrDefault(real, 0) + 1);
+        }
+        List<Integer> ans = new ArrayList<>();
+        for (String puzzle : puzzles) {
+            int begin = 1 << puzzle.charAt(0) - 'a';
+            int puzAns = 0;
+            Set<Integer> puSet = new HashSet<>();
+            puSet.add(begin);
+            findNumOfValidWordsPickChar(puzzle, 1, begin, puSet);
+            for (int val : puSet) {
+                puzAns += realWord.getOrDefault(val, 0);
+            }
+//            puzAns += puSet.stream().mapToInt(x -> realWord.getOrDefault(x, 0)).sum();
+            ans.add(puzAns);
+        }
+        return ans;
+    }
+
+    private void findNumOfValidWordsPickChar(String puzzle, int l, int now, Set<Integer> res) {
+        if (puzzle.length() == l) {
+            res.add(now);
+            return;
+        }
+        findNumOfValidWordsPickChar(puzzle, l + 1, now, res);
+        now = now | 1 << puzzle.charAt(l) - 'a';
+        findNumOfValidWordsPickChar(puzzle, l + 1, now, res);
     }
 }
