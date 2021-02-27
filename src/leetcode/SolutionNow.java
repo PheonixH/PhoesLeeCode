@@ -1425,13 +1425,14 @@ public class SolutionNow {
 
     /**
      * 1438. 绝对差不超过限制的最长连续子数组
-     *
+     * <p>
      * 给你一个整数数组 nums ，和一个表示限制的整数 limit，请你返回最长连续子数组的长度，该子数组中的任意两个元素之间的绝对差必须小于或者等于 limit 。
      * 如果不存在满足条件的子数组，则返回 0 。
-     *
+     * <p>
      * 执行用时：87 ms, 在所有 Java 提交中击败了32.66% 的用户
      * 内存消耗：47.5 MB, 在所有 Java 提交中击败了82.68% 的用户
-     * @param nums 整数数组
+     *
+     * @param nums  整数数组
      * @param limit 限制
      * @return 绝对差不超过限制的最长连续子数组
      */
@@ -1453,5 +1454,50 @@ public class SolutionNow {
             right++;
         }
         return ret;
+    }
+
+    /**
+     * 395. 至少有 K 个重复字符的最长子串
+     * <p>
+     * 给你一个字符串 s 和一个整数 k ，请你找出 s 中的最长子串， 要求该子串中的每一字符出现次数都不少于 k 。返回这一子串的长度。
+     * <p>
+     * 执行用时：5 ms, 在所有 Java 提交中击败了30.01% 的用户
+     * 内存消耗：39.2 MB, 在所有 Java 提交中击败了10.51% 的用户
+     *
+     * @param s 字符串
+     * @param k 整数
+     * @return 至少有 K 个重复字符的最长子串
+     */
+    public int longestSubstring(String s, int k) {
+        char[] chars = s.toCharArray();
+        return longsetSubstring(chars, 0, chars.length, k);
+    }
+
+    /**
+     * 含l 不含r
+     */
+    private int longsetSubstring(char[] chars, int l, int r, int k) {
+        if (r - l < k) {
+            return 0;
+        }
+        Map<Character, List<Integer>> map = new HashMap<>();
+        for (int i = l; i < r; i++) {
+            List<Integer> list = map.getOrDefault(chars[i], new ArrayList<>());
+            list.add(i);
+            map.put(chars[i], list);
+        }
+        for (Map.Entry<Character, List<Integer>> entry : map.entrySet()) {
+            if (entry.getValue().size() > 0 && entry.getValue().size() < k) {
+                int max = 0;
+                int ll = l - 1;
+                for (int rr : entry.getValue()) {
+                    max = Math.max(max, longsetSubstring(chars, ll + 1, rr, k));
+                    ll = rr;
+                }
+                max = Math.max(max, longsetSubstring(chars, ll + 1, r, k));
+                return max;
+            }
+        }
+        return r - l;
     }
 }
