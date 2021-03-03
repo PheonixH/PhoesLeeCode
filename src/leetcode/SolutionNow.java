@@ -1720,7 +1720,7 @@ public class SolutionNow {
      * 执行用时：184 ms, 在所有 Java 提交中击败了13.04% 的用户
      * 内存消耗：56.8 MB, 在所有 Java 提交中击败了9.78% 的用户
      *
-     * @param words 谜底
+     * @param words   谜底
      * @param puzzles 谜面
      * @return 谜底的单词数目
      */
@@ -1757,5 +1757,32 @@ public class SolutionNow {
         findNumOfValidWordsPickChar(puzzle, l + 1, now, res);
         now = now | 1 << puzzle.charAt(l) - 'a';
         findNumOfValidWordsPickChar(puzzle, l + 1, now, res);
+    }
+
+    /**
+     * 338. 比特位计数
+     * <p>
+     * 给定一个非负整数 num。对于 0 ≤ i ≤ num 范围中的每个数字 i ，计算其二进制数中的 1 的数目并将它们作为数组返回。
+     * <p>
+     * 执行用时：2 ms, 在所有 Java 提交中击败了60.00% 的用户
+     * 内存消耗：42.7 MB, 在所有 Java 提交中击败了20.35% 的用户
+     *
+     * @param num 非负整数
+     * @return 计算其二进制数中的 1 的数目并将它们作为数组
+     */
+    public int[] countBits(int num) {
+        int[] ans = new int[num + 1];
+        // [0,1,1,2,1,2,2,3,1,2,2,3,2,3,3,4,1,2,2,3,2]
+        int max = 1;
+        ans[0] = 0;
+        for (int i = 1; i <= num; i++) {
+            if (i < max) {
+                ans[i] = 1 + ans[i - max / 2];
+            } else {
+                max *= 2;
+                ans[i] = 1;
+            }
+        }
+        return ans;
     }
 }
