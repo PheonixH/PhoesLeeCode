@@ -1894,4 +1894,36 @@ public class SolutionNow {
         }
         return max;
     }
+
+
+    /**
+     * 844. 比较含退格的字符串
+     *
+     * 给定 S 和 T 两个字符串，当它们分别被输入到空白的文本编辑器后，判断二者是否相等，并返回结果。 # 代表退格字符。
+     * 注意：如果对空文本输入退格字符，文本继续为空。
+     *
+     * 执行用时：2 ms, 在所有 Java 提交中击败了50.37% 的用户
+     * 内存消耗：36.8 MB, 在所有 Java 提交中击败了30.12% 的用户
+     * @param S 字符串
+     * @param T 字符串
+     * @return 比较含退格的字符串
+     */
+    public boolean backspaceCompare(String S, String T) {
+        return backspaceCompareGetRealString(S).equals(backspaceCompareGetRealString(T));
+    }
+
+    private String backspaceCompareGetRealString(String s) {
+        char[] chars = s.toCharArray();
+        List<Character> list = new ArrayList<>();
+        for (char c : chars) {
+            if (c == '#' && list.size() > 0) {
+                list.remove(list.size() - 1);
+            } else if (c != '#') {
+                list.add(c);
+            }
+        }
+        StringBuilder stringBuilder = new StringBuilder();
+        list.forEach(stringBuilder::append);
+        return stringBuilder.toString();
+    }
 }
