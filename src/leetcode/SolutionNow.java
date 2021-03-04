@@ -1785,4 +1785,113 @@ public class SolutionNow {
         }
         return ans;
     }
+
+    public ArrayList<Integer> spiralOrder(int[][] matrix) {
+        int n = matrix.length;
+        if (n <= 0) {
+            return new ArrayList<>();
+        }
+        int m = matrix[0].length;
+        ArrayList<Integer> ans = new ArrayList<>();
+        boolean[][] visited = new boolean[n][m];
+        int[][] moveType = new int[][]{{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
+        int x = 0, y = 0;
+        int move = 0;
+        while (ans.size() < m * n) {
+            ans.add(matrix[x][y]);
+            visited[x][y] = true;
+            if (x + moveType[move][0] >= n || y + moveType[move][1] >= m ||
+                    x + moveType[move][0] < 0 || y + moveType[move][1] < 0 ||
+                    visited[x + moveType[move][0]][y + moveType[move][1]]) {
+                move = (move + 1) % 4;
+            }
+            x = x + moveType[move][0];
+            y = y + moveType[move][1];
+        }
+        return ans;
+    }
+
+    public boolean search(int[] nums, int target) {
+        int n = nums.length;
+        int l = 0, r = n - 1;
+        while (l < r) {
+            int mid = (l + r) >> 1;
+            if (nums[l] < nums[mid]) {
+                l = mid;
+            } else {
+                r = mid;
+            }
+            if (l == r - 1) {
+                l = nums[l] > nums[r] ? r : l;
+                break;
+            }
+        }
+        int nl = 0, nr = l;
+        if (nl == nr && nums[nl] == target) {
+            return true;
+        }
+        while (nl < nr) {
+            int mid = (nl + nr) >> 1;
+            if (nums[mid] == target) {
+                return true;
+            } else if (nums[mid] > target) {
+                nr = mid;
+            } else {
+                nl = mid + 1;
+            }
+        }
+        nl = l;
+        nr = n - 1;
+        if (nl == nr && nums[nl] == target) {
+            return true;
+        }
+        while (nl < nr) {
+            int mid = (nl + nr) >> 1;
+            if (nums[mid] == target) {
+                return true;
+            } else if (nums[mid] > target) {
+                nr = mid;
+            } else {
+                nl = mid + 1;
+            }
+        }
+        return false;
+    }
+
+
+    /**
+     * 354. 俄罗斯套娃信封问题
+     * <p>
+     * 给定一些标记了宽度和高度的信封，宽度和高度以整数对形式 (w, h) 出现。当另一个信封的宽度和高度都比这个信封大的时候，这个信封就可以放进另一个信封里，如同俄罗斯套娃一样。
+     * 请计算最多能有多少个信封能组成一组“俄罗斯套娃”信封（即可以把一个信封放到另一个信封里面）。
+     * 说明:
+     * 不允许旋转信封。
+     * <p>
+     * 执行用时：299 ms, 在所有 Java 提交中击败了19.11% 的用户
+     * 内存消耗：39.3 MB, 在所有 Java 提交中击败了75.77% 的用户
+     *
+     * @param envelopes 信封
+     * @return 最多能有多少个信封能组成一组“俄罗斯套娃”信封
+     */
+    public int maxEnvelopes(int[][] envelopes) {
+        int n = envelopes.length;
+        if (n <= 1) {
+            return n;
+        }
+        Arrays.sort(envelopes, (x, y) -> x[0] == y[0] ? x[1] - y[1] : x[0] - y[0]);
+        int[] ans = new int[n];
+        ans[0] = 1;
+        int max = 1;
+        for (int i = 1; i < n; i++) {
+            //x: 1 1 2 3 3 4 4 5 6 6
+            //y: 1 2 2 2 3 1 4 4 5 6
+            ans[i] = 1;
+            for (int j = 0; j < i; j++) {
+                if (envelopes[i][0] > envelopes[j][0] && envelopes[i][1] > envelopes[j][1])
+                    ans[i] = Math.max(ans[i], ans[j] + 1);
+            }
+            max = Math.max(ans[i], max);
+        }
+        return max;
+    }
 }
