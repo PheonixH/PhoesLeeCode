@@ -1898,12 +1898,13 @@ public class SolutionNow {
 
     /**
      * 844. 比较含退格的字符串
-     *
+     * <p>
      * 给定 S 和 T 两个字符串，当它们分别被输入到空白的文本编辑器后，判断二者是否相等，并返回结果。 # 代表退格字符。
      * 注意：如果对空文本输入退格字符，文本继续为空。
-     *
+     * <p>
      * 执行用时：2 ms, 在所有 Java 提交中击败了50.37% 的用户
      * 内存消耗：36.8 MB, 在所有 Java 提交中击败了30.12% 的用户
+     *
      * @param S 字符串
      * @param T 字符串
      * @return 比较含退格的字符串
@@ -1925,5 +1926,134 @@ public class SolutionNow {
         StringBuilder stringBuilder = new StringBuilder();
         list.forEach(stringBuilder::append);
         return stringBuilder.toString();
+    }
+
+    /**
+     * 1419. 数青蛙
+     * <p>
+     * 给你一个字符串 croakOfFrogs，它表示不同青蛙发出的蛙鸣声（字符串 "croak" ）的组合。由于同一时间可以有多只青蛙呱呱作响，所以 croakOfFrogs 中会混合多个 “croak” 。请你返回模拟字符串中所有蛙鸣所需不同青蛙的最少数目。
+     * 注意：要想发出蛙鸣 "croak"，青蛙必须 依序 输出 ‘c’, ’r’, ’o’, ’a’, ’k’ 这 5 个字母。如果没有输出全部五个字母，那么它就不会发出声音。
+     * 如果字符串 croakOfFrogs 不是由若干有效的 "croak" 字符混合而成，请返回 -1 。
+     * <p>
+     * 执行用时：62 ms, 在所有 Java 提交中击败了5.19% 的用户
+     * 内存消耗：39 MB, 在所有 Java 提交中击败了48.89% 的用户
+     *
+     * @param croakOfFrogs
+     * @return
+     */
+    public int minNumberOfFrogs(String croakOfFrogs) {
+        int n = croakOfFrogs.length();
+        char[] croakArr = croakOfFrogs.toCharArray();
+        int[] check = new int[5];
+        for (char cro : croakArr) {
+            switch (cro) {
+                case 'c': {
+                    check[0]++;
+                    break;
+                }
+                case 'r': {
+                    check[1]++;
+                    if (check[1] > check[0]) {
+                        return -1;
+                    }
+                    break;
+                }
+                case 'o': {
+                    check[2]++;
+                    if (check[2] > check[1]) {
+                        return -1;
+                    }
+                    break;
+                }
+                case 'a': {
+                    check[3]++;
+                    if (check[3] > check[2]) {
+                        return -1;
+                    }
+                    break;
+                }
+                case 'k': {
+                    check[4]++;
+                    if (check[4] > check[3]) {
+                        return -1;
+                    }
+                    break;
+                }
+                default: {
+                    return -1;
+                }
+            }
+        }
+        for (int i = 1; i < 5; i++) {
+            if (check[i] != check[i - 1]) {
+                return -1;
+            }
+        }
+        int l = 1, r = 20000;
+        while (l < r) {
+            int mid = (l + r) / 2;
+            if (minNumberOfFrogs(croakArr, mid)) {
+                r = mid;
+            } else {
+                l = mid + 1;
+            }
+        }
+        return l;
+    }
+
+    private boolean minNumberOfFrogs(char[] chars, int num) {
+        int[] check = new int[5];
+        for (char cro : chars) {
+            switch (cro) {
+                case 'c': {
+                    check[0]++;
+                    int min = minNumberOfFrogsReturnMin(check);
+                    if (check[0] > num + min) {
+                        return false;
+                    }
+                    break;
+                }
+                case 'r': {
+                    check[1]++;
+                    int min = minNumberOfFrogsReturnMin(check);
+                    if (check[1] > num + min) {
+                        return false;
+                    }
+                    break;
+                }
+                case 'o': {
+                    check[2]++;
+                    int min = minNumberOfFrogsReturnMin(check);
+                    if (check[2] > num + min) {
+                        return false;
+                    }
+                    break;
+                }
+                case 'a': {
+                    check[3]++;
+                    int min = minNumberOfFrogsReturnMin(check);
+                    if (check[3] > num + min) {
+                        return false;
+                    }
+                    break;
+                }
+                default: {
+                    check[4]++;
+                    int min = minNumberOfFrogsReturnMin(check);
+                    if (check[4] > num + min) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    private int minNumberOfFrogsReturnMin(int[] arr) {
+        int min = arr[0];
+        for (int i = 1; i < 5; i++) {
+            min = Math.min(min, arr[i]);
+        }
+        return min;
     }
 }
