@@ -1,5 +1,6 @@
 package leetcode;
 
+import Template.BinaryIndexedTree;
 import Template.UnionFind;
 import leetcode.dataStruct.TreeNode;
 
@@ -1499,5 +1500,65 @@ public class SolutionNow {
             }
         }
         return r - l;
+    }
+
+    /**
+     * 503. 下一个更大元素 II
+     * <p>
+     * 给定一个循环数组（最后一个元素的下一个元素是数组的第一个元素），输出每个元素的下一个更大元素。
+     * 数字 x 的下一个更大的元素是按数组遍历顺序，这个数字之后的第一个比它更大的数，这意味着你应该循环地搜索它的下一个更大的数。
+     * 如果不存在，则输出 -1。
+     * <p>
+     * 执行用时：82 ms, 在所有 Java 提交中击败了6.09% 的用户
+     * 内存消耗：44.3 MB, 在所有 Java 提交中击败了5.04% 的用户
+     *
+     * @param nums 循环数组
+     * @return 下一个更大元素
+     */
+    public int[] nextGreaterElements(int[] nums) {
+        int n = nums.length;
+        if (n < 1) {
+            return new int[]{};
+        }
+        int[] ans = new int[n];
+        Arrays.fill(ans, -1);
+        Map<Integer, List<Integer>> map = new HashMap<>();
+        PriorityQueue<Integer> queue = new PriorityQueue<>((x, y) -> y - x);
+        for (int i = 0; i < n; i++) {
+            if (!map.containsKey(nums[i])) {
+                queue.add(nums[i]);
+            }
+            List<Integer> list = map.getOrDefault(nums[i], new ArrayList<>());
+            list.add(i);
+            map.put(nums[i], list);
+        }
+        BinaryIndexedTree bit = new BinaryIndexedTree(n);
+        boolean isBiggest = true;
+        while (!queue.isEmpty()) {
+            List<Integer> list = map.get(queue.poll());
+            if (!isBiggest) {
+                for (int index : list) {
+                    int l = index, r = n - 1;
+                    if (bit.sumRange(l, r) == 0) {
+                        l = 0;
+                        r = index - 1;
+                    }
+                    while (l < r) {
+                        int mid = (l + r) / 2;
+                        if (bit.sumRange(l, mid) == 0) {
+                            l = mid + 1;
+                        } else {
+                            r = mid;
+                        }
+                    }
+                    ans[index] = nums[l];
+                }
+            }
+            for (int index : list) {
+                bit.update(index, 1);
+            }
+            isBiggest = false;
+        }
+        return ans;
     }
 }
