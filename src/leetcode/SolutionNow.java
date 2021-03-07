@@ -1,6 +1,5 @@
 package leetcode;
 
-import Template.BinaryIndexedTree;
 import Template.UnionFind;
 import leetcode.dataStruct.TreeNode;
 
@@ -1425,6 +1424,232 @@ public class SolutionNow {
     }
 
     /**
+     * 766. 托普利茨矩阵
+     * <p>
+     * 给你一个 m x n 的矩阵 matrix 。如果这个矩阵是托普利茨矩阵，返回 true ；否则，返回 false 。
+     * 如果矩阵上每一条由左上到右下的对角线上的元素都相同，那么这个矩阵是 托普利茨矩阵 。
+     * <p>
+     * 执行用时：1 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：38.6 MB, 在所有 Java 提交中击败了51.03% 的用户
+     *
+     * @param matrix 矩阵
+     * @return 矩阵是否是托普利茨矩阵
+     */
+    public boolean isToeplitzMatrix(int[][] matrix) {
+        int n = matrix.length;
+        int m = matrix[0].length;
+        for (int i = 1; i < n; i++) {
+            for (int j = m - 1; j > 0; j--) {
+                if (matrix[i][j] != matrix[i - 1][j - 1]) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     * 1052. 爱生气的书店老板
+     * <p>
+     * 今天，书店老板有一家店打算试营业 customers.length 分钟。每分钟都有一些顾客（customers[i]）会进入书店，所有这些顾客都会在那一分钟结束后离开。
+     * 在某些时候，书店老板会生气。 如果书店老板在第 i 分钟生气，那么 grumpy[i] = 1，否则 grumpy[i] = 0。 当书店老板生气时，那一分钟的顾客就会不满意，不生气则他们是满意的。
+     * 书店老板知道一个秘密技巧，能抑制自己的情绪，可以让自己连续 X 分钟不生气，但却只能使用一次。
+     * 请你返回这一天营业下来，最多有多少客户能够感到满意的数量。
+     * <p>
+     * 执行用时：8 ms, 在所有 Java 提交中击败了14.80% 的用户
+     * 内存消耗：41 MB, 在所有 Java 提交中击败了29.82% 的用户
+     *
+     * @param customers 顾客
+     * @param grumpy    生气与否
+     * @param X         秘笈
+     * @return 最大顾客满意人数
+     */
+    public int maxSatisfied(int[] customers, int[] grumpy, int X) {
+        int n = customers.length;
+        // dp[i][0] : 没用x 时候的用户满意数量
+        // dp[i][1] : 用了x
+        int[][] dp = new int[n][2];
+        int[] pre = new int[n];
+        pre[0] = customers[0];
+        for (int i = 1; i < n; i++) {
+            pre[i] = pre[i - 1] + customers[i];
+        }
+        dp[0][0] = (1 - grumpy[0]) * customers[0];
+        if (X > 0) {
+            dp[0][1] = customers[0];
+        } else {
+            dp[0][1] = dp[0][0];
+        }
+        int i = 1;
+        for (; i < X && i < n; i++) {
+            dp[i][0] = dp[i - 1][0] + (1 - grumpy[i]) * customers[i];
+            dp[i][1] = dp[i - 1][1] + customers[i];
+        }
+        for (; i < n; i++) {
+            dp[i][0] = dp[i - 1][0] + (1 - grumpy[i]) * customers[i];
+            dp[i][1] = Math.max(dp[i - 1][1] + (1 - grumpy[i]) * customers[i], dp[i - X][0] + pre[i] - pre[i - X]);
+        }
+        return dp[n - 1][1];
+    }
+
+    /**
+     * 1768. 交替合并字符串
+     * <p>
+     * 给你两个字符串 word1 和 word2 。请你从 word1 开始，通过交替添加字母来合并字符串。如果一个字符串比另一个字符串长，就将多出来的字母追加到合并后字符串的末尾。
+     * 返回 合并后的字符串 。
+     * <p>
+     * 执行用时：1 ms, 在所有 Java 提交中击败了88.67% 的用户
+     * 内存消耗：37.1 MB, 在所有 Java 提交中击败了17.37% 的用户
+     *
+     * @param word1 字符串
+     * @param word2 字符串
+     * @return 合并后的字符串
+     */
+    public String mergeAlternately(String word1, String word2) {
+        int n = word1.length();
+        int m = word2.length();
+        int t = 0, p = 0;
+        StringBuilder stb = new StringBuilder();
+        while (t < n || p < m) {
+            if (t < n) {
+                stb.append(word1.charAt(t++));
+            }
+            if (p < m) {
+                stb.append(word2.charAt(p++));
+            }
+        }
+        return stb.toString();
+    }
+
+    /**
+     * 1769. 移动所有球到每个盒子所需的最小操作数
+     * <p>
+     * 有 n 个盒子。给你一个长度为 n 的二进制字符串 boxes ，其中 boxes[i] 的值为 '0' 表示第 i 个盒子是 空 的，而 boxes[i] 的值为 '1' 表示盒子里有 一个 小球。
+     * 在一步操作中，你可以将 一个 小球从某个盒子移动到一个与之相邻的盒子中。第 i 个盒子和第 j 个盒子相邻需满足 abs(i - j) == 1 。注意，操作执行后，某些盒子中可能会存在不止一个小球。
+     * 返回一个长度为 n 的数组 answer ，其中 answer[i] 是将所有小球移动到第 i 个盒子所需的 最小 操作数。
+     * 每个 answer[i] 都需要根据盒子的 初始状态 进行计算。
+     * <p>
+     * 执行用时：4 ms, 在所有 Java 提交中击败了86.50% 的用户
+     * 内存消耗：39.1 MB, 在所有 Java 提交中击败了81.55% 的用户
+     *
+     * @param boxes 二进制字符串
+     * @return 将所有小球移动到第 i 个盒子所需的 最小 操作数
+     */
+    public int[] minOperations(String boxes) {
+        int n = boxes.length();
+        int[] pre = new int[n];
+        pre[0] = 0;
+        int pn = boxes.charAt(0) - '0';
+        for (int i = 1; i < n; i++) {
+            pre[i] = pre[i - 1] + pn;
+            pn += boxes.charAt(i) - '0';
+        }
+        int[] aft = new int[n];
+        aft[n - 1] = 0;
+        int an = boxes.charAt(n - 1) - '0';
+        int[] ans = new int[n];
+        ans[n - 1] = pre[n - 1];
+        for (int i = n - 2; i >= 0; i--) {
+            aft[i] = aft[i + 1] + an;
+            an += boxes.charAt(i) - '0';
+            ans[i] = aft[i] + pre[i];
+        }
+        return ans;
+    }
+
+
+    /**
+     * 1770. 执行乘法运算的最大分数
+     * <p>
+     * 给你两个长度分别 n 和 m 的整数数组 nums 和 multipliers ，其中 n >= m ，数组下标 从 1 开始 计数。
+     * 初始时，你的分数为 0 。你需要执行恰好 m 步操作。在第 i 步操作（从 1 开始 计数）中，需要：
+     * 选择数组 nums 开头处或者末尾处 的整数 x 。
+     * 你获得 multipliers[i] * x 分，并累加到你的分数中。
+     * 将 x 从数组 nums 中移除。
+     * 在执行 m 步操作后，返回 最大 分数。
+     * <p>
+     * 执行用时：57 ms, 在所有 Java 提交中击败了64.47% 的用户
+     * 内存消耗：48.7 MB, 在所有 Java 提交中击败了42.54% 的用户
+     *
+     * @param nums        整数数组
+     * @param multipliers 整数数组
+     * @return 执行乘法运算的最大分数
+     */
+    public int maximumScore(int[] nums, int[] multipliers) {
+        // dp[m][m] = Math.max(dp[m][m+1] + value1, dp[m-1][m] + value2)
+        int n = nums.length, m = multipliers.length;
+        int[][] dp = new int[1000 + 5][1000 + 5];
+        dp[0][0] = 0;
+        for (int i = 1; i <= m; ++i) dp[i][0] = dp[i - 1][0] + nums[i - 1] * multipliers[i - 1];
+        for (int j = 1; j <= m; ++j) dp[0][j] = dp[0][j - 1] + nums[n - j] * multipliers[j - 1];
+        for (int i = 1; i <= m; ++i) {
+            for (int j = 1; i + j <= m; ++j) {
+                dp[i][j] = Math.max(dp[i - 1][j] + nums[i - 1] * multipliers[i + j - 1], dp[i][j - 1] + nums[n - j] * multipliers[i + j - 1]);
+            }
+        }
+        int ans = Integer.MIN_VALUE;
+        for (int i = 0; i <= m; ++i) ans = Math.max(ans, dp[i][m - i]);
+        return ans;
+    }
+
+
+    public int longestPalindrome(String word1, String word2) {
+        word2 = new StringBuilder().append(word2).reverse().toString();
+        int n = findLCS(word1, word1.length(), word2, word2.length());
+        return n == 0 ? 0 : n * 2 + (useLast ? 0 : 1);
+    }
+
+    private boolean useLast = false;
+
+    private int findLCS(String A, int n, String B, int m) {
+        int[][] dp = new int[n + 1][m + 1];
+        for (int i = 0; i <= n; i++) {
+            for (int j = 0; j <= m; j++) {
+                dp[i][j] = 0;
+            }
+        }
+        for (int i = 1; i <= n; i++) {
+            for (int j = 1; j <= m; j++) {
+                if (A.charAt(i - 1) == B.charAt(j - 1)) {
+                    dp[i][j] = dp[i - 1][j - 1] + 1;
+                    if (i == n && j == m) {
+                        useLast = true;
+                    }
+                } else {
+                    dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
+                }
+            }
+        }
+        return dp[n][m];
+    }
+
+
+    /**
+     * 832. 翻转图像
+     * <p>
+     * 给定一个二进制矩阵 A，我们想先水平翻转图像，然后反转图像并返回结果。
+     * 水平翻转图片就是将图片的每一行都进行翻转，即逆序。例如，水平翻转 [1, 1, 0] 的结果是 [0, 1, 1]。
+     * 反转图片的意思是图片中的 0 全部被 1 替换， 1 全部被 0 替换。例如，反转 [0, 1, 1] 的结果是 [1, 0, 0]。
+     * <p>
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：38.9 MB, 在所有 Java 提交中击败了5.02% 的用户
+     *
+     * @param A 二进制矩阵
+     * @return 先水平翻转图像，然后反转得到的图像
+     */
+    public int[][] flipAndInvertImage(int[][] A) {
+        int n = A.length;
+        int m = A[0].length;
+        int[][] ans = new int[n][m];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                ans[i][j] = 1 - A[i][m - j - 1];
+            }
+        }
+        return ans;
+    }
+
+    /**
      * 1438. 绝对差不超过限制的最长连续子数组
      * <p>
      * 给你一个整数数组 nums ，和一个表示限制的整数 limit，请你返回最长连续子数组的长度，该子数组中的任意两个元素之间的绝对差必须小于或者等于 limit 。
@@ -1455,6 +1680,381 @@ public class SolutionNow {
             right++;
         }
         return ret;
+    }
+
+
+    /**
+     * 867. 转置矩阵
+     * <p>
+     * 给你一个二维整数数组 matrix， 返回 matrix 的 转置矩阵 。
+     * 矩阵的 转置 是指将矩阵的主对角线翻转，交换矩阵的行索引与列索引。
+     * <p>
+     * 执行用时：0 ms, 在所有 Java 提交中击败了100.00% 的用户
+     * 内存消耗：39.3 MB, 在所有 Java 提交中击败了60.50% 的用户
+     *
+     * @param A 二维整数数组
+     * @return 转置矩阵
+     */
+    public int[][] transpose(int[][] A) {
+        int row = A.length;
+        int col = A[0].length;
+        int[][] ans = new int[col][row];
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                ans[j][i] = A[i][j];
+            }
+        }
+        return ans;
+    }
+
+    /**
+     * 1178. 猜字谜
+     * <p>
+     * 外国友人仿照中国字谜设计了一个英文版猜字谜小游戏，请你来猜猜看吧。
+     * 字谜的迷面 puzzle 按字符串形式给出，如果一个单词 word 符合下面两个条件，那么它就可以算作谜底：
+     * 单词 word 中包含谜面 puzzle 的第一个字母。
+     * 单词 word 中的每一个字母都可以在谜面 puzzle 中找到。
+     * 例如，如果字谜的谜面是 "abcdefg"，那么可以作为谜底的单词有 "faced", "cabbage", 和 "baggage"；而 "beefed"（不含字母 "a"）以及 "based"（其中的 "s" 没有出现在谜面中）。
+     * 返回一个答案数组 answer，数组中的每个元素 answer[i] 是在给出的单词列表 words 中可以作为字谜迷面 puzzles[i] 所对应的谜底的单词数目。
+     * <p>
+     * 执行用时：184 ms, 在所有 Java 提交中击败了13.04% 的用户
+     * 内存消耗：56.8 MB, 在所有 Java 提交中击败了9.78% 的用户
+     *
+     * @param words   谜底
+     * @param puzzles 谜面
+     * @return 谜底的单词数目
+     */
+    public List<Integer> findNumOfValidWords(String[] words, String[] puzzles) {
+        Map<Integer, Integer> realWord = new HashMap<>();
+        for (int i = 0; i < words.length; i++) {
+            int real = 0;
+            for (int j = 0; j < words[i].length(); j++) {
+                real = real | 1 << (words[i].charAt(j) - 'a');
+            }
+            realWord.put(real, realWord.getOrDefault(real, 0) + 1);
+        }
+        List<Integer> ans = new ArrayList<>();
+        for (String puzzle : puzzles) {
+            int begin = 1 << puzzle.charAt(0) - 'a';
+            int puzAns = 0;
+            Set<Integer> puSet = new HashSet<>();
+            puSet.add(begin);
+            findNumOfValidWordsPickChar(puzzle, 1, begin, puSet);
+            for (int val : puSet) {
+                puzAns += realWord.getOrDefault(val, 0);
+            }
+//            puzAns += puSet.stream().mapToInt(x -> realWord.getOrDefault(x, 0)).sum();
+            ans.add(puzAns);
+        }
+        return ans;
+    }
+
+    private void findNumOfValidWordsPickChar(String puzzle, int l, int now, Set<Integer> res) {
+        if (puzzle.length() == l) {
+            res.add(now);
+            return;
+        }
+        findNumOfValidWordsPickChar(puzzle, l + 1, now, res);
+        now = now | 1 << puzzle.charAt(l) - 'a';
+        findNumOfValidWordsPickChar(puzzle, l + 1, now, res);
+    }
+
+    /**
+     * 338. 比特位计数
+     * <p>
+     * 给定一个非负整数 num。对于 0 ≤ i ≤ num 范围中的每个数字 i ，计算其二进制数中的 1 的数目并将它们作为数组返回。
+     * <p>
+     * 执行用时：2 ms, 在所有 Java 提交中击败了60.00% 的用户
+     * 内存消耗：42.7 MB, 在所有 Java 提交中击败了20.35% 的用户
+     *
+     * @param num 非负整数
+     * @return 计算其二进制数中的 1 的数目并将它们作为数组
+     */
+    public int[] countBits(int num) {
+        int[] ans = new int[num + 1];
+        // [0,1,1,2,1,2,2,3,1,2,2,3,2,3,3,4,1,2,2,3,2]
+        int max = 1;
+        ans[0] = 0;
+        for (int i = 1; i <= num; i++) {
+            if (i < max) {
+                ans[i] = 1 + ans[i - max / 2];
+            } else {
+                max *= 2;
+                ans[i] = 1;
+            }
+        }
+        return ans;
+    }
+
+    public ArrayList<Integer> spiralOrder(int[][] matrix) {
+        int n = matrix.length;
+        if (n <= 0) {
+            return new ArrayList<>();
+        }
+        int m = matrix[0].length;
+        ArrayList<Integer> ans = new ArrayList<>();
+        boolean[][] visited = new boolean[n][m];
+        int[][] moveType = new int[][]{{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
+        int x = 0, y = 0;
+        int move = 0;
+        while (ans.size() < m * n) {
+            ans.add(matrix[x][y]);
+            visited[x][y] = true;
+            if (x + moveType[move][0] >= n || y + moveType[move][1] >= m ||
+                    x + moveType[move][0] < 0 || y + moveType[move][1] < 0 ||
+                    visited[x + moveType[move][0]][y + moveType[move][1]]) {
+                move = (move + 1) % 4;
+            }
+            x = x + moveType[move][0];
+            y = y + moveType[move][1];
+        }
+        return ans;
+    }
+
+    public boolean search(int[] nums, int target) {
+        int n = nums.length;
+        int l = 0, r = n - 1;
+        while (l < r) {
+            int mid = (l + r) >> 1;
+            if (nums[l] < nums[mid]) {
+                l = mid;
+            } else {
+                r = mid;
+            }
+            if (l == r - 1) {
+                l = nums[l] > nums[r] ? r : l;
+                break;
+            }
+        }
+        int nl = 0, nr = l;
+        if (nl == nr && nums[nl] == target) {
+            return true;
+        }
+        while (nl < nr) {
+            int mid = (nl + nr) >> 1;
+            if (nums[mid] == target) {
+                return true;
+            } else if (nums[mid] > target) {
+                nr = mid;
+            } else {
+                nl = mid + 1;
+            }
+        }
+        nl = l;
+        nr = n - 1;
+        if (nl == nr && nums[nl] == target) {
+            return true;
+        }
+        while (nl < nr) {
+            int mid = (nl + nr) >> 1;
+            if (nums[mid] == target) {
+                return true;
+            } else if (nums[mid] > target) {
+                nr = mid;
+            } else {
+                nl = mid + 1;
+            }
+        }
+        return false;
+    }
+
+
+    /**
+     * 354. 俄罗斯套娃信封问题
+     * <p>
+     * 给定一些标记了宽度和高度的信封，宽度和高度以整数对形式 (w, h) 出现。当另一个信封的宽度和高度都比这个信封大的时候，这个信封就可以放进另一个信封里，如同俄罗斯套娃一样。
+     * 请计算最多能有多少个信封能组成一组“俄罗斯套娃”信封（即可以把一个信封放到另一个信封里面）。
+     * 说明:
+     * 不允许旋转信封。
+     * <p>
+     * 执行用时：299 ms, 在所有 Java 提交中击败了19.11% 的用户
+     * 内存消耗：39.3 MB, 在所有 Java 提交中击败了75.77% 的用户
+     *
+     * @param envelopes 信封
+     * @return 最多能有多少个信封能组成一组“俄罗斯套娃”信封
+     */
+    public int maxEnvelopes(int[][] envelopes) {
+        int n = envelopes.length;
+        if (n <= 1) {
+            return n;
+        }
+        Arrays.sort(envelopes, (x, y) -> x[0] == y[0] ? x[1] - y[1] : x[0] - y[0]);
+        int[] ans = new int[n];
+        ans[0] = 1;
+        int max = 1;
+        for (int i = 1; i < n; i++) {
+            //x: 1 1 2 3 3 4 4 5 6 6
+            //y: 1 2 2 2 3 1 4 4 5 6
+            ans[i] = 1;
+            for (int j = 0; j < i; j++) {
+                if (envelopes[i][0] > envelopes[j][0] && envelopes[i][1] > envelopes[j][1])
+                    ans[i] = Math.max(ans[i], ans[j] + 1);
+            }
+            max = Math.max(ans[i], max);
+        }
+        return max;
+    }
+
+
+    /**
+     * 844. 比较含退格的字符串
+     * <p>
+     * 给定 S 和 T 两个字符串，当它们分别被输入到空白的文本编辑器后，判断二者是否相等，并返回结果。 # 代表退格字符。
+     * 注意：如果对空文本输入退格字符，文本继续为空。
+     * <p>
+     * 执行用时：2 ms, 在所有 Java 提交中击败了50.37% 的用户
+     * 内存消耗：36.8 MB, 在所有 Java 提交中击败了30.12% 的用户
+     *
+     * @param S 字符串
+     * @param T 字符串
+     * @return 比较含退格的字符串
+     */
+    public boolean backspaceCompare(String S, String T) {
+        return backspaceCompareGetRealString(S).equals(backspaceCompareGetRealString(T));
+    }
+
+    private String backspaceCompareGetRealString(String s) {
+        char[] chars = s.toCharArray();
+        List<Character> list = new ArrayList<>();
+        for (char c : chars) {
+            if (c == '#' && list.size() > 0) {
+                list.remove(list.size() - 1);
+            } else if (c != '#') {
+                list.add(c);
+            }
+        }
+        StringBuilder stringBuilder = new StringBuilder();
+        list.forEach(stringBuilder::append);
+        return stringBuilder.toString();
+    }
+
+    /**
+     * 1419. 数青蛙
+     * <p>
+     * 给你一个字符串 croakOfFrogs，它表示不同青蛙发出的蛙鸣声（字符串 "croak" ）的组合。由于同一时间可以有多只青蛙呱呱作响，所以 croakOfFrogs 中会混合多个 “croak” 。请你返回模拟字符串中所有蛙鸣所需不同青蛙的最少数目。
+     * 注意：要想发出蛙鸣 "croak"，青蛙必须 依序 输出 ‘c’, ’r’, ’o’, ’a’, ’k’ 这 5 个字母。如果没有输出全部五个字母，那么它就不会发出声音。
+     * 如果字符串 croakOfFrogs 不是由若干有效的 "croak" 字符混合而成，请返回 -1 。
+     * <p>
+     * 执行用时：62 ms, 在所有 Java 提交中击败了5.19% 的用户
+     * 内存消耗：39 MB, 在所有 Java 提交中击败了48.89% 的用户
+     *
+     * @param croakOfFrogs
+     * @return
+     */
+    public int minNumberOfFrogs(String croakOfFrogs) {
+        int n = croakOfFrogs.length();
+        char[] croakArr = croakOfFrogs.toCharArray();
+        int[] check = new int[5];
+        for (char cro : croakArr) {
+            switch (cro) {
+                case 'c': {
+                    check[0]++;
+                    break;
+                }
+                case 'r': {
+                    check[1]++;
+                    if (check[1] > check[0]) {
+                        return -1;
+                    }
+                    break;
+                }
+                case 'o': {
+                    check[2]++;
+                    if (check[2] > check[1]) {
+                        return -1;
+                    }
+                    break;
+                }
+                case 'a': {
+                    check[3]++;
+                    if (check[3] > check[2]) {
+                        return -1;
+                    }
+                    break;
+                }
+                case 'k': {
+                    check[4]++;
+                    if (check[4] > check[3]) {
+                        return -1;
+                    }
+                    break;
+                }
+                default: {
+                    return -1;
+                }
+            }
+        }
+        for (int i = 1; i < 5; i++) {
+            if (check[i] != check[i - 1]) {
+                return -1;
+            }
+        }
+        int l = 1, r = 20000;
+        while (l < r) {
+            int mid = (l + r) / 2;
+            if (minNumberOfFrogs(croakArr, mid)) {
+                r = mid;
+            } else {
+                l = mid + 1;
+            }
+        }
+        return l;
+    }
+
+    private boolean minNumberOfFrogs(char[] chars, int num) {
+        int[] check = new int[5];
+        for (char cro : chars) {
+            switch (cro) {
+                case 'c': {
+                    check[0]++;
+                    int min = minNumberOfFrogsReturnMin(check);
+                    if (check[0] > num + min) {
+                        return false;
+                    }
+                    break;
+                }
+                case 'r': {
+                    check[1]++;
+                    int min = minNumberOfFrogsReturnMin(check);
+                    if (check[1] > num + min) {
+                        return false;
+                    }
+                    break;
+                }
+                case 'o': {
+                    check[2]++;
+                    int min = minNumberOfFrogsReturnMin(check);
+                    if (check[2] > num + min) {
+                        return false;
+                    }
+                    break;
+                }
+                case 'a': {
+                    check[3]++;
+                    int min = minNumberOfFrogsReturnMin(check);
+                    if (check[3] > num + min) {
+                        return false;
+                    }
+                    break;
+                }
+                default: {
+                    check[4]++;
+                    int min = minNumberOfFrogsReturnMin(check);
+                    if (check[4] > num + min) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    private int minNumberOfFrogsReturnMin(int[] arr) {
+        int min = arr[0];
+        for (int i = 1; i < 5; i++) {
+            min = Math.min(min, arr[i]);
+        }
+        return min;
     }
 
     /**
