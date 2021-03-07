@@ -1561,4 +1561,51 @@ public class SolutionNow {
         }
         return ans;
     }
+
+    /**
+     * 131. 分割回文串
+     *
+     * 给你一个字符串 s，请你将 s 分割成一些子串，使每个子串都是 回文串 。
+     * 返回 s 所有可能的分割方案。
+     * 回文串 是正着读和反着读都一样的字符串。
+     *
+     * 执行用时：11 ms, 在所有 Java 提交中击败了63.02% 的用户
+     * 内存消耗：51.5 MB, 在所有 Java 提交中击败了84.86% 的用户
+     * @param s 字符串
+     * @return s 所有可能的分割方案
+     */
+    public List<List<String>> partition(String s) {
+        partitionDFS(s.toCharArray(), new ArrayList<>(), 0);
+        return partitionAns;
+    }
+
+    private List<List<String>> partitionAns = new ArrayList<>();
+
+    private void partitionDFS(char[] cs, List<String> list, int index) {
+        if (index >= cs.length) {
+            List<String> newList = new ArrayList<>();
+            newList.addAll(list);
+            partitionAns.add(newList);
+            return;
+        }
+        StringBuilder sb = new StringBuilder();
+        for (int r = index + 1; r <= cs.length; r++) {
+            sb.append(cs[r - 1]);
+            if (isPartition(cs, index, r - 1)) {
+                list.add(sb.toString());
+                partitionDFS(cs, list, r);
+                list.remove(list.size() - 1);
+            }
+        }
+    }
+
+    private boolean isPartition(char[] cs, int l, int r) {
+        if (l >= r) {
+            return true;
+        }
+        if (cs[l] != cs[r]) {
+            return false;
+        }
+        return isPartition(cs, l + 1, r - 1);
+    }
 }
