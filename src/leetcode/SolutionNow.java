@@ -1,5 +1,6 @@
 package leetcode;
 
+import Template.BinaryIndexedTree;
 import Template.UnionFind;
 import leetcode.dataStruct.TreeNode;
 
@@ -1580,15 +1581,21 @@ public class SolutionNow {
         int n = nums.length, m = multipliers.length;
         int[][] dp = new int[1000 + 5][1000 + 5];
         dp[0][0] = 0;
-        for (int i = 1; i <= m; ++i) dp[i][0] = dp[i - 1][0] + nums[i - 1] * multipliers[i - 1];
-        for (int j = 1; j <= m; ++j) dp[0][j] = dp[0][j - 1] + nums[n - j] * multipliers[j - 1];
+        for (int i = 1; i <= m; ++i) {
+            dp[i][0] = dp[i - 1][0] + nums[i - 1] * multipliers[i - 1];
+        }
+        for (int j = 1; j <= m; ++j) {
+            dp[0][j] = dp[0][j - 1] + nums[n - j] * multipliers[j - 1];
+        }
         for (int i = 1; i <= m; ++i) {
             for (int j = 1; i + j <= m; ++j) {
                 dp[i][j] = Math.max(dp[i - 1][j] + nums[i - 1] * multipliers[i + j - 1], dp[i][j - 1] + nums[n - j] * multipliers[i + j - 1]);
             }
         }
         int ans = Integer.MIN_VALUE;
-        for (int i = 0; i <= m; ++i) ans = Math.max(ans, dp[i][m - i]);
+        for (int i = 0; i <= m; ++i) {
+            ans = Math.max(ans, dp[i][m - i]);
+        }
         return ans;
     }
 
@@ -1887,8 +1894,9 @@ public class SolutionNow {
             //y: 1 2 2 2 3 1 4 4 5 6
             ans[i] = 1;
             for (int j = 0; j < i; j++) {
-                if (envelopes[i][0] > envelopes[j][0] && envelopes[i][1] > envelopes[j][1])
+                if (envelopes[i][0] > envelopes[j][0] && envelopes[i][1] > envelopes[j][1]) {
                     ans[i] = Math.max(ans[i], ans[j] + 1);
+                }
             }
             max = Math.max(ans[i], max);
         }
